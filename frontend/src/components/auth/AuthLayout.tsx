@@ -33,15 +33,15 @@ export function AuthLayout({ children }: AuthLayoutProps) {
               © 2026 DealFlow360
             </span>
             <div className="flex items-center gap-4 sm:gap-6">
-              <a href="#" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/help" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
                 Privacy
-              </a>
-              <a href="#" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/help" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
                 Terms
-              </a>
-              <a href="#" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
+              </Link>
+              <Link to="/help" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
                 Support
-              </a>
+              </Link>
             </div>
           </div>
         </div>

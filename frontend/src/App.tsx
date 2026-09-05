@@ -1,7 +1,8 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { CustomerPortalLayout } from '@/layouts/CustomerPortalLayout'
 import { ProtectedRoute, GuestRoute, RoleRoute } from '@/routes/guards'
+import { useAuth } from '@/providers/AuthProvider'
 
 // Auth Pages (00. Public / Auth)
 import LoginPage from '@/pages/auth/LoginPage'
@@ -255,9 +256,31 @@ export function App() {
 
         {/* Internal Enterprise Dashboard Layout Routes */}
         <Route element={<DashboardLayout />}>
-          {/* Main Sales Dashboard */}
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
+          {/* Main Sales Dashboard with Role Landing Redirection */}
+          <Route
+            path="/"
+            element={
+              (() => {
+                const { user, getDashboardPath } = useAuth()
+                if (user && user.role !== 'sales_rep') {
+                  return <Navigate to={getDashboardPath()} replace />
+                }
+                return <DashboardPage />
+              })()
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              (() => {
+                const { user } = useAuth()
+                if (user?.role === 'customer') {
+                  return <Navigate to="/customer-portal/dashboard" replace />
+                }
+                return <DashboardPage />
+              })()
+            }
+          />
 
           {/* ─── PLATFORM / SUPER ADMIN (01.x) ─── */}
           <Route element={<RoleRoute allowedRoles={['super_admin']} />}>

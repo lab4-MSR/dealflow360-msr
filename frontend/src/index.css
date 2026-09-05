@@ -354,12 +354,12 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: var(--color-border-strong, #cbd5e1);
   border-radius: 9999px;
   transition: background-color 150ms ease-out;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.4);
+  background: var(--color-slate-400, #94a3b8);
 }
 
 @media (prefers-reduced-motion: reduce) {

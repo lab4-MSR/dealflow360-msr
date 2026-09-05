@@ -20,9 +20,14 @@ import {
   Settings,
   Shield,
   ArrowRightLeft,
+  Menu,
 } from 'lucide-react'
 
-export function Topbar() {
+interface TopbarProps {
+  onOpenMobileMenu?: () => void
+}
+
+export function Topbar({ onOpenMobileMenu }: TopbarProps) {
   const { resolvedTheme, setTheme } = useTheme()
   const { user, logout, login } = useAuth()
   const navigate = useNavigate()
@@ -38,6 +43,17 @@ export function Topbar() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        navigate('/search')
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [navigate])
 
   const handleSwitchAccount = async (email: string, pass: string) => {
     try {
@@ -68,12 +84,22 @@ export function Topbar() {
     .toUpperCase() || 'DF'
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/95 pl-20 pr-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:pr-6 lg:px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-6 lg:px-6">
+      {/* Mobile Menu Trigger Button */}
+      <button
+        type="button"
+        onClick={onOpenMobileMenu}
+        className="lg:hidden flex items-center justify-center h-9 w-9 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer shrink-0"
+        aria-label="Open navigation menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
       {/* Breadcrumb / Organization Title */}
-      <div className="flex items-center gap-2 text-small text-muted-foreground">
-        <span className="text-foreground font-medium">{user?.business_name || 'DealFlow360'}</span>
-        <span className="text-muted-foreground/60">/</span>
-        <span className="text-xs capitalize font-normal text-muted-foreground">{displayRole}</span>
+      <div className="flex items-center gap-2 text-small text-muted-foreground min-w-0">
+        <span className="text-foreground font-medium truncate">{user?.business_name || 'DealFlow360'}</span>
+        <span className="text-muted-foreground/60 shrink-0">/</span>
+        <span className="text-xs capitalize font-normal text-muted-foreground shrink-0">{displayRole}</span>
       </div>
 
       {/* Spacer */}
@@ -86,6 +112,7 @@ export function Topbar() {
           variant="ghost"
           size="sm"
           onClick={() => navigate('/search')}
+          aria-label="Global search (Ctrl+K)"
           className="hidden md:inline-flex items-center gap-2 text-muted-foreground"
         >
           <Search className="h-4 w-4" />
@@ -103,6 +130,7 @@ export function Topbar() {
           className="text-muted-foreground"
           onClick={() => navigate('/help')}
           title="Help Center"
+          aria-label="Help Center"
         >
           <HelpCircle className="h-4 w-4" />
         </Button>
@@ -114,6 +142,7 @@ export function Topbar() {
           className="text-muted-foreground relative"
           onClick={() => navigate('/notifications')}
           title="Notification Center"
+          aria-label="Notification Center"
         >
           <Bell className="h-4 w-4" />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background animate-pulse" />
@@ -126,6 +155,7 @@ export function Topbar() {
           className="text-muted-foreground relative overflow-hidden"
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
           title="Toggle theme"
+          aria-label="Toggle color theme"
         >
           <Sun className={cn("h-4 w-4 transition-all duration-200 ease-out", resolvedTheme === 'dark' ? "rotate-0 scale-100" : "-rotate-90 scale-0 absolute")} />
           <Moon className={cn("h-4 w-4 transition-all duration-200 ease-out", resolvedTheme === 'dark' ? "rotate-90 scale-0 absolute" : "rotate-0 scale-100")} />
@@ -136,7 +166,10 @@ export function Topbar() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-accent cursor-pointer transition-all duration-150 ease-out active:scale-[0.98] motion-reduce:active:scale-100 focus:outline-none"
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            aria-label="User account and switcher"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-accent cursor-pointer transition-all duration-150 ease-out active:scale-[0.98] motion-reduce:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Avatar className="h-8 w-8 bg-primary/10 text-primary border border-primary/20">
               <AvatarFallback className="text-xs font-semibold">{initials}</AvatarFallback>

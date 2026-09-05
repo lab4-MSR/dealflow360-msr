@@ -1,53 +1,85 @@
+import { Link } from 'react-router-dom'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { MoneyDisplay, PercentageDisplay, DiscountIndicator, RiskIndicator } from '@/components/shared'
 import {
   FileText,
   Users,
   DollarSign,
   AlertTriangle,
+  Plus,
+  ArrowRight,
 } from 'lucide-react'
 
 export function DashboardPage() {
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-h1 text-foreground">Dashboard</h1>
-        <p className="text-body text-muted-foreground mt-1">
-          Welcome back. Here's your sales overview.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-h1 text-foreground">Sales Dashboard</h1>
+          <p className="text-body text-muted-foreground mt-1">
+            Welcome back. Here is your sales pipeline overview and activity.
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button asChild size="sm">
+            <Link to="/sales/quotations/create">
+              <Plus className="h-4 w-4" />
+              New Quotation
+            </Link>
+          </Button>
+          <Button variant="outline" asChild size="sm">
+            <Link to="/sales/deals">
+              View Deals
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard
-          label="Total Revenue"
-          value="₹2,84,500"
-          trend={{ value: 12.5, direction: 'up' }}
-          icon={<DollarSign className="h-5 w-5" />}
-        />
-        <KpiCard
-          label="Active Quotations"
-          value="47"
-          trend={{ value: 8.2, direction: 'up' }}
-          icon={<FileText className="h-5 w-5" />}
-        />
-        <KpiCard
-          label="Customers"
-          value="156"
-          trend={{ value: 3.1, direction: 'up' }}
-          icon={<Users className="h-5 w-5" />}
-        />
-        <KpiCard
-          label="Pending Approvals"
-          value="12"
-          variant="warning"
-          trend={{ value: 2.4, direction: 'down' }}
-          icon={<AlertTriangle className="h-5 w-5" />}
-        />
+        <Link to="/sales/deals" className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
+          <KpiCard
+            label="Total Revenue"
+            value="₹2,84,500"
+            trend={{ value: 12.5, direction: 'up' }}
+            icon={<DollarSign className="h-5 w-5" />}
+            className="hover:shadow-md transition-all cursor-pointer h-full"
+          />
+        </Link>
+        <Link to="/sales/quotations" className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
+          <KpiCard
+            label="Active Quotations"
+            value="47"
+            trend={{ value: 8.2, direction: 'up' }}
+            icon={<FileText className="h-5 w-5" />}
+            className="hover:shadow-md transition-all cursor-pointer h-full"
+          />
+        </Link>
+        <Link to="/sales/customers" className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
+          <KpiCard
+            label="Customers"
+            value="156"
+            trend={{ value: 3.1, direction: 'up' }}
+            icon={<Users className="h-5 w-5" />}
+            className="hover:shadow-md transition-all cursor-pointer h-full"
+          />
+        </Link>
+        <Link to="/sales/deals" className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl">
+          <KpiCard
+            label="Pending Approvals"
+            value="12"
+            variant="warning"
+            trend={{ value: 2.4, direction: 'down' }}
+            icon={<AlertTriangle className="h-5 w-5" />}
+            className="hover:shadow-md transition-all cursor-pointer h-full"
+          />
+        </Link>
       </div>
 
       {/* Status & Risk Demos */}

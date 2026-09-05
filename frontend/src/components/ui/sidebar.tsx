@@ -31,6 +31,7 @@ import {
   TrendingUp,
   Receipt,
   Shield,
+  X,
 } from 'lucide-react'
 
 const iconMap: Record<string, React.ElementType> = {
@@ -65,15 +66,29 @@ const iconMap: Record<string, React.ElementType> = {
 interface SidebarProps {
   collapsed?: boolean
   onToggle?: () => void
+  mobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
+export function Sidebar({
+  collapsed = false,
+  onToggle,
+  mobileOpen,
+  onMobileClose,
+}: SidebarProps) {
   const location = useLocation()
   const { user } = useAuth()
-  const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [localMobileOpen, setLocalMobileOpen] = useState(false)
+
+  const isMobileOpen = mobileOpen !== undefined ? mobileOpen : localMobileOpen
+
+  const handleClose = () => {
+    setLocalMobileOpen(false)
+    onMobileClose?.()
+  }
 
   useEffect(() => {
-    setIsMobileOpen(false)
+    handleClose()
   }, [location.pathname])
 
   const role = user?.role
@@ -97,8 +112,9 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
       {/* Mobile overlay */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/45 lg:hidden"
-          onClick={() => setIsMobileOpen(false)}
+          className="fixed inset-0 z-40 bg-black/45 backdrop-blur-xs lg:hidden transition-opacity duration-200"
+          onClick={handleClose}
+          aria-hidden="true"
         />
       )}
 
@@ -107,28 +123,34 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         className={cn(
           'fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar-background border-r border-sidebar-border transition-all duration-200',
           collapsed ? 'w-[72px]' : 'w-[240px]',
-          isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          isMobileOpen ? 'translate-x-0 shadow-elevation-4' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        {/* Logo */}
+        {/* Logo and Mobile Close */}
         <div
           className={cn(
             'flex h-16 items-center border-b border-sidebar-border',
-            collapsed ? 'justify-center px-2' : 'px-5'
+            collapsed ? 'justify-center px-2' : 'justify-between px-5'
           )}
         >
-          {!collapsed && (
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <span className="text-caption font-bold text-primary-foreground">DF</span>
-              </div>
-              <span className="text-body font-semibold text-sidebar-foreground">DealFlow360</span>
-            </div>
-          )}
-          {collapsed && (
+          <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="text-caption font-bold text-primary-foreground">DF</span>
             </div>
+            {!collapsed && (
+              <span className="text-body font-semibold text-sidebar-foreground">DealFlow360</span>
+            )}
+          </div>
+          {/* Mobile close button */}
+          {!collapsed && (
+            <button
+              type="button"
+              onClick={handleClose}
+              className="lg:hidden p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors cursor-pointer"
+              aria-label="Close sidebar"
+            >
+              <X className="h-4 w-4" />
+            </button>
           )}
         </div>
 

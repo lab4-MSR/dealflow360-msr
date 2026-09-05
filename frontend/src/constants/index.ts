@@ -149,7 +149,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'ANALYTICS & BI',
-    roles: ['sales_manager', 'finance', 'business_admin', 'super_admin'],
+    roles: ['sales_manager', 'finance', 'operations', 'business_admin', 'super_admin'],
     items: [
       { label: 'Executive Dashboard', path: '/analytics/executive', icon: 'BarChart3' },
       { label: 'Sales Analytics', path: '/analytics/sales', icon: 'TrendingUp' },

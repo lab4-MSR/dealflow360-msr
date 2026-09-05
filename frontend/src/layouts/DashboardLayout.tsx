@@ -6,6 +6,7 @@ import { PageTransition } from '@/components/common/PageTransition'
 
 export function DashboardLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
 
   return (
@@ -13,9 +14,11 @@ export function DashboardLayout() {
       <Sidebar
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        mobileOpen={mobileMenuOpen}
+        onMobileClose={() => setMobileMenuOpen(false)}
       />
       <div className={`transition-all duration-200 ${sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-[240px]'}`}>
-        <Topbar />
+        <Topbar onOpenMobileMenu={() => setMobileMenuOpen(true)} />
         <main className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-[1600px]">
             <PageTransition key={location.pathname}>

@@ -13,9 +13,9 @@ import {
 
 const SUGGESTIONS = [
   { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { label: 'Quotations', path: '/dashboard/quotations', icon: FileText },
-  { label: 'Customers', path: '/dashboard/customers', icon: Users },
-  { label: 'Help Center', path: '#', icon: HelpCircle },
+  { label: 'Quotations', path: '/sales/quotations', icon: FileText },
+  { label: 'Customers', path: '/sales/customers', icon: Users },
+  { label: 'Help Center', path: '/help', icon: HelpCircle },
 ]
 
 export default function NotFoundPage() {

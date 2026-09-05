@@ -1,6 +1,8 @@
 import React from 'react'
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { PageTransition } from '@/components/common/PageTransition'
+import { useAuth } from '@/providers/AuthProvider'
+import { useTheme } from '@/providers/ThemeProvider'
 import {
   FileText,
   Truck,
@@ -13,6 +15,8 @@ import {
   LayoutDashboard,
   Shield,
   ExternalLink,
+  Sun,
+  Moon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -20,6 +24,13 @@ import { cn } from '@/lib/utils'
 export function CustomerPortalLayout() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { user, logout } = useAuth()
+  const { resolvedTheme, setTheme } = useTheme()
+
+  const handleSignOut = async () => {
+    await logout()
+    navigate('/login', { replace: true })
+  }
 
   const navItems = [
     { label: 'Overview', path: '/customer-portal/dashboard', icon: LayoutDashboard },
@@ -103,6 +114,29 @@ export function CustomerPortalLayout() {
                   )
                 })}
               </div>
+
+              {/* Theme Toggle */}
+              <button
+                type="button"
+                onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-muted transition-colors cursor-pointer"
+                title="Toggle color theme"
+                aria-label="Toggle color theme"
+              >
+                {resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </button>
+
+              {/* Sign Out */}
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-danger hover:bg-danger/10 transition-colors cursor-pointer"
+                title="Sign Out"
+                aria-label="Sign Out"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Sign Out</span>
+              </button>
             </div>
           </div>
 

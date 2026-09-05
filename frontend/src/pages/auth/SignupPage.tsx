@@ -13,7 +13,7 @@ import { signupSchema, type SignupFormData } from '@/lib/schemas'
 
 export default function SignupPage() {
   const navigate = useNavigate()
-  const { signup, clearError } = useAuth()
+  const { signup, clearError, getDashboardPath } = useAuth()
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const {
@@ -45,7 +45,7 @@ export default function SignupPage() {
         password: data.password,
         business_name: data.businessName,
       })
-      navigate('/dashboard', { replace: true })
+      navigate(getDashboardPath(), { replace: true })
     } catch (err: unknown) {
       const axiosErr = err as { response?: { status?: number; data?: { error?: { code?: string; message?: string } } } }
       const status = axiosErr?.response?.status
