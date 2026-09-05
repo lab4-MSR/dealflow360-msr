@@ -148,6 +148,7 @@ export const authService = {
           refresh_token: 'demo-mock-refresh-token',
           user: demo.user,
         }
+        localStorage.setItem('dealflow360-user', JSON.stringify(demo.user))
         return mockResponse
       }
       throw new Error('Invalid credentials')
@@ -157,7 +158,11 @@ export const authService = {
   async signup(data: { full_name: string; email: string; password: string; business_name: string }): Promise<LoginResponse> {
     try {
       const response = await apiClient.post<LoginResponse>('/auth/signup', data)
-      return (response as any).data ?? response
+      const resData = (response as any).data ?? response
+      if (resData?.user) {
+        localStorage.setItem('dealflow360-user', JSON.stringify(resData.user))
+      }
+      return resData
     } catch {
       const mockUser: AuthUser = {
         user_id: `usr_${Date.now()}`,
@@ -170,6 +175,7 @@ export const authService = {
         avatar_url: null,
         permissions: ['*'],
       }
+      localStorage.setItem('dealflow360-user', JSON.stringify(mockUser))
       return {
         access_token: `${DEMO_MOCK_TOKEN_PREFIX}${mockUser.user_id}`,
         refresh_token: 'demo-mock-refresh-token',
@@ -180,10 +186,15 @@ export const authService = {
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post('/auth/logout')
+      await apiClient.post('/auth/logout').catch(() => {})
+    } catch {
+      // Ignore network errors on sign out
     } finally {
       localStorage.removeItem('dealflow360-access-token')
       localStorage.removeItem('dealflow360-refresh-token')
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('dealflow360-user')
     }
   },
 
@@ -193,9 +204,35 @@ export const authService = {
       const userId = token.slice(DEMO_MOCK_TOKEN_PREFIX.length)
       const demo = Object.values(DEMO_USERS).find(({ user }) => user.user_id === userId)
       if (demo) return demo.user
+
+      const storedUserJson = localStorage.getItem('dealflow360-user')
+      if (storedUserJson) {
+        try {
+          return JSON.parse(storedUserJson)
+        } catch {
+          // ignore parse error
+        }
+      }
     }
-    const response = await apiClient.get<{ data: AuthUser }>('/auth/session')
-    return (response as any).data ?? response.data
+
+    try {
+      const response = await apiClient.get<{ data: AuthUser }>('/auth/session')
+      const user = (response as any).data ?? response.data
+      if (user) {
+        localStorage.setItem('dealflow360-user', JSON.stringify(user))
+      }
+      return user
+    } catch (err) {
+      const storedUserJson = localStorage.getItem('dealflow360-user')
+      if (storedUserJson) {
+        try {
+          return JSON.parse(storedUserJson)
+        } catch {
+          // ignore parse error
+        }
+      }
+      throw err
+    }
   },
 
   async forgotPassword(data: ForgotPasswordRequest): Promise<void> {

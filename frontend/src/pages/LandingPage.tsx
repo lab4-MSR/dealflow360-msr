@@ -132,11 +132,11 @@ export function LandingPage() {
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center gap-8 text-small font-medium text-muted-foreground">
-            <a href="#platform" className="hover:text-foreground transition-colors">Platform</a>
-            <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
-            <a href="#ai-intelligence" className="hover:text-foreground transition-colors">AI Intelligence</a>
-            <a href="#workflow" className="hover:text-foreground transition-colors">Workflow</a>
-            <a href="#insights" className="hover:text-foreground transition-colors">Insights</a>
+            <button type="button" onClick={() => document.getElementById('platform')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors cursor-pointer">Platform</button>
+            <button type="button" onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors cursor-pointer">How It Works</button>
+            <button type="button" onClick={() => document.getElementById('ai-intelligence')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors cursor-pointer">AI Intelligence</button>
+            <button type="button" onClick={() => document.getElementById('workflow')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors cursor-pointer">Workflow</button>
+            <button type="button" onClick={() => document.getElementById('insights')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors cursor-pointer">Insights</button>
           </nav>
 
           {/* Actions: Theme Toggle + Sign In / Register */}
@@ -157,7 +157,7 @@ export function LandingPage() {
             </button>
 
             {user ? (
-              <Button asChild size="sm" className="bg-primary hover:bg-primary-hover text-primary-foreground font-semibold shadow-xs">
+              <Button asChild size="sm" className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-md shadow-sky-500/20">
                 <Link to={getDashboardPath()} className="flex items-center gap-1.5">
                   <span>Enter Dashboard</span>
                   <ArrowRight className="h-4 w-4" />
@@ -211,7 +211,7 @@ export function LandingPage() {
               {/* CTAs */}
               <div className="flex flex-wrap items-center gap-3.5 pt-1">
                 <Button asChild size="lg" className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold h-11 px-6 rounded-lg shadow-lg shadow-sky-500/25">
-                  <Link to="/login" className="flex items-center gap-2">
+                  <Link to={user ? getDashboardPath() : "/login"} className="flex items-center gap-2">
                     <span>Explore Dashboard</span>
                     <ArrowRight className="h-4 w-4" />
                   </Link>

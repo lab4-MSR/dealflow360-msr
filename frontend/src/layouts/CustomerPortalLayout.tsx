@@ -30,8 +30,13 @@ export function CustomerPortalLayout() {
   const { resolvedTheme, setTheme } = useTheme()
 
   const handleSignOut = async () => {
-    await logout()
-    navigate('/login', { replace: true })
+    try {
+      await logout()
+    } catch (err) {
+      console.warn('Sign out warning:', err)
+    } finally {
+      navigate('/login', { replace: true })
+    }
   }
 
   const navItems = [

@@ -58,21 +58,28 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
   }, [navigate, menuOpen])
 
   const handleSwitchAccount = async (email: string, pass: string) => {
+    setMenuOpen(false)
     try {
       await login(email, pass)
-      setMenuOpen(false)
       const demoAccount = DEMO_USERS[email]
       if (demoAccount) {
-        navigate(ROLE_DASHBOARD_MAP[demoAccount.user.role], { replace: true })
+        const dest = ROLE_DASHBOARD_MAP[demoAccount.user.role] || '/dashboard'
+        navigate(dest, { replace: true })
       }
-    } catch {
-      // ignore
+    } catch (err) {
+      console.error('Account switch failed:', err)
     }
   }
 
   const handleSignOut = async () => {
-    await logout()
-    navigate('/login', { replace: true })
+    setMenuOpen(false)
+    try {
+      await logout()
+    } catch (err) {
+      console.warn('Sign out error:', err)
+    } finally {
+      navigate('/login', { replace: true })
+    }
   }
 
   const displayName = user?.full_name || 'Anonymous User'

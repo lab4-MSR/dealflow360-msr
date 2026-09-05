@@ -100,9 +100,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   const logout = useCallback(async () => {
-    await authService.logout()
-    queryClient.clear()
-    setUser(null)
+    try {
+      await authService.logout()
+    } catch (e) {
+      console.warn('Logout error ignored:', e)
+    } finally {
+      queryClient.clear()
+      setUser(null)
+      localStorage.removeItem('dealflow360-access-token')
+      localStorage.removeItem('dealflow360-refresh-token')
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('dealflow360-user')
+    }
   }, [queryClient])
 
   const getDashboardPath = useCallback(() => {

@@ -79,11 +79,21 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {
-    if (error.response?.status === 401) {
+    const url = error.config?.url || ''
+    const isAuthRequest =
+      url.includes('/auth/login') ||
+      url.includes('/auth/logout') ||
+      url.includes('/auth/signup') ||
+      url.includes('/auth/session')
+    const token = localStorage.getItem('dealflow360-access-token')
+    const isMockToken = token?.startsWith('mock_token_')
+
+    if (error.response?.status === 401 && !isAuthRequest && !isMockToken) {
       localStorage.removeItem('dealflow360-access-token')
       localStorage.removeItem('dealflow360-refresh-token')
+      localStorage.removeItem('dealflow360-user')
       const currentPath = window.location.pathname
-      if (!currentPath.startsWith('/login') && !currentPath.startsWith('/auth')) {
+      if (!currentPath.startsWith('/login') && !currentPath.startsWith('/auth') && currentPath !== '/') {
         window.location.href = `/login?returnTo=${encodeURIComponent(currentPath)}`
       }
     }

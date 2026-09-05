@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { SIDEBAR_NAV } from '@/constants'
 import { useAuth } from '@/providers/AuthProvider'
@@ -32,6 +32,7 @@ import {
   Receipt,
   Shield,
   X,
+  LogOut,
 } from 'lucide-react'
 
 const iconMap: Record<string, React.ElementType> = {
@@ -77,7 +78,8 @@ export function Sidebar({
   onMobileClose,
 }: SidebarProps) {
   const location = useLocation()
-  const { user } = useAuth()
+  const navigate = useNavigate()
+  const { user, logout } = useAuth()
   const [localMobileOpen, setLocalMobileOpen] = useState(false)
 
   const isMobileOpen = mobileOpen !== undefined ? mobileOpen : localMobileOpen
@@ -85,6 +87,17 @@ export function Sidebar({
   const handleClose = () => {
     setLocalMobileOpen(false)
     onMobileClose?.()
+  }
+
+  const handleSignOut = async () => {
+    handleClose()
+    try {
+      await logout()
+    } catch (err) {
+      console.warn('Sign out warning:', err)
+    } finally {
+      navigate('/login', { replace: true })
+    }
   }
 
   useEffect(() => {
@@ -106,6 +119,10 @@ export function Sidebar({
   const role = user?.role
 
   const visibleSections = SIDEBAR_NAV.map((section) => {
+    if (role === 'super_admin') return section
+    if (role === 'business_admin' && (section.section === 'SALES' || section.section === 'INTELLIGENCE' || section.section === 'ANALYTICS & BI')) {
+      return section
+    }
     if (section.roles && role && !section.roles.includes(role)) {
       return null
     }
@@ -233,6 +250,23 @@ export function Sidebar({
             </div>
           ))}
         </nav>
+
+        {/* Sign Out button */}
+        <div className="p-2 border-t border-sidebar-border">
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className={cn(
+              'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-small font-medium text-danger hover:bg-danger/10 hover:text-danger transition-colors cursor-pointer',
+              collapsed && 'justify-center px-2'
+            )}
+            title="Sign Out"
+            aria-label="Sign Out"
+          >
+            <LogOut className="h-4 w-4 shrink-0 text-danger" />
+            {(!collapsed || isMobileOpen) && <span className={cn('truncate', collapsed && 'lg:hidden')}>Sign Out</span>}
+          </button>
+        </div>
 
         {/* Collapse toggle */}
         {onToggle && (
