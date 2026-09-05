@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useTheme } from '@/providers/ThemeProvider'
 import { useAuth } from '@/providers/AuthProvider'
 import { DEMO_USERS } from '@/services/auth'
 import { ROLE_LABELS, ROLE_DASHBOARD_MAP } from '@/types/auth'
+import { SIDEBAR_NAV } from '@/constants'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -27,10 +28,67 @@ interface TopbarProps {
   onOpenMobileMenu?: () => void
 }
 
+interface ActiveNavFeature {
+  feature: string
+  featurePath: string
+  subFeature?: string
+}
+
+function getActiveSidebarFeature(pathname: string): ActiveNavFeature | null {
+  // 1. Specific platform route overrides
+  if (pathname === '/platform' || pathname === '/platform/dashboard') {
+    return { feature: 'Platform Dashboard', featurePath: '/platform/dashboard' }
+  }
+  if (pathname === '/platform/health' || pathname === '/platform/system-health') {
+    return { feature: 'System Health', featurePath: '/platform/health' }
+  }
+  if (pathname === '/platform/businesses/create') {
+    return { feature: 'All Businesses', featurePath: '/platform/businesses', subFeature: 'Create Business' }
+  }
+  if (pathname.startsWith('/platform/businesses/') && pathname !== '/platform/businesses') {
+    return { feature: 'All Businesses', featurePath: '/platform/businesses', subFeature: 'Business Details' }
+  }
+  if (pathname === '/platform/users/invite') {
+    return { feature: 'Platform Users', featurePath: '/platform/users', subFeature: 'Invite User' }
+  }
+  if (pathname.startsWith('/platform/users/') && pathname !== '/platform/users') {
+    return { feature: 'Platform Users', featurePath: '/platform/users', subFeature: 'User Details' }
+  }
+  if (pathname.startsWith('/platform/deals/')) {
+    return { feature: 'Platform Dashboard', featurePath: '/platform/dashboard', subFeature: 'Deal Details' }
+  }
+
+  // 2. Generic SIDEBAR_NAV search
+  const allNavItems = SIDEBAR_NAV.flatMap((section) => section.items)
+
+  // Exact match
+  const exactMatch = allNavItems.find((item) => item.path === pathname)
+  if (exactMatch) {
+    return { feature: exactMatch.label, featurePath: exactMatch.path }
+  }
+
+  // Prefix match (longest path first)
+  const prefixMatches = allNavItems
+    .filter((item) => item.path !== '/' && item.path !== '/dashboard' && pathname.startsWith(item.path + '/'))
+    .sort((a, b) => b.path.length - a.path.length)
+
+  if (prefixMatches.length > 0) {
+    return { feature: prefixMatches[0].label, featurePath: prefixMatches[0].path }
+  }
+
+  // Root or /dashboard
+  if (pathname === '/' || pathname === '/dashboard') {
+    return { feature: 'Sales Dashboard', featurePath: '/dashboard' }
+  }
+
+  return null
+}
+
 export function Topbar({ onOpenMobileMenu }: TopbarProps) {
   const { resolvedTheme, setTheme } = useTheme()
   const { user, logout, login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -84,6 +142,9 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
 
   const displayName = user?.full_name || 'Anonymous User'
   const displayRole = user?.role ? (ROLE_LABELS[user.role] || user.role) : 'Sales Rep'
+  const isSuperAdminPage = location.pathname.startsWith('/platform') || user?.role === 'super_admin'
+  const effectiveRole = isSuperAdminPage ? 'Super Admin' : displayRole
+  const activeFeature = getActiveSidebarFeature(location.pathname)
   const initials = displayName
     .split(' ')
     .filter(Boolean)
@@ -104,11 +165,35 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Breadcrumb / Organization Title */}
-      <div className="flex items-center gap-2 text-small text-muted-foreground min-w-0">
-        <span className="text-foreground font-medium truncate">{user?.business_name || 'DealFlow360'}</span>
-        <span className="text-muted-foreground/60 shrink-0">/</span>
-        <span className="text-xs capitalize font-normal text-muted-foreground shrink-0">{displayRole}</span>
+      {/* Breadcrumb / Organization Title & Selected Feature */}
+      <div className="flex items-center gap-1.5 sm:gap-2 text-small text-muted-foreground min-w-0">
+        <span className="text-foreground font-medium truncate hidden md:inline">
+          {user?.business_name || 'DealFlow360'}
+        </span>
+        <span className="text-muted-foreground/60 shrink-0 hidden md:inline">/</span>
+        <span className="text-xs capitalize font-medium text-muted-foreground shrink-0">
+          {effectiveRole}
+        </span>
+        {activeFeature && (
+          <>
+            <span className="text-muted-foreground/60 shrink-0">/</span>
+            <Link
+              to={activeFeature.featurePath}
+              className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors shrink-0 max-w-[140px] sm:max-w-[200px] truncate"
+              title={activeFeature.feature}
+            >
+              {activeFeature.feature}
+            </Link>
+          </>
+        )}
+        {activeFeature?.subFeature && (
+          <>
+            <span className="text-muted-foreground/60 shrink-0 hidden lg:inline">/</span>
+            <span className="text-xs font-medium text-foreground truncate hidden lg:inline max-w-[160px]" title={activeFeature.subFeature}>
+              {activeFeature.subFeature}
+            </span>
+          </>
+        )}
       </div>
 
       {/* Spacer */}

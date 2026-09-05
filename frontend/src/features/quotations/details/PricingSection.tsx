@@ -35,7 +35,7 @@ export function PricingSection({ pricing }: PricingSectionProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <button className="text-muted-foreground hover:text-foreground">
+                <button type="button" aria-label="Pricing details help" className="text-muted-foreground hover:text-foreground cursor-pointer">
                   <HelpCircle className="h-4 w-4" />
                 </button>
               </TooltipTrigger>

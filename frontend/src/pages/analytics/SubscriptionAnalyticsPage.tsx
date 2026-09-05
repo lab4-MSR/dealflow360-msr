@@ -30,6 +30,7 @@ import {
   Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from 'recharts'
 import { getSubscriptionAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent, formatCount } from '@/lib/analytics-format'
@@ -219,7 +220,9 @@ export function SubscriptionAnalyticsPage() {
                 fill="#10b981"
                 fillOpacity={0.08}
                 name="MRR"
-              />
+              >
+                <LabelList dataKey="mrr" position="top" formatter={(v: number) => `₹${(v / 100000).toFixed(1)}L`} fill="var(--color-muted-foreground)" fontSize={10} />
+              </Area>
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -241,7 +244,7 @@ export function SubscriptionAnalyticsPage() {
 
           <div className="h-[250px] w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={movementData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+              <BarChart data={movementData} margin={{ top: 16, right: 10, left: -10, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
                 <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" fontSize={10} tickLine={false} />
                 <YAxis
@@ -261,6 +264,7 @@ export function SubscriptionAnalyticsPage() {
                   }}
                 />
                 <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
+                  <LabelList dataKey="amount" position="top" formatter={(v: number) => `₹${(v / 100000).toFixed(1)}L`} fill="var(--color-muted-foreground)" fontSize={10} />
                   {movementData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

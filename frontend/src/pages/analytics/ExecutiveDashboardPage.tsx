@@ -37,6 +37,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  LabelList,
 } from 'recharts'
 import { getExecutiveAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent, formatCount, kpiChange } from '@/lib/analytics-format'
@@ -244,7 +245,9 @@ export function ExecutiveDashboardPage() {
                   fill="hsl(var(--primary))"
                   fillOpacity={0.08}
                   name="Revenue"
-                />
+                >
+                  <LabelList dataKey="revenue" position="top" formatter={(v: number) => `₹${(v / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={10} />
+                </Area>
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -272,6 +275,8 @@ export function ExecutiveDashboardPage() {
                     innerRadius={55}
                     outerRadius={80}
                     paddingAngle={3}
+                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
                   >
                     {revenueMix.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

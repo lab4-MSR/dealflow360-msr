@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import type { DealOverview as DealOverviewType } from '../types'
@@ -81,7 +82,7 @@ export function DealOverview({ data }: DealOverviewProps) {
 
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data.trend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+            <BarChart data={data.trend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
               <XAxis
                 dataKey="date"
@@ -105,7 +106,9 @@ export function DealOverview({ data }: DealOverviewProps) {
                 barSize={16}
                 animationDuration={350}
                 animationEasing="ease-out"
-              />
+              >
+                <LabelList dataKey="created" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
+              </Bar>
               <Bar
                 dataKey="completed"
                 name="Completed"
@@ -114,7 +117,9 @@ export function DealOverview({ data }: DealOverviewProps) {
                 barSize={16}
                 animationDuration={350}
                 animationEasing="ease-out"
-              />
+              >
+                <LabelList dataKey="completed" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

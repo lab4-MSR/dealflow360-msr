@@ -20,6 +20,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import {
@@ -241,7 +242,7 @@ export function BusinessDetailsOverviewPage() {
             {dealTrend && dealTrend.length > 0 ? (
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={dealTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                  <BarChart data={dealTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                     <XAxis
                       dataKey="date"
@@ -256,7 +257,9 @@ export function BusinessDetailsOverviewPage() {
                       tickLine={false}
                     />
                     <Tooltip content={<ChartTooltip />} />
-                    <Bar dataKey="count" name="Deals" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={24} animationDuration={350} animationEasing="ease-out" />
+                    <Bar dataKey="count" name="Deals" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={24} animationDuration={350} animationEasing="ease-out">
+                      <LabelList dataKey="count" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -275,7 +278,7 @@ export function BusinessDetailsOverviewPage() {
             {revenueTrend && revenueTrend.length > 0 ? (
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={revenueTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+                  <LineChart data={revenueTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                     <XAxis
                       dataKey="date"
@@ -301,7 +304,9 @@ export function BusinessDetailsOverviewPage() {
                       activeDot={{ r: 5 }}
                       animationDuration={350}
                       animationEasing="ease-out"
-                    />
+                    >
+                      <LabelList dataKey="revenue" position="top" formatter={(val: number) => `₹${(val / 1000).toFixed(0)}K`} fill="var(--color-muted-foreground)" fontSize={10} />
+                    </Line>
                   </LineChart>
                 </ResponsiveContainer>
               </div>

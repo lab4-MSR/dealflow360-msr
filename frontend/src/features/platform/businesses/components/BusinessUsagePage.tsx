@@ -20,6 +20,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { Users, FileText, ShoppingCart, Code, Activity } from 'lucide-react'
@@ -323,7 +324,9 @@ export function BusinessUsagePage() {
                     strokeWidth={2}
                     fill="var(--color-primary)"
                     fillOpacity={0.08}
-                  />
+                  >
+                    <LabelList dataKey="events" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
+                  </Area>
                   <Area
                     type="monotone"
                     dataKey="users"

@@ -30,6 +30,7 @@ import {
   Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from 'recharts'
 import { getRevenueAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent } from '@/lib/analytics-format'
@@ -231,12 +232,14 @@ export function RevenueAnalyticsPage() {
               <Area
                 type="monotone"
                 dataKey="total"
+                name="Total Revenue"
                 stroke="hsl(var(--primary))"
                 strokeWidth={2.5}
                 fill="hsl(var(--primary))"
                 fillOpacity={0.08}
-                name="Total Revenue"
-              />
+              >
+                <LabelList dataKey="total" position="top" formatter={(v: number) => `₹${(v / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={10} />
+              </Area>
               <Area
                 type="monotone"
                 dataKey="recurring"

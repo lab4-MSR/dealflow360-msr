@@ -28,6 +28,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  LabelList,
 } from 'recharts'
 import { getApprovalAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCount, formatPercent } from '@/lib/analytics-format'
@@ -199,6 +200,7 @@ export function ApprovalAnalyticsPage() {
                   }}
                 />
                 <Bar dataKey="avg_hours" radius={[6, 6, 0, 0]}>
+                  <LabelList dataKey="avg_hours" position="top" formatter={(v: number) => `${v}h`} fill="var(--color-muted-foreground)" fontSize={11} />
                   {hierarchyData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -230,6 +232,8 @@ export function ApprovalAnalyticsPage() {
                     innerRadius={50}
                     outerRadius={75}
                     paddingAngle={3}
+                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
+                    labelLine={false}
                   >
                     {decisionMix.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />

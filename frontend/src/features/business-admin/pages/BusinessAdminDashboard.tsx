@@ -36,7 +36,7 @@ import {
   Settings,
   CheckCircle2,
 } from 'lucide-react'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, LabelList } from 'recharts'
 import { format, parseISO } from 'date-fns'
 
 function DashboardSkeleton() {
@@ -212,7 +212,9 @@ export function BusinessAdminDashboard() {
                   <Tooltip
                     contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
                   />
-                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} animationDuration={350} animationEasing="ease-out" />
+                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} animationDuration={350} animationEasing="ease-out">
+                    <LabelList dataKey="count" position="top" fill="var(--color-muted-foreground)" fontSize={11} />
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -264,7 +266,7 @@ export function BusinessAdminDashboard() {
             </div>
             {revenue?.revenueTrend && revenue.revenueTrend.length > 0 ? (
               <ResponsiveContainer width="100%" height={200}>
-                <AreaChart data={revenue.revenueTrend}>
+                <AreaChart data={revenue.revenueTrend} margin={{ top: 16, right: 10, left: -10, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
@@ -272,7 +274,9 @@ export function BusinessAdminDashboard() {
                     contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
                     formatter={(value) => [`₹${Number(value).toLocaleString()}`, 'Revenue']}
                   />
-                  <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} animationDuration={350} animationEasing="ease-out" />
+                  <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} animationDuration={350} animationEasing="ease-out">
+                    <LabelList dataKey="amount" position="top" formatter={(val: number) => `₹${Number(val).toLocaleString()}`} fill="var(--color-muted-foreground)" fontSize={10} />
+                  </Area>
                 </AreaChart>
               </ResponsiveContainer>
             ) : (

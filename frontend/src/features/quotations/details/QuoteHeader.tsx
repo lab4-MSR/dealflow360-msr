@@ -87,7 +87,7 @@ export function QuoteHeader({ quote, onVersionChange, onAction, actionLoading }:
               {/* Version Badge & Selector */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-caption font-semibold bg-muted hover:bg-accent border border-border text-foreground transition-colors cursor-pointer">
+                  <button type="button" className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-caption font-semibold bg-muted hover:bg-accent border border-border text-foreground transition-colors cursor-pointer">
                     <span>v{quote.version}</span>
                     <span className="text-muted-foreground">/ v{quote.total_versions}</span>
                     <ChevronDown className="h-3 w-3 text-muted-foreground" />

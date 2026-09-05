@@ -27,6 +27,7 @@ import {
   Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from 'recharts'
 import { getFulfillmentAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatPercent } from '@/lib/analytics-format'
@@ -190,6 +191,7 @@ export function FulfillmentAnalyticsPage() {
                   }}
                 />
                 <Bar dataKey="rate" radius={[6, 6, 0, 0]}>
+                  <LabelList dataKey="rate" position="top" formatter={(v: number) => `${v}%`} fill="var(--color-muted-foreground)" fontSize={11} />
                   {warehouseHubs.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

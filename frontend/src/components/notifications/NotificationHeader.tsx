@@ -1,4 +1,4 @@
-import { Bell, CheckCheck, Filter, Search, X } from 'lucide-react'
+import { Bell, CheckCheck, Filter, Search, Settings, Trash2, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,7 +18,10 @@ interface NotificationHeaderProps {
   filter: NotificationFilter
   onFilterChange: (filter: NotificationFilter) => void
   unreadCount: number
+  hasReadCount?: number
   onMarkAllRead: () => void
+  onClearRead?: () => void
+  onOpenPreferences?: () => void
   markAllPending?: boolean
 }
 
@@ -28,7 +31,10 @@ export function NotificationHeader({
   filter,
   onFilterChange,
   unreadCount,
+  hasReadCount = 0,
   onMarkAllRead,
+  onClearRead,
+  onOpenPreferences,
   markAllPending,
 }: NotificationHeaderProps) {
   const filterLabel = NOTIFICATION_FILTERS.find((f) => f.value === filter)?.label ?? 'All'
@@ -44,22 +50,50 @@ export function NotificationHeader({
           <p className="text-body text-muted-foreground mt-1">
             Review approvals, deals, billing and operational updates.
             {unreadCount > 0 && (
-              <span className="ml-2 inline-flex items-center rounded-full bg-primary-subtle px-2 py-0.5 text-caption font-medium text-primary">
+              <span className="ml-2 inline-flex items-center rounded-full bg-primary/10 border border-primary/20 px-2 py-0.5 text-caption font-semibold text-primary">
                 {unreadCount} unread
               </span>
             )}
           </p>
         </div>
 
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onMarkAllRead}
-          disabled={markAllPending || unreadCount === 0}
-        >
-          <CheckCheck className="h-4 w-4" aria-hidden />
-          Mark All Read
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          {onOpenPreferences && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onOpenPreferences}
+              className="gap-1.5 text-muted-foreground hover:text-foreground"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Channels</span>
+            </Button>
+          )}
+
+          {onClearRead && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClearRead}
+              disabled={hasReadCount === 0}
+              className="gap-1.5 text-muted-foreground hover:text-danger hover:border-danger/30"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Clear Read</span>
+            </Button>
+          )}
+
+          <Button
+            variant="default"
+            size="sm"
+            onClick={onMarkAllRead}
+            disabled={markAllPending || unreadCount === 0}
+            className="gap-1.5"
+          >
+            <CheckCheck className="h-4 w-4" aria-hidden />
+            Mark All Read
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">

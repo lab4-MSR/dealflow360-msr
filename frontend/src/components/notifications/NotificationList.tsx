@@ -11,6 +11,8 @@ interface NotificationListProps {
   onRetry: () => void
   onSelect: (notification: Notification) => void
   onMarkRead: (id: string) => void
+  onToggleRead?: (id: string, currentRead: boolean) => void
+  onDelete?: (id: string) => void
   selectedId?: string
 }
 
@@ -21,6 +23,8 @@ export function NotificationList({
   onRetry,
   onSelect,
   onMarkRead,
+  onToggleRead,
+  onDelete,
   selectedId,
 }: NotificationListProps) {
   if (isLoading) {
@@ -56,6 +60,8 @@ export function NotificationList({
           selected={n.id === selectedId}
           onSelect={onSelect}
           onMarkRead={onMarkRead}
+          onToggleRead={onToggleRead}
+          onDelete={onDelete}
         />
       ))}
     </div>

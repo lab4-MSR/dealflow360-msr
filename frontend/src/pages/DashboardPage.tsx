@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/providers/AuthProvider'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -34,6 +34,7 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts'
 
 interface DealItem {
@@ -151,6 +152,7 @@ const VELOCITY_CHART_DATA = [
 
 export function DashboardPage() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [deals, setDeals] = useState<DealItem[]>(DEFAULT_DEALS)
   const [quotations, setQuotations] = useState<QuotationItem[]>(DEFAULT_QUOTATIONS)
   const [, setLoading] = useState(true)
@@ -260,6 +262,10 @@ export function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Active Pipeline Value */}
         <div
+          role="button"
+          tabIndex={0}
+          onClick={() => navigate('/sales/deals')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/sales/deals') }}
           className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer"
         >
           <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
@@ -273,7 +279,13 @@ export function DashboardPage() {
         </div>
 
         {/* Card 2: Quotations In Review */}
-        <div className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => navigate('/sales/quotations')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/sales/quotations') }}
+          className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer"
+        >
           <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Quotations In Flight</span>
             <Layers className="h-3.5 w-3.5 text-primary" />
@@ -285,7 +297,13 @@ export function DashboardPage() {
         </div>
 
         {/* Card 3: Margin Approvals Pending */}
-        <div className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => navigate('/sales-manager/approvals')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/sales-manager/approvals') }}
+          className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer"
+        >
           <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Margin Approvals</span>
             <Zap className="h-3.5 w-3.5 text-amber-500" />
@@ -297,7 +315,13 @@ export function DashboardPage() {
         </div>
 
         {/* Card 4: Fulfillments Active */}
-        <div className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer">
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => navigate('/operations/fulfillment')}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigate('/operations/fulfillment') }}
+          className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer"
+        >
           <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Split Fulfillments</span>
             <Truck className="h-3.5 w-3.5 text-muted-foreground" />
@@ -409,7 +433,9 @@ export function DashboardPage() {
                   strokeWidth={2}
                   fill="#0ea5e9"
                   fillOpacity={0.08}
-                />
+                >
+                  <LabelList dataKey="velocity" position="top" formatter={(v: number) => `₹${v}L`} fill="var(--color-muted-foreground)" fontSize={11} />
+                </Area>
               </AreaChart>
             </ResponsiveContainer>
           </div>

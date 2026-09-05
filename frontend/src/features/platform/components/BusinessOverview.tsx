@@ -9,6 +9,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import type { BusinessOverview as BusinessOverviewType } from '../types'
@@ -104,7 +105,9 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
                 fillOpacity={0.08}
                 animationDuration={350}
                 animationEasing="ease-out"
-              />
+              >
+                <LabelList dataKey="total" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
+              </Area>
               <Area
                 type="monotone"
                 dataKey="active"

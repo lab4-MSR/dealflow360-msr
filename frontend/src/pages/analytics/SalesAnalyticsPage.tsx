@@ -28,6 +28,7 @@ import {
   Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from 'recharts'
 import { getSalesAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent, formatCount } from '@/lib/analytics-format'
@@ -244,6 +245,7 @@ export function SalesAnalyticsPage() {
                     }}
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                    <LabelList dataKey="value" position="top" formatter={(v: number) => `₹${(v / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={11} />
                     {stageDistribution.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color || '#3b82f6'} />
                     ))}

@@ -27,6 +27,7 @@ import {
   Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from 'recharts'
 import { getDiscountAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatPercent, formatCurrencyCompact, formatCurrency } from '@/lib/analytics-format'
@@ -191,6 +192,7 @@ export function DiscountAnalyticsPage() {
                   }}
                 />
                 <Bar dataKey="avg_discount" radius={[6, 6, 0, 0]}>
+                  <LabelList dataKey="avg_discount" position="top" formatter={(v: number) => `${v}%`} fill="var(--color-muted-foreground)" fontSize={11} />
                   {tierDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

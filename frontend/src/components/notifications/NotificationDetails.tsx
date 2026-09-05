@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { Drawer } from '@/components/ui/drawer'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, Check, CheckCheck, Trash2 } from 'lucide-react'
 import type { Notification } from '@/types/shared'
 import { NOTIFICATION_CATEGORY_LABELS, NOTIFICATION_PRIORITY_LABELS, NOTIFICATION_PRIORITY_VARIANT } from '@/constants/shared'
 import { fullTimestamp } from '@/lib/dates'
@@ -12,9 +12,17 @@ interface NotificationDetailsProps {
   notification: Notification | null
   open: boolean
   onClose: () => void
+  onToggleRead?: (id: string, currentRead: boolean) => void
+  onDelete?: (id: string) => void
 }
 
-export function NotificationDetails({ notification, open, onClose }: NotificationDetailsProps) {
+export function NotificationDetails({
+  notification,
+  open,
+  onClose,
+  onToggleRead,
+  onDelete,
+}: NotificationDetailsProps) {
   const navigate = useNavigate()
 
   const Icon = notification ? categoryIcon(notification.type) : null
@@ -24,6 +32,17 @@ export function NotificationDetails({ notification, open, onClose }: Notificatio
     if (!url) return
     onClose()
     navigate(url)
+  }
+
+  const handleToggle = () => {
+    if (!notification) return
+    onToggleRead?.(notification.id, notification.read)
+  }
+
+  const handleDelete = () => {
+    if (!notification) return
+    onDelete?.(notification.id)
+    onClose()
   }
 
   if (!notification) return null
@@ -93,13 +112,33 @@ export function NotificationDetails({ notification, open, onClose }: Notificatio
           <p className="text-body text-foreground">{fullTimestamp(notification.created_at)}</p>
         </section>
 
-        {/* Action */}
-        {url && (
-          <Button variant="default" className="w-full" onClick={handleOpenRecord}>
-            <ExternalLink className="h-4 w-4" aria-hidden />
-            Open Record
-          </Button>
-        )}
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2 pt-2">
+          {url && (
+            <Button variant="default" className="w-full gap-2" onClick={handleOpenRecord}>
+              <ExternalLink className="h-4 w-4" aria-hidden />
+              <span>Navigate to Record</span>
+            </Button>
+          )}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              className="flex-1 gap-2"
+              onClick={handleToggle}
+            >
+              {notification.read ? <Check className="h-4 w-4" /> : <CheckCheck className="h-4 w-4 text-primary" />}
+              <span>{notification.read ? 'Mark Unread' : 'Mark Read'}</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2 text-danger hover:bg-danger/10 border-danger/30"
+              onClick={handleDelete}
+            >
+              <Trash2 className="h-4 w-4" />
+              <span>Dismiss</span>
+            </Button>
+          </div>
+        </div>
       </div>
     </Drawer>
   )

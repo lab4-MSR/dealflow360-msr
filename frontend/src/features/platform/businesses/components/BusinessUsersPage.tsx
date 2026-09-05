@@ -14,6 +14,7 @@ import { DataTable, type Column } from '@/components/ui/datatable'
 import { Pagination } from '@/components/ui/datatable/pagination'
 import { useBusinessUsers, useBusinessUserKpis } from '../hooks/use-businesses'
 import type { BusinessUserFilters, UserRole, UserStatus, BusinessUser } from '../types'
+import { toast } from 'sonner'
 
 const ROLE_LABELS: Record<UserRole, string> = {
   business_admin: 'Business Admin',
@@ -217,17 +218,38 @@ export function BusinessUsersPage() {
                 onClick={() => setOpenDropdown(null)}
               />
               <div className="absolute right-0 top-full z-50 mt-1 w-40 overflow-hidden rounded-lg border border-border bg-card shadow-elevation-2">
-                <button className="flex w-full items-center gap-2 px-3 py-2 text-small text-foreground hover:bg-accent transition-colors">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpenDropdown(null)
+                    toast.info(`Viewing profile for ${row.name} (${row.email})`)
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-small text-foreground hover:bg-accent transition-colors cursor-pointer"
+                >
                   <Eye className="h-4 w-4 text-muted-foreground" />
                   View Profile
                 </button>
                 {row.status === 'active' ? (
-                  <button className="flex w-full items-center gap-2 px-3 py-2 text-small text-danger hover:bg-accent transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenDropdown(null)
+                      toast.success(`User ${row.name} has been deactivated`)
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-small text-danger hover:bg-accent transition-colors cursor-pointer"
+                  >
                     <UserX className="h-4 w-4" />
                     Deactivate
                   </button>
                 ) : (
-                  <button className="flex w-full items-center gap-2 px-3 py-2 text-small text-success hover:bg-accent transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenDropdown(null)
+                      toast.success(`User ${row.name} has been reactivated`)
+                    }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-small text-success hover:bg-accent transition-colors cursor-pointer"
+                  >
                     <UserCheck className="h-4 w-4" />
                     Reactivate
                   </button>

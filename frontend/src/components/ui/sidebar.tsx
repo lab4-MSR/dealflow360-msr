@@ -215,6 +215,7 @@ export function Sidebar({
                     if (active) return true
                     if (item.path === '/dashboard' && (location.pathname === '/' || location.pathname === '/dashboard')) return true
                     if (item.path === '/platform/dashboard' && (location.pathname === '/platform' || location.pathname === '/platform/dashboard')) return true
+                    if (item.path === '/platform/health' && location.pathname === '/platform/system-health') return true
                     if (item.path !== '/dashboard' && item.path !== '/platform/dashboard' && location.pathname.startsWith(item.path + '/')) return true
                     return false
                   }

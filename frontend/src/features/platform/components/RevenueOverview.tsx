@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import type { RevenueOverview as RevenueOverviewType } from '../types'
@@ -90,7 +91,9 @@ export function RevenueOverview({ data }: RevenueOverviewProps) {
                 activeDot={{ r: 5 }}
                 animationDuration={350}
                 animationEasing="ease-out"
-              />
+              >
+                <LabelList dataKey="revenue" position="top" formatter={(val: number) => `₹${(val / 1000).toFixed(0)}k`} fill="var(--color-muted-foreground)" fontSize={10} />
+              </Line>
             </LineChart>
           </ResponsiveContainer>
         </div>

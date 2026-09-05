@@ -32,6 +32,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import {
@@ -376,7 +377,9 @@ export function BusinessRevenuePage() {
                     strokeWidth={2}
                     dot={{ fill: 'var(--color-primary)', r: 3 }}
                     activeDot={{ r: 5 }}
-                  />
+                  >
+                    <LabelList dataKey="revenue" position="top" formatter={(val: number) => formatCompactCurrency(val, currency)} fill="var(--color-muted-foreground)" fontSize={10} />
+                  </Line>
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -415,6 +418,8 @@ export function BusinessRevenuePage() {
                       outerRadius={85}
                       paddingAngle={4}
                       dataKey="value"
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      labelLine={false}
                     >
                       {pieChartData.map((_, index) => (
                         <Cell
@@ -498,7 +503,9 @@ export function BusinessRevenuePage() {
                       fill="var(--color-info)"
                       radius={[0, 3, 3, 0]}
                       barSize={20}
-                    />
+                    >
+                      <LabelList dataKey="revenue" position="right" formatter={(val: number) => formatCompactCurrency(val, currency)} fill="var(--color-muted-foreground)" fontSize={10} />
+                    </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>

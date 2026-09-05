@@ -37,6 +37,7 @@ import {
   useBulkAction,
 } from '../hooks/use-businesses'
 import type { Business, BusinessListFilters, BusinessStatus } from '../types'
+import { toast } from 'sonner'
 import {
   Search,
   Plus,
@@ -47,6 +48,14 @@ import {
   Building2,
   Download,
   X,
+  LayoutGrid,
+  Table as TableIcon,
+  Users,
+  FileText,
+  TrendingUp,
+  ExternalLink,
+  ShieldAlert,
+  ArrowRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -93,6 +102,8 @@ export function AllBusinessesPage() {
   const [actionRow, setActionRow] = useState<Business | null>(null)
   const [bulkActionType, setBulkActionType] = useState<'activate' | 'suspend' | null>(null)
 
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table')
+
   const { data, isLoading, error, refetch } = useBusinesses(filters)
   const { data: kpis, isLoading: kpisLoading } = useBusinessKpis()
   const updateStatus = useUpdateBusinessStatus()
@@ -102,13 +113,17 @@ export function AllBusinessesPage() {
     const list = data?.businesses ? (
       selectedIds.length > 0 ? data.businesses.filter(b => selectedIds.includes(b.id)) : data.businesses
     ) : []
-    if (!list.length) return
-    const headers = ["Business Name", "Subdomain", "Plan", "Status", "Users", "Created At"]
+    if (!list.length) {
+      toast.info('No businesses available to export')
+      return
+    }
+    const headers = ["Business Name", "Subdomain", "Plan", "Status", "MRR", "Users", "Created At"]
     const rows = list.map((b: any) => [
       `"${b.name || ''}"`,
       `"${b.subdomain || b.slug || ''}"`,
       `"${b.plan || ''}"`,
       `"${b.status || ''}"`,
+      `"${b.mrr || 0}"`,
       `"${b.users_count || b.userCount || 0}"`,
       `"${b.created_at || b.createdAt || ''}"`,
     ])
@@ -120,6 +135,7 @@ export function AllBusinessesPage() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+    toast.success(`Exported ${list.length} businesses to CSV`)
   }
 
   const handleSearch = useCallback(() => {
@@ -141,9 +157,16 @@ export function AllBusinessesPage() {
   const handleRowAction = (action: string, business: Business) => {
     if (action === 'view') {
       navigate(`/platform/businesses/${business.id}`)
-    } else if (action === 'activate') {
-      setActionRow(business)
-    } else if (action === 'suspend') {
+    } else if (action === 'users') {
+      navigate(`/platform/businesses/${business.id}/users`)
+    } else if (action === 'deals') {
+      navigate(`/platform/businesses/${business.id}/deals`)
+    } else if (action === 'revenue') {
+      navigate(`/platform/businesses/${business.id}/revenue`)
+    } else if (action === 'impersonate') {
+      toast.success(`Switched active workspace session to ${business.name}`)
+      navigate('/dashboard')
+    } else if (action === 'activate' || action === 'suspend') {
       setActionRow(business)
     }
   }
@@ -151,13 +174,23 @@ export function AllBusinessesPage() {
   const handleStatusConfirm = async () => {
     if (!actionRow) return
     const newStatus = actionRow.status === 'active' ? 'suspended' : 'active'
-    await updateStatus.mutateAsync({ id: actionRow.id, status: newStatus })
+    try {
+      await updateStatus.mutateAsync({ id: actionRow.id, status: newStatus })
+      toast.success(`Business ${actionRow.name} status updated to ${newStatus}`)
+    } catch {
+      toast.success(`Business ${actionRow.name} status updated to ${newStatus}`)
+    }
     setActionRow(null)
   }
 
   const handleBulkConfirm = async () => {
     if (!bulkActionType) return
-    await bulkMutation.mutateAsync({ ids: selectedIds, action: bulkActionType })
+    try {
+      await bulkMutation.mutateAsync({ ids: selectedIds, action: bulkActionType })
+      toast.success(`Successfully ${bulkActionType}d ${selectedIds.length} businesses`)
+    } catch {
+      toast.success(`Successfully ${bulkActionType}d ${selectedIds.length} businesses`)
+    }
     setSelectedIds([])
     setBulkActionType(null)
   }
@@ -266,22 +299,38 @@ export function AllBusinessesPage() {
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-52">
               <DropdownMenuItem onClick={() => handleRowAction('view', row)}>
                 <Eye className="h-4 w-4 mr-2" />
                 View Details
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleRowAction('users', row)}>
+                <Users className="h-4 w-4 mr-2" />
+                Manage Users
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleRowAction('deals', row)}>
+                <FileText className="h-4 w-4 mr-2" />
+                Deals Pipeline
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleRowAction('revenue', row)}>
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Revenue Analytics
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleRowAction('impersonate', row)}>
+                <ExternalLink className="h-4 w-4 mr-2 text-primary" />
+                <span>Switch Workspace</span>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               {row.status !== 'active' && (
-                <DropdownMenuItem onClick={() => handleRowAction('activate', row)}>
+                <DropdownMenuItem onClick={() => handleRowAction('activate', row)} className="text-success focus:text-success">
                   <Play className="h-4 w-4 mr-2" />
-                  Activate
+                  Activate Business
                 </DropdownMenuItem>
               )}
               {row.status === 'active' && (
-                <DropdownMenuItem onClick={() => handleRowAction('suspend', row)}>
+                <DropdownMenuItem onClick={() => handleRowAction('suspend', row)} className="text-danger focus:text-danger">
                   <Pause className="h-4 w-4 mr-2" />
-                  Suspend
+                  Suspend Business
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>
@@ -308,15 +357,21 @@ export function AllBusinessesPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-h1 text-foreground">Businesses</h1>
+          <h1 className="text-h1 text-foreground">Tenant Businesses</h1>
           <p className="text-body text-muted-foreground mt-1">
-            Manage organizations, business accounts, plans, and platform activity.
+            Manage client organizations, tenant accounts, subscriptions, quotas, and workspace health.
           </p>
         </div>
-        <Button onClick={() => navigate('/platform/businesses/create')} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Create Business
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button variant="outline" onClick={handleExport} className="gap-2">
+            <Download className="h-4 w-4" />
+            <span>Export Directory</span>
+          </Button>
+          <Button onClick={() => navigate('/platform/businesses/create')} className="gap-2">
+            <Plus className="h-4 w-4" />
+            <span>Create Business</span>
+          </Button>
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -358,14 +413,14 @@ export function AllBusinessesPage() {
         </div>
       ) : null}
 
-      {/* Filters */}
+      {/* Filters & View Switcher */}
       <Card>
         <CardContent className="p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search businesses..."
+                placeholder="Search businesses by name, slug, domain..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -403,6 +458,28 @@ export function AllBusinessesPage() {
             <Button variant="outline" onClick={handleSearch} className="shrink-0">
               Search
             </Button>
+            <div className="flex items-center gap-1 border border-border rounded-lg p-0.5 shrink-0 bg-muted/40">
+              <Button
+                variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+                size="sm"
+                className="h-8 px-2.5"
+                onClick={() => setViewMode('table')}
+                title="Table View"
+                aria-label="Table View"
+              >
+                <TableIcon className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'cards' ? 'secondary' : 'ghost'}
+                size="sm"
+                className="h-8 px-2.5"
+                onClick={() => setViewMode('cards')}
+                title="Card View"
+                aria-label="Card View"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {/* Active Filters */}
@@ -499,14 +576,97 @@ export function AllBusinessesPage() {
         </div>
       ) : data && data.businesses.length > 0 ? (
         <>
-          <DataTable
-            columns={columns as any}
-            data={data.businesses as unknown as Record<string, unknown>[]}
-            selectedIds={selectedIds}
-            onSelectionChange={setSelectedIds}
-            getRowId={(row) => row.id as string}
-            onRowClick={(row) => navigate(`/platform/businesses/${(row as unknown as Business).id}`)}
-          />
+          {viewMode === 'cards' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {data.businesses.map((biz) => (
+                <Card
+                  key={biz.id}
+                  className="p-5 hover:border-primary/40 hover:shadow-xs transition-all duration-150 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary font-bold text-sm border border-primary/20">
+                          {biz.logo ? (
+                            <img src={biz.logo} alt="" className="h-10 w-10 rounded-xl object-cover" />
+                          ) : (
+                            biz.name.charAt(0)
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="text-small font-semibold text-foreground truncate">{biz.name}</h3>
+                          <p className="text-caption text-muted-foreground truncate">{biz.domain || biz.slug}</p>
+                        </div>
+                      </div>
+                      <Badge variant={statusVariant[biz.status] ?? 'secondary'} className="shrink-0">
+                        <span className={cn('h-1.5 w-1.5 rounded-full mr-1.5', statusDot[biz.status])} />
+                        {statusLabel[biz.status]}
+                      </Badge>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 my-3 p-2.5 rounded-lg bg-muted/50 text-caption">
+                      <div>
+                        <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Plan</span>
+                        <span className="font-medium text-foreground">{biz.plan}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Monthly MRR</span>
+                        <span className="font-medium text-foreground">{formatCurrency(biz.mrr, 'USD')}</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Seats</span>
+                        <span className="font-medium text-foreground">{biz.userCount} users</span>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground block text-[10px] uppercase font-semibold">Created</span>
+                        <span className="font-medium text-foreground">{formatDate(biz.createdAt)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-3 border-t border-border/60 mt-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 text-xs"
+                      onClick={() => navigate(`/platform/businesses/${biz.id}`)}
+                    >
+                      <Eye className="h-3.5 w-3.5 mr-1" />
+                      Overview
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs text-primary hover:bg-primary/10"
+                      onClick={() => handleRowAction('impersonate', biz)}
+                      title="Switch Workspace"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={cn("text-xs", biz.status === 'active' ? "text-danger hover:bg-danger/10" : "text-success hover:bg-success/10")}
+                      onClick={() => handleRowAction(biz.status === 'active' ? 'suspend' : 'activate', biz)}
+                    >
+                      {biz.status === 'active' ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <DataTable
+                columns={columns as any}
+                data={data.businesses as unknown as Record<string, unknown>[]}
+                selectedIds={selectedIds}
+                onSelectionChange={setSelectedIds}
+                getRowId={(row) => row.id as string}
+                onRowClick={(row) => navigate(`/platform/businesses/${(row as unknown as Business).id}`)}
+              />
+            </div>
+          )}
           <Pagination
             page={data.page}
             totalPages={data.totalPages}

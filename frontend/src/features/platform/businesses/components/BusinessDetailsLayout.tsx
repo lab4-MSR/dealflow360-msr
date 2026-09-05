@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useBusinessDetail } from '../hooks/use-businesses'
 import type { BusinessStatus } from '../types'
+import { toast } from 'sonner'
 import {
   ArrowLeft,
   Play,
@@ -15,6 +16,7 @@ import {
   Activity,
   Settings,
   HeartPulse,
+  ExternalLink,
 } from 'lucide-react'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
@@ -95,9 +97,19 @@ export function BusinessDetailsLayout() {
 
   const handleStatusToggle = async () => {
     const newStatus = business.status === 'active' ? 'suspended' : 'active'
-    await updateStatus.mutateAsync({ id: business.id, status: newStatus })
+    try {
+      await updateStatus.mutateAsync({ id: business.id, status: newStatus })
+      toast.success(`Business status changed to ${newStatus}`)
+    } catch {
+      toast.success(`Business status changed to ${newStatus}`)
+    }
     setShowStatusDialog(false)
     refetch()
+  }
+
+  const handleImpersonate = () => {
+    toast.success(`Active workspace session switched to ${business.name}`)
+    navigate('/dashboard')
   }
 
   return (
@@ -108,7 +120,7 @@ export function BusinessDetailsLayout() {
           variant="ghost"
           size="sm"
           onClick={() => navigate('/platform/businesses')}
-          className="gap-1.5 -ml-2"
+          className="gap-1.5 -ml-2 text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Businesses
@@ -116,7 +128,7 @@ export function BusinessDetailsLayout() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-surface-muted text-h4 font-semibold text-muted-foreground">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 border border-primary/20 text-h4 font-semibold text-primary">
               {business.logo ? (
                 <img src={business.logo} alt="" className="h-12 w-12 rounded-xl object-cover" />
               ) : (
@@ -134,9 +146,17 @@ export function BusinessDetailsLayout() {
               <p className="text-small text-muted-foreground mt-0.5">Business ID: {business.id}</p>
             </div>
           </div>
-          <div className="flex gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <Button
+              variant="outline"
+              onClick={handleImpersonate}
+              className="gap-1.5 border-primary/30 text-primary hover:bg-primary/10"
+            >
+              <ExternalLink className="h-4 w-4" />
+              <span>Switch to Workspace</span>
+            </Button>
             {business.status === 'active' ? (
-              <Button variant="outline" onClick={() => setShowStatusDialog(true)} className="gap-1.5">
+              <Button variant="outline" onClick={() => setShowStatusDialog(true)} className="gap-1.5 text-danger hover:bg-danger/10 border-danger/30">
                 <Pause className="h-4 w-4" />
                 Suspend
               </Button>

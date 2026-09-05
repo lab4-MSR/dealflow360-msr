@@ -174,13 +174,17 @@ export function BrandingPage() {
             </div>
             <div className="flex gap-2">
               <button
-                className="px-4 py-2 rounded-lg text-[13px] font-semibold text-white transition-colors"
+                type="button"
+                onClick={() => toast.success(`Preview: ${form.brandName || 'Brand'} primary action triggered`)}
+                className="px-4 py-2 rounded-lg text-[13px] font-semibold text-white transition-colors cursor-pointer"
                 style={{ backgroundColor: form.primaryColor || '#4F46E5' }}
               >
                 Primary Button
               </button>
               <button
-                className="px-4 py-2 rounded-lg text-[13px] font-semibold border border-border text-foreground transition-colors hover:bg-accent"
+                type="button"
+                onClick={() => toast.info(`Preview: ${form.brandName || 'Brand'} secondary action triggered`)}
+                className="px-4 py-2 rounded-lg text-[13px] font-semibold border border-border text-foreground transition-colors hover:bg-accent cursor-pointer"
               >
                 Secondary Button
               </button>

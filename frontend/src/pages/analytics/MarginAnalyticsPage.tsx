@@ -29,6 +29,7 @@ import {
   Tooltip,
   Legend,
   Cell,
+  LabelList,
 } from 'recharts'
 import { getMarginAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent } from '@/lib/analytics-format'
@@ -210,7 +211,9 @@ export function MarginAnalyticsPage() {
                   fontSize: '12px',
                 }}
               />
-              <Line type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2.5} name="Revenue" dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2.5} name="Revenue" dot={{ r: 3 }}>
+                <LabelList dataKey="revenue" position="top" formatter={(val: number) => `₹${(val / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={10} />
+              </Line>
               <Line type="monotone" dataKey="cost" stroke="#ef4444" strokeWidth={2} name="COGS" dot={{ r: 3 }} />
               <Line type="monotone" dataKey="grossProfit" stroke="#10b981" strokeWidth={2.5} name="Gross Profit" dot={{ r: 3 }} />
             </LineChart>
