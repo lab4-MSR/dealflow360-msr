@@ -1,48 +1,64 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { useTheme } from '@/providers/ThemeProvider'
+import { Sparkles, Sun, Moon } from 'lucide-react'
 
 interface AuthLayoutProps {
   children: ReactNode
 }
 
 export function AuthLayout({ children }: AuthLayoutProps) {
-  return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-x-hidden">
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-[400px]">
-          {/* Brand */}
-          <div className="flex flex-col items-center mb-8">
-            <Link to="/" className="flex items-center gap-2.5 mb-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                <span className="text-body font-bold text-primary-foreground">DF</span>
-              </div>
-              <span className="text-h3 font-semibold text-foreground">DealFlow360</span>
-            </Link>
-          </div>
+  const { resolvedTheme, setTheme } = useTheme()
 
-          {/* Content */}
+  return (
+    <div className="min-h-screen bg-background flex flex-col relative overflow-x-hidden selection:bg-primary/20 selection:text-primary">
+      {/* Top Bar with Brand & Theme Toggle */}
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2.5 group">
+          <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-slate-950 font-bold shadow-sm group-hover:scale-105 transition-transform">
+            <Sparkles className="h-4 w-4 fill-slate-950" />
+          </div>
+          <span className="text-h4 font-bold tracking-tight text-foreground">
+            DealFlow<span className="text-primary">360</span>
+          </span>
+        </Link>
+
+        <button
+          type="button"
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+          className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors cursor-pointer"
+          aria-label="Toggle theme"
+          title="Toggle theme"
+        >
+          {resolvedTheme === 'dark' ? (
+            <Sun className="h-4 w-4" />
+          ) : (
+            <Moon className="h-4 w-4" />
+          )}
+        </button>
+      </div>
+
+      {/* Main Form Center Box */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+        <div className="w-full max-w-[440px]">
           {children}
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-border py-6">
-        <div className="mx-auto max-w-[400px] px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-            <span className="text-caption text-muted-foreground">
-              © 2026 DealFlow360
-            </span>
-            <div className="flex items-center gap-4 sm:gap-6">
-              <Link to="/help" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
-                Privacy
-              </Link>
-              <Link to="/help" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
-                Terms
-              </Link>
-              <Link to="/help" className="text-caption text-muted-foreground hover:text-foreground transition-colors">
-                Support
-              </Link>
-            </div>
+      <footer className="border-t border-border/60 py-6 bg-card/40">
+        <div className="mx-auto max-w-[440px] px-4 text-center">
+          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+            <span>© 2026 DealFlow360</span>
+            <Link to="/help" className="hover:text-foreground transition-colors">
+              Privacy
+            </Link>
+            <Link to="/help" className="hover:text-foreground transition-colors">
+              Terms
+            </Link>
+            <Link to="/help" className="hover:text-foreground transition-colors">
+              Support
+            </Link>
           </div>
         </div>
       </footer>

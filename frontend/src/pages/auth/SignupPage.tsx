@@ -195,7 +195,7 @@ export default function SignupPage() {
             {/* Submit CTA */}
             <Button
               type="submit"
-              className="w-full mt-2"
+              className="w-full mt-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-md shadow-sky-500/20"
               size="lg"
               disabled={isSubmitting}
             >

@@ -18,6 +18,7 @@ import {
   Sun,
   Moon,
   Package,
+  Sparkles,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -56,11 +57,13 @@ export function CustomerPortalLayout() {
           <div className="flex h-16 items-center justify-between gap-4">
             {/* Logo */}
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-                DF
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-sky-500 to-cyan-400 text-slate-950 font-bold text-sm shadow-sm">
+                <Sparkles className="h-4.5 w-4.5 fill-slate-950" />
               </div>
               <div>
-                <span className="font-bold text-base text-foreground block leading-tight">DealFlow360</span>
+                <span className="font-bold text-base text-foreground block leading-tight">
+                  DealFlow<span className="text-primary">360</span>
+                </span>
                 <span className="text-[11px] text-muted-foreground uppercase tracking-wider font-medium">
                   Customer Portal
                 </span>

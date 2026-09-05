@@ -28,3 +28,8 @@ export function downloadCsv(filename: string, data: Record<string, any>[]) {
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
+
+export function exportToCsv(data: Record<string, any>[], filename: string) {
+  downloadCsv(filename, data)
+}
+

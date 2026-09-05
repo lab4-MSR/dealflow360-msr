@@ -295,7 +295,7 @@ export default function CompanyRegistrationPage() {
             <Button
               type="submit"
               size="lg"
-              className="w-full font-semibold"
+              className="w-full font-semibold bg-sky-500 hover:bg-sky-400 text-slate-950 shadow-md shadow-sky-500/20"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
