@@ -53,6 +53,21 @@ export interface NavSection {
 
 export const SIDEBAR_NAV: NavSection[] = [
   {
+    section: 'CUSTOMER PORTAL',
+    roles: ['customer'],
+    items: [
+      { label: 'Overview', path: '/customer-portal/dashboard', icon: 'LayoutDashboard' },
+      { label: 'Quotations', path: '/customer-portal/quotations', icon: 'FileText' },
+      { label: 'Orders', path: '/customer-portal/orders', icon: 'Package' },
+      { label: 'Shipments', path: '/customer-portal/shipments', icon: 'Truck' },
+      { label: 'Invoices', path: '/customer-portal/invoices', icon: 'CreditCard' },
+      { label: 'Subscriptions', path: '/customer-portal/subscriptions', icon: 'RefreshCw' },
+      { label: 'Profile', path: '/customer-portal/account/profile', icon: 'User' },
+      { label: 'Company', path: '/customer-portal/account/company', icon: 'Building2' },
+      { label: 'Preferences', path: '/customer-portal/account/preferences', icon: 'SlidersHorizontal' },
+    ],
+  },
+  {
     section: 'PLATFORM (SUPER ADMIN)',
     roles: ['super_admin'],
     items: [
