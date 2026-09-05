@@ -33,3 +33,5 @@ export const listFailedPayments = async (req: Request, res: Response) => res.jso
 export const recordPayment = async (req: Request, res: Response) => { const body = paymentSchema.parse(req.body ?? {}); res.status(201).json(envelope.ok(await service.recordPayment(businessId(req), body))); };
 export const retryPayment = async (req: Request, res: Response) => res.json(envelope.ok(await service.retryPayment(businessId(req), String(req.params.id))));
 export const issueCreditNote = async (req: Request, res: Response) => { const body = creditNoteSchema.parse(req.body ?? {}); res.status(201).json(envelope.ok(await service.issueCreditNote(businessId(req), String(req.params.id), body, getAuth(req).userId))); };
+export const getQuotationBilling = async (req: Request, res: Response) => res.json(envelope.ok(await service.getQuotationBilling(businessId(req), String(req.params.id))));
+export const generateQuotationInvoice = async (req: Request, res: Response) => res.status(201).json(envelope.ok(await service.generateQuotationInvoice(businessId(req), String(req.params.id))));

@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { serviceClient } from '../lib/supabase';
 import { ApiError, ErrorCode } from '../lib/apiErrors';
 
@@ -200,4 +201,75 @@ export async function issueCreditNote(businessId: string, invoiceId: string, inp
   const { data, error } = await serviceClient.from('credit_notes').insert({ business_id: businessId, invoice_id: invoiceId, amount: input.amount, currency: invoice.currency, reason: input.reason, issued_by: actor }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   return data;
+}
+
+export async function getQuotationBilling(businessId: string, quotationId: string) {
+  const id = tenant(businessId);
+  const { data: quotation, error: quotationError } = await serviceClient
+    .from('quotations')
+    .select('id, customer_id, currency, quotation_lines(*), subscriptions(*, subscription_plans(name,billing_cycle,price,currency))')
+    .eq('business_id', id)
+    .eq('id', quotationId)
+    .maybeSingle();
+  if (quotationError || !quotation) throw ApiError.notFound('Quotation not found.');
+  const oneTimeLines = ((quotation.quotation_lines ?? []) as Array<Record<string, unknown>>).map((line) => ({
+    product_id: line.product_id,
+    description: line.product_name ?? null,
+    quantity: Number(line.quantity),
+    amount: Number(line.line_total ?? 0),
+    currency: line.currency ?? quotation.currency,
+  }));
+  const recurringLines = ((quotation.subscriptions ?? []) as Array<Record<string, unknown>>).map((subscription) => ({
+    plan_id: subscription.plan_id,
+    billing_cycle: (subscription.subscription_plans as Record<string, unknown> | null)?.billing_cycle ?? null,
+    amount: Number(subscription.quantity ?? 1) * Number((subscription.subscription_plans as Record<string, unknown> | null)?.price ?? 0),
+    next_billing_date: subscription.next_billing_date ?? null,
+  }));
+  return {
+    one_time_lines: oneTimeLines,
+    recurring_lines: recurringLines,
+    upcoming_schedule: recurringLines.filter((line) => line.next_billing_date).map((line) => ({ date: line.next_billing_date, amount: line.amount, type: 'recurring' })),
+    pending_proration: null,
+  };
+}
+
+export async function generateQuotationInvoice(businessId: string, quotationId: string) {
+  const id = tenant(businessId);
+  const { data: quotation, error: quotationError } = await serviceClient
+    .from('quotations')
+    .select('id, customer_id, status, currency, quotation_lines(*)')
+    .eq('business_id', id)
+    .eq('id', quotationId)
+    .maybeSingle();
+  if (quotationError || !quotation) throw ApiError.notFound('Quotation not found.');
+  if (!['approved', 'confirmed', 'sent'].includes(quotation.status)) throw new ApiError({ code: ErrorCode.QUOTATION_LOCKED, message: 'Only approved quotations can generate an invoice.' });
+  const lines = (quotation.quotation_lines ?? []) as Array<Record<string, unknown>>;
+  const subtotal = lines.reduce((sum, line) => sum + Number(line.line_total ?? 0), 0);
+  const tax = lines.reduce((sum, line) => sum + Number(line.tax_amount ?? 0), 0);
+  const { data: invoice, error: invoiceError } = await serviceClient.from('invoices').insert({
+    business_id: id,
+    customer_id: quotation.customer_id,
+    invoice_number: `INV-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`,
+    status: 'draft',
+    currency: quotation.currency ?? 'USD',
+    subtotal,
+    tax,
+    total: subtotal + tax,
+  }).select().single();
+  if (invoiceError) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: invoiceError.message });
+  if (lines.length) {
+    const { error: lineError } = await serviceClient.from('invoice_line_items').insert(lines.map((line) => ({
+      business_id: id,
+      invoice_id: invoice.id,
+      kind: 'one_time',
+      description: line.product_name ?? null,
+      product_id: line.product_id ?? null,
+      quantity: line.quantity,
+      unit_price: line.net_price ?? line.unit_price ?? 0,
+      amount: line.line_total ?? 0,
+      currency: line.currency ?? quotation.currency ?? 'USD',
+    })));
+    if (lineError) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: lineError.message });
+  }
+  return getInvoice(id, invoice.id);
 }

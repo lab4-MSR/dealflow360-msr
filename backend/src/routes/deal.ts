@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authenticate, requireBusiness, requireRole } from '../middleware/auth';
 import * as dc from '../controllers/deal.controller';
 import * as fc from '../controllers/fulfillment.controller';
+import * as bc from '../controllers/billing.controller';
 
 const scoped = [authenticate, requireBusiness()] as const;
 const write = [...scoped, requireRole('business_admin', 'sales_rep', 'sales_manager')] as const;
@@ -33,6 +34,8 @@ quotationsRouter.post('/:id/submit-for-approval', ...write, dc.submitForApproval
 quotationsRouter.get('/:id/fulfillment/suggested-split', ...scoped, fc.suggestQuotationSplit);
 quotationsRouter.post('/:id/fulfillment/accept-split', ...fulfillmentWrite, fc.acceptQuotationSplit);
 quotationsRouter.post('/:id/fulfillment/override-split', ...fulfillmentOverride, fc.overrideQuotationSplit);
+quotationsRouter.get('/:id/billing', ...scoped, bc.getQuotationBilling);
+quotationsRouter.post('/:id/billing/generate-invoice', ...write, bc.generateQuotationInvoice);
 quotationsRouter.get('/:id/approval', ...scoped, dc.getQuotationApproval);
 quotationsRouter.get('/:id/recommendations', ...scoped, dc.getRecommendations);
 quotationsRouter.post('/:id/recommendations/:rec_id/add', ...write, dc.addRecommendation);
