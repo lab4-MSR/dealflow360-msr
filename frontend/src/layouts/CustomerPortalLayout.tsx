@@ -17,13 +17,13 @@ import {
   Sun,
   Moon,
   Package,
-  Sparkles,
   ChevronLeft,
   ChevronRight,
   Menu,
   X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { BrandMark } from '@/components/common/BrandMark'
 import { cn } from '@/lib/utils'
 
 export function CustomerPortalLayout() {
@@ -119,9 +119,7 @@ export function CustomerPortalLayout() {
         {/* Brand Header */}
         <div className="flex h-16 items-center justify-between px-4 border-b border-border/70">
           <Link to="/customer-portal/dashboard" className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-sky-500 to-cyan-400 text-slate-950 font-bold text-sm shadow-sm">
-              <Sparkles className="h-4.5 w-4.5 fill-slate-950" />
-            </div>
+            <BrandMark />
             {!sidebarCollapsed && (
               <div className="min-w-0 truncate">
                 <span className="font-bold text-base text-foreground block leading-tight truncate">

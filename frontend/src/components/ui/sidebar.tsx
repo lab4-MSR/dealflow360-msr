@@ -3,6 +3,7 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { SIDEBAR_NAV } from '@/constants'
 import { useAuth } from '@/providers/AuthProvider'
+import { BrandMark } from '@/components/common/BrandMark'
 import {
   LayoutDashboard,
   FileText,
@@ -163,9 +164,7 @@ export function Sidebar({
           )}
         >
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-sky-500 to-cyan-400 text-slate-950 font-bold shadow-sm">
-              <Sparkles className="h-4 w-4 fill-slate-950" />
-            </div>
+            <BrandMark />
             {(!collapsed || isMobileOpen) && (
               <span className={cn('text-body font-bold tracking-tight text-sidebar-foreground', collapsed && 'lg:hidden')}>
                 DealFlow<span className="text-primary">360</span>

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '@/providers/ThemeProvider'
-import { Sparkles, Sun, Moon } from 'lucide-react'
+import { Sun, Moon } from 'lucide-react'
+import { BrandMark } from '@/components/common/BrandMark'
 
 interface AuthLayoutProps {
   children: ReactNode
@@ -15,9 +16,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
       {/* Top Bar with Brand & Theme Toggle */}
       <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2.5 group">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-sky-500 to-cyan-400 flex items-center justify-center text-slate-950 font-bold shadow-sm group-hover:scale-105 transition-transform">
-            <Sparkles className="h-4 w-4 fill-slate-950" />
-          </div>
+          <BrandMark />
           <span className="text-h4 font-bold tracking-tight text-foreground">
             DealFlow<span className="text-primary">360</span>
           </span>
