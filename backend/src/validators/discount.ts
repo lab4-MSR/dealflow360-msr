@@ -21,9 +21,32 @@ export const customerTiersSchema = z.object({
 }).strict();
 
 export const discountSimulatorSchema = z.object({
-  customer_id: z.string().uuid().optional(),
-  lines: z.array(z.object({ product_id: z.string().uuid(), quantity: z.number().min(1), unit_price: z.number().min(0), discount_percent: z.number().min(0).max(100).optional() })),
-}).strict();
+  customer_id: z.string().optional(),
+  customerId: z.string().optional(),
+  customer_tier: z.string().optional(),
+  customerTier: z.string().optional(),
+  order_discount_percent: z.number().optional(),
+  orderDiscountPercent: z.number().optional(),
+  lines: z.array(z.object({
+    product_id: z.string().optional(),
+    productId: z.string().optional(),
+    quantity: z.number().min(1),
+    unit_price: z.number().min(0).optional(),
+    unitPrice: z.number().min(0).optional(),
+    discount_percent: z.number().min(0).max(100).optional(),
+    proposedDiscountPercent: z.number().min(0).max(100).optional(),
+  })).optional(),
+  products: z.array(z.object({
+    product_id: z.string().optional(),
+    productId: z.string().optional(),
+    quantity: z.number().min(1),
+    unit_price: z.number().min(0).optional(),
+    unitPrice: z.number().min(0).optional(),
+    discount_percent: z.number().min(0).max(100).optional(),
+    proposedDiscountPercent: z.number().min(0).max(100).optional(),
+    categoryId: z.string().optional(),
+  })).optional(),
+});
 
 export const createApprovalRuleSchema = z.object({ name: z.string().min(1), trigger_type: z.string().min(1), trigger_config: z.record(z.string(), z.unknown()).optional(), chain_id: z.string().uuid().optional().nullable() }).strict();
 export const updateApprovalRuleSchema = createApprovalRuleSchema.partial().strict();
@@ -34,4 +57,24 @@ export const updateApprovalChainSchema = z.object({ name: z.string().min(1).opti
 
 export const approvalThresholdsSchema = z.object({ metric: z.string().min(1), bands: z.array(z.object({ band_min: z.number().optional().nullable(), band_max: z.number().optional().nullable(), approver_role: z.string().optional(), chain_id: z.string().uuid().optional().nullable() })) }).strict();
 
-export const approvalSimulatorSchema = z.object({ customer_id: z.string().uuid().optional(), deal_value: z.number().min(0), products: z.array(z.object({ product_id: z.string().uuid(), quantity: z.number().min(1) })), discount_percent: z.number().min(0).max(100).optional(), margin_percent: z.number().optional(), risk_score: z.number().int().optional() }).strict();
+export const approvalSimulatorSchema = z.object({
+  customer_id: z.string().optional(),
+  customerId: z.string().optional(),
+  deal_value: z.number().min(0).optional(),
+  dealValue: z.number().min(0).optional(),
+  products: z.array(z.object({
+    product_id: z.string().optional(),
+    productId: z.string().optional(),
+    quantity: z.number().min(1),
+    unit_price: z.number().optional(),
+    unitPrice: z.number().optional(),
+    category_id: z.string().optional(),
+    categoryId: z.string().optional(),
+  })).optional(),
+  discount_percent: z.number().min(0).max(100).optional(),
+  discountPercent: z.number().min(0).max(100).optional(),
+  margin_percent: z.number().optional(),
+  marginPercent: z.number().optional(),
+  risk_score: z.number().optional(),
+  riskScore: z.number().optional(),
+});

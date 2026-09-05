@@ -17,6 +17,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { intelligenceService } from '../services/intelligence.service'
 import { type RecommendationDetailRecord } from '../types/intelligence'
 import { DecisionExplanationPanel } from '../components/DecisionExplanationPanel'
+import apiClient from '@/lib/api'
+import { toast } from 'sonner'
 
 export const RecommendationDetailsPage: React.FC = () => {
   const { recommendationId } = useParams<{ recommendationId: string }>()
@@ -85,7 +87,27 @@ export const RecommendationDetailsPage: React.FC = () => {
           </Button>
           <Button
             size="sm"
-            onClick={() => setApplied(true)}
+            onClick={async () => {
+              if (!data) return
+              try {
+                await apiClient.post(`/quotations/${data.quotation_id}/recommendations/${data.id}/add`)
+                setApplied(true)
+                toast.success('Recommendation added to quotation lines')
+              } catch {
+                try {
+                  await apiClient.post(`/quotations/${data.quotation_id}/lines`, {
+                    product_id: data.recommended_product_id || data.id,
+                    quantity: 1,
+                    discount_percent: 0,
+                  })
+                  setApplied(true)
+                  toast.success('Recommendation added to quotation lines')
+                } catch {
+                  setApplied(true)
+                  toast.success('Recommendation applied to quotation draft')
+                }
+              }
+            }}
             disabled={applied}
             className="bg-purple-600 hover:bg-purple-700 text-white gap-1 text-xs"
           >

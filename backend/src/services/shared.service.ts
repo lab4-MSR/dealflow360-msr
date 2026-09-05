@@ -85,9 +85,9 @@ export async function search(businessId: string, query: string) {
     serviceClient.from('quotations').select('id,quote_number,status').eq('business_id', id).ilike('quote_number', term).limit(20),
   ]);
   return [
-    ...(customers.data ?? []).map((row) => ({ type: 'customer', id: row.id, title: row.name, subtitle: 'Customer', status: row.status, url: `/customers/${row.id}` })),
-    ...(products.data ?? []).map((row) => ({ type: 'product', id: row.id, title: row.name, subtitle: 'Product', status: row.status, url: `/products/${row.id}` })),
-    ...(deals.data ?? []).map((row) => ({ type: 'deal', id: row.id, title: row.name, subtitle: 'Deal', status: row.stage, url: `/deals/${row.id}` })),
-    ...(quotations.data ?? []).map((row) => ({ type: 'quotation', id: row.id, title: row.quote_number, subtitle: 'Quotation', status: row.status, url: `/quotations/${row.id}` })),
+    ...(customers.data ?? []).map((row) => ({ type: 'customer', id: row.id, title: row.name, subtitle: 'Customer', status: row.status, url: `/sales/customers/${row.id}` })),
+    ...(products.data ?? []).map((row) => ({ type: 'product', id: row.id, title: row.name, subtitle: 'Product', status: row.status, url: `/business-admin/products/${row.id}` })),
+    ...(deals.data ?? []).map((row) => ({ type: 'deal', id: row.id, title: row.name, subtitle: 'Deal', status: row.stage, url: `/sales/deals/${row.id}` })),
+    ...(quotations.data ?? []).map((row) => ({ type: 'quotation', id: row.id, title: row.quote_number, subtitle: 'Quotation', status: row.status, url: `/sales/quotations/${row.id}` })),
   ];
 }

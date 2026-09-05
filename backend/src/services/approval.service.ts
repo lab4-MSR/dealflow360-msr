@@ -79,25 +79,41 @@ export async function updateApprovalThresholds(b: string, metric: string, bands:
   return getApprovalThresholds(b);
 }
 
-export async function runApprovalSimulator(b: string, input: { customer_id?: string; deal_value: number; products: Array<{ product_id: string; quantity: number }>; discount_percent?: number; margin_percent?: number; risk_score?: number }) {
-  const discount = Number(input.discount_percent ?? 0);
+export async function runApprovalSimulator(b: string, input: Record<string, any>) {
+  const discount = Number(input.discount_percent ?? input.discountPercent ?? 0);
+  const dealVal = Number(input.deal_value ?? input.dealValue ?? 0);
+  const margin = Number(input.margin_percent ?? input.marginPercent ?? 25);
+  const risk = Number(input.risk_score ?? input.riskScore ?? 20);
+
   const { data: rules } = await serviceClient.from('approval_rules').select('*').eq('business_id', b).eq('status', 'active');
   const triggered = (rules ?? []).filter((r) => {
     const cfg = (r.trigger_config ?? {}) as Record<string, unknown>;
     const threshold = Number(cfg.discount_threshold ?? cfg.deal_value_threshold ?? cfg.risk_threshold ?? cfg.margin_threshold ?? 0);
     if (cfg.discount_threshold !== undefined && discount >= threshold) return true;
-    if (cfg.deal_value_threshold !== undefined && input.deal_value >= threshold) return true;
+    if (cfg.deal_value_threshold !== undefined && dealVal >= threshold) return true;
     return false;
   });
-  const approval_required = discount > 10 || input.deal_value > 10000 || triggered.length > 0;
-  const approval_level = discount > 25 ? 'finance' : discount > 10 ? 'sales_manager' : 'none';
+  const approval_required = discount > 10 || dealVal > 10000 || margin < 15 || risk > 50 || triggered.length > 0;
+  const approval_level = (discount > 25 || margin < 15) ? 'finance' : (discount > 10 || dealVal > 50000) ? 'sales_manager' : 'none';
+  const role = approval_level === 'finance' ? 'Finance' : 'Sales Manager';
+
   return {
     approval_required,
+    approvalRequired: approval_required,
     approval_level,
+    approvalLevel: approval_level,
     next_approver_role: approval_level === 'finance' ? 'finance' : 'sales_manager',
+    nextApproverRole: approval_level === 'finance' ? 'finance' : 'sales_manager',
+    approvalChain: approval_required ? [
+      { step: 1, approverName: role, role, slaMinutes: approval_level === 'finance' ? 2880 : 1440 },
+    ] : [],
     triggered_rules: (rules ?? []).map((r) => ({ id: r.id, name: r.name, trigger_type: r.trigger_type })),
-    decision_reason: approval_required ? `Discount ${discount}% exceeded threshold or deal value triggers approval.` : 'Within allowed limits.',
+    triggeredRules: (rules ?? []).map((r) => ({ id: r.id, name: r.name, triggerType: r.trigger_type })),
+    decision_reason: approval_required ? `Discount ${discount}% or deal value $${dealVal.toLocaleString()} triggers approval.` : 'Within allowed limits.',
+    decisionReason: approval_required ? `Discount ${discount}% or deal value $${dealVal.toLocaleString()} triggers approval.` : 'Within allowed limits.',
     recommended_action: approval_required ? 'Submit for approval.' : 'Auto-approve.',
+    recommendedAction: approval_required ? 'Submit for approval.' : 'Auto-approve.',
     sla_hours: approval_level === 'finance' ? 48 : 24,
+    slaHours: approval_level === 'finance' ? 48 : 24,
   };
 }

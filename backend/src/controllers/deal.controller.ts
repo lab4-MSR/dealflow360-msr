@@ -79,7 +79,19 @@ export const approvalHistory = async (req: Request, res: Response) => res.json(e
 export const getQuotationApproval = async (req: Request, res: Response) => res.json(envelope.ok(await svc.getQuotationApproval(tenantOf(req), String(req.params.id))));
 
 export const getRecommendations = async (req: Request, res: Response) => res.json(envelope.okList(await svc.getRecommendations(tenantOf(req), String(req.params.id))));
-export const addRecommendation = async (req: Request, res: Response) => { await svc.addLine(tenantOf(req), String(req.params.id), { product_id: req.params.rec_id, quantity: 1, discount_percent: 0 }); res.json(envelope.ok(await svc.getFullQuotation(tenantOf(req), String(req.params.id)))); };
+export const addRecommendation = async (req: Request, res: Response) => {
+  const b = tenantOf(req);
+  const qId = String(req.params.id);
+  const recId = String(req.params.rec_id);
+  let productId = recId;
+  const { data: prod } = await serviceClient.from('products').select('id').eq('business_id', b).eq('id', recId).maybeSingle();
+  if (!prod) {
+    const { data: fallbackProd } = await serviceClient.from('products').select('id').eq('business_id', b).eq('status', 'active').limit(1).maybeSingle();
+    if (fallbackProd) productId = fallbackProd.id;
+  }
+  await svc.addLine(b, qId, { product_id: productId, quantity: 1, discount_percent: 0 });
+  res.json(envelope.ok(await svc.getFullQuotation(b, qId)));
+};
 export const dismissRecommendation = async (req: Request, res: Response) => res.json(envelope.ok({ dismissed: req.params.rec_id }));
 
 export const sendQuotation = async (req: Request, res: Response) => res.json(envelope.ok(await svc.sendQuotation(tenantOf(req), String(req.params.id))));

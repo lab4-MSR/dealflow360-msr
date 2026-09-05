@@ -507,6 +507,12 @@ export function App() {
           <Route path="/preferences" element={<PreferencesPage />} />
           <Route path="/help" element={<HelpCenterPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+
+          {/* Alias / compatibility routes for direct entity links */}
+          <Route path="/deals/:id" element={<DealDetailsPage />} />
+          <Route path="/quotations/:id" element={<QuotationDetailsPage />} />
+          <Route path="/customers/:id" element={<CustomerDetailsPage />} />
+          <Route path="/products/:id" element={<ProductDetailsPage />} />
         </Route>
       </Route>
     </Route>

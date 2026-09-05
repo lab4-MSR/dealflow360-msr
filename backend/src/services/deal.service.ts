@@ -412,8 +412,17 @@ export async function getApproval(b: string, id: string) {
   if (error || !data) throw ApiError.notFound('Approval not found.');
   return data;
 }
+async function findApprovalInstance(b: string, id: string) {
+  let { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  if (!inst) {
+    const { data: byQuote } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('quotation_id', id).eq('status', 'pending').order('created_at', { ascending: false }).limit(1).maybeSingle();
+    inst = byQuote;
+  }
+  return inst;
+}
+
 export async function approveApproval(b: string, id: string, userId: string, comment?: string | null) {
-  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  const inst = await findApprovalInstance(b, id);
   if (!inst) throw ApiError.notFound('Approval instance not found.');
   if (inst.status !== 'pending') throw new ApiError({ code: ErrorCode.APPROVAL_ALREADY_DECIDED, message: 'This approval has already been decided.' });
 
@@ -423,8 +432,24 @@ export async function approveApproval(b: string, id: string, userId: string, com
     throw ApiError.roleNotAllowed('Self-approval is strictly prohibited.');
   }
 
-  await serviceClient.from('approval_instances').update({ status: 'approved', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', id);
-  await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: id, actor: userId, action: 'approve', comment: comment ?? null });
+  // Multi-tier approval check: advance from Sales Manager to Finance if required
+  if (inst.current_level === 'sales_manager_then_finance' && inst.next_approver_role === 'sales_manager') {
+    await serviceClient.from('approval_instances').update({
+      next_approver_role: 'finance',
+      current_level: 'finance'
+    }).eq('business_id', b).eq('id', inst.id);
+    await serviceClient.from('approval_instance_actions').insert({
+      business_id: b,
+      instance_id: inst.id,
+      actor: userId,
+      action: 'approve_tier_1',
+      comment: comment ?? 'Approved by Sales Manager; escalated to Finance for tier-2 review'
+    });
+    return { id: inst.id, status: 'pending_finance', current_level: 'finance' };
+  }
+
+  await serviceClient.from('approval_instances').update({ status: 'approved', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', inst.id);
+  await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: inst.id, actor: userId, action: 'approve', comment: comment ?? null });
 
   // Multi-tier approval check: only mark quotation as approved when all pending instances are resolved
   const { data: remainingPending } = await serviceClient
@@ -432,34 +457,34 @@ export async function approveApproval(b: string, id: string, userId: string, com
     .select('id')
     .eq('business_id', b)
     .eq('quotation_id', inst.quotation_id)
-    .neq('id', id)
+    .neq('id', inst.id)
     .eq('status', 'pending');
 
   if (!remainingPending || remainingPending.length === 0) {
     await serviceClient.from('quotations').update({ status: 'approved', approval_status: 'approved' }).eq('business_id', b).eq('id', inst.quotation_id);
   }
 
-  return { id, status: 'approved' };
+  return { id: inst.id, status: 'approved' };
 }
 
 export async function rejectApproval(b: string, id: string, userId: string, reason: string) {
-  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  const inst = await findApprovalInstance(b, id);
   if (!inst) throw ApiError.notFound('Approval instance not found.');
   if (inst.status !== 'pending') throw new ApiError({ code: ErrorCode.APPROVAL_ALREADY_DECIDED, message: 'Already decided.' });
-  await serviceClient.from('approval_instances').update({ status: 'rejected', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', id);
-  await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: id, actor: userId, action: 'reject', comment: reason });
+  await serviceClient.from('approval_instances').update({ status: 'rejected', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', inst.id);
+  await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: inst.id, actor: userId, action: 'reject', comment: reason });
   await serviceClient.from('quotations').update({ status: 'rejected', approval_status: 'rejected' }).eq('business_id', b).eq('id', inst.quotation_id);
-  return { id, status: 'rejected' };
+  return { id: inst.id, status: 'rejected' };
 }
 
 export async function returnApproval(b: string, id: string, userId: string, reason: string) {
-  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  const inst = await findApprovalInstance(b, id);
   if (!inst) throw ApiError.notFound('Approval instance not found.');
   if (inst.status !== 'pending') throw new ApiError({ code: ErrorCode.APPROVAL_ALREADY_DECIDED, message: 'Already decided.' });
-  await serviceClient.from('approval_instances').update({ status: 'returned', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', id);
-  await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: id, actor: userId, action: 'return', comment: reason });
+  await serviceClient.from('approval_instances').update({ status: 'returned', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', inst.id);
+  await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: inst.id, actor: userId, action: 'return', comment: reason });
   await serviceClient.from('quotations').update({ status: 'draft', approval_status: 'not_required' }).eq('business_id', b).eq('id', inst.quotation_id);
-  return { id, status: 'returned' };
+  return { id: inst.id, status: 'returned' };
 }
 
 export async function approvalHistory(b: string) {

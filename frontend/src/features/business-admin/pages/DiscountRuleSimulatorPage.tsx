@@ -80,7 +80,12 @@ function DiscountRuleSimulatorPage() {
       const request: DiscountSimulatorRequest = {
         customerId,
         customerTier,
-        products: products.map(p => ({ productId: p.productId, quantity: p.quantity, unitPrice: p.unitPrice })),
+        products: products.map(p => ({
+          productId: p.productId,
+          quantity: p.quantity,
+          unitPrice: p.unitPrice,
+          proposedDiscountPercent: p.proposedDiscountPercent || 0,
+        })),
         orderDiscountPercent: 0,
       }
       const result = await simulateDiscount.mutateAsync(request)

@@ -75,43 +75,72 @@ export async function updateCustomerTiers(b: string, tiers: Record<string, unkno
   }
   return getCustomerTiers(biz);
 }
-export async function runDiscountSimulator(b: string, input: { customer_id?: string; lines: Array<{ product_id: string; quantity: number; unit_price: number; discount_percent?: number }> }) {
-  const { data: customer } = input.customer_id
-    ? await serviceClient.from('customers').select('tier').eq('business_id', b).eq('id', input.customer_id).maybeSingle()
+export async function runDiscountSimulator(b: string, input: Record<string, any>) {
+  const custId = input.customer_id || input.customerId;
+  const { data: customer } = custId
+    ? await serviceClient.from('customers').select('tier').eq('business_id', b).eq('id', custId).maybeSingle()
     : { data: null };
-  const tier = (customer as { tier?: string } | null)?.tier ?? 'gold';
+  const tier = (customer as { tier?: string } | null)?.tier ?? input.customer_tier ?? input.customerTier ?? 'gold';
   const { data: tierCfg } = await serviceClient.from('customer_tier_configs').select('*').eq('business_id', b).eq('tier', tier).maybeSingle();
   const ceiling = (tierCfg as { max_discount_percent?: number } | null)?.max_discount_percent ?? 15;
 
-  const lineResults = input.lines.map((l, idx) => {
-    const requested = Number(l.discount_percent ?? 0);
+  const rawLines: any[] = input.lines || input.products || [];
+  const normalizedLines = rawLines.map((l: any, idx: number) => {
+    const prodId = l.product_id || l.productId || `prod-${idx}`;
+    const qty = Number(l.quantity ?? 1);
+    const unitPrice = Number(l.unit_price ?? l.unitPrice ?? 0);
+    const requested = Number(l.discount_percent ?? l.proposedDiscountPercent ?? 0);
     const excess = Math.max(0, requested - ceiling);
     const allowed = Math.min(requested, ceiling);
     return {
       line_index: idx,
-      product_id: l.product_id,
+      product_id: prodId,
+      productId: prodId,
+      quantity: qty,
+      unit_price: unitPrice,
       requested_discount_percent: requested,
+      requestedDiscountPercent: requested,
       allowed_discount_percent: allowed,
+      allowedDiscountPercent: allowed,
       customer_tier_ceiling: ceiling,
+      customerTierCeiling: ceiling,
       excess_percent: excess,
+      excessPercent: excess,
       excess: Number(excess.toFixed(2)),
       violated: requested > ceiling,
     };
   });
-  const orderDiscount = input.lines.reduce((sum, l) => sum + (l.unit_price * l.quantity * (l.discount_percent ?? 0) / 100), 0);
-  const orderValue = input.lines.reduce((sum, l) => sum + l.unit_price * l.quantity, 0);
+
+  const orderDiscount = normalizedLines.reduce((sum, l) => sum + (l.unit_price * l.quantity * (l.requested_discount_percent) / 100), 0);
+  const orderValue = normalizedLines.reduce((sum, l) => sum + l.unit_price * l.quantity, 0);
   const requestedOrderPercent = orderValue ? (orderDiscount / orderValue) * 100 : 0;
+  const approvalRequired = (tierCfg as { approval_required?: boolean } | null)?.approval_required ?? (requestedOrderPercent > ceiling || normalizedLines.some(l => l.violated));
+  const approvalLevel = requestedOrderPercent > 20 ? 'finance' : approvalRequired ? 'sales_manager' : 'none';
+
   return {
     customer_tier: tier,
+    customerTier: tier,
     tier_ceiling: ceiling,
-    lines: lineResults,
+    finalCeiling: ceiling,
+    lines: normalizedLines,
     order_level: {
       requested_discount_percent: requestedOrderPercent,
+      requestedDiscountPercent: requestedOrderPercent,
       allowed_discount_percent: ceiling,
+      allowedDiscountPercent: ceiling,
       excess_percent: Math.max(0, requestedOrderPercent - ceiling),
+      excessPercent: Math.max(0, requestedOrderPercent - ceiling),
       excess: Number(Math.max(0, requestedOrderPercent - ceiling).toFixed(2)),
     },
-    approval_required: (tierCfg as { approval_required?: boolean } | null)?.approval_required ?? true,
-    approval_level: (tierCfg as { approval_level?: string } | null)?.approval_level ?? 'sales_manager',
+    orderLevel: {
+      requestedDiscountPercent: requestedOrderPercent,
+      allowedDiscountPercent: ceiling,
+      excessPercent: Math.max(0, requestedOrderPercent - ceiling),
+    },
+    overallRisk: requestedOrderPercent > 20 ? 'critical' : requestedOrderPercent > ceiling ? 'high' : 'low',
+    approval_required: approvalRequired,
+    approvalRequired,
+    approval_level: approvalLevel,
+    approvalLevel,
   };
 }

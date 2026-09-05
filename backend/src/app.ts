@@ -20,6 +20,7 @@ import { backordersRouter, fulfillmentRouter, shippingRulesRouter, shipmentsRout
 import { billingCyclesRouter, invoicesRouter, paymentsRouter, prorationRulesRouter, subscriptionPlansRouter, subscriptionsRouter } from './routes/billing';
 import { auditRouter, dealHealthRouter, insightsRouter } from './routes/intelligence';
 import { meRouter, notificationsRouter, searchRouter } from './routes/shared';
+import { portalRouter } from './routes/portal';
 
 /**
  * Build the Express application (kept separate from server for testability).
@@ -81,6 +82,7 @@ export function createApp(): Application {
   app.use('/api/v1/notifications', notificationsRouter);
   app.use('/api/v1/me', meRouter);
   app.use('/api/v1/search', searchRouter);
+  app.use('/api/v1/portal', portalRouter);
 
   // 404 + error handling LAST
   app.use(notFound);
