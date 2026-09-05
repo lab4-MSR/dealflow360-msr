@@ -155,8 +155,8 @@ export function GlobalSearchPage() {
   const { data: searchResponse, isLoading, error, refetch } = useQuery<SearchResponse>({
     queryKey: ['global-search', apiParams],
     queryFn: async () => {
-      const response = await api.get<SearchResponse>('/search', { ...apiParams })
-      return response
+      const response = await api.get<SearchResponse>('/search', { params: apiParams })
+      return response.data
     },
     enabled: hasSearched && query.trim().length > 0,
     staleTime: 30 * 1000,

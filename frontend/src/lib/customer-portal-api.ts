@@ -173,6 +173,8 @@ export interface CustomerOrderDetail {
 
 export interface CustomerShipmentItem {
   product: string
+  product_name?: string
+  product_id?: string
   sku?: string
   quantity: number
   status: string
@@ -184,16 +186,19 @@ export interface TrackingTimelineStage {
   completed: boolean
   current: boolean
   description?: string
+  location?: string
 }
 
 export interface CustomerShipmentDetail {
   id: string // Shipment ID e.g. SHP-8041
   order_number: string // Order ID e.g. ORD-2026-00891
+  order_id?: string
   status: 'processing' | 'in_transit' | 'delivered' | 'delayed' | string
   tracking_number: string // e.g. FedEx 9823410244
   carrier: string // e.g. FedEx Express
   delivery_address: string
   expected_delivery: string
+  delivery_date?: string
   delivery_status: string
   items: CustomerShipmentItem[]
   timeline: TrackingTimelineStage[]
@@ -238,6 +243,7 @@ export interface CustomerInvoiceDetail {
   id: string
   invoice_number: string
   date: string
+  invoice_date?: string
   due_date: string
   status: 'paid' | 'outstanding' | 'overdue' | string
   seller: { company: string; address: string; contact: string }

@@ -22,21 +22,27 @@ const kpiCardVariants = cva(
 )
 
 export interface KpiCardProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof kpiCardVariants> {
-  label: string
+  label?: string
+  title?: string
   value: string | number
   trend?: {
     value: number
     direction: 'up' | 'down' | 'neutral'
   }
+  change?: {
+    value: number
+    label: string
+  }
   icon?: React.ReactNode
 }
 
-function KpiCard({ className, variant, label, value, trend, icon, children, ...props }: KpiCardProps) {
+function KpiCard({ className, variant, label, title, value, trend, change, icon, children, ...props }: KpiCardProps) {
+  const displayLabel = label || title || ''
   return (
     <div className={cn(kpiCardVariants({ variant }), className)} {...props}>
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <p className="text-caption font-medium text-muted-foreground">{label}</p>
+          <p className="text-caption font-medium text-muted-foreground">{displayLabel}</p>
           <p className="text-h2 tabular-nums">{value}</p>
           {trend && (
             <p className={cn(
@@ -48,6 +54,11 @@ function KpiCard({ className, variant, label, value, trend, icon, children, ...p
               {trend.direction === 'up' && '↑'}
               {trend.direction === 'down' && '↓'}
               {Math.abs(trend.value)}%
+            </p>
+          )}
+          {!trend && change && (
+            <p className="text-caption text-muted-foreground tabular-nums">
+              {change.label}
             </p>
           )}
         </div>

@@ -26,6 +26,32 @@ export interface ApiSuccessResponse<T> {
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse
 
+export interface ApiError {
+  code: string
+  message: string
+  field?: string
+  details?: Record<string, unknown>
+}
+
+export interface SearchResult {
+  type: string
+  id: string
+  title: string
+  subtitle: string
+  status?: string
+  url: string
+}
+
+export interface SearchResponse {
+  success: boolean
+  data: SearchResult[]
+  meta: {
+    total: number
+    query: string
+  }
+  error: ApiError | null
+}
+
 export interface SearchParams {
   q: string
   type?: string
