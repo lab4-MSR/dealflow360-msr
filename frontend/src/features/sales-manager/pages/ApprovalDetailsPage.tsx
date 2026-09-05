@@ -311,14 +311,16 @@ export function ApprovalDetailsPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               {(data.approval_chain || []).map((step, i) => (
-                <div key={i} className="flex items-center justify-between text-body-small border-b border-border pb-2 last:border-b-0">
+                <div key={i} className="flex items-center justify-between text-body-small border-b border-border pb-2 last:border-b-0 transition-colors duration-150 hover:bg-muted/20 px-2 -mx-2 rounded">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-foreground">L{step.level ?? step.step_number}</span>
+                    <span className={cn("font-semibold text-foreground flex items-center justify-center h-6 w-6 rounded-full text-xs transition-transform duration-200", (step.status === 'approved' || step.status === 'completed') ? "bg-success/15 text-success" : step.status === 'pending' ? "bg-primary/15 text-primary scale-105" : "bg-muted text-muted-foreground")}>
+                      L{step.level ?? step.step_number}
+                    </span>
                     <span className="text-muted-foreground">{step.role_name ?? step.role_display ?? step.role}</span>
                   </div>
                   <Badge
                     variant={step.status === 'approved' || step.status === 'completed' ? 'default' : step.status === 'pending' ? 'secondary' : 'outline'}
-                    className="capitalize"
+                    className="capitalize transition-all duration-200"
                   >
                     {step.status}
                   </Badge>

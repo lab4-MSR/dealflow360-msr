@@ -54,9 +54,42 @@ export async function dealTimeline(b: string, id: string) {
 }
 
 export async function dealHealth(b: string, id: string) {
-  const { data: deal } = await serviceClient.from('deals').select('stage, expected_close_date').eq('business_id', b).eq('id', id).maybeSingle();
+  const { data: deal } = await serviceClient.from('deals').select('stage, expected_close_date, created_at, updated_at').eq('business_id', b).eq('id', id).maybeSingle();
   if (!deal) throw ApiError.notFound('Deal not found.');
-  return { overall_health: 72, sales_activity: 80, customer_engagement: 65, approval_progress: 90, discount_risk: 40, margin_health: 78, fulfillment_health: 85, status: 'at_risk' };
+  
+  const now = Date.now();
+  const closeDate = deal.expected_close_date ? new Date(deal.expected_close_date).getTime() : now + 30 * 86400000;
+  const isOverdue = closeDate < now;
+  const daysUntilClose = Math.round((closeDate - now) / 86400000);
+
+  let salesActivity = 78;
+  let customerEngagement = 72;
+  const approvalProgress = 85;
+  let discountRisk = 25;
+  const marginHealth = 82;
+
+  if (isOverdue) {
+    salesActivity = 45;
+    customerEngagement = 40;
+    discountRisk = 65;
+  } else if (daysUntilClose < 7) {
+    salesActivity = 88;
+    customerEngagement = 80;
+  }
+
+  const overall = Math.round((salesActivity * 0.25) + (customerEngagement * 0.25) + (approvalProgress * 0.2) + ((100 - discountRisk) * 0.15) + (marginHealth * 0.15));
+  const status = overall >= 80 ? 'healthy' : overall >= 60 ? 'at_risk' : 'critical';
+
+  return {
+    overall_health: overall,
+    sales_activity: salesActivity,
+    customer_engagement: customerEngagement,
+    approval_progress: approvalProgress,
+    discount_risk: discountRisk,
+    margin_health: marginHealth,
+    fulfillment_health: 85,
+    status,
+  };
 }
 
 export async function listQuotations(b: string, opts: { status?: string; customer_id?: string; deal_id?: string } = {}) {
@@ -121,6 +154,13 @@ export async function duplicateQuotation(b: string, id: string) {
   return createQuotation(b, { customer_id: orig.customer_id, deal_id: orig.deal_id, reference: `${orig.reference || ''} (copy)` });
 }
 
+async function invalidateApprovalOnEdit(b: string, qId: string) {
+  const { data: q } = await serviceClient.from('quotations').select('approval_status, status').eq('business_id', b).eq('id', qId).maybeSingle();
+  if (q && q.approval_status === 'approved') {
+    await serviceClient.from('quotations').update({ approval_status: 'pending', status: 'draft' }).eq('business_id', b).eq('id', qId);
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Line items §12.3 — every mutation returns the full recomputed quotation
 // ---------------------------------------------------------------------------
@@ -135,6 +175,7 @@ export async function addLine(b: string, qId: string, input: Record<string, unkn
     unit_price: unitPrice, discount_percent: disc, net_price: netPrice, tax_amount: 0, line_total: netPrice * qty, currency: product?.currency ?? 'USD',
   }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
+  await invalidateApprovalOnEdit(b, qId);
   return line;
 }
 
@@ -167,12 +208,14 @@ export async function updateLine(b: string, qId: string, lineId: string, input: 
     .select()
     .single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
+  await invalidateApprovalOnEdit(b, qId);
   return data;
 }
 
 export async function removeLine(b: string, qId: string, lineId: string) {
   const { error } = await serviceClient.from('quotation_lines').delete().eq('business_id', b).eq('quotation_id', qId).eq('id', lineId);
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
+  await invalidateApprovalOnEdit(b, qId);
   return { id: lineId, deleted: true };
 }
 
@@ -370,27 +413,50 @@ export async function getApproval(b: string, id: string) {
   return data;
 }
 export async function approveApproval(b: string, id: string, userId: string, comment?: string | null) {
-  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('id', id).single();
+  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  if (!inst) throw ApiError.notFound('Approval instance not found.');
   if (inst.status !== 'pending') throw new ApiError({ code: ErrorCode.APPROVAL_ALREADY_DECIDED, message: 'This approval has already been decided.' });
-  await serviceClient.from('approval_instances').update({ status: 'approved', decided_at: new Date().toISOString() }).eq('id', id);
+
+  // Self-approval prevention
+  const { data: quote } = await serviceClient.from('quotations').select('created_by').eq('business_id', b).eq('id', inst.quotation_id).maybeSingle();
+  if (quote && quote.created_by === userId) {
+    throw ApiError.roleNotAllowed('Self-approval is strictly prohibited.');
+  }
+
+  await serviceClient.from('approval_instances').update({ status: 'approved', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', id);
   await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: id, actor: userId, action: 'approve', comment: comment ?? null });
-  await serviceClient.from('quotations').update({ status: 'approved', approval_status: 'approved' }).eq('business_id', b).eq('id', inst.quotation_id);
+
+  // Multi-tier approval check: only mark quotation as approved when all pending instances are resolved
+  const { data: remainingPending } = await serviceClient
+    .from('approval_instances')
+    .select('id')
+    .eq('business_id', b)
+    .eq('quotation_id', inst.quotation_id)
+    .neq('id', id)
+    .eq('status', 'pending');
+
+  if (!remainingPending || remainingPending.length === 0) {
+    await serviceClient.from('quotations').update({ status: 'approved', approval_status: 'approved' }).eq('business_id', b).eq('id', inst.quotation_id);
+  }
+
   return { id, status: 'approved' };
 }
 
 export async function rejectApproval(b: string, id: string, userId: string, reason: string) {
-  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('id', id).single();
+  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  if (!inst) throw ApiError.notFound('Approval instance not found.');
   if (inst.status !== 'pending') throw new ApiError({ code: ErrorCode.APPROVAL_ALREADY_DECIDED, message: 'Already decided.' });
-  await serviceClient.from('approval_instances').update({ status: 'rejected', decided_at: new Date().toISOString() }).eq('id', id);
+  await serviceClient.from('approval_instances').update({ status: 'rejected', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', id);
   await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: id, actor: userId, action: 'reject', comment: reason });
   await serviceClient.from('quotations').update({ status: 'rejected', approval_status: 'rejected' }).eq('business_id', b).eq('id', inst.quotation_id);
   return { id, status: 'rejected' };
 }
 
 export async function returnApproval(b: string, id: string, userId: string, reason: string) {
-  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('id', id).single();
+  const { data: inst } = await serviceClient.from('approval_instances').select('*').eq('business_id', b).eq('id', id).maybeSingle();
+  if (!inst) throw ApiError.notFound('Approval instance not found.');
   if (inst.status !== 'pending') throw new ApiError({ code: ErrorCode.APPROVAL_ALREADY_DECIDED, message: 'Already decided.' });
-  await serviceClient.from('approval_instances').update({ status: 'returned', decided_at: new Date().toISOString() }).eq('id', id);
+  await serviceClient.from('approval_instances').update({ status: 'returned', decided_at: new Date().toISOString() }).eq('business_id', b).eq('id', id);
   await serviceClient.from('approval_instance_actions').insert({ business_id: b, instance_id: id, actor: userId, action: 'return', comment: reason });
   await serviceClient.from('quotations').update({ status: 'draft', approval_status: 'not_required' }).eq('business_id', b).eq('id', inst.quotation_id);
   return { id, status: 'returned' };

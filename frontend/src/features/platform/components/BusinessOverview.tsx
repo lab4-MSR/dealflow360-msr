@@ -111,6 +111,8 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
                 stroke="var(--color-primary)"
                 strokeWidth={2}
                 fill="url(#gradientTotal)"
+                animationDuration={350}
+                animationEasing="ease-out"
               />
               <Area
                 type="monotone"
@@ -119,6 +121,8 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
                 stroke="var(--color-success)"
                 strokeWidth={2}
                 fill="url(#gradientActive)"
+                animationDuration={350}
+                animationEasing="ease-out"
               />
             </AreaChart>
           </ResponsiveContainer>

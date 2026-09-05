@@ -39,12 +39,12 @@ export function SalesAnalyticsPage() {
       )}
       <AnalyticsSection title="Pipeline" description="Stage distribution, trend, and velocity." isLoading={isLoading} isEmpty={!isLoading && !s.stage_distribution} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Pipeline stage distribution chart" emptyTitle="No pipeline data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.stage_distribution ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="count" fill="hsl(var(--primary))" name="Deals" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.stage_distribution ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="count" fill="hsl(var(--primary))" name="Deals" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Pipeline Trend" description="Pipeline value over time." isLoading={isLoading} isEmpty={!isLoading && !s.trend_data} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Pipeline trend chart" emptyTitle="No trend data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.trend_data ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Bar dataKey="value" fill="hsl(var(--info))" name="Pipeline Value" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.trend_data ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Bar dataKey="value" fill="hsl(var(--info))" name="Pipeline Value" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Pipeline Velocity" description="How quickly deals move through stages." isLoading={isLoading} isEmpty={!isLoading && s.velocity_days == null} error={error} onRetry={() => refetch()}>
@@ -52,12 +52,12 @@ export function SalesAnalyticsPage() {
       </AnalyticsSection>
       <AnalyticsSection title="Sales Performance" description="Rep, team, and customer performance." isLoading={isLoading} isEmpty={!isLoading && !s.rep_performance} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Rep performance chart" emptyTitle="No performance data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.rep_performance ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Bar dataKey="revenue" fill="hsl(var(--success))" name="Revenue" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.rep_performance ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Bar dataKey="revenue" fill="hsl(var(--success))" name="Revenue" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Conversion" description="Lead to Deal to Quote to Won funnel." isLoading={isLoading} isEmpty={!isLoading && !s.funnel} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Conversion funnel chart" emptyTitle="No conversion data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.funnel ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Bar dataKey="count" fill="hsl(var(--intelligence))" name="Count" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.funnel ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Bar dataKey="count" fill="hsl(var(--intelligence))" name="Count" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
     </div>

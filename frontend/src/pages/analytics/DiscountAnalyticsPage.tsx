@@ -41,7 +41,7 @@ export function DiscountAnalyticsPage() {
       )}
       <AnalyticsSection title="Discount Distribution" description="By customer tier, category, product, and sales rep." isLoading={isLoading} isEmpty={!isLoading && !s.distribution} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Discount distribution chart" emptyTitle="No distribution data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={(Array.isArray(s.distribution) ? s.distribution : []) as any} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="category" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="discount" fill="hsl(var(--warning))" name="Avg Discount %" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={(Array.isArray(s.distribution) ? s.distribution : []) as any} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="category" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="discount" fill="hsl(var(--warning))" name="Avg Discount %" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Governance" description="Allowed discounts, violations, approval required, and exceptions." isLoading={isLoading} isEmpty={!isLoading && s.allowed_discounts == null} error={error} onRetry={() => refetch()}>

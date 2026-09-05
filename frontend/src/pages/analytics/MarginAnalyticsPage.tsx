@@ -34,7 +34,7 @@ export function MarginAnalyticsPage() {
       )}
       <AnalyticsSection title="Margin Breakdown" description="By product, category, customer, and sales rep." isLoading={isLoading} isEmpty={!isLoading && !s.breakdown} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Margin breakdown chart" emptyTitle="No margin breakdown data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.breakdown ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="margin" fill="hsl(var(--info))" name="Margin" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.breakdown ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="margin" fill="hsl(var(--info))" name="Margin" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Margin Risk" description="Below target, below minimum, discount compression, and high risk." isLoading={isLoading} isEmpty={!isLoading && !s.risk_buckets} error={error} onRetry={() => refetch()}>

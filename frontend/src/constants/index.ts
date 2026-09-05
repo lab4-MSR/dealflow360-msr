@@ -133,7 +133,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'INTELLIGENCE',
-    roles: ['sales_rep', 'sales_manager', 'finance', 'operations', 'business_admin', 'super_admin'],
+    roles: ['sales_manager', 'business_admin', 'super_admin'],
     items: [
       { label: 'Intelligence Command', path: '/intelligence', icon: 'Sparkles' },
       { label: 'Risk Overview', path: '/intelligence/risks', icon: 'ShieldAlert' },

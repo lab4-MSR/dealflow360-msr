@@ -88,6 +88,8 @@ export function RevenueOverview({ data }: RevenueOverviewProps) {
                 strokeWidth={2}
                 dot={{ fill: 'var(--color-primary)', r: 3 }}
                 activeDot={{ r: 5 }}
+                animationDuration={350}
+                animationEasing="ease-out"
               />
             </LineChart>
           </ResponsiveContainer>

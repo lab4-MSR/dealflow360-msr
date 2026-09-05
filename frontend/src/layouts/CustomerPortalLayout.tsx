@@ -1,5 +1,6 @@
 import React from 'react'
-import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { PageTransition } from '@/components/common/PageTransition'
 import {
   FileText,
   Truck,
@@ -18,6 +19,7 @@ import { cn } from '@/lib/utils'
 
 export function CustomerPortalLayout() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const navItems = [
     { label: 'Overview', path: '/customer-portal/dashboard', icon: LayoutDashboard },
@@ -101,12 +103,6 @@ export function CustomerPortalLayout() {
                   )
                 })}
               </div>
-
-              <Link to="/dashboard">
-                <Button variant="ghost" size="sm" className="text-xs text-muted-foreground gap-1">
-                  Internal App <ExternalLink className="h-3 w-3" />
-                </Button>
-              </Link>
             </div>
           </div>
 
@@ -132,7 +128,9 @@ export function CustomerPortalLayout() {
 
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Outlet />
+        <PageTransition key={location.pathname}>
+          <Outlet />
+        </PageTransition>
       </main>
 
       {/* Footer */}

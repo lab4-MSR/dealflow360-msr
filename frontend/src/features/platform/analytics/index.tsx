@@ -126,8 +126,8 @@ export function PlatformAnalyticsPage() {
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Area type="monotone" dataKey="total" name="Total" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} strokeWidth={2} />
-                  <Area type="monotone" dataKey="active" name="Active" stroke="var(--color-success)" fill="var(--color-success)" fillOpacity={0.1} strokeWidth={2} />
+                  <Area type="monotone" dataKey="total" name="Total" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} strokeWidth={2} animationDuration={350} animationEasing="ease-out" />
+                  <Area type="monotone" dataKey="active" name="Active" stroke="var(--color-success)" fill="var(--color-success)" fillOpacity={0.1} strokeWidth={2} animationDuration={350} animationEasing="ease-out" />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -144,8 +144,8 @@ export function PlatformAnalyticsPage() {
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="created" name="Created" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={20} />
-                  <Bar dataKey="completed" name="Completed" fill="var(--color-success)" radius={[3, 3, 0, 0]} barSize={20} />
+                  <Bar dataKey="created" name="Created" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out" />
+                  <Bar dataKey="completed" name="Completed" fill="var(--color-success)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -162,7 +162,7 @@ export function PlatformAnalyticsPage() {
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}K`} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Line type="monotone" dataKey="revenue" name="Revenue" stroke="var(--color-primary)" strokeWidth={2} dot={{ fill: 'var(--color-primary)', r: 3 }} />
+                  <Line type="monotone" dataKey="revenue" name="Revenue" stroke="var(--color-primary)" strokeWidth={2} dot={{ fill: 'var(--color-primary)', r: 3 }} animationDuration={350} animationEasing="ease-out" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -175,7 +175,7 @@ export function PlatformAnalyticsPage() {
             <div className="h-[280px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={data.riskDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value" nameKey="name">
+                  <Pie data={data.riskDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value" nameKey="name" animationDuration={350} animationEasing="ease-out">
                     {data.riskDistribution.map((_, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
                   </Pie>
                   <Tooltip content={<ChartTooltipContent />} />

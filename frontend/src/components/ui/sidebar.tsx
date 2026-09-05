@@ -168,16 +168,20 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
                       title={collapsed ? item.label : undefined}
                       className={({ isActive }) =>
                         cn(
-                          'flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-colors',
+                          'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-all duration-150 ease-out',
                           collapsed && 'justify-center px-2',
                           isActive
-                            ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                            : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                            ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-xs font-semibold'
+                            : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:scale-[0.99] motion-reduce:active:scale-100'
                         )
                       }
                     >
-                      <Icon className="h-4 w-4 shrink-0" />
-                      {!collapsed && <span className="truncate">{item.label}</span>}
+                      {({ isActive }) => (
+                        <>
+                          <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-150', isActive && 'scale-105')} />
+                          {!collapsed && <span className="truncate">{item.label}</span>}
+                        </>
+                      )}
                     </NavLink>
                   )
                 })}

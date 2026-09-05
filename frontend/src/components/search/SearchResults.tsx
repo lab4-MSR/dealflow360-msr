@@ -82,7 +82,7 @@ export function SearchResults({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 animate-page-enter">
       <div className="flex items-center justify-between">
         <p className="text-body text-foreground">
           <span className="font-medium">{totalCount}</span> result{totalCount !== 1 ? 's' : ''}
@@ -98,7 +98,7 @@ export function SearchResults({
 
       <div className="space-y-3" role="list" aria-label="Search results">
         {results.map((result) => (
-          <SearchResultItem result={result} onNavigate={onNavigate} />
+          <SearchResultItem key={result.id ?? result.title} result={result} onNavigate={onNavigate} />
         ))}
       </div>
     </div>

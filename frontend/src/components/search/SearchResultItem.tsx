@@ -88,9 +88,10 @@ export function SearchResultItem({ result, onNavigate, isLoading }: SearchResult
   return (
     <article
       className={cn(
-        'group relative flex items-start gap-4 p-4 rounded-xl border border-border bg-card',
-        'transition-all duration-150',
-        'hover:border-border-strong hover:bg-accent/50 hover:shadow-elevation-1',
+        'group relative flex items-start gap-4 p-4 rounded-xl border border-border bg-card cursor-pointer',
+        'transition-all duration-150 ease-out',
+        'hover:border-border-strong hover:bg-accent/40 hover:-translate-y-0.5 hover:shadow-elevation-1',
+        'active:scale-[0.99] motion-reduce:active:scale-100 motion-reduce:hover:translate-y-0',
         'focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
         isLoading && 'opacity-50 pointer-events-none'
       )}

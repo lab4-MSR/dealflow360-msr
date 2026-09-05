@@ -35,7 +35,7 @@ export function ApprovalAnalyticsPage() {
       )}
       <AnalyticsSection title="Approval Distribution" description="By risk, sales rep, manager, and deal value." isLoading={isLoading} isEmpty={!isLoading && !s.distribution} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Approval distribution chart" emptyTitle="No distribution data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.distribution ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="count" fill="hsl(var(--primary))" name="Approvals" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.distribution ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="count" fill="hsl(var(--primary))" name="Approvals" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Bottlenecks" description="Pending, SLA breach, and average wait time." isLoading={isLoading} isEmpty={!isLoading && !s.bottlenecks} error={error} onRetry={() => refetch()}>
@@ -47,7 +47,7 @@ export function ApprovalAnalyticsPage() {
       </AnalyticsSection>
       <AnalyticsSection title="Decision Analysis" description="Approved, rejected, returned, and escalated." isLoading={isLoading} isEmpty={!isLoading && !s.distribution} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Decision analysis chart" emptyTitle="No decision data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><PieChart><Pie data={(s.distribution ?? [])} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={90} label><Cell fill="hsl(var(--primary))" /><Cell fill="hsl(var(--danger))" /><Cell fill="hsl(var(--info))" /><Cell fill="hsl(var(--warning))" /></Pie><Tooltip /><Legend /></PieChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><PieChart><Pie data={(s.distribution ?? [])} dataKey="count" nameKey="name" cx="50%" cy="50%" outerRadius={90} label animationDuration={350} animationEasing="ease-out"><Cell fill="hsl(var(--primary))" /><Cell fill="hsl(var(--danger))" /><Cell fill="hsl(var(--info))" /><Cell fill="hsl(var(--warning))" /></Pie><Tooltip /><Legend /></PieChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
     </div>

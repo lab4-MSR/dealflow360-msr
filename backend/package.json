@@ -10,8 +10,7 @@
     "lint": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio",
-    "postinstall": "prisma skills sync || exit 0"
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",

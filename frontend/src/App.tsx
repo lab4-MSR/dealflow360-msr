@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom'
 import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { CustomerPortalLayout } from '@/layouts/CustomerPortalLayout'
-import { ProtectedRoute, GuestRoute } from '@/routes/guards'
+import { ProtectedRoute, GuestRoute, RoleRoute } from '@/routes/guards'
 
 // Auth Pages (00. Public / Auth)
 import LoginPage from '@/pages/auth/LoginPage'
@@ -227,27 +227,30 @@ export function App() {
       {/* ─── PROTECTED APPLICATION ROUTES ─── */}
       <Route element={<ProtectedRoute />}>
         {/* Customer Portal Layout Routes (08.x) */}
-        <Route element={<CustomerPortalLayout />}>
-          <Route path="/customer-portal" element={<CustomerDashboardPage />} />
-          <Route path="/customer-portal/dashboard" element={<CustomerDashboardPage />} />
-          <Route path="/customer-portal/quotations" element={<CustomerMyQuotationsPage />} />
-          <Route path="/customer-portal/quotations/:id" element={<CustomerQuotationDetailsPage />} />
-          <Route path="/customer-portal/counter-offer/:id" element={<CounterOfferPage />} />
-          <Route path="/customer-portal/request-changes/:id" element={<RequestChangesPage />} />
-          <Route path="/customer-portal/quotations/:id/review" element={<ReviewQuotePage />} />
-          <Route path="/customer-portal/quotations/:id/counter-offer" element={<CounterOfferPage />} />
-          <Route path="/customer-portal/quotations/:id/request-changes" element={<RequestChangesPage />} />
-          <Route path="/customer-portal/orders" element={<MyOrdersPage />} />
-          <Route path="/customer-portal/orders/:id" element={<OrderDetailsPage />} />
-          <Route path="/customer-portal/shipments" element={<ShipmentListPage />} />
-          <Route path="/customer-portal/shipments/:id" element={<CustomerShipmentDetailsPage />} />
-          <Route path="/customer-portal/invoices" element={<CustomerInvoicesPage />} />
-          <Route path="/customer-portal/invoices/:id" element={<CustomerInvoiceDetailsPage />} />
-          <Route path="/customer-portal/subscriptions" element={<CustomerSubscriptionsPage />} />
-          <Route path="/customer-portal/subscriptions/:id" element={<CustomerSubscriptionDetailsPage />} />
-          <Route path="/customer-portal/account/profile" element={<CustomerProfilePage />} />
-          <Route path="/customer-portal/account/company" element={<CustomerCompanyPage />} />
-          <Route path="/customer-portal/account/preferences" element={<CustomerPreferencesPage />} />
+        <Route element={<RoleRoute allowedRoles={['customer', 'super_admin', 'business_admin']} />}>
+          <Route element={<CustomerPortalLayout />}>
+            <Route path="/customer-portal" element={<CustomerDashboardPage />} />
+            <Route path="/customer-portal/dashboard" element={<CustomerDashboardPage />} />
+            <Route path="/customer-portal/quotations" element={<CustomerMyQuotationsPage />} />
+            <Route path="/customer-portal/quotations/:id" element={<CustomerQuotationDetailsPage />} />
+            <Route path="/customer-portal/review/:id" element={<ReviewQuotePage />} />
+            <Route path="/customer-portal/counter-offer/:id" element={<CounterOfferPage />} />
+            <Route path="/customer-portal/request-changes/:id" element={<RequestChangesPage />} />
+            <Route path="/customer-portal/quotations/:id/review" element={<ReviewQuotePage />} />
+            <Route path="/customer-portal/quotations/:id/counter-offer" element={<CounterOfferPage />} />
+            <Route path="/customer-portal/quotations/:id/request-changes" element={<RequestChangesPage />} />
+            <Route path="/customer-portal/orders" element={<MyOrdersPage />} />
+            <Route path="/customer-portal/orders/:id" element={<OrderDetailsPage />} />
+            <Route path="/customer-portal/shipments" element={<ShipmentListPage />} />
+            <Route path="/customer-portal/shipments/:id" element={<CustomerShipmentDetailsPage />} />
+            <Route path="/customer-portal/invoices" element={<CustomerInvoicesPage />} />
+            <Route path="/customer-portal/invoices/:id" element={<CustomerInvoiceDetailsPage />} />
+            <Route path="/customer-portal/subscriptions" element={<CustomerSubscriptionsPage />} />
+            <Route path="/customer-portal/subscriptions/:id" element={<CustomerSubscriptionDetailsPage />} />
+            <Route path="/customer-portal/account/profile" element={<CustomerProfilePage />} />
+            <Route path="/customer-portal/account/company" element={<CustomerCompanyPage />} />
+            <Route path="/customer-portal/account/preferences" element={<CustomerPreferencesPage />} />
+          </Route>
         </Route>
 
         {/* Internal Enterprise Dashboard Layout Routes */}
@@ -257,190 +260,206 @@ export function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
 
           {/* ─── PLATFORM / SUPER ADMIN (01.x) ─── */}
-          <Route path="/platform" element={<SuperAdminDashboardPage />} />
-          <Route path="/platform/dashboard" element={<SuperAdminDashboardPage />} />
-          <Route path="/platform/businesses" element={<AllBusinessesPage />} />
-          <Route path="/platform/businesses/create" element={<CreateBusinessPage />} />
-          <Route path="/platform/businesses/:id" element={<BusinessDetailsLayout />}>
-            <Route index element={<BusinessDetailsOverviewPage />} />
-            <Route path="users" element={<BusinessUsersPage />} />
-            <Route path="deals" element={<BusinessDealsPage />} />
-            <Route path="revenue" element={<BusinessRevenuePage />} />
-            <Route path="usage" element={<BusinessUsagePage />} />
-            <Route path="health" element={<BusinessHealthPage />} />
-            <Route path="configuration" element={<BusinessConfigurationPage />} />
-            <Route path="activity" element={<BusinessActivityPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin']} />}>
+            <Route path="/platform" element={<SuperAdminDashboardPage />} />
+            <Route path="/platform/dashboard" element={<SuperAdminDashboardPage />} />
+            <Route path="/platform/businesses" element={<AllBusinessesPage />} />
+            <Route path="/platform/businesses/create" element={<CreateBusinessPage />} />
+            <Route path="/platform/businesses/:id" element={<BusinessDetailsLayout />}>
+              <Route index element={<BusinessDetailsOverviewPage />} />
+              <Route path="users" element={<BusinessUsersPage />} />
+              <Route path="deals" element={<BusinessDealsPage />} />
+              <Route path="revenue" element={<BusinessRevenuePage />} />
+              <Route path="usage" element={<BusinessUsagePage />} />
+              <Route path="health" element={<BusinessHealthPage />} />
+              <Route path="configuration" element={<BusinessConfigurationPage />} />
+              <Route path="activity" element={<BusinessActivityPage />} />
+            </Route>
+            <Route path="/platform/users" element={<PlatformUsersPage />} />
+            <Route path="/platform/users/invite" element={<PlatformInviteUserPage />} />
+            <Route path="/platform/users/:id" element={<PlatformUserDetailsPage />} />
+            <Route path="/platform/analytics" element={<PlatformAnalyticsPage />} />
+            <Route path="/platform/audit" element={<PlatformAuditPage />} />
+            <Route path="/platform/health" element={<PlatformHealthPage />} />
+            <Route path="/platform/settings" element={<PlatformSettingsPage />} />
           </Route>
-          <Route path="/platform/users" element={<PlatformUsersPage />} />
-          <Route path="/platform/users/invite" element={<PlatformInviteUserPage />} />
-          <Route path="/platform/users/:id" element={<PlatformUserDetailsPage />} />
-          <Route path="/platform/analytics" element={<PlatformAnalyticsPage />} />
-          <Route path="/platform/audit" element={<PlatformAuditPage />} />
-          <Route path="/platform/health" element={<PlatformHealthPage />} />
-          <Route path="/platform/settings" element={<PlatformSettingsPage />} />
 
           {/* ─── BUSINESS ADMIN (02.x) ─── */}
-          <Route path="/business-admin" element={<BusinessAdminDashboard />} />
-          <Route path="/business-admin/dashboard" element={<BusinessAdminDashboard />} />
-          {/* Organization */}
-          <Route path="/business-admin/organization/profile" element={<CompanyProfilePage />} />
-          <Route path="/business-admin/organization/branding" element={<BrandingPage />} />
-          <Route path="/business-admin/organization/localization" element={<LocalizationPage />} />
-          <Route path="/business-admin/organization/currency-tax" element={<CurrencyTaxPage />} />
-          <Route path="/business-admin/organization/settings" element={<BusinessSettingsFullPage />} />
-          {/* Users & Roles */}
-          <Route path="/business-admin/users" element={<BusinessUsersListPage />} />
-          <Route path="/business-admin/users/invite" element={<BusinessInviteUserPage />} />
-          <Route path="/business-admin/users/:userId" element={<BusinessUserDetailsPage />} />
-          <Route path="/business-admin/users-access/users" element={<BusinessUsersListPage />} />
-          <Route path="/business-admin/users-access/invite" element={<BusinessInviteUserPage />} />
-          <Route path="/business-admin/users-access/users/:userId" element={<BusinessUserDetailsPage />} />
-          <Route path="/business-admin/teams" element={<TeamsPage />} />
-          <Route path="/business-admin/roles" element={<RolesPage />} />
-          <Route path="/business-admin/roles/:roleId" element={<RoleDetailsPage />} />
-          <Route path="/business-admin/users-access/roles" element={<RolesPage />} />
-          <Route path="/business-admin/users-access/roles/:roleId" element={<RoleDetailsPage />} />
-          {/* Customers */}
-          <Route path="/business-admin/customers" element={<BusinessCustomersPage />} />
-          <Route path="/business-admin/customers/create" element={<BusinessCreateCustomerPage />} />
-          <Route path="/business-admin/customers/new" element={<BusinessCreateCustomerPage />} />
-          <Route path="/business-admin/customers/:id" element={<BusinessCustomerDetailsPage />} />
-          {/* Products & Catalog */}
-          <Route path="/business-admin/products" element={<ProductsPage />} />
-          <Route path="/business-admin/products/create" element={<CreateProductPage />} />
-          <Route path="/business-admin/products/new" element={<CreateProductPage />} />
-          <Route path="/business-admin/products/categories" element={<CategoriesPage />} />
-          <Route path="/business-admin/products/:id" element={<ProductDetailsPage />} />
-          {/* Pricing */}
-          <Route path="/business-admin/pricing" element={<PriceListsPage />} />
-          <Route path="/business-admin/pricing/lists" element={<PriceListsPage />} />
-          <Route path="/business-admin/pricing/lists/create" element={<CreatePriceListPage />} />
-          <Route path="/business-admin/pricing/lists/:id" element={<PriceListDetailsPage />} />
-          <Route path="/business-admin/pricing/price-lists" element={<PriceListsPage />} />
-          <Route path="/business-admin/pricing/price-lists/create" element={<CreatePriceListPage />} />
-          <Route path="/business-admin/pricing/price-lists/:id" element={<PriceListDetailsPage />} />
-          <Route path="/business-admin/pricing/customer-pricing" element={<CustomerPricingPage />} />
-          <Route path="/business-admin/pricing/volume-pricing" element={<VolumePricingPage />} />
-          <Route path="/business-admin/pricing/history" element={<PricingHistoryPage />} />
-          {/* Discounts */}
-          <Route path="/business-admin/discounts" element={<DiscountRulesPage />} />
-          <Route path="/business-admin/discounts/create" element={<CreateDiscountRulePage />} />
-          <Route path="/business-admin/discounts/customer-tier" element={<CustomerTierRulesPage />} />
-          <Route path="/business-admin/discounts/category" element={<CategoryRulesPage />} />
-          <Route path="/business-admin/discounts/margin" element={<MarginRulesPage />} />
-          <Route path="/business-admin/discounts/simulator" element={<DiscountRuleSimulatorPage />} />
-          <Route path="/business-admin/discounts/:id" element={<DiscountRuleDetailsPage />} />
-          <Route path="/business-admin/discount-governance/rules" element={<DiscountRulesPage />} />
-          <Route path="/business-admin/discount-governance/rules/create" element={<CreateDiscountRulePage />} />
-          <Route path="/business-admin/discount-governance/rules/:id" element={<DiscountRuleDetailsPage />} />
-          {/* Approvals */}
-          <Route path="/business-admin/approvals" element={<ApprovalRulesPage />} />
-          <Route path="/business-admin/approvals/create" element={<CreateApprovalRulePage />} />
-          <Route path="/business-admin/approvals/chains" element={<ApprovalChainsPage />} />
-          <Route path="/business-admin/approvals/thresholds" element={<ApprovalThresholdsPage />} />
-          <Route path="/business-admin/approvals/simulator" element={<ApprovalSimulatorPage />} />
-          <Route path="/business-admin/approval-configuration/rules" element={<ApprovalRulesPage />} />
-          <Route path="/business-admin/approval-configuration/rules/create" element={<CreateApprovalRulePage />} />
-          {/* Warehouses & Shipping */}
-          <Route path="/business-admin/warehouses" element={<WarehouseListPage />} />
-          <Route path="/business-admin/warehouses/create" element={<CreateWarehousePage />} />
-          <Route path="/business-admin/warehouses/shipping-rules" element={<ShippingRulesListPage />} />
-          <Route path="/business-admin/warehouses/shipping-rules/create" element={<CreateShippingRulePage />} />
-          <Route path="/business-admin/warehouses/:id" element={<WarehouseDetailsPage />} />
-          <Route path="/business-admin/shipping-rules" element={<ShippingRulesListPage />} />
-          <Route path="/business-admin/shipping-rules/create" element={<CreateShippingRulePage />} />
-          <Route path="/business-admin/shipping-rules/:id" element={<WarehouseDetailsPage />} />
-          {/* Subscriptions */}
-          <Route path="/business-admin/subscriptions" element={<SubscriptionPlansListPage />} />
-          <Route path="/business-admin/subscriptions/create" element={<CreateSubscriptionPlanPage />} />
-          <Route path="/business-admin/subscriptions/billing-cycles" element={<BillingCyclesPage />} />
-          <Route path="/business-admin/subscriptions/proration-cancellation" element={<ProrationCancellationPage />} />
-          <Route path="/business-admin/subscriptions/:id" element={<SubscriptionPlanDetailsPage />} />
-          <Route path="/business-admin/subscription-plans" element={<SubscriptionPlansListPage />} />
-          <Route path="/business-admin/subscription-plans/create" element={<CreateSubscriptionPlanPage />} />
-          <Route path="/business-admin/subscription-plans/:id" element={<SubscriptionPlanDetailsPage />} />
-          {/* Other Admin Pages */}
-          <Route path="/business-admin/deal-health" element={<BusinessDealHealthPage />} />
-          <Route path="/business-admin/audit" element={<BusinessAuditTrailPage />} />
-          <Route path="/business-admin/reports" element={<BusinessReportsPage />} />
-          <Route path="/business-admin/settings" element={<BusinessSettingsPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin']} />}>
+            <Route path="/business-admin" element={<BusinessAdminDashboard />} />
+            <Route path="/business-admin/dashboard" element={<BusinessAdminDashboard />} />
+            {/* Organization */}
+            <Route path="/business-admin/organization/profile" element={<CompanyProfilePage />} />
+            <Route path="/business-admin/organization/branding" element={<BrandingPage />} />
+            <Route path="/business-admin/organization/localization" element={<LocalizationPage />} />
+            <Route path="/business-admin/organization/currency-tax" element={<CurrencyTaxPage />} />
+            <Route path="/business-admin/organization/settings" element={<BusinessSettingsFullPage />} />
+            {/* Users & Roles */}
+            <Route path="/business-admin/users" element={<BusinessUsersListPage />} />
+            <Route path="/business-admin/users/invite" element={<BusinessInviteUserPage />} />
+            <Route path="/business-admin/users/:userId" element={<BusinessUserDetailsPage />} />
+            <Route path="/business-admin/users-access/users" element={<BusinessUsersListPage />} />
+            <Route path="/business-admin/users-access/invite" element={<BusinessInviteUserPage />} />
+            <Route path="/business-admin/users-access/users/:userId" element={<BusinessUserDetailsPage />} />
+            <Route path="/business-admin/teams" element={<TeamsPage />} />
+            <Route path="/business-admin/roles" element={<RolesPage />} />
+            <Route path="/business-admin/roles/:roleId" element={<RoleDetailsPage />} />
+            <Route path="/business-admin/users-access/roles" element={<RolesPage />} />
+            <Route path="/business-admin/users-access/roles/:roleId" element={<RoleDetailsPage />} />
+            {/* Customers */}
+            <Route path="/business-admin/customers" element={<BusinessCustomersPage />} />
+            <Route path="/business-admin/customers/create" element={<BusinessCreateCustomerPage />} />
+            <Route path="/business-admin/customers/new" element={<BusinessCreateCustomerPage />} />
+            <Route path="/business-admin/customers/:id" element={<BusinessCustomerDetailsPage />} />
+            {/* Products & Catalog */}
+            <Route path="/business-admin/products" element={<ProductsPage />} />
+            <Route path="/business-admin/products/create" element={<CreateProductPage />} />
+            <Route path="/business-admin/products/new" element={<CreateProductPage />} />
+            <Route path="/business-admin/products/categories" element={<CategoriesPage />} />
+            <Route path="/business-admin/products/:id" element={<ProductDetailsPage />} />
+            {/* Pricing */}
+            <Route path="/business-admin/pricing" element={<PriceListsPage />} />
+            <Route path="/business-admin/pricing/lists" element={<PriceListsPage />} />
+            <Route path="/business-admin/pricing/lists/create" element={<CreatePriceListPage />} />
+            <Route path="/business-admin/pricing/lists/:id" element={<PriceListDetailsPage />} />
+            <Route path="/business-admin/pricing/price-lists" element={<PriceListsPage />} />
+            <Route path="/business-admin/pricing/price-lists/create" element={<CreatePriceListPage />} />
+            <Route path="/business-admin/pricing/price-lists/:id" element={<PriceListDetailsPage />} />
+            <Route path="/business-admin/pricing/customer-pricing" element={<CustomerPricingPage />} />
+            <Route path="/business-admin/pricing/volume-pricing" element={<VolumePricingPage />} />
+            <Route path="/business-admin/pricing/history" element={<PricingHistoryPage />} />
+            {/* Discounts */}
+            <Route path="/business-admin/discounts" element={<DiscountRulesPage />} />
+            <Route path="/business-admin/discounts/create" element={<CreateDiscountRulePage />} />
+            <Route path="/business-admin/discounts/customer-tier" element={<CustomerTierRulesPage />} />
+            <Route path="/business-admin/discounts/category" element={<CategoryRulesPage />} />
+            <Route path="/business-admin/discounts/margin" element={<MarginRulesPage />} />
+            <Route path="/business-admin/discounts/simulator" element={<DiscountRuleSimulatorPage />} />
+            <Route path="/business-admin/discounts/:id" element={<DiscountRuleDetailsPage />} />
+            <Route path="/business-admin/discount-governance/rules" element={<DiscountRulesPage />} />
+            <Route path="/business-admin/discount-governance/rules/create" element={<CreateDiscountRulePage />} />
+            <Route path="/business-admin/discount-governance/rules/:id" element={<DiscountRuleDetailsPage />} />
+            {/* Approvals */}
+            <Route path="/business-admin/approvals" element={<ApprovalRulesPage />} />
+            <Route path="/business-admin/approvals/create" element={<CreateApprovalRulePage />} />
+            <Route path="/business-admin/approvals/chains" element={<ApprovalChainsPage />} />
+            <Route path="/business-admin/approvals/thresholds" element={<ApprovalThresholdsPage />} />
+            <Route path="/business-admin/approvals/simulator" element={<ApprovalSimulatorPage />} />
+            <Route path="/business-admin/approval-configuration/rules" element={<ApprovalRulesPage />} />
+            <Route path="/business-admin/approval-configuration/rules/create" element={<CreateApprovalRulePage />} />
+            {/* Warehouses & Shipping */}
+            <Route path="/business-admin/warehouses" element={<WarehouseListPage />} />
+            <Route path="/business-admin/warehouses/create" element={<CreateWarehousePage />} />
+            <Route path="/business-admin/warehouses/shipping-rules" element={<ShippingRulesListPage />} />
+            <Route path="/business-admin/warehouses/shipping-rules/create" element={<CreateShippingRulePage />} />
+            <Route path="/business-admin/warehouses/:id" element={<WarehouseDetailsPage />} />
+            <Route path="/business-admin/shipping-rules" element={<ShippingRulesListPage />} />
+            <Route path="/business-admin/shipping-rules/create" element={<CreateShippingRulePage />} />
+            <Route path="/business-admin/shipping-rules/:id" element={<WarehouseDetailsPage />} />
+            {/* Subscriptions */}
+            <Route path="/business-admin/subscriptions" element={<SubscriptionPlansListPage />} />
+            <Route path="/business-admin/subscriptions/create" element={<CreateSubscriptionPlanPage />} />
+            <Route path="/business-admin/subscriptions/billing-cycles" element={<BillingCyclesPage />} />
+            <Route path="/business-admin/subscriptions/proration-cancellation" element={<ProrationCancellationPage />} />
+            <Route path="/business-admin/subscriptions/:id" element={<SubscriptionPlanDetailsPage />} />
+            <Route path="/business-admin/subscription-plans" element={<SubscriptionPlansListPage />} />
+            <Route path="/business-admin/subscription-plans/create" element={<CreateSubscriptionPlanPage />} />
+            <Route path="/business-admin/subscription-plans/:id" element={<SubscriptionPlanDetailsPage />} />
+            {/* Other Admin Pages */}
+            <Route path="/business-admin/deal-health" element={<BusinessDealHealthPage />} />
+            <Route path="/business-admin/audit" element={<BusinessAuditTrailPage />} />
+            <Route path="/business-admin/reports" element={<BusinessReportsPage />} />
+            <Route path="/business-admin/settings" element={<BusinessSettingsPage />} />
+          </Route>
 
           {/* ─── SALES (03.x) ─── */}
-          <Route path="/sales/customers" element={<MyCustomersPage />} />
-          <Route path="/sales/customers/:id" element={<CustomerDetailsPage />} />
-          <Route path="/sales/deals" element={<MyDealsPage />} />
-          <Route path="/sales/deals/:id" element={<DealDetailsPage />} />
-          <Route path="/sales/deals/:id/timeline" element={<DealTimelinePage />} />
-          <Route path="/sales/deals/:id/health" element={<DealHealthPage />} />
-          <Route path="/sales/quotations" element={<AllQuotationsPage />} />
-          <Route path="/sales/quotations/create" element={<CreateQuotationPage />} />
-          <Route path="/sales/quotations/:id" element={<QuotationDetailsPage />} />
-          <Route path="/sales/quotations/:id/builder" element={<QuotationBuilderPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'sales_manager', 'sales_rep']} />}>
+            <Route path="/sales/customers" element={<MyCustomersPage />} />
+            <Route path="/sales/customers/:id" element={<CustomerDetailsPage />} />
+            <Route path="/sales/deals" element={<MyDealsPage />} />
+            <Route path="/sales/deals/:id" element={<DealDetailsPage />} />
+            <Route path="/sales/deals/:id/timeline" element={<DealTimelinePage />} />
+            <Route path="/sales/deals/:id/health" element={<DealHealthPage />} />
+            <Route path="/sales/quotations" element={<AllQuotationsPage />} />
+            <Route path="/sales/quotations/create" element={<CreateQuotationPage />} />
+            <Route path="/sales/quotations/:id" element={<QuotationDetailsPage />} />
+            <Route path="/sales/quotations/:id/builder" element={<QuotationBuilderPage />} />
+          </Route>
 
           {/* ─── SALES MANAGER (04.x) ─── */}
-          <Route path="/sales-manager" element={<SalesManagerDashboardPage />} />
-          <Route path="/sales-manager/dashboard" element={<SalesManagerDashboardPage />} />
-          <Route path="/sales-manager/approvals" element={<ApprovalInboxPage />} />
-          <Route path="/sales-manager/approvals/:id" element={<ApprovalDetailsPage />} />
-          <Route path="/sales-manager/approvals/history" element={<ApprovalHistoryPage />} />
-          <Route path="/sales-manager/deals" element={<TeamDealListPage />} />
-          <Route path="/sales-manager/deals/:id" element={<TeamDealDetailsPage />} />
-          <Route path="/sales-manager/deals/:id/timeline" element={<TeamDealTimelinePage />} />
-          <Route path="/sales-manager/performance" element={<TeamPerformancePage />} />
-          <Route path="/sales-manager/deal-health" element={<DealHealthManagerPage />} />
-          <Route path="/sales-manager/reports" element={<SalesManagerReportsPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'sales_manager']} />}>
+            <Route path="/sales-manager" element={<SalesManagerDashboardPage />} />
+            <Route path="/sales-manager/dashboard" element={<SalesManagerDashboardPage />} />
+            <Route path="/sales-manager/approvals" element={<ApprovalInboxPage />} />
+            <Route path="/sales-manager/approvals/:id" element={<ApprovalDetailsPage />} />
+            <Route path="/sales-manager/approvals/history" element={<ApprovalHistoryPage />} />
+            <Route path="/sales-manager/deals" element={<TeamDealListPage />} />
+            <Route path="/sales-manager/deals/:id" element={<TeamDealDetailsPage />} />
+            <Route path="/sales-manager/deals/:id/timeline" element={<TeamDealTimelinePage />} />
+            <Route path="/sales-manager/performance" element={<TeamPerformancePage />} />
+            <Route path="/sales-manager/deal-health" element={<DealHealthManagerPage />} />
+            <Route path="/sales-manager/reports" element={<SalesManagerReportsPage />} />
+          </Route>
 
           {/* ─── FINANCE & BILLING (05.x) ─── */}
-          <Route path="/finance" element={<FinanceDashboardPage />} />
-          <Route path="/finance/dashboard" element={<FinanceDashboardPage />} />
-          <Route path="/finance/approvals" element={<FinanceHighRiskDealsPage />} />
-          <Route path="/finance/approvals/high-risk" element={<FinanceHighRiskDealsPage />} />
-          <Route path="/finance/billing/invoices" element={<FinanceInvoicesPage />} />
-          <Route path="/finance/billing/payments" element={<FinancePaymentsPage />} />
-          <Route path="/finance/billing/failed" element={<FinanceFailedPaymentsPage />} />
-          <Route path="/finance/subscriptions" element={<FinanceSubscriptionsPage />} />
-          <Route path="/finance/analytics" element={<FinanceRevenueAnalyticsPage />} />
-          <Route path="/finance/audit" element={<FinanceAuditPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'finance']} />}>
+            <Route path="/finance" element={<FinanceDashboardPage />} />
+            <Route path="/finance/dashboard" element={<FinanceDashboardPage />} />
+            <Route path="/finance/approvals" element={<FinanceHighRiskDealsPage />} />
+            <Route path="/finance/approvals/high-risk" element={<FinanceHighRiskDealsPage />} />
+            <Route path="/finance/billing/invoices" element={<FinanceInvoicesPage />} />
+            <Route path="/finance/billing/payments" element={<FinancePaymentsPage />} />
+            <Route path="/finance/billing/failed" element={<FinanceFailedPaymentsPage />} />
+            <Route path="/finance/subscriptions" element={<FinanceSubscriptionsPage />} />
+            <Route path="/finance/analytics" element={<FinanceRevenueAnalyticsPage />} />
+            <Route path="/finance/audit" element={<FinanceAuditPage />} />
+          </Route>
 
           {/* ─── OPERATIONS & FULFILLMENT (06.x) ─── */}
-          <Route path="/operations" element={<OperationsDashboardPage />} />
-          <Route path="/operations/fulfillment" element={<FulfillmentQueuePage />} />
-          <Route path="/operations/fulfillment/:fulfillmentId" element={<FulfillmentDetailsPage />} />
-          <Route path="/operations/shipments/:shipmentId" element={<ShipmentDetailsPage />} />
-          <Route path="/operations/warehouses" element={<WarehouseOverviewPage />} />
-          <Route path="/operations/inventory" element={<InventoryPage />} />
-          <Route path="/operations/inventory/movements" element={<StockMovementsPage />} />
-          <Route path="/operations/allocation/:orderId" element={<AllocationPage />} />
-          <Route path="/operations/backorders" element={<BackorderQueuePage />} />
-          <Route path="/operations/backorders/:backorderId" element={<BackorderDetailsPage />} />
-          <Route path="/operations/shipping" element={<ShipmentTrackingPage />} />
-          <Route path="/operations/analytics" element={<OperationsAnalyticsPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'operations']} />}>
+            <Route path="/operations" element={<OperationsDashboardPage />} />
+            <Route path="/operations/fulfillment" element={<FulfillmentQueuePage />} />
+            <Route path="/operations/fulfillment/:fulfillmentId" element={<FulfillmentDetailsPage />} />
+            <Route path="/operations/shipments/:shipmentId" element={<ShipmentDetailsPage />} />
+            <Route path="/operations/warehouses" element={<WarehouseOverviewPage />} />
+            <Route path="/operations/inventory" element={<InventoryPage />} />
+            <Route path="/operations/inventory/movements" element={<StockMovementsPage />} />
+            <Route path="/operations/allocation/:orderId" element={<AllocationPage />} />
+            <Route path="/operations/backorders" element={<BackorderQueuePage />} />
+            <Route path="/operations/backorders/:backorderId" element={<BackorderDetailsPage />} />
+            <Route path="/operations/shipping" element={<ShipmentTrackingPage />} />
+            <Route path="/operations/analytics" element={<OperationsAnalyticsPage />} />
+          </Route>
 
           {/* ─── INTELLIGENCE (07.x) ─── */}
-          <Route path="/intelligence" element={<IntelligenceDashboardPage />} />
-          <Route path="/intelligence/risks" element={<RiskOverviewPage />} />
-          <Route path="/intelligence/risks/high" element={<HighRiskDealsPage />} />
-          <Route path="/intelligence/risks/:riskId" element={<RiskDetailsPage />} />
-          <Route path="/intelligence/recommendations/upsell" element={<UpsellRecommendationsPage />} />
-          <Route path="/intelligence/recommendations/cross-sell" element={<CrossSellRecommendationsPage />} />
-          <Route path="/intelligence/recommendations/:recommendationId" element={<RecommendationDetailsPage />} />
-          <Route path="/intelligence/health" element={<DealHealthOverviewPage />} />
-          <Route path="/intelligence/health/stalled" element={<StalledDealsPage />} />
-          <Route path="/intelligence/anomalies/discount" element={<DiscountAnomaliesPage />} />
-          <Route path="/intelligence/anomalies/delivery" element={<DeliverySlippagePage />} />
-          <Route path="/intelligence/insights" element={<DecisionInsightsPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'sales_manager']} />}>
+            <Route path="/intelligence" element={<IntelligenceDashboardPage />} />
+            <Route path="/intelligence/risks" element={<RiskOverviewPage />} />
+            <Route path="/intelligence/risks/high" element={<HighRiskDealsPage />} />
+            <Route path="/intelligence/risks/:riskId" element={<RiskDetailsPage />} />
+            <Route path="/intelligence/recommendations/upsell" element={<UpsellRecommendationsPage />} />
+            <Route path="/intelligence/recommendations/cross-sell" element={<CrossSellRecommendationsPage />} />
+            <Route path="/intelligence/recommendations/:recommendationId" element={<RecommendationDetailsPage />} />
+            <Route path="/intelligence/health" element={<DealHealthOverviewPage />} />
+            <Route path="/intelligence/health/stalled" element={<StalledDealsPage />} />
+            <Route path="/intelligence/anomalies/discount" element={<DiscountAnomaliesPage />} />
+            <Route path="/intelligence/anomalies/delivery" element={<DeliverySlippagePage />} />
+            <Route path="/intelligence/insights" element={<DecisionInsightsPage />} />
+          </Route>
 
           {/* ─── ANALYTICS & BI (09.x) ─── */}
-          <Route path="/analytics" element={<ExecutiveDashboardPage />} />
-          <Route path="/analytics/executive" element={<ExecutiveDashboardPage />} />
-          <Route path="/analytics/sales" element={<SalesAnalyticsPage />} />
-          <Route path="/analytics/revenue" element={<RevenueAnalyticsPage />} />
-          <Route path="/analytics/discount" element={<DiscountAnalyticsPage />} />
-          <Route path="/analytics/margin" element={<MarginAnalyticsPage />} />
-          <Route path="/analytics/approval" element={<ApprovalAnalyticsPage />} />
-          <Route path="/analytics/fulfillment" element={<FulfillmentAnalyticsPage />} />
-          <Route path="/analytics/subscription" element={<SubscriptionAnalyticsPage />} />
-          <Route path="/analytics/reports" element={<CustomReportsPage />} />
+          <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'sales_manager', 'finance', 'operations']} />}>
+            <Route path="/analytics" element={<ExecutiveDashboardPage />} />
+            <Route path="/analytics/executive" element={<ExecutiveDashboardPage />} />
+            <Route path="/analytics/sales" element={<SalesAnalyticsPage />} />
+            <Route path="/analytics/revenue" element={<RevenueAnalyticsPage />} />
+            <Route path="/analytics/discount" element={<DiscountAnalyticsPage />} />
+            <Route path="/analytics/margin" element={<MarginAnalyticsPage />} />
+            <Route path="/analytics/approval" element={<ApprovalAnalyticsPage />} />
+            <Route path="/analytics/fulfillment" element={<FulfillmentAnalyticsPage />} />
+            <Route path="/analytics/subscription" element={<SubscriptionAnalyticsPage />} />
+            <Route path="/analytics/reports" element={<CustomReportsPage />} />
+          </Route>
 
           {/* ─── WORKSPACE & SHARED ─── */}
           <Route path="/search" element={<GlobalSearchPage />} />

@@ -34,7 +34,7 @@ export function FulfillmentAnalyticsPage() {
       )}
       <AnalyticsSection title="Warehouse Performance" description="Throughput, capacity, allocation efficiency, and inventory turnover." isLoading={isLoading} isEmpty={!isLoading && !s.warehouses} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Warehouse performance chart" emptyTitle="No warehouse data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.warehouses ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="throughput" fill="hsl(var(--primary))" name="Throughput" /><Bar dataKey="capacity" fill="hsl(var(--info))" name="Capacity" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.warehouses ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="throughput" fill="hsl(var(--primary))" name="Throughput" animationDuration={350} animationEasing="ease-out" /><Bar dataKey="capacity" fill="hsl(var(--info))" name="Capacity" animationDuration={350} animationEasing="ease-out" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Shipping" description="Shipments, delays, shipping cost, and delivery time." isLoading={isLoading} isEmpty={!isLoading && !s.shipping} error={error} onRetry={() => refetch()}>
@@ -42,7 +42,7 @@ export function FulfillmentAnalyticsPage() {
       </AnalyticsSection>
       <AnalyticsSection title="Backorders" description="Volume, duration, and customer impact." isLoading={isLoading} isEmpty={!isLoading && !s.warehouses} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Backorder trend chart" emptyTitle="No backorder data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><LineChart data={(s.warehouses ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Line type="monotone" dataKey="backorders" stroke="hsl(var(--danger))" name="Backorders" /></LineChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><LineChart data={(s.warehouses ?? [])} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Line type="monotone" dataKey="backorders" stroke="hsl(var(--danger))" name="Backorders" animationDuration={350} animationEasing="ease-out" /></LineChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
     </div>

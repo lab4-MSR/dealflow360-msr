@@ -256,7 +256,7 @@ export function BusinessDetailsOverviewPage() {
                       tickLine={false}
                     />
                     <Tooltip content={<ChartTooltip />} />
-                    <Bar dataKey="count" name="Deals" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={24} />
+                    <Bar dataKey="count" name="Deals" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={24} animationDuration={350} animationEasing="ease-out" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -299,6 +299,8 @@ export function BusinessDetailsOverviewPage() {
                       strokeWidth={2}
                       dot={{ fill: 'var(--color-primary)', r: 3 }}
                       activeDot={{ r: 5 }}
+                      animationDuration={350}
+                      animationEasing="ease-out"
                     />
                   </LineChart>
                 </ResponsiveContainer>

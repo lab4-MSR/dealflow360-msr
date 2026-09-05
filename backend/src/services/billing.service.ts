@@ -81,7 +81,7 @@ export async function testProration(businessId: string, input: { current_plan_id
   if (!current || !next) throw ApiError.notFound('Both subscription plans are required for proration.');
   const changeDate = new Date(input.change_date);
   if (Number.isNaN(changeDate.getTime())) throw ApiError.validation('change_date must be a valid date.');
-  const daysInPeriod = 30;
+  const daysInPeriod = new Date(changeDate.getFullYear(), changeDate.getMonth() + 1, 0).getDate();
   const usedDays = Math.min(daysInPeriod, Math.max(0, changeDate.getDate() - 1));
   const remainingDays = daysInPeriod - usedDays;
   const credit = Number((Number(current.price) * remainingDays / daysInPeriod).toFixed(2));

@@ -6,6 +6,7 @@ import { DEMO_USERS } from '@/services/auth'
 import { ROLE_LABELS, ROLE_DASHBOARD_MAP } from '@/types/auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import {
   Search,
   Sun,
@@ -115,22 +116,19 @@ export function Topbar() {
           title="Notification Center"
         >
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-danger" />
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background animate-pulse" />
         </Button>
 
         {/* Theme Toggle */}
         <Button
           variant="ghost"
           size="icon"
-          className="text-muted-foreground"
+          className="text-muted-foreground relative overflow-hidden"
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
           title="Toggle theme"
         >
-          {resolvedTheme === 'dark' ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Moon className="h-4 w-4" />
-          )}
+          <Sun className={cn("h-4 w-4 transition-all duration-200 ease-out", resolvedTheme === 'dark' ? "rotate-0 scale-100" : "-rotate-90 scale-0 absolute")} />
+          <Moon className={cn("h-4 w-4 transition-all duration-200 ease-out", resolvedTheme === 'dark' ? "rotate-90 scale-0 absolute" : "rotate-0 scale-100")} />
         </Button>
 
         {/* User Profile & Account Switcher Dropdown */}
@@ -138,7 +136,7 @@ export function Topbar() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-accent cursor-pointer transition-colors focus:outline-none"
+            className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-accent cursor-pointer transition-all duration-150 ease-out active:scale-[0.98] motion-reduce:active:scale-100 focus:outline-none"
           >
             <Avatar className="h-8 w-8 bg-primary/10 text-primary border border-primary/20">
               <AvatarFallback className="text-xs font-semibold">{initials}</AvatarFallback>
@@ -152,7 +150,7 @@ export function Topbar() {
 
           {/* Dropdown Menu */}
           {menuOpen && (
-            <div className="absolute right-0 mt-2 w-72 rounded-xl border border-border bg-card shadow-lg py-2 z-50 animate-in fade-in-50 zoom-in-95">
+            <div className="absolute right-0 mt-2 w-72 rounded-xl border border-border bg-card shadow-elevation-3 py-2 z-50 animate-in fade-in-0 zoom-in-95 duration-150 ease-out origin-top-right motion-reduce:animate-none">
               {/* Account Header */}
               <div className="px-4 py-3 border-b border-border/70">
                 <p className="text-sm font-semibold text-foreground truncate">{displayName}</p>

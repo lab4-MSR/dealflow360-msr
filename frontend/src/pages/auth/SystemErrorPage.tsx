@@ -1,4 +1,4 @@
-import { useNavigate, useRouteError } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { AlertTriangle, ArrowLeft, Home, RefreshCw, Mail, ChevronDown, ChevronUp } from 'lucide-react'
 import { useState, useMemo } from 'react'
@@ -10,10 +10,9 @@ interface SystemErrorPageProps {
 
 export default function SystemErrorPage({ error: propError, resetError }: SystemErrorPageProps) {
   const navigate = useNavigate()
-  const routeError = useRouteError()
   const [showDetails, setShowDetails] = useState(false)
 
-  const error = propError || routeError
+  const error = propError || null
 
   const errorId = useMemo(() => {
     const random = Math.random().toString(36).substring(2, 6).toUpperCase()

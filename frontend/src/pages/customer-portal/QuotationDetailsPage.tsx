@@ -50,8 +50,8 @@ export function QuotationDetailsPage() {
       </div>
       <Card><CardHeader><CardTitle className="text-base font-semibold">Actions</CardTitle><CardDescription>Respond to this quotation.</CardDescription></CardHeader><CardContent>
         <div className="flex flex-wrap gap-3">
-          <Button onClick={() => navigate(`/customer-portal/review/${id}`)}><CheckCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Accept</Button>
-          <Button variant="outline" onClick={() => navigate(`/customer-portal/review/${id}`)}><XCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Reject</Button>
+          <Button onClick={() => navigate(`/customer-portal/quotations/${id}/review`)}><CheckCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Accept</Button>
+          <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/review`)}><XCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Reject</Button>
           <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/request-changes`)}><MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Request Changes</Button>
           <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/counter-offer`)}><Handshake className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Counter Offer</Button>
         </div>

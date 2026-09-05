@@ -26,13 +26,13 @@ function Drawer({ open, onClose, title, description, children, side = 'right', c
     <>
       {open && (
         <div
-          className="fixed inset-0 z-50 bg-black/45 animate-in fade-in-0"
+          className="fixed inset-0 z-50 bg-black/45 duration-200 animate-in fade-in-0 motion-reduce:animate-none"
           onClick={onClose}
         />
       )}
       <div
         className={cn(
-          'fixed z-50 inset-y-0 flex flex-col bg-card shadow-elevation-4 transition-transform duration-250',
+          'fixed z-50 inset-y-0 flex flex-col bg-card shadow-elevation-4 transition-transform duration-300 ease-out motion-reduce:transition-none',
           side === 'right' && 'right-0 w-full max-w-[560px] border-l border-border',
           side === 'left' && 'left-0 w-full max-w-[560px] border-r border-border',
           side === 'right' && (open ? 'translate-x-0' : 'translate-x-full'),

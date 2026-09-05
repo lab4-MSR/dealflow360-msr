@@ -205,7 +205,7 @@ export function BusinessAdminDashboard() {
                   <Tooltip
                     contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
                   />
-                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} animationDuration={350} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
@@ -265,7 +265,7 @@ export function BusinessAdminDashboard() {
                     contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
                     formatter={(value) => [`₹${Number(value).toLocaleString()}`, 'Revenue']}
                   />
-                  <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} />
+                  <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} animationDuration={350} animationEasing="ease-out" />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (

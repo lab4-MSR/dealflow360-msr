@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const kpiCardVariants = cva(
-  'rounded-xl border border-border bg-card p-5 transition-all duration-150',
+  'rounded-xl border border-border bg-card p-5 transition-all duration-200 ease-out hover:border-border-strong',
   {
     variants: {
       variant: {
@@ -43,7 +43,7 @@ function KpiCard({ className, variant, label, title, value, trend, change, icon,
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-caption font-medium text-muted-foreground">{displayLabel}</p>
-          <p className="text-h2 tabular-nums">{value}</p>
+          <p className="text-h2 tabular-nums transition-all duration-200 ease-out">{value}</p>
           {trend && (
             <p className={cn(
               'text-caption tabular-nums',
