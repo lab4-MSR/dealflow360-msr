@@ -18,7 +18,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@prisma/client": "^6.23.0",
+    "@prisma/client": "^6.4.1",
+    "@supabase/supabase-js": "^2.49.1",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -29,14 +30,14 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.3",
+    "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^24.13.3",
     "nodemon": "^3.1.9",
-    "prisma": "^6.23.0",
+    "prisma": "^6.4.1",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
   }

@@ -9,15 +9,19 @@ import { env } from '../config/env';
  * endpoints where the frontend/anon role is the appropriate principal
  * (e.g. sign-up / magic-link flows that Supabase expects from a user client).
  */
+const supabaseUrl = env.supabaseUrl || 'https://placeholder.supabase.co';
+const supabaseServiceRoleKey = env.supabaseServiceRoleKey || 'placeholder-service-role-key';
+const supabaseAnonKey = env.supabaseAnonKey || 'placeholder-anon-key';
+
 export const serviceClient: SupabaseClient = createClient(
-  env.supabaseUrl,
-  env.supabaseServiceRoleKey,
+  supabaseUrl,
+  supabaseServiceRoleKey,
   { auth: { autoRefreshToken: false, persistSession: false } },
 );
 
 /** Client used with a specific user JWT (respects RLS on remote calls). */
 export function withAuth(jwt: string): SupabaseClient {
-  return createClient(env.supabaseUrl, env.supabaseAnonKey, {
+  return createClient(supabaseUrl, supabaseAnonKey, {
     global: { headers: { Authorization: `Bearer ${jwt}` } },
     auth: { autoRefreshToken: false, persistSession: false },
   });
@@ -25,7 +29,7 @@ export function withAuth(jwt: string): SupabaseClient {
 
 /** Anon client (no user JWT) for genuinely public flows. */
 export const anonClient: SupabaseClient = createClient(
-  env.supabaseUrl,
-  env.supabaseAnonKey,
+  supabaseUrl,
+  supabaseAnonKey,
   { auth: { autoRefreshToken: false, persistSession: false } },
 );
