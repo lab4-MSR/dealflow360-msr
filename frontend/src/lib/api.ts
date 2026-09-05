@@ -1,96 +1,94 @@
-import axios, { type AxiosInstance, type InternalAxiosRequestConfig } from 'axios'
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1'
-
-class ApiClient {
-  private client: AxiosInstance
-
-  constructor() {
-    this.client = axios.create({
-      baseURL: API_BASE_URL,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    this.client.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('access_token')
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`
-        }
-        return config
-      },
-      (error) => Promise.reject(error)
-    )
-
-    this.client.interceptors.response.use(
-      (response) => response,
-      (error) => Promise.reject(error)
-    )
-  }
-
-  async get<T>(url: string, params?: Record<string, unknown>) {
-    const response = await this.client.get<T>(url, { params })
-    return response.data
-  }
-
-  async post<T>(url: string, data?: unknown) {
-    const response = await this.client.post<T>(url, data)
-    return response.data
-  }
-
-  async patch<T>(url: string, data?: unknown) {
-    const response = await this.client.patch<T>(url, data)
-    return response.data
-  }
-
-  async delete<T>(url: string) {
-    const response = await this.client.delete<T>(url)
-    return response.data
+export interface ApiErrorResponse {
+  success: false
+  data: null
+  meta: null
+  error: {
+    code: string
+    message: string
+    field?: string
+    details?: Record<string, unknown>
   }
 }
 
-export const api = new ApiClient()
-
-export interface ApiResponse<T> {
-  success: boolean
+export interface ApiSuccessResponse<T> {
+  success: true
   data: T
-  meta: Record<string, unknown> | null
-  error: ApiError | null
-}
-
-export interface ApiError {
-  code: string
-  message: string
-  field?: string
-  details?: Record<string, unknown>
-}
-
-export interface SearchResult {
-  type: string
-  id: string
-  title: string
-  subtitle: string
-  status?: string
-  url: string
-}
-
-export interface SearchResponse {
-  success: boolean
-  data: SearchResult[]
-  meta: {
+  meta?: {
+    page: number
+    per_page: number
     total: number
-    query: string
-  }
-  error: ApiError | null
+    total_pages: number
+  } | null
+  error: null
 }
 
-export interface SearchParams {
-  q: string
-  type?: string
-  status?: string
-  date_from?: string
-  date_to?: string
-  owner_id?: string
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse
+
+const apiClient = axios.create({
+  baseURL: '/api/v1',
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 15000,
+})
+
+apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem('dealflow360-access-token')
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError<ApiErrorResponse>) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('dealflow360-access-token')
+      localStorage.removeItem('dealflow360-refresh-token')
+      const currentPath = window.location.pathname
+      if (!currentPath.startsWith('/login') && !currentPath.startsWith('/auth')) {
+        window.location.href = `/login?returnTo=${encodeURIComponent(currentPath)}`
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
+export function getApiErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const apiError = error.response?.data as ApiErrorResponse | undefined
+    if (apiError?.error?.message) return apiError.error.message
+    if (error.response?.status === 0 || !error.response) {
+      return "We couldn't connect to DealFlow360. Please check your connection and try again."
+    }
+    if (error.response?.status === 429) {
+      return 'Too many attempts. Please wait a moment and try again.'
+    }
+    if (error.response?.status && error.response.status >= 500) {
+      return 'Something went wrong on our end. Please try again.'
+    }
+    return error.message || 'An unexpected error occurred.'
+  }
+  if (error instanceof Error) return error.message
+  return 'An unexpected error occurred.'
 }
+
+export function getApiErrorCode(error: unknown): string | undefined {
+  if (axios.isAxiosError(error)) {
+    const apiError = error.response?.data as ApiErrorResponse | undefined
+    return apiError?.error?.code
+  }
+  return undefined
+}
+
+export function getApiErrorField(error: unknown): string | undefined {
+  if (axios.isAxiosError(error)) {
+    const apiError = error.response?.data as ApiErrorResponse | undefined
+    return apiError?.error?.field
+  }
+  return undefined
+}
+
+export const api = apiClient
+export default apiClient

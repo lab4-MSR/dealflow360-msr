@@ -48,7 +48,7 @@ export function SalesAnalyticsPage() {
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Pipeline Velocity" description="How quickly deals move through stages." isLoading={isLoading} isEmpty={!isLoading && s.velocity_days == null} error={error} onRetry={() => refetch()}>
-        <div className="rounded-lg border border-border p-6 text-center"><p className="text-sm text-muted-foreground">Average velocity: {s.velocity_days != null ? `${s.velocity_days} days` : '—'}</p></div>
+        <div className="rounded-lg border border-border p-6 text-center"><p className="text-sm text-muted-foreground">Average velocity: {s.velocity_days != null ? `${s.velocity_days} days` : 'ï¿½'}</p></div>
       </AnalyticsSection>
       <AnalyticsSection title="Sales Performance" description="Rep, team, and customer performance." isLoading={isLoading} isEmpty={!isLoading && !s.rep_performance} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Rep performance chart" emptyTitle="No performance data for this period.">

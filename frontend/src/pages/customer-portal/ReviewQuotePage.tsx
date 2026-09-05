@@ -53,8 +53,8 @@ export function ReviewQuotePage() {
           <div className="flex flex-wrap gap-3">
             <Button onClick={() => setDialog('accept')}><CheckCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Accept Quote</Button>
             <Button variant="outline" onClick={() => setDialog('reject')}><XCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Reject Quote</Button>
-            <Button variant="outline" onClick={() => setDialog('changes')}><MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Request Changes</Button>
-            <Button variant="outline" onClick={() => setDialog('counter')}><Handshake className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Negotiate</Button>
+            <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/request-changes`)}><MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Request Changes</Button>
+            <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/counter-offer`)}><Handshake className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Negotiate</Button>
           </div>
         </CardContent></Card>
       </div>

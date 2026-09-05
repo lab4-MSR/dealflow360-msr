@@ -52,8 +52,8 @@ export function QuotationDetailsPage() {
         <div className="flex flex-wrap gap-3">
           <Button onClick={() => navigate(`/customer-portal/review/${id}`)}><CheckCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Accept</Button>
           <Button variant="outline" onClick={() => navigate(`/customer-portal/review/${id}`)}><XCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Reject</Button>
-          <Button variant="outline" onClick={() => navigate(`/customer-portal/review/${id}`)}><MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Request Changes</Button>
-          <Button variant="outline" onClick={() => navigate(`/customer-portal/review/${id}`)}><Handshake className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Counter Offer</Button>
+          <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/request-changes`)}><MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Request Changes</Button>
+          <Button variant="outline" onClick={() => navigate(`/customer-portal/quotations/${id}/counter-offer`)}><Handshake className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Counter Offer</Button>
         </div>
       </CardContent></Card>
     </div>

@@ -16,6 +16,11 @@ import {
   Settings,
   ChevronLeft,
   Building2,
+  Bell,
+  HelpCircle,
+  User,
+  Package,
+  RefreshCw,
 } from 'lucide-react'
 
 const iconMap: Record<string, React.ElementType> = {
@@ -30,7 +35,14 @@ const iconMap: Record<string, React.ElementType> = {
   UserCog,
   SlidersHorizontal,
   Settings,
+  Bell,
+  HelpCircle,
+  User,
+  Package,
+  RefreshCw,
+  Building2,
 }
+
 
 interface SidebarProps {
   collapsed?: boolean
