@@ -14,11 +14,17 @@ const sizeClasses = {
 }
 
 export function MoneyDisplay({ amount, currency = 'INR', className, size = 'md' }: MoneyDisplayProps) {
-  const formatted = new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: 0,
-  }).format(amount)
+  const numericAmount = typeof amount === 'number' && !isNaN(amount) ? amount : (Number(amount) || 0)
+  let formatted: string
+  try {
+    formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: currency || 'INR',
+      minimumFractionDigits: 0,
+    }).format(numericAmount)
+  } catch {
+    formatted = `${currency || '₹'} ${numericAmount.toLocaleString('en-IN')}`
+  }
 
   return (
     <span className={cn('font-medium', sizeClasses[size], className)}>

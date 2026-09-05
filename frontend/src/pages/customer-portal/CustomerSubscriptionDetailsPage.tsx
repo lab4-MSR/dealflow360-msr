@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { toast } from 'sonner'
 import {
   getCustomerSubscriptionDetail,
   cancelCustomerSubscription,
@@ -169,7 +170,11 @@ export const CustomerSubscriptionDetailsPage: React.FC = () => {
             >
               <XCircle className="h-3.5 w-3.5" /> Cancel Subscription
             </Button>
-            <Button size="sm" className="bg-primary text-xs h-8">
+            <Button
+              size="sm"
+              className="bg-primary text-xs h-8"
+              onClick={() => toast.success('Your seat expansion request has been sent to your account team.')}
+            >
               Request Seat Expansion
             </Button>
           </div>

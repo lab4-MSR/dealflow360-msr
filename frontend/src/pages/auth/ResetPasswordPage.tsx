@@ -72,17 +72,17 @@ export default function ResetPasswordPage() {
           </div>
           <AuthCard>
             <div className="space-y-4">
-              <Link to="/forgot-password">
-                <Button className="w-full" size="lg">
+              <Button asChild className="w-full" size="lg">
+                <Link to="/forgot-password">
                   Request a new reset link
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button variant="secondary" className="w-full" size="lg">
+                </Link>
+              </Button>
+              <Button asChild variant="secondary" className="w-full" size="lg">
+                <Link to="/login">
                   <ArrowLeft className="h-4 w-4" />
                   Back to sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </AuthCard>
         </div>
@@ -105,17 +105,17 @@ export default function ResetPasswordPage() {
           </div>
           <AuthCard>
             <div className="space-y-4">
-              <Link to="/forgot-password">
-                <Button className="w-full" size="lg">
+              <Button asChild className="w-full" size="lg">
+                <Link to="/forgot-password">
                   Request a new reset link
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button variant="secondary" className="w-full" size="lg">
+                </Link>
+              </Button>
+              <Button asChild variant="secondary" className="w-full" size="lg">
+                <Link to="/login">
                   <ArrowLeft className="h-4 w-4" />
                   Back to sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </AuthCard>
         </div>
@@ -137,11 +137,11 @@ export default function ResetPasswordPage() {
             </p>
           </div>
           <AuthCard>
-            <Link to="/login">
-              <Button className="w-full" size="lg">
+            <Button asChild className="w-full" size="lg">
+              <Link to="/login">
                 Continue to sign in
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </AuthCard>
         </div>
       </AuthLayout>

@@ -17,6 +17,7 @@ import {
   ExternalLink,
   Sun,
   Moon,
+  Package,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -35,6 +36,7 @@ export function CustomerPortalLayout() {
   const navItems = [
     { label: 'Overview', path: '/customer-portal/dashboard', icon: LayoutDashboard },
     { label: 'Quotations', path: '/customer-portal/quotations', icon: FileText },
+    { label: 'Orders', path: '/customer-portal/orders', icon: Package },
     { label: 'Shipments', path: '/customer-portal/shipments', icon: Truck },
     { label: 'Invoices', path: '/customer-portal/invoices', icon: CreditCard },
     { label: 'Subscriptions', path: '/customer-portal/subscriptions', icon: RefreshCw },

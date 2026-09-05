@@ -139,11 +139,11 @@ export default function AcceptInvitationPage() {
             </p>
           </div>
           <AuthCard>
-            <Link to="/login">
-              <Button className="w-full" size="lg">
+            <Button asChild className="w-full" size="lg">
+              <Link to="/login">
                 Go to sign in
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </AuthCard>
         </div>
       </AuthLayout>
@@ -164,11 +164,11 @@ export default function AcceptInvitationPage() {
             </p>
           </div>
           <AuthCard>
-            <Link to="/login">
-              <Button className="w-full" size="lg">
+            <Button asChild className="w-full" size="lg">
+              <Link to="/login">
                 Go to sign in
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </AuthCard>
         </div>
       </AuthLayout>
@@ -189,11 +189,11 @@ export default function AcceptInvitationPage() {
             </p>
           </div>
           <AuthCard>
-            <Link to="/login">
-              <Button className="w-full" size="lg">
+            <Button asChild className="w-full" size="lg">
+              <Link to="/login">
                 Go to sign in
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </AuthCard>
         </div>
       </AuthLayout>

@@ -183,8 +183,17 @@ export function CustomerPricingPage() {
     {
       id: 'actions',
       header: '',
-      accessorFn: () => (
-        <Button variant="ghost" size="icon" className="h-7 w-7 text-danger">
+      accessorFn: (row: Record<string, unknown>) => (
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 text-danger"
+          onClick={() => {
+            toast.success(`Override for ${String((row as { productName?: string }).productName || 'product')} removed`)
+            refetch()
+          }}
+          aria-label="Remove override"
+        >
           <Trash2 className="h-3.5 w-3.5" />
         </Button>
       ),

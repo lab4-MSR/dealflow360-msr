@@ -162,28 +162,5 @@ export const SIDEBAR_NAV: NavSection[] = [
       { label: 'Custom Reports Hub', path: '/analytics/reports', icon: 'FileText' },
     ],
   },
-  {
-    section: 'CUSTOMER PORTAL',
-    roles: ['customer'],
-    items: [
-      { label: 'Portal Dashboard', path: '/customer-portal', icon: 'LayoutDashboard' },
-      { label: 'Portal Quotations', path: '/customer-portal/quotations', icon: 'FileText' },
-      { label: 'Portal Orders', path: '/customer-portal/orders', icon: 'Package' },
-      { label: 'Portal Shipments', path: '/customer-portal/shipments', icon: 'Truck' },
-      { label: 'Portal Invoices', path: '/customer-portal/invoices', icon: 'CreditCard' },
-      { label: 'Portal Subscriptions', path: '/customer-portal/subscriptions', icon: 'RefreshCw' },
-    ],
-  },
-  {
-    section: 'WORKSPACE',
-    roles: ['sales_rep', 'sales_manager', 'finance', 'operations', 'business_admin', 'super_admin'],
-    items: [
-      { label: 'Global Search', path: '/search', icon: 'Sparkles' },
-      { label: 'Notifications', path: '/notifications', icon: 'Bell' },
-      { label: 'My Profile', path: '/profile', icon: 'User' },
-      { label: 'Preferences', path: '/preferences', icon: 'SlidersHorizontal' },
-      { label: 'Help Center', path: '/help', icon: 'HelpCircle' },
-      { label: 'System Settings', path: '/settings', icon: 'Settings' },
-    ],
-  },
 ]
+

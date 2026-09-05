@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HeartPulse, AlertTriangle, TrendingDown, Activity, Users, Target, Clock, Package, Eye, ChevronRight, Lightbulb } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -35,6 +36,7 @@ function getHealthColor(score: number) {
 }
 
 export function DealHealthPage() {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<DealHealthFilters>({ page: 1, perPage: 20 });
   const [searchInput, setSearchInput] = useState('');
 
@@ -246,7 +248,12 @@ export function DealHealthPage() {
               id: 'actions',
               header: '',
               accessorFn: (row: DealHealthItem) => (
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-label={`View deal ${row.dealName}`}
+                  onClick={() => navigate(`/sales/deals/${row.id}`)}
+                >
                   <Eye className="h-3.5 w-3.5" />
                 </Button>
               ),

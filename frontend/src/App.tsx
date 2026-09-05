@@ -262,10 +262,10 @@ export function App() {
             element={
               (() => {
                 const { user, getDashboardPath } = useAuth()
-                if (user && user.role !== 'sales_rep') {
+                if (user) {
                   return <Navigate to={getDashboardPath()} replace />
                 }
-                return <DashboardPage />
+                return <Navigate to="/login" replace />
               })()
             }
           />
@@ -304,6 +304,8 @@ export function App() {
             <Route path="/platform/analytics" element={<PlatformAnalyticsPage />} />
             <Route path="/platform/audit" element={<PlatformAuditPage />} />
             <Route path="/platform/health" element={<PlatformHealthPage />} />
+            <Route path="/platform/system-health" element={<PlatformHealthPage />} />
+            <Route path="/platform/deals/:id" element={<DealDetailsPage />} />
             <Route path="/platform/settings" element={<PlatformSettingsPage />} />
           </Route>
 
@@ -325,8 +327,11 @@ export function App() {
             <Route path="/business-admin/users-access/invite" element={<BusinessInviteUserPage />} />
             <Route path="/business-admin/users-access/users/:userId" element={<BusinessUserDetailsPage />} />
             <Route path="/business-admin/teams" element={<TeamsPage />} />
+            <Route path="/business-admin/teams/:teamId" element={<TeamsPage />} />
             <Route path="/business-admin/roles" element={<RolesPage />} />
             <Route path="/business-admin/roles/:roleId" element={<RoleDetailsPage />} />
+            <Route path="/business-admin/users-access/teams" element={<TeamsPage />} />
+            <Route path="/business-admin/users-access/teams/:teamId" element={<TeamsPage />} />
             <Route path="/business-admin/users-access/roles" element={<RolesPage />} />
             <Route path="/business-admin/users-access/roles/:roleId" element={<RoleDetailsPage />} />
             {/* Customers */}
@@ -359,9 +364,11 @@ export function App() {
             <Route path="/business-admin/discounts/margin" element={<MarginRulesPage />} />
             <Route path="/business-admin/discounts/simulator" element={<DiscountRuleSimulatorPage />} />
             <Route path="/business-admin/discounts/:id" element={<DiscountRuleDetailsPage />} />
+            <Route path="/business-admin/discounts/:id/edit" element={<CreateDiscountRulePage />} />
             <Route path="/business-admin/discount-governance/rules" element={<DiscountRulesPage />} />
             <Route path="/business-admin/discount-governance/rules/create" element={<CreateDiscountRulePage />} />
             <Route path="/business-admin/discount-governance/rules/:id" element={<DiscountRuleDetailsPage />} />
+            <Route path="/business-admin/discount-governance/rules/:id/edit" element={<CreateDiscountRulePage />} />
             {/* Approvals */}
             <Route path="/business-admin/approvals" element={<ApprovalRulesPage />} />
             <Route path="/business-admin/approvals/create" element={<CreateApprovalRulePage />} />
@@ -430,10 +437,17 @@ export function App() {
             <Route path="/finance/dashboard" element={<FinanceDashboardPage />} />
             <Route path="/finance/approvals" element={<FinanceHighRiskDealsPage />} />
             <Route path="/finance/approvals/high-risk" element={<FinanceHighRiskDealsPage />} />
+            <Route path="/finance/risk/high" element={<FinanceHighRiskDealsPage />} />
+            <Route path="/finance/reviews/:id" element={<ApprovalDetailsPage />} />
+            <Route path="/finance/approvals/:id" element={<ApprovalDetailsPage />} />
+            <Route path="/finance/invoices" element={<FinanceInvoicesPage />} />
+            <Route path="/finance/invoices/:id" element={<FinanceInvoicesPage />} />
             <Route path="/finance/billing/invoices" element={<FinanceInvoicesPage />} />
+            <Route path="/finance/billing/invoices/:id" element={<FinanceInvoicesPage />} />
             <Route path="/finance/billing/payments" element={<FinancePaymentsPage />} />
             <Route path="/finance/billing/failed" element={<FinanceFailedPaymentsPage />} />
             <Route path="/finance/subscriptions" element={<FinanceSubscriptionsPage />} />
+            <Route path="/finance/subscriptions/:id" element={<FinanceSubscriptionsPage />} />
             <Route path="/finance/analytics" element={<FinanceRevenueAnalyticsPage />} />
             <Route path="/finance/audit" element={<FinanceAuditPage />} />
           </Route>

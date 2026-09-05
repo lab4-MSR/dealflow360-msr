@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Users, UserPlus, Search, Filter, X, MoreHorizontal, Eye, UserX, UserCheck } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -86,6 +86,7 @@ function useDebouncedCallback<T extends (...args: unknown[]) => void>(callback: 
 
 export function BusinessUsersPage() {
   const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
 
   const [page, setPage] = useState(1)
   const [perPage] = useState(10)
@@ -292,7 +293,10 @@ export function BusinessUsersPage() {
       {/* Page Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-h2 text-foreground">Business Users</h1>
-        <Button className="gap-1.5">
+        <Button
+          className="gap-1.5"
+          onClick={() => navigate(`/platform/users/invite${id ? `?business_id=${id}` : ''}`)}
+        >
           <UserPlus className="h-4 w-4" />
           Invite User
         </Button>
@@ -461,7 +465,10 @@ export function BusinessUsersPage() {
                   Clear Filters
                 </Button>
               ) : (
-                <Button className="gap-1.5">
+                <Button
+                  className="gap-1.5"
+                  onClick={() => navigate(`/platform/users/invite${id ? `?business_id=${id}` : ''}`)}
+                >
                   <UserPlus className="h-4 w-4" />
                   Invite User
                 </Button>

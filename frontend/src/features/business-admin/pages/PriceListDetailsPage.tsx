@@ -207,7 +207,7 @@ export function PriceListDetailsPage() {
             <Badge variant={STATUS_VARIANT[pl.status] || 'secondary'}>{pl.status}</Badge>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" aria-label="More actions">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>

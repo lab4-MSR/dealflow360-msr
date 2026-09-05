@@ -7,8 +7,10 @@ interface DiscountIndicatorProps {
   size?: 'sm' | 'md'
 }
 
-export function DiscountIndicator({ allowed, applied, className, size = 'md' }: DiscountIndicatorProps) {
-  const overDiscount = applied - allowed
+export function DiscountIndicator({ allowed = 0, applied = 0, className, size = 'md' }: DiscountIndicatorProps) {
+  const numAllowed = typeof allowed === 'number' && !isNaN(allowed) ? allowed : (Number(allowed) || 0)
+  const numApplied = typeof applied === 'number' && !isNaN(applied) ? applied : (Number(applied) || 0)
+  const overDiscount = numApplied - numAllowed
   const isOverDiscount = overDiscount > 0
 
   return (
@@ -20,7 +22,7 @@ export function DiscountIndicator({ allowed, applied, className, size = 'md' }: 
           : 'bg-success-subtle text-success',
         size === 'sm' ? 'px-2 py-0.5 text-caption' : 'px-2.5 py-0.5 text-caption'
       )}>
-        <span className="tabular-nums">{applied.toFixed(1)}%</span>
+        <span className="tabular-nums">{numApplied.toFixed(1)}%</span>
       </div>
       {isOverDiscount && (
         <span className={cn('tabular-nums', size === 'sm' ? 'text-caption' : 'text-small', 'text-danger')}>
@@ -29,7 +31,7 @@ export function DiscountIndicator({ allowed, applied, className, size = 'md' }: 
       )}
       {!isOverDiscount && (
         <span className={cn('tabular-nums', size === 'sm' ? 'text-caption' : 'text-small', 'text-muted-foreground')}>
-          Allowed: {allowed.toFixed(1)}%
+          Allowed: {numAllowed.toFixed(1)}%
         </span>
       )}
     </div>

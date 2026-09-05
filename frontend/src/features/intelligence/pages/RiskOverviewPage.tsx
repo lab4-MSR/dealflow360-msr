@@ -218,11 +218,11 @@ export const RiskOverviewPage: React.FC = () => {
           </CardContent>
           <div className="p-4 border-t border-border flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Audit Log: 0 policy overrides today</span>
-            <Link to="/intelligence/risks/high">
-              <Button size="sm" className="bg-primary text-xs gap-1">
+            <Button asChild size="sm" className="bg-primary text-xs gap-1">
+              <Link to="/intelligence/risks/high">
                 View High-Risk Deals <ArrowRight className="h-3 w-3" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </Card>
       </div>

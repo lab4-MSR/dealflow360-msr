@@ -12,6 +12,7 @@ import { RiskBadge } from '@/components/ui/risk-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
+import { toast } from 'sonner'
 import { Search, Plus, Download, Archive, Send, FileText, Clock, AlertTriangle } from 'lucide-react'
 
 const FALLBACK_QUOTATIONS = {
@@ -93,6 +94,29 @@ export function AllQuotationsPage() {
 
   const total = data?.meta.total ?? 0
 
+  const handleExport = () => {
+    if (!data?.data || data.data.length === 0) {
+      toast.info('No quotations to export')
+      return
+    }
+    const headers = ['Quote Number', 'Customer', 'Value', 'Status']
+    const rows = data.data.map((q) => [
+      q.quote_number,
+      `"${((q as { customer?: { name?: string } }).customer?.name || '').replace(/"/g, '""')}"`,
+      (q as { pricing?: { grand_total?: number } }).pricing?.grand_total || 0,
+      q.status,
+    ])
+    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `quotations-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('Quotations exported to CSV')
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -124,7 +148,17 @@ export function AllQuotationsPage() {
 
       <div className="flex items-center gap-2">
         <Badge variant="secondary">Table</Badge><Badge variant="outline">Kanban — same state, different view</Badge>
-        <span className="ml-auto flex gap-2"><Button variant="outline" size="sm"><Download className="h-4 w-4" />Export</Button><Button variant="outline" size="sm"><Send className="h-4 w-4" />Send</Button><Button variant="outline" size="sm"><Archive className="h-4 w-4" />Archive</Button></span>
+        <span className="ml-auto flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleExport}>
+            <Download className="h-4 w-4" />Export
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info('Please select quotations to send in batch.')}>
+            <Send className="h-4 w-4" />Send
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info('Please select quotations to archive.')}>
+            <Archive className="h-4 w-4" />Archive
+          </Button>
+        </span>
       </div>
 
       <Card>

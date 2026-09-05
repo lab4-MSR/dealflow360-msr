@@ -167,11 +167,11 @@ export const HighRiskDealsPage: React.FC = () => {
                           <span className="text-[11px] text-muted-foreground">Erosion risk</span>
                         </td>
                         <td className="py-3.5 px-4 text-right">
-                          <Link to={`/intelligence/risks/${deal.quotation_id}`}>
-                            <Button size="sm" variant="outline" className="text-xs h-7 gap-1">
+                          <Button asChild size="sm" variant="outline" className="text-xs h-7 gap-1">
+                            <Link to={`/intelligence/risks/${deal.quotation_id}`}>
                               Inspect Risk <ArrowRight className="h-3 w-3" />
-                            </Button>
-                          </Link>
+                            </Link>
+                          </Button>
                         </td>
                       </tr>
                     ))

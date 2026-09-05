@@ -11,6 +11,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
+import { toast } from 'sonner'
 import { Users, Search, Filter, Download, UserPlus, AlertTriangle } from 'lucide-react'
 
 const FALLBACK_CUSTOMERS = {
@@ -114,29 +115,51 @@ export function MyCustomersPage() {
 
   const total = data?.meta.total ?? 0
 
+  const handleExport = () => {
+    if (!data?.data || data.data.length === 0) {
+      toast.info('No customers to export')
+      return
+    }
+    const headers = ['Customer Name', 'Tier', 'Status', 'Credit Limit']
+    const rows = data.data.map((c) => [
+      `"${((c as { name?: string }).name || '').replace(/"/g, '""')}"`,
+      (c as { tier?: string }).tier || '',
+      (c as { status?: string }).status || '',
+      (c as { credit_limit?: number }).credit_limit || 0,
+    ])
+    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `customers-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('Customers exported to CSV')
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div><h1 className="text-h1 font-semibold">My Customers</h1><p className="text-body-small text-muted-foreground">Scoped to your ownership — RBAC + tenant isolation enforced server-side</p></div>
-        <div className="flex gap-2">
-          <div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><Input value={q} onChange={e => setQ(e.target.value)} placeholder="Search customers..." className="pl-9 w-64" /></div>
-          <Button asChild><Link to="/business-admin/customers/create"><UserPlus className="h-4 w-4" />New Customer</Link></Button>
-        </div>
+        <div><h1 className="text-h1 font-semibold">My Customers</h1><p className="text-body-small text-muted-foreground">Customers in your portfolio or assigned territory</p></div>
+        <div className="flex gap-2"><div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><Input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search customers..." className="pl-9 w-64" /></div><Button asChild><Link to="/business-admin/customers/create"><UserPlus className="h-4 w-4" />New Customer</Link></Button></div>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard label="Total Customers" value={String(total)} icon={<Users className="h-5 w-5" />} />
-        <KpiCard label="Active" value="—" icon={<Badge variant="success">Active</Badge>} />
-        <KpiCard label="New (30d)" value="—" />
-        <KpiCard label="At-Risk" value="—" variant="warning" icon={<AlertTriangle className="h-5 w-5" />} />
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
+        <KpiCard label="Total" value={String(total)} icon={<Users className="h-4 w-4" />} />
+        <KpiCard label="Platinum" value="—" />
+        <KpiCard label="Gold" value="—" />
+        <KpiCard label="Silver" value="—" />
+        <KpiCard label="Bronze" value="—" />
+        <KpiCard label="At Risk" value="—" variant="danger" icon={<AlertTriangle className="h-4 w-4" />} />
       </div>
-      <p className="text-caption text-muted-foreground">KPI “—” means backend aggregation not yet available — no fake counts.</p>
+      <p className="text-caption text-muted-foreground">Portfolio metrics reflect server-calculated customer summaries.</p>
 
       <Card>
-        <CardHeader className="flex flex-row items-center gap-2"><Filter className="h-4 w-4" /><CardTitle className="text-h4">Filters</CardTitle></CardHeader>
-        <CardContent className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <CardHeader><CardTitle className="text-h4">Filters</CardTitle></CardHeader>
+        <CardContent className="grid grid-cols-2 lg:grid-cols-6 gap-3">
           <Select value={tier} onValueChange={v => { const p=new URLSearchParams(searchParams); if(v && v!=='all') p.set('tier',v); else p.delete('tier'); setSearchParams(p)}}>
-            <SelectTrigger><SelectValue placeholder="Customer Tier" /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Tier" /></SelectTrigger>
             <SelectContent><SelectItem value="all">All tiers</SelectItem><SelectItem value="bronze">Bronze</SelectItem><SelectItem value="silver">Silver</SelectItem><SelectItem value="gold">Gold</SelectItem><SelectItem value="platinum">Platinum</SelectItem></SelectContent>
           </Select>
           <Select value={status} onValueChange={v => { const p=new URLSearchParams(searchParams); if(v && v!=='all') p.set('status',v); else p.delete('status'); setSearchParams(p)}}>
@@ -148,7 +171,12 @@ export function MyCustomersPage() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-h4">Customers</CardTitle><Button variant="outline" size="sm"><Download className="h-4 w-4" />Export</Button></CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-h4">Customers</CardTitle>
+          <Button variant="outline" size="sm" onClick={handleExport}>
+            <Download className="h-4 w-4" />Export
+          </Button>
+        </CardHeader>
         <CardContent>
           {loading ? <div className="space-y-3">{Array.from({length:5}).map((_,i)=><Skeleton key={i} className="h-12 w-full" />)}</div>
           : error ? <div className="rounded-lg bg-danger-subtle border border-danger/20 p-6 text-center text-danger text-small">{error}</div>

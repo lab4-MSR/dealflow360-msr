@@ -33,9 +33,12 @@ export interface RiskBadgeProps
 }
 
 function RiskBadge({ className, risk, children, ...props }: RiskBadgeProps) {
+  const normRisk = (risk ? String(risk).toLowerCase() : 'low') as 'low' | 'medium' | 'high' | 'critical'
+  const validRisk = normRisk in riskDotVariants ? normRisk : 'low'
+
   return (
-    <div className={cn(riskVariants({ risk }), className)} {...props}>
-      <span className={cn('h-1.5 w-1.5 rounded-full transition-colors duration-200', riskDotVariants[risk || 'low'], risk === 'critical' && 'animate-pulse motion-reduce:animate-none')} />
+    <div className={cn(riskVariants({ risk: validRisk }), className)} {...props}>
+      <span className={cn('h-1.5 w-1.5 rounded-full transition-colors duration-200', riskDotVariants[validRisk], validRisk === 'critical' && 'animate-pulse motion-reduce:animate-none')} />
       {children}
     </div>
   )

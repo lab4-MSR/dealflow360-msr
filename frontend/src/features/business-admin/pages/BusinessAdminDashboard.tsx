@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
@@ -64,6 +65,7 @@ function DashboardSkeleton() {
 }
 
 export function BusinessAdminDashboard() {
+  const navigate = useNavigate()
   const { data: kpis, isLoading: kpisLoading, error: kpisError, refetch: refetchKpis } = useDashboardKpis()
   const { data: sales, isLoading: salesLoading, error: salesError, refetch: refetchSales } = useSalesOverview()
   const { data: revenue, isLoading: revenueLoading, error: revenueError, refetch: refetchRevenue } = useRevenueOverview()
@@ -94,11 +96,11 @@ export function BusinessAdminDashboard() {
         description="Here's what's happening with your business today."
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => navigate('/business-admin/users/invite')}>
               <UserPlus className="h-3.5 w-3.5 mr-1.5" />
               Add User
             </Button>
-            <Button size="sm">
+            <Button size="sm" onClick={() => navigate('/business-admin/organization/settings')}>
               <Settings className="h-3.5 w-3.5 mr-1.5" />
               Settings
             </Button>
@@ -132,7 +134,12 @@ export function BusinessAdminDashboard() {
                 <p className="text-[12px] text-muted-foreground mt-0.5">{alert.description}</p>
               </div>
               {alert.actionLabel && (
-                <Button variant="ghost" size="sm" className="shrink-0">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="shrink-0"
+                  onClick={() => alert.actionPath && navigate(alert.actionPath)}
+                >
                   {alert.actionLabel}
                   <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
                 </Button>
@@ -301,7 +308,7 @@ export function BusinessAdminDashboard() {
                   <span className="text-[13px] text-muted-foreground">Avg. Time</span>
                   <span className="text-[13px] font-semibold text-foreground">{approvals?.averageApprovalTime ?? '—'}</span>
                 </div>
-                <Button variant="outline" size="sm" className="w-full mt-2">
+                <Button variant="outline" size="sm" className="w-full mt-2" onClick={() => navigate('/business-admin/approvals')}>
                   Review Approvals
                   <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
                 </Button>
@@ -394,7 +401,7 @@ export function BusinessAdminDashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Recent Deals</CardTitle>
-              <Button variant="ghost" size="sm">View All</Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/sales/deals')}>View All</Button>
             </div>
           </CardHeader>
           <CardContent>
@@ -407,7 +414,11 @@ export function BusinessAdminDashboard() {
             ) : (
               <div className="space-y-3">
                 {recentDeals.map((deal) => (
-                  <div key={deal.id} className="flex items-center gap-3 rounded-lg border border-border p-3 hover:bg-accent transition-colors cursor-pointer">
+                  <div
+                    key={deal.id}
+                    onClick={() => navigate(`/sales/deals/${deal.id}`)}
+                    className="flex items-center gap-3 rounded-lg border border-border p-3 hover:bg-accent transition-colors cursor-pointer"
+                  >
                     <div className="flex-1 min-w-0">
                       <p className="text-[13px] font-semibold text-foreground truncate">{deal.name}</p>
                       <p className="text-[11px] text-muted-foreground">{deal.customer} · {deal.salesRep}</p>
@@ -433,7 +444,7 @@ export function BusinessAdminDashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Recent Activity</CardTitle>
-              <Button variant="ghost" size="sm">View All</Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/business-admin/audit')}>View All</Button>
             </div>
           </CardHeader>
           <CardContent>

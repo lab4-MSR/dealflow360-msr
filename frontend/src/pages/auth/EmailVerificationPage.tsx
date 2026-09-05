@@ -92,11 +92,11 @@ export default function EmailVerificationPage() {
             </p>
           </div>
           <AuthCard>
-            <Link to="/login">
-              <Button className="w-full" size="lg">
+            <Button asChild className="w-full" size="lg">
+              <Link to="/login">
                 Continue to sign in
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </AuthCard>
         </div>
       </AuthLayout>
@@ -118,11 +118,11 @@ export default function EmailVerificationPage() {
           </div>
           <AuthCard>
             <div className="space-y-3">
-              <Link to="/login">
-                <Button className="w-full" size="lg">
+              <Button asChild className="w-full" size="lg">
+                <Link to="/login">
                   Go to sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </AuthCard>
         </div>
@@ -156,12 +156,12 @@ export default function EmailVerificationPage() {
                   ? `Resend in ${resendCooldown}s`
                   : 'Resend verification email'}
               </Button>
-              <Link to="/login">
-                <Button variant="secondary" className="w-full" size="lg">
+              <Button asChild variant="secondary" className="w-full" size="lg">
+                <Link to="/login">
                   <ArrowLeft className="h-4 w-4" />
                   Back to sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </AuthCard>
         </div>
@@ -195,12 +195,12 @@ export default function EmailVerificationPage() {
                   ? `Resend in ${resendCooldown}s`
                   : 'Resend verification email'}
               </Button>
-              <Link to="/login">
-                <Button variant="secondary" className="w-full" size="lg">
+              <Button asChild variant="secondary" className="w-full" size="lg">
+                <Link to="/login">
                   <ArrowLeft className="h-4 w-4" />
                   Back to sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </AuthCard>
         </div>
@@ -235,12 +235,12 @@ export default function EmailVerificationPage() {
                 ? `Resend in ${resendCooldown}s`
                 : 'Resend verification email'}
             </Button>
-            <Link to="/login">
-              <Button variant="secondary" className="w-full" size="lg">
+            <Button asChild variant="secondary" className="w-full" size="lg">
+              <Link to="/login">
                 <ArrowLeft className="h-4 w-4" />
                 Back to sign in
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </AuthCard>
       </div>

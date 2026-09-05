@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { StatusBadge } from '@/components/ui/status-badge'
@@ -7,12 +7,15 @@ import { RiskBadge } from '@/components/ui/risk-badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
+import { toast } from 'sonner'
 import { AlertTriangle, Edit, Send, Eye, DollarSign, Percent, Shield, Package, Truck, CreditCard, HeartPulse } from 'lucide-react'
 
 export function DealDetailsPage() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [deal, setDeal] = useState<Record<string, unknown> | null>(null)
   const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string|null>(null)
 
   useEffect(() => {
@@ -20,6 +23,37 @@ export function DealDetailsPage() {
     async function load(){ if(!id) return; setLoading(true); try{ const r=await apiClient.get(`/deals/${id}`); if(!c) setDeal(r.data.data)} catch(e){ if(!c) setError(getApiErrorMessage(e))} finally{ if(!c) setLoading(false)}}
     load(); return()=>{c=true}
   },[id])
+
+  const handleEdit = () => {
+    if (!deal) return
+    const quotationId = deal.quotation_id || deal.quote_id
+    if (quotationId) {
+      navigate(`/sales/quotations/${quotationId}/builder`)
+    } else {
+      navigate(`/sales/quotations/create?deal_id=${id}&customer_id=${deal.customer_id || ''}`)
+    }
+  }
+
+  const handleSubmit = async () => {
+    if (!deal) return
+    const quotationId = deal.quotation_id || deal.quote_id
+    if (!quotationId) {
+      toast.info('Please create and attach a quotation to submit this deal for approval.')
+      navigate(`/sales/quotations/create?deal_id=${id}&customer_id=${deal.customer_id || ''}`)
+      return
+    }
+    setSubmitting(true)
+    try {
+      await apiClient.post(`/quotations/${quotationId}/submit-for-approval`)
+      toast.success('Deal and quotation submitted for approval')
+      const r = await apiClient.get(`/deals/${id}`)
+      setDeal(r.data.data)
+    } catch (err) {
+      toast.error(getApiErrorMessage(err))
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   if (loading) return <div className="space-y-4"><Skeleton className="h-24 w-full" /><Skeleton className="h-64 w-full" /></div>
   if (error) return <div className="rounded-xl border border-danger/20 bg-danger-subtle p-8 text-center text-danger"><AlertTriangle className="h-8 w-8 mx-auto mb-2" />{error}</div>
@@ -29,7 +63,19 @@ export function DealDetailsPage() {
     <div className="space-y-6">
       <div className="rounded-xl border border-border bg-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div><h1 className="text-h2 font-semibold">{String((deal as {name?:string}).name ?? 'Deal')} <span className="text-caption font-mono text-muted-foreground">#{String(deal.id).slice(0,8)}</span></h1><p className="text-body-small text-muted-foreground">{String((deal as {customer_name?:string}).customer_name ?? '—')} · {String((deal as {stage?:string}).stage ?? '—')}</p></div>
-        <div className="flex gap-2"><Button variant="outline" size="sm"><Edit className="h-4 w-4" />Edit</Button><Button variant="secondary" size="sm"><Send className="h-4 w-4" />Submit</Button><Button size="sm" asChild><Link to={`/sales/deals/${id}/timeline`}><Eye className="h-4 w-4" />Timeline</Link></Button></div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleEdit}>
+            <Edit className="h-4 w-4" />Edit
+          </Button>
+          <Button variant="secondary" size="sm" onClick={handleSubmit} loading={submitting}>
+            <Send className="h-4 w-4" />Submit
+          </Button>
+          <Button size="sm" asChild>
+            <Link to={`/sales/deals/${id}/timeline`}>
+              <Eye className="h-4 w-4" />Timeline
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">

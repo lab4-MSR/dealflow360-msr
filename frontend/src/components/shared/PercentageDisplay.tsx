@@ -13,7 +13,8 @@ const sizeClasses = {
 }
 
 export function PercentageDisplay({ value, className, size = 'md' }: PercentageDisplayProps) {
-  const formatted = `${value.toFixed(1)}%`
+  const numericValue = typeof value === 'number' && !isNaN(value) ? value : (Number(value) || 0)
+  const formatted = `${numericValue.toFixed(1)}%`
 
   return (
     <span className={cn('font-medium', sizeClasses[size], className)}>

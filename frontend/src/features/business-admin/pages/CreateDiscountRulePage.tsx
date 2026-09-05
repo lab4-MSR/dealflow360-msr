@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
-import { useCreateDiscountRule } from '../hooks/use-business-admin'
+import { useCreateDiscountRule, useUpdateDiscountRule, useDiscountRuleDetail } from '../hooks/use-business-admin'
 import type { DiscountRuleCreateInput, DiscountRuleType } from '../types'
 import { toast } from 'sonner'
 import { ArrowLeft, Save, Shield, Info } from 'lucide-react'
@@ -22,7 +22,11 @@ const TYPE_LABEL: Record<string, string> = {
 
 export function CreateDiscountRulePage() {
   const navigate = useNavigate()
+  const { id } = useParams()
+  const isEditMode = Boolean(id)
   const createRule = useCreateDiscountRule()
+  const updateRule = useUpdateDiscountRule()
+  const { data: existingRule } = useDiscountRuleDetail(id || '')
   const [form, setForm] = useState<DiscountRuleCreateInput>({
     name: '',
     description: '',
@@ -56,6 +60,29 @@ export function CreateDiscountRulePage() {
     setForm((prev) => ({ ...prev, conditions: { ...prev.conditions, [field]: value } }))
   }
 
+  useEffect(() => {
+    if (existingRule) {
+      setForm({
+        name: existingRule.name || '',
+        description: existingRule.description || '',
+        type: existingRule.type || 'customer_tier',
+        priority: existingRule.priority || 100,
+        scope: existingRule.scope || { isGlobal: false },
+        maxDiscountPercent: existingRule.maxDiscountPercent || 0,
+        lineDiscountPercent: existingRule.lineDiscountPercent,
+        orderDiscountPercent: existingRule.orderDiscountPercent,
+        minMarginPercent: existingRule.minMarginPercent,
+        marginThreshold: existingRule.marginThreshold,
+        riskBehavior: existingRule.riskBehavior || 'require_approval',
+        conditions: existingRule.conditions || {},
+        approvalRequired: existingRule.approvalRequired || false,
+        approvalLevel: existingRule.approvalLevel || 'none',
+        escalationBehavior: existingRule.escalationBehavior || '',
+        status: existingRule.status || 'draft',
+      })
+    }
+  }, [existingRule])
+
   const validate = (): boolean => {
     const errs: Record<string, string> = {}
     if (!form.name.trim()) errs.name = 'Rule name is required'
@@ -68,11 +95,16 @@ export function CreateDiscountRulePage() {
     e.preventDefault()
     if (!validate()) return
     try {
-      await createRule.mutateAsync(form)
-      toast.success('Discount rule created')
+      if (isEditMode && id) {
+        await updateRule.mutateAsync({ id, data: form })
+        toast.success('Discount rule updated')
+      } else {
+        await createRule.mutateAsync(form)
+        toast.success('Discount rule created')
+      }
       navigate('/business-admin/discount-governance/rules')
     } catch {
-      toast.error('Failed to create discount rule')
+      toast.error(isEditMode ? 'Failed to update discount rule' : 'Failed to create discount rule')
     }
   }
 
@@ -81,13 +113,13 @@ export function CreateDiscountRulePage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Create Discount Rule"
-        description="Define a new discount governance rule to protect margins and control pricing"
+        title={isEditMode ? 'Edit Discount Rule' : 'Create Discount Rule'}
+        description={isEditMode ? 'Update discount governance rule parameters and thresholds' : 'Define a new discount governance rule to protect margins and control pricing'}
         breadcrumbs={[
           { label: 'Business Admin', path: '/business-admin/dashboard' },
           { label: 'Discount Governance', path: '/business-admin/discount-governance' },
           { label: 'Discount Rules', path: '/business-admin/discount-governance/rules' },
-          { label: 'Create Rule' },
+          { label: isEditMode ? 'Edit Rule' : 'Create Rule' },
         ]}
         actions={
           <Button variant="outline" onClick={() => navigate('/business-admin/discount-governance/rules')}>
@@ -513,9 +545,11 @@ export function CreateDiscountRulePage() {
           >
             Save Draft
           </Button>
-          <Button type="submit" loading={createRule.isPending}>
+          <Button type="submit" loading={createRule.isPending || updateRule.isPending}>
             <Save className="h-4 w-4 mr-1.5" />
-            {createRule.isPending ? 'Creating...' : 'Create Rule'}
+            {(createRule.isPending || updateRule.isPending)
+              ? (isEditMode ? 'Saving...' : 'Creating...')
+              : (isEditMode ? 'Save Changes' : 'Create Rule')}
           </Button>
         </div>
       </form>

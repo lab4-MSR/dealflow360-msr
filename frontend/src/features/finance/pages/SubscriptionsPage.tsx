@@ -25,6 +25,14 @@ export function SubscriptionsPage() {
     finally { setLoading(false) }
   }
 
+  const filteredSubscriptions = subscriptions.filter(sub =>
+    !search ||
+    sub.subscription_name?.toLowerCase().includes(search.toLowerCase()) ||
+    sub.customer?.name?.toLowerCase().includes(search.toLowerCase()) ||
+    sub.plan?.name?.toLowerCase().includes(search.toLowerCase()) ||
+    sub.status?.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-border pb-5">
@@ -51,14 +59,14 @@ export function SubscriptionsPage() {
         <CardContent>
           {loading ? (
             <div className="space-y-4">{[1, 2, 3, 4, 5].map((i) => <div key={i} className="h-12 bg-muted animate-pulse rounded" />)}</div>
-          ) : subscriptions.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground"><Wrench className="h-12 w-12 mx-auto mb-2 opacity-50" /><p>No subscriptions found</p></div>
+          ) : filteredSubscriptions.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground"><Wrench className="h-12 w-12 mx-auto mb-2 opacity-50" /><p>{search ? "No subscriptions matching search" : "No subscriptions found"}</p></div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-muted/50 border-y border-border"><tr><th className="px-4 py-2.5 font-semibold">Subscription</th><th className="px-4 py-2.5 font-semibold">Customer</th><th className="px-4 py-2.5 font-semibold">Plan</th><th className="px-4 py-2.5 font-semibold text-right">Amount</th><th className="px-4 py-2.5 font-semibold">Billing</th><th className="px-4 py-2.5 font-semibold">Status</th><th className="px-4 py-2.5 font-semibold text-right">Actions</th></tr></thead>
                 <tbody className="divide-y divide-border">
-                  {subscriptions.map((sub) => (
+                  {filteredSubscriptions.map((sub) => (
                     <tr key={sub.id} className="hover:bg-muted/30">
                       <td className="px-4 py-3 font-medium">{sub.subscription_name || sub.id.slice(0, 8)}</td>
                       <td className="px-4 py-3">{sub.customer?.name}</td>

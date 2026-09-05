@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,7 +12,8 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorState } from '@/components/shared'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { useTeams, useTeamKpis, useCreateTeam, useDeleteTeam } from '../hooks/use-business-admin'
+import { Drawer } from '@/components/ui/drawer'
+import { useTeams, useTeamKpis, useCreateTeam, useDeleteTeam, useTeamDetail } from '../hooks/use-business-admin'
 import type { Team } from '../types'
 import { toast } from 'sonner'
 import { Plus, Search, UsersRound, UserCheck, Activity, MoreHorizontal, Eye, Trash2 } from 'lucide-react'
@@ -22,6 +23,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 
 export function TeamsPage() {
   const navigate = useNavigate()
+  const { teamId } = useParams()
+  const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null)
+  const activeTeamId = teamId || selectedTeamId
+  const { data: teamDetail, isLoading: teamDetailLoading } = useTeamDetail(activeTeamId || '')
   const [searchInput, setSearchInput] = useState('')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
@@ -247,6 +252,89 @@ export function TeamsPage() {
         onConfirm={handleDelete}
         loading={deleteTeam.isPending}
       />
+
+      <Drawer
+        open={Boolean(activeTeamId)}
+        onClose={() => {
+          setSelectedTeamId(null)
+          if (teamId) navigate('/business-admin/teams')
+        }}
+        title={teamDetail?.name || 'Team Details'}
+        description={teamDetail?.description || 'Team overview and members'}
+      >
+        {teamDetailLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-40 w-full" />
+          </div>
+        ) : teamDetail ? (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-border">
+              <div>
+                <span className="text-caption text-muted-foreground">Status</span>
+                <div className="mt-1">
+                  <Badge variant={teamDetail.status === 'active' ? 'success' : 'secondary'}>
+                    {teamDetail.status || 'Active'}
+                  </Badge>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-caption text-muted-foreground">Deals</span>
+                <p className="text-h3 font-semibold tabular-nums mt-0.5">{teamDetail.dealsCount ?? 0}</p>
+              </div>
+            </div>
+
+            {teamDetail.lead && (
+              <div className="rounded-xl border border-border p-4 bg-surface-muted">
+                <span className="text-caption text-muted-foreground block mb-2 font-medium">Team Lead</span>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="bg-primary text-primary-foreground text-caption font-bold">
+                      {teamDetail.lead.fullName?.split(' ').map((n: string) => n[0]).join('') || 'TL'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-body-small font-semibold text-foreground">{teamDetail.lead.fullName}</p>
+                    <p className="text-caption text-muted-foreground">{teamDetail.lead.email || 'Lead'}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-body font-semibold text-foreground">Team Members</h3>
+                <Badge variant="outline">{teamDetail.members?.length ?? teamDetail.memberCount ?? 0}</Badge>
+              </div>
+              {teamDetail.members && teamDetail.members.length > 0 ? (
+                <div className="space-y-2">
+                  {teamDetail.members.map((member) => (
+                    <div key={member.id} className="flex items-center justify-between p-3 rounded-lg border border-border bg-card">
+                      <div className="flex items-center gap-2.5">
+                        <Avatar className="h-7 w-7">
+                          <AvatarFallback className="text-[11px]">
+                            {member.fullName?.slice(0, 2).toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-body-small font-medium text-foreground">{member.fullName}</p>
+                          <p className="text-caption text-muted-foreground">{member.email}</p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="text-caption">{member.role?.replace(/_/g, ' ') || 'Member'}</Badge>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-body-small text-muted-foreground py-4 text-center">No assigned members yet.</p>
+              )}
+            </div>
+          </div>
+        ) : (
+          <EmptyState title="Team not found" description="The requested team could not be loaded." />
+        )}
+      </Drawer>
     </div>
   )
 }

@@ -113,11 +113,11 @@ export const DealHealthOverviewPage: React.FC = () => {
             Pipeline value of ₹{data.critical_pipeline_value.toLocaleString('en-IN')} has had 0 rep or buyer activity for over 14 days.
           </p>
         </div>
-        <Link to="/intelligence/health/stalled">
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white text-xs gap-1 shrink-0">
+        <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white text-xs gap-1 shrink-0" asChild>
+          <Link to="/intelligence/health/stalled">
             View Stalled Deals <ArrowRight className="h-3 w-3" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   )

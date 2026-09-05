@@ -6,6 +6,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
+import { toast } from 'sonner'
 import { Building2, Mail, Phone, Globe, MapPin, AlertTriangle, FileText, TrendingUp, HeartPulse } from 'lucide-react'
 
 export function CustomerDetailsPage() {
@@ -55,7 +56,24 @@ export function CustomerDetailsPage() {
             <p className="text-body-small text-muted-foreground flex items-center gap-3 mt-1"><span className="flex items-center gap-1"><Mail className="h-3.5 w-3.5" />{String((customer as {contacts?:Array<{email:string}>}).contacts?.[0]?.email ?? '—')}</span><span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{String((customer as {contacts?:Array<{phone:string}>}).contacts?.[0]?.phone ?? '—')}</span></p>
           </div>
         </div>
-        <div className="flex gap-2"><Button asChild><Link to={`/sales/quotations/create?customer_id=${id}`}><FileText className="h-4 w-4" />Create Quotation</Link></Button><Button variant="secondary">Contact Customer</Button></div>
+        <div className="flex gap-2">
+          <Button asChild>
+            <Link to={`/sales/quotations/create?customer_id=${id}`}>
+              <FileText className="h-4 w-4" />Create Quotation
+            </Link>
+          </Button>
+          {(customer as {contacts?:Array<{email?:string}>}).contacts?.[0]?.email ? (
+            <Button variant="secondary" asChild>
+              <a href={`mailto:${(customer as {contacts?:Array<{email?:string}>}).contacts?.[0]?.email}`}>
+                <Mail className="h-4 w-4 mr-1.5" />Contact Customer
+              </a>
+            </Button>
+          ) : (
+            <Button variant="secondary" onClick={() => toast.info('No direct contact email found for this customer.')}>
+              <Mail className="h-4 w-4 mr-1.5" />Contact Customer
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

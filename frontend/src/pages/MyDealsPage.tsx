@@ -12,6 +12,7 @@ import { RiskBadge } from '@/components/ui/risk-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
+import { toast } from 'sonner'
 import { Search, Plus, Download, LayoutGrid, TableIcon, TrendingUp, AlertTriangle } from 'lucide-react'
 
 const FALLBACK_DEALS = {
@@ -102,6 +103,29 @@ export function MyDealsPage() {
 
   const total = data?.meta.total ?? 0
 
+  const handleExport = () => {
+    if (!data?.data || data.data.length === 0) {
+      toast.info('No deals to export')
+      return
+    }
+    const headers = ['Deal Name', 'Customer', 'Value', 'Stage']
+    const rows = data.data.map((d) => [
+      `"${((d as { name?: string }).name || '').replace(/"/g, '""')}"`,
+      `"${((d as { customer_name?: string }).customer_name || '').replace(/"/g, '""')}"`,
+      (d as { value?: number }).value || 0,
+      (d as { stage?: string }).stage || '',
+    ])
+    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `deals-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('Deals exported to CSV')
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -145,7 +169,7 @@ export function MyDealsPage() {
       </div>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-h4">Deals — {view}</CardTitle><Button variant="outline" size="sm"><Download className="h-4 w-4" />Export</Button></CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between"><CardTitle className="text-h4">Deals — {view}</CardTitle><Button variant="outline" size="sm" onClick={handleExport}><Download className="h-4 w-4" />Export</Button></CardHeader>
         <CardContent>
           {loading ? <div className="space-y-3">{Array.from({length:5}).map((_,i)=><Skeleton key={i} className="h-12 w-full" />)}</div>
           : error ? <div className="rounded-lg bg-danger-subtle border border-danger/20 p-6 text-center text-danger text-small">{error}</div>

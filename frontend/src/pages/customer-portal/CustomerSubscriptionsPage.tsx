@@ -109,11 +109,11 @@ export const CustomerSubscriptionsPage: React.FC = () => {
                 <Badge variant={sub.status === 'active' ? 'default' : 'secondary'} className="capitalize text-xs">
                   {sub.status}
                 </Badge>
-                <Link to={`/customer-portal/subscriptions/${sub.id}`}>
-                  <Button size="sm" variant="outline" className="text-xs h-8 gap-1">
+                <Button asChild size="sm" variant="outline" className="text-xs h-8 gap-1">
+                  <Link to={`/customer-portal/subscriptions/${sub.id}`}>
                     Manage Subscription <ArrowRight className="h-3 w-3" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </Card>
           ))}

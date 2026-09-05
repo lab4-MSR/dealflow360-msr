@@ -13,7 +13,7 @@ const quickActions = [
   { label: 'View Users', path: '/platform/users', icon: Users },
   { label: 'Analytics', path: '/platform/analytics', icon: BarChart3 },
   { label: 'Audit Log', path: '/platform/audit', icon: ClipboardList },
-  { label: 'System Health', path: '/platform/system-health', icon: Activity },
+  { label: 'System Health', path: '/platform/health', icon: Activity },
 ]
 
 export function PlatformPageHeader() {

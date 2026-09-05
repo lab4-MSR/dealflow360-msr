@@ -77,12 +77,12 @@ export default function ForgotPasswordPage() {
                 .
               </p>
 
-              <Link to="/login">
-                <Button variant="secondary" className="w-full" size="lg">
+              <Button asChild variant="secondary" className="w-full" size="lg">
+                <Link to="/login">
                   <ArrowLeft className="h-4 w-4" />
                   Back to sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </AuthCard>
         </div>

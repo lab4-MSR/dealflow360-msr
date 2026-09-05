@@ -79,11 +79,11 @@ export const RiskDetailsPage: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link to={`/sales/quotations/${data.quotation_id}`}>
-            <Button variant="outline" size="sm" className="gap-1 text-xs">
+          <Button asChild variant="outline" size="sm" className="gap-1 text-xs">
+            <Link to={`/sales/quotations/${data.quotation_id}`}>
               <FileText className="h-3.5 w-3.5" /> View Quotation <ExternalLink className="h-3 w-3" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
 

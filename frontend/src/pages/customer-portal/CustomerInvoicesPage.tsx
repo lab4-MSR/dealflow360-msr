@@ -194,11 +194,11 @@ export const CustomerInvoicesPage: React.FC = () => {
                       </td>
                       <td className="py-3.5 px-3">{getStatusBadge(inv.status)}</td>
                       <td className="py-3.5 px-4 text-right">
-                        <Link to={`/customer-portal/invoices/${inv.id}`}>
-                          <Button size="sm" variant="outline" className="text-xs h-7 gap-1">
+                        <Button asChild size="sm" variant="outline" className="text-xs h-7 gap-1">
+                          <Link to={`/customer-portal/invoices/${inv.id}`}>
                             View <ArrowRight className="h-3 w-3" />
-                          </Button>
-                        </Link>
+                          </Link>
+                        </Button>
                       </td>
                     </tr>
                   ))}

@@ -38,7 +38,8 @@ const riskConfig: Record<RiskLevel, { color: string; bg: string; label: string; 
 }
 
 export function RiskIndicator({ level, score, showLabel = true, showScore = true, className, size = 'md' }: RiskIndicatorProps) {
-  const config = riskConfig[level]
+  const normalizedLevel = (level?.toLowerCase?.() || 'low') as RiskLevel
+  const config = riskConfig[normalizedLevel] || riskConfig.low
 
   return (
     <div className={cn('inline-flex items-center gap-2', className)}>
@@ -50,10 +51,10 @@ export function RiskIndicator({ level, score, showLabel = true, showScore = true
       )}>
         <span className={cn(
           'h-1.5 w-1.5 rounded-full',
-          level === 'low' && 'bg-success',
-          level === 'medium' && 'bg-warning',
-          level === 'high' && 'bg-orange-500',
-          level === 'critical' && 'bg-danger'
+          normalizedLevel === 'low' && 'bg-success',
+          normalizedLevel === 'medium' && 'bg-warning',
+          normalizedLevel === 'high' && 'bg-orange-500',
+          normalizedLevel === 'critical' && 'bg-danger'
         )} />
         {showLabel && config.label}
       </div>

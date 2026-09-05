@@ -49,11 +49,13 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         navigate('/search')
+      } else if (e.key === 'Escape' && menuOpen) {
+        setMenuOpen(false)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [navigate])
+  }, [navigate, menuOpen])
 
   const handleSwitchAccount = async (email: string, pass: string) => {
     try {

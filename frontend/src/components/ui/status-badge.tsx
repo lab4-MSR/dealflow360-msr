@@ -27,6 +27,15 @@ const statusVariants = cva(
         paid: 'bg-success-subtle text-success',
         overdue: 'bg-danger-subtle text-danger',
         unpaid: 'bg-warning-subtle text-warning',
+        proposal: 'bg-info-subtle text-info',
+        closing: 'bg-warning-subtle text-warning',
+        won: 'bg-success-subtle text-success',
+        lost: 'bg-danger-subtle text-danger',
+        suspended: 'bg-danger-subtle text-danger',
+        review: 'bg-warning-subtle text-warning',
+        inactive: 'bg-muted text-muted-foreground',
+        open: 'bg-info-subtle text-info',
+        closed: 'bg-muted text-muted-foreground',
       },
     },
     defaultVariants: {
@@ -56,6 +65,15 @@ const statusDotVariants: Record<string, string> = {
   paid: 'bg-success',
   overdue: 'bg-danger',
   unpaid: 'bg-warning',
+  proposal: 'bg-info',
+  closing: 'bg-warning',
+  won: 'bg-success',
+  lost: 'bg-danger',
+  suspended: 'bg-danger',
+  review: 'bg-warning',
+  inactive: 'bg-muted-foreground',
+  open: 'bg-info',
+  closed: 'bg-muted-foreground',
 }
 
 export interface StatusBadgeProps

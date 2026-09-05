@@ -98,8 +98,34 @@ export function AllBusinessesPage() {
   const updateStatus = useUpdateBusinessStatus()
   const bulkMutation = useBulkAction()
 
-  const handleSearch = useCallback(() => {
-    setFilters((prev) => ({ ...prev, search: searchInput || undefined, page: 1 }))
+  const handleExport = () => {
+    const list = data?.businesses ? (
+      selectedIds.length > 0 ? data.businesses.filter(b => selectedIds.includes(b.id)) : data.businesses
+    ) : []
+    if (!list.length) return
+    const headers = ["Business Name", "Subdomain", "Plan", "Status", "Users", "Created At"]
+    const rows = list.map((b: any) => [
+      `"${b.name || ''}"`,
+      `"${b.subdomain || b.slug || ''}"`,
+      `"${b.plan || ''}"`,
+      `"${b.status || ''}"`,
+      `"${b.users_count || b.userCount || 0}"`,
+      `"${b.created_at || b.createdAt || ''}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r: string[]) => r.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `businesses_export_${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const debouncedSearch = useMemo(() => {
+    return () => {
+      setFilters((prev) => ({ ...prev, search: searchInput || undefined, page: 1 }))
+    }
   }, [searchInput])
 
   const handleFilterChange = (key: keyof BusinessListFilters, value: string | undefined) => {
@@ -437,7 +463,7 @@ export function AllBusinessesPage() {
             >
               Suspend
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" onClick={handleExport}>
               <Download className="h-3.5 w-3.5 mr-1" />
               Export
             </Button>

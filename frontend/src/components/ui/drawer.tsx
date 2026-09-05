@@ -22,15 +22,30 @@ function Drawer({ open, onClose, title, description, children, side = 'right', c
     return () => { document.body.style.overflow = '' }
   }, [open])
 
+  React.useEffect(() => {
+    if (!open) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [open, onClose])
+
   return (
     <>
       {open && (
         <div
           className="fixed inset-0 z-50 bg-black/45 duration-200 animate-in fade-in-0 motion-reduce:animate-none"
           onClick={onClose}
+          aria-hidden="true"
         />
       )}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title || 'Drawer'}
         className={cn(
           'fixed z-50 inset-y-0 flex flex-col bg-card shadow-elevation-4 transition-transform duration-300 ease-out motion-reduce:transition-none',
           side === 'right' && 'right-0 w-full max-w-[560px] border-l border-border',
@@ -48,8 +63,10 @@ function Drawer({ open, onClose, title, description, children, side = 'right', c
               {description && <p className="text-body-small text-muted-foreground">{description}</p>}
             </div>
             <button
+              type="button"
               onClick={onClose}
-              className="rounded-md p-1 text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              aria-label="Close drawer"
+              className="rounded-md p-1 text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>

@@ -91,6 +91,18 @@ export function Sidebar({
     handleClose()
   }, [location.pathname])
 
+  // Escape key handler to close mobile drawer
+  useEffect(() => {
+    if (!isMobileOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose()
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isMobileOpen])
+
   const role = user?.role
 
   const visibleSections = SIDEBAR_NAV.map((section) => {
@@ -121,8 +133,8 @@ export function Sidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar-background border-r border-sidebar-border transition-all duration-200',
-          collapsed ? 'w-[72px]' : 'w-[240px]',
+          'fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar-background border-r border-sidebar-border transition-all duration-200 max-w-[85vw]',
+          collapsed ? 'w-[260px] lg:w-[72px]' : 'w-[260px] lg:w-[240px]',
           isMobileOpen ? 'translate-x-0 shadow-elevation-4' : '-translate-x-full lg:translate-x-0'
         )}
       >
@@ -130,28 +142,28 @@ export function Sidebar({
         <div
           className={cn(
             'flex h-16 items-center border-b border-sidebar-border',
-            collapsed ? 'justify-center px-2' : 'justify-between px-5'
+            collapsed ? 'justify-between px-5 lg:justify-center lg:px-2' : 'justify-between px-5'
           )}
         >
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <span className="text-caption font-bold text-primary-foreground">DF</span>
             </div>
-            {!collapsed && (
-              <span className="text-body font-semibold text-sidebar-foreground">DealFlow360</span>
+            {(!collapsed || isMobileOpen) && (
+              <span className={cn('text-body font-semibold text-sidebar-foreground', collapsed && 'lg:hidden')}>
+                DealFlow360
+              </span>
             )}
           </div>
           {/* Mobile close button */}
-          {!collapsed && (
-            <button
-              type="button"
-              onClick={handleClose}
-              className="lg:hidden p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors cursor-pointer"
-              aria-label="Close sidebar"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleClose}
+            className="lg:hidden p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-sidebar-accent transition-colors cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X className="h-4 w-4" />
+          </button>
         </div>
 
         {/* Workspace Switcher */}
@@ -183,27 +195,37 @@ export function Sidebar({
               <div className="mt-1 space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = iconMap[item.icon] || FileText
+                  const isItemActive = (active: boolean) => {
+                    if (active) return true
+                    if (item.path === '/dashboard' && (location.pathname === '/' || location.pathname === '/dashboard')) return true
+                    if (item.path !== '/dashboard' && location.pathname.startsWith(item.path + '/')) return true
+                    return false
+                  }
                   return (
                     <NavLink
                       key={item.path}
                       to={item.path}
                       title={collapsed ? item.label : undefined}
-                      className={({ isActive }) =>
-                        cn(
+                      className={({ isActive }) => {
+                        const active = isItemActive(isActive)
+                        return cn(
                           'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-all duration-150 ease-out',
                           collapsed && 'justify-center px-2',
-                          isActive
+                          active
                             ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-xs font-semibold'
                             : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:scale-[0.99] motion-reduce:active:scale-100'
                         )
-                      }
+                      }}
                     >
-                      {({ isActive }) => (
-                        <>
-                          <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-150', isActive && 'scale-105')} />
-                          {!collapsed && <span className="truncate">{item.label}</span>}
-                        </>
-                      )}
+                      {({ isActive }) => {
+                        const active = isItemActive(isActive)
+                        return (
+                          <>
+                            <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-150', active && 'scale-105')} />
+                            {!collapsed && <span className="truncate">{item.label}</span>}
+                          </>
+                        )
+                      }}
                     </NavLink>
                   )
                 })}
@@ -214,11 +236,13 @@ export function Sidebar({
 
         {/* Collapse toggle */}
         {onToggle && (
-          <div className="p-2 border-t border-sidebar-border">
+          <div className="p-2 border-t border-sidebar-border hidden lg:block">
             <button
+              type="button"
               onClick={onToggle}
-              className="flex w-full items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+              className="flex w-full items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
               <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
             </button>

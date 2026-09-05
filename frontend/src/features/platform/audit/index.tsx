@@ -99,6 +99,28 @@ export function GlobalAuditPage() {
 
   if (error || !data) return <ErrorState title="Unable to load audit log" description="We couldn't load the global audit trail." onRetry={() => refetch()} />
 
+  const handleExport = () => {
+    if (!data?.events?.length) return
+    const headers = ["Timestamp", "Actor", "Business", "Action", "Resource", "IP", "Severity"]
+    const rows = data.events.map((e) => [
+      `"${e.timestamp}"`,
+      `"${e.actor}"`,
+      `"${e.businessName || ''}"`,
+      `"${e.action}"`,
+      `"${e.resource}"`,
+      `"${e.ip || ''}"`,
+      `"${e.severity}"`,
+    ])
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n')
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
+    link.setAttribute('download', `platform_audit_${new Date().toISOString().split('T')[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -106,7 +128,7 @@ export function GlobalAuditPage() {
           <h1 className="text-h2 text-foreground">Global Audit</h1>
           <p className="text-body-small text-muted-foreground mt-1">Platform-wide audit trail across all businesses and users.</p>
         </div>
-        <Button variant="outline" className="gap-1.5"><Download className="h-4 w-4" /> Export</Button>
+        <Button variant="outline" className="gap-1.5" onClick={handleExport}><Download className="h-4 w-4" /> Export</Button>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

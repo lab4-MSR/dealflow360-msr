@@ -277,11 +277,11 @@ export const IntelligenceDashboardPage: React.FC = () => {
                 <CardTitle className="text-base font-semibold">High & Critical Risk Deals</CardTitle>
                 <CardDescription>Deals requiring executive or managerial risk mitigation</CardDescription>
               </div>
-              <Link to="/intelligence/risks/high">
-                <Button variant="ghost" size="sm" className="text-xs text-rose-600 gap-1">
+              <Button asChild variant="ghost" size="sm" className="text-xs text-rose-600 gap-1">
+                <Link to="/intelligence/risks/high">
                   View All ({dashboardData.high_risk_deals_count}) <ArrowRight className="h-3 w-3" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </CardHeader>
           <CardContent className="p-0">
@@ -314,11 +314,11 @@ export const IntelligenceDashboardPage: React.FC = () => {
                         <div className="text-[11px] text-muted-foreground">Margin: {deal.margin_percent}%</div>
                       </td>
                       <td className="py-3 px-3 text-right">
-                        <Link to={`/intelligence/risks/${deal.quotation_id}`}>
-                          <Button variant="outline" size="sm" className="text-xs h-7">
+                        <Button asChild variant="outline" size="sm" className="text-xs h-7">
+                          <Link to={`/intelligence/risks/${deal.quotation_id}`}>
                             Inspect
-                          </Button>
-                        </Link>
+                          </Link>
+                        </Button>
                       </td>
                     </tr>
                   ))}
@@ -365,11 +365,11 @@ export const IntelligenceDashboardPage: React.FC = () => {
               Direct evidence-backed decision support with WHAT, WHY, IMPACT, WHO, and NEXT ACTION framework
             </p>
           </div>
-          <Link to="/intelligence/insights">
-            <Button variant="outline" size="sm" className="text-xs gap-1">
+          <Button asChild variant="outline" size="sm" className="text-xs gap-1">
+            <Link to="/intelligence/insights">
               View All Insights <ArrowRight className="h-3 w-3" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

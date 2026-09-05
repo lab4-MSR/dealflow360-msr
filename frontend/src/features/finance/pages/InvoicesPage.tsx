@@ -24,12 +24,39 @@ export function InvoicesPage() {
     finally { setLoading(false) }
   }
 
+  const handleExport = () => {
+    if (!invoices.length) return
+    const headers = ["Invoice Number", "Customer", "Amount", "Due Date", "Status"]
+    const rows = invoices.map(i => [
+      `"${i.invoice_number || ""}"`,
+      `"${i.customer?.name || ""}"`,
+      `"${i.amount || 0}"`,
+      `"${i.due_date || ""}"`,
+      `"${i.status || ""}"`
+    ])
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n")
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute("download", `invoices_export_${new Date().toISOString().split("T")[0]}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const filteredInvoices = invoices.filter(inv =>
+    !search ||
+    inv.invoice_number?.toLowerCase().includes(search.toLowerCase()) ||
+    inv.customer?.name?.toLowerCase().includes(search.toLowerCase()) ||
+    inv.status?.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between border-b border-border pb-5">
         <div><h1 className="text-2xl font-bold tracking-tight">Invoices</h1><p className="text-sm text-muted-foreground mt-1">Manage billing and invoices</p></div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-2" />Export</Button>
+          <Button variant="outline" size="sm" onClick={handleExport}><Download className="h-4 w-4 mr-2" />Export</Button>
           <Button variant="outline" size="sm" onClick={loadInvoices}><RefreshCw className="h-4 w-4 mr-2" />Refresh</Button>
         </div>
       </div>
@@ -54,14 +81,14 @@ export function InvoicesPage() {
         <CardContent>
           {loading ? (
             <div className="space-y-4">{[1, 2, 3, 4, 5].map((i) => <div key={i} className="h-12 bg-muted animate-pulse rounded" />)}</div>
-          ) : invoices.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground"><FileText className="h-12 w-12 mx-auto mb-2 opacity-50" /><p>No invoices found</p></div>
+          ) : filteredInvoices.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground"><FileText className="h-12 w-12 mx-auto mb-2 opacity-50" /><p>{search ? "No invoices matching search" : "No invoices found"}</p></div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-muted/50 border-y border-border"><tr><th className="px-4 py-2.5 font-semibold">Invoice</th><th className="px-4 py-2.5 font-semibold">Customer</th><th className="px-4 py-2.5 font-semibold text-right">Amount</th><th className="px-4 py-2.5 font-semibold">Due Date</th><th className="px-4 py-2.5 font-semibold">Status</th><th className="px-4 py-2.5 font-semibold text-right">Actions</th></tr></thead>
                 <tbody className="divide-y divide-border">
-                  {invoices.map((inv) => (
+                  {filteredInvoices.map((inv) => (
                     <tr key={inv.id} className="hover:bg-muted/30">
                       <td className="px-4 py-3 font-mono font-medium">{inv.invoice_number}</td>
                       <td className="px-4 py-3">{inv.customer?.name}</td>

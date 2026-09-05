@@ -65,7 +65,7 @@ export function RoleRoute({ allowedRoles }: { allowedRoles: import('@/types/auth
   }
 
   if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to={getDashboardPath()} replace />
+    return <Navigate to="/403" replace />
   }
 
   return <Outlet />
