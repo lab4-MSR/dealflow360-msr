@@ -180,7 +180,7 @@ export function BusinessDetailsLayout() {
       </nav>
 
       {/* Tab Content */}
-      <div className="pt-6">
+      <div className="pt-6 animate-fade-in" key={location.pathname}>
         <Outlet />
       </div>
 

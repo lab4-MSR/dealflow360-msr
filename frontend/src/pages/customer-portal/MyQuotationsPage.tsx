@@ -49,7 +49,7 @@ export function MyQuotationsPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-12">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-page-enter">
       {/* ─── PAGE HEADER ─── */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border/70 pb-5">
         <div>
@@ -57,7 +57,7 @@ export function MyQuotationsPage() {
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
               My Quotations
             </h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/20">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-subtle text-primary border border-primary/20">
               Commercial Proposals
             </span>
           </div>
@@ -196,11 +196,7 @@ export function MyQuotationsPage() {
                   variant={statusFilter === pill.id ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setStatusFilter(pill.id)}
-                  className={`text-xs h-8 ${
-                    statusFilter === pill.id
-                      ? 'bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold'
-                      : 'text-muted-foreground'
-                  }`}
+                  className="text-xs h-8"
                 >
                   {pill.label}
                 </Button>
@@ -264,8 +260,8 @@ export function MyQuotationsPage() {
                           {q.status !== 'accepted' && q.status !== 'expired' && (
                             <Button
                               asChild
-                              size="sm"
-                              className="h-7 text-xs bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-xs"
+                              size="xs"
+                              className="font-semibold shadow-xs"
                             >
                               <Link to={`/customer-portal/quotations/${q.id}/review`}>
                                 Review

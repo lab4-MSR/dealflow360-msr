@@ -19,7 +19,7 @@ import {
 } from '../hooks/use-business-admin'
 import type { CustomerPricingProduct, CustomerPricingOverride } from '../types'
 import { toast } from 'sonner'
-import { Search, IndianRupee, Tag, Shield, Plus, Trash2, Eye, Package } from 'lucide-react'
+import { Search, IndianRupee, DollarSign, Tag, Shield, Plus, Trash2, Eye, Package } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { cn } from '@/lib/utils'
 
@@ -333,10 +333,10 @@ export function CustomerPricingPage() {
                   <div className="flex items-start justify-between">
                     <div className="space-y-1.5">
                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Standard Price</p>
-                      <MoneyDisplay amount={summary.totalStandard} currency={inspection?.priceList?.currency || 'USD'} size="lg" />
+                      <MoneyDisplay amount={summary.totalStandard} currency={inspection?.priceList?.currency || 'INR'} size="lg" />
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted">
-                      <DollarSign className="h-5 w-5 text-muted-foreground" />
+                      <IndianRupee className="h-5 w-5 text-muted-foreground" />
                     </div>
                   </div>
                 </CardContent>
@@ -346,7 +346,7 @@ export function CustomerPricingPage() {
                   <div className="flex items-start justify-between">
                     <div className="space-y-1.5">
                       <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Customer Price</p>
-                      <MoneyDisplay amount={summary.totalEffective} currency={inspection?.priceList?.currency || 'USD'} size="lg" />
+                      <MoneyDisplay amount={summary.totalEffective} currency={inspection?.priceList?.currency || 'INR'} size="lg" />
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted">
                       <Tag className="h-5 w-5 text-muted-foreground" />

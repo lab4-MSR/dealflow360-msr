@@ -18,6 +18,7 @@ import {
   Settings,
   ChevronLeft,
   Building2,
+  Layers3,
   Sparkles,
   ShieldAlert,
   Bell,
@@ -120,7 +121,6 @@ export function Sidebar({
   const role = user?.role
 
   const visibleSections = SIDEBAR_NAV.map((section) => {
-    if (role === 'super_admin') return section
     if (role === 'business_admin' && (section.section === 'SALES' || section.section === 'INTELLIGENCE' || section.section === 'ANALYTICS & BI')) {
       return section
     }
@@ -214,7 +214,8 @@ export function Sidebar({
                   const isItemActive = (active: boolean) => {
                     if (active) return true
                     if (item.path === '/dashboard' && (location.pathname === '/' || location.pathname === '/dashboard')) return true
-                    if (item.path !== '/dashboard' && location.pathname.startsWith(item.path + '/')) return true
+                    if (item.path === '/platform/dashboard' && (location.pathname === '/platform' || location.pathname === '/platform/dashboard')) return true
+                    if (item.path !== '/dashboard' && item.path !== '/platform/dashboard' && location.pathname.startsWith(item.path + '/')) return true
                     return false
                   }
                   return (
@@ -285,3 +286,4 @@ export function Sidebar({
     </>
   )
 }
+

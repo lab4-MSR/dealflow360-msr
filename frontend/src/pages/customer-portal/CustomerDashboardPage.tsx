@@ -61,7 +61,7 @@ export function CustomerDashboardPage() {
   const activity = s.recent_activity ?? []
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto pb-12">
+    <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-page-enter">
       {/* ─── WELCOME HEADER ─── */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border/70 pb-5">
         <div>
@@ -69,7 +69,7 @@ export function CustomerDashboardPage() {
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Customer Portal
             </h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/20">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-subtle text-primary border border-primary/20">
               Verified Account
             </span>
           </div>
@@ -79,13 +79,13 @@ export function CustomerDashboardPage() {
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
-          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs h-9">
+          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
             <Link to="/customer-portal/quotations">
               <FileText className="h-3.5 w-3.5 text-muted-foreground" />
               <span>My Quotations</span>
             </Link>
           </Button>
-          <Button asChild size="sm" className="gap-1.5 text-xs h-9 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-sm shadow-sky-500/20">
+          <Button asChild size="sm" className="gap-1.5 text-xs font-semibold shadow-xs">
             <Link to="/customer-portal/orders">
               <Package className="h-3.5 w-3.5" />
               <span>Track Orders</span>

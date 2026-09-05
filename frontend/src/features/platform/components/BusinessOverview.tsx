@@ -80,16 +80,6 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={data.growthTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <defs>
-                <linearGradient id="gradientActive" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-success)" stopOpacity={0.15} />
-                  <stop offset="100%" stopColor="var(--color-success)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="gradientTotal" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.15} />
-                  <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
               <XAxis
                 dataKey="date"
@@ -110,7 +100,8 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
                 name="Total"
                 stroke="var(--color-primary)"
                 strokeWidth={2}
-                fill="url(#gradientTotal)"
+                fill="var(--color-primary)"
+                fillOpacity={0.08}
                 animationDuration={350}
                 animationEasing="ease-out"
               />
@@ -120,7 +111,8 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
                 name="Active"
                 stroke="var(--color-success)"
                 strokeWidth={2}
-                fill="url(#gradientActive)"
+                fill="var(--color-success)"
+                fillOpacity={0.06}
                 animationDuration={350}
                 animationEasing="ease-out"
               />

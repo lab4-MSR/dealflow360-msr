@@ -360,16 +360,11 @@ export function ReviewQuotePage() {
               Cancel
             </Button>
             <Button
+              variant={dialog === 'reject' ? 'destructive' : 'default'}
               size="sm"
               onClick={() => mutation.mutate()}
               disabled={mutation.isPending}
-              className={
-                dialog === 'reject'
-                  ? 'bg-rose-600 hover:bg-rose-500 text-white'
-                  : dialog === 'accept'
-                  ? 'bg-emerald-600 hover:bg-emerald-500 text-white font-semibold'
-                  : 'bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold'
-              }
+              loading={mutation.isPending}
             >
               {mutation.isPending ? 'Submitting...' : 'Confirm Decision'}
             </Button>

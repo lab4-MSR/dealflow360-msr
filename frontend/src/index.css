@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* ─── Layer 1: Primitive Colors ─── */
   --color-slate-50: #f8fafc;
@@ -179,70 +179,136 @@
     border-color: var(--color-border);
   }
 
+  html {
+    font-size: 14px;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
-
-  html {
-    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum", "ss01", "ss02";
   }
 }
 
 @layer utilities {
+  /* ─── Production SaaS Typography Hierarchy (Calibrated Enterprise Scale) ─── */
+  .font-numeric {
+    font-variant-numeric: tabular-nums;
+  }
+
   .text-display {
-    font-size: 3rem;
-    line-height: 3.5rem;
+    font-size: 2.25rem;
+    line-height: 1.15;
+    font-weight: 750;
+    letter-spacing: -0.03em;
+  }
+  @media (min-width: 640px) {
+    .text-display {
+      font-size: 2.75rem;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+  }
+
+  .text-h1 {
+    font-size: 1.5rem;
+    line-height: 1.25;
     font-weight: 700;
     letter-spacing: -0.025em;
   }
-  .text-h1 {
-    font-size: 2rem;
-    line-height: 2.5rem;
-    font-weight: 700;
+  @media (min-width: 640px) {
+    .text-h1 {
+      font-size: 1.75rem;
+      line-height: 1.2;
+    }
+  }
+
+  .text-h2 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+    font-weight: 650;
     letter-spacing: -0.02em;
   }
-  .text-h2 {
-    font-size: 1.5rem;
-    line-height: 2rem;
+  @media (min-width: 640px) {
+    .text-h2 {
+      font-size: 1.375rem;
+      line-height: 1.25;
+    }
+  }
+
+  .text-h3 {
+    font-size: 1.05rem;
+    line-height: 1.4;
     font-weight: 600;
     letter-spacing: -0.015em;
   }
-  .text-h3 {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
+  @media (min-width: 640px) {
+    .text-h3 {
+      font-size: 1.15rem;
+      line-height: 1.35;
+    }
+  }
+
+  .text-h4 {
+    font-size: 0.9375rem;
+    line-height: 1.4;
     font-weight: 600;
     letter-spacing: -0.01em;
   }
-  .text-h4 {
-    font-size: 1.125rem;
-    line-height: 1.625rem;
-    font-weight: 600;
-  }
+
   .text-body {
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-  .text-body-small {
     font-size: 0.875rem;
-    line-height: 1.375rem;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
   }
+
+  .text-body-small {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    letter-spacing: -0.003em;
+  }
+
   .text-small {
-    font-size: 0.8125rem;
-    line-height: 1.25rem;
-  }
-  .text-caption {
     font-size: 0.75rem;
-    line-height: 1rem;
+    line-height: 1.25rem;
+    letter-spacing: -0.002em;
   }
+
+  .text-caption {
+    font-size: 0.6875rem;
+    line-height: 0.95rem;
+    letter-spacing: 0.005em;
+  }
+
   .text-label {
-    font-size: 0.8125rem;
+    font-size: 0.78125rem;
     line-height: 1.125rem;
     font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+
+  .text-overline {
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .text-metric {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -321,16 +387,38 @@
   --shadow-elevation-4: 0 20px 48px rgba(0, 0, 0, 0.65);
 }
 
-@keyframes shimmer {
+@keyframes page-enter {
   0% {
-    transform: translateX(-100%);
+    opacity: 0;
+    transform: translateY(4px);
   }
   100% {
-    transform: translateX(100%);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes page-enter {
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-up {
   0% {
     opacity: 0;
     transform: translateY(6px);
@@ -341,8 +429,49 @@
   }
 }
 
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ─── Production Animation Utility Classes ─── */
 .animate-page-enter {
-  animation: page-enter 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: page-enter 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scale-in 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slide-down 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Custom subtle scrollbars */
@@ -371,33 +500,67 @@
   }
 }
 
-/* ─── Assetrix Aesthetics Utilities ─── */
-.assetrix-card {
-  border-radius: 1rem;
+/* ─── Modern SaaS Component Utility Tokens (Clean, Solid, Refined) ─── */
+.saas-card {
+  border-radius: 0.75rem;
   border: 1px solid var(--color-border);
   background-color: var(--color-card);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.saas-card-interactive {
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.saas-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-elevation-2);
+}
+
+.saas-card-interactive:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-elevation-1);
+}
+
+.saas-glass {
+  background-color: rgba(14, 21, 38, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+}
+
+:not(.dark) .saas-glass {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border);
+}
+
+/* Backward compatibility aliases */
+.assetrix-card {
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-card);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .assetrix-glass {
-  background-color: rgba(14, 21, 38, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-:not(.dark) .assetrix-glass {
-  background-color: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
 }
 
 .cyan-glow {
-  box-shadow: 0 0 60px -15px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 4px 20px -2px rgba(2, 132, 199, 0.12);
 }
 
 .cyan-glow-sm {
-  box-shadow: 0 0 25px -5px rgba(14, 165, 233, 0.25);
+  box-shadow: 0 2px 10px -2px rgba(2, 132, 199, 0.1);
 }
+
 

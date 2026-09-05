@@ -16,8 +16,11 @@ import {
   Clock,
   XCircle,
   AlertTriangle,
-  Users,
+  User,
+  ArrowRight,
+  Sparkles,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 type InvitationStatus = 'loading' | 'valid' | 'expired' | 'accepted' | 'invalid'
 
@@ -118,9 +121,12 @@ export default function AcceptInvitationPage() {
   if (status === 'loading') {
     return (
       <AuthLayout>
-        <div className="flex items-center justify-center py-12">
-          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
-        </div>
+        <AuthCard>
+          <div className="flex flex-col items-center justify-center py-16 space-y-4">
+            <div className="animate-spin h-12 w-12 border-3 border-primary border-t-transparent rounded-full" />
+            <p className="text-sm font-semibold text-muted-foreground">Verifying invitation credentials...</p>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -128,24 +134,26 @@ export default function AcceptInvitationPage() {
   if (status === 'invalid') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger-subtle">
-              <XCircle className="h-6 w-6 text-danger" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-danger-subtle border border-danger/20 text-danger shadow-xl shadow-danger/10">
+              <XCircle className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Invalid invitation</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              This invitation link is invalid.
-            </p>
-          </div>
-          <AuthCard>
-            <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Invalid invitation link
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                This invitation link is invalid or has expired.
+              </p>
+            </div>
+            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
               <Link to="/login">
                 Go to sign in
               </Link>
             </Button>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -153,24 +161,26 @@ export default function AcceptInvitationPage() {
   if (status === 'expired') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warning-subtle">
-              <Clock className="h-6 w-6 text-warning" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-warning-subtle border border-warning/20 text-warning shadow-xl shadow-warning/10">
+              <Clock className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Invitation expired</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              This invitation has expired. Please request a new one from your administrator.
-            </p>
-          </div>
-          <AuthCard>
-            <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Invitation expired
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                This invitation has expired. Please contact your organization administrator for a new invite.
+              </p>
+            </div>
+            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
               <Link to="/login">
                 Go to sign in
               </Link>
             </Button>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -178,80 +188,94 @@ export default function AcceptInvitationPage() {
   if (status === 'accepted') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-info-subtle">
-              <AlertTriangle className="h-6 w-6 text-info" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-info-subtle border border-info/20 text-info shadow-xl shadow-info/10">
+              <AlertTriangle className="h-10 w-10 text-info" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Already accepted</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              This invitation has already been accepted.
-            </p>
-          </div>
-          <AuthCard>
-            <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Already accepted
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                This invitation has already been accepted. You can directly sign in to your workspace.
+              </p>
+            </div>
+            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
               <Link to="/login">
-                Go to sign in
+                Continue to sign in
               </Link>
             </Button>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
 
   return (
     <AuthLayout>
-      <div className="space-y-6">
-        {/* Invitation info */}
-        <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-subtle">
-            <Users className="h-6 w-6 text-primary" />
-          </div>
-          <h1 className="text-h2 font-semibold text-foreground">Join your team</h1>
-          <p className="mt-2 text-body-small text-muted-foreground">
-            You&apos;ve been invited to join{' '}
-            <span className="font-medium text-foreground">{invitation?.business_name}</span>
-          </p>
-        </div>
-
-        {/* Invitation details */}
-        <AuthCard>
-          <div className="mb-6 space-y-2 rounded-lg bg-surface-muted p-3">
-            <div className="flex items-center justify-between text-small">
-              <span className="text-muted-foreground">Email</span>
-              <span className="font-medium text-foreground">{invitation?.email}</span>
+      <AuthCard>
+        <div className="space-y-7">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Team Invitation</span>
             </div>
-            <div className="flex items-center justify-between text-small">
-              <span className="text-muted-foreground">Role</span>
-              <span className="font-medium text-foreground">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              Join your workspace
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              You&apos;ve been invited to join{' '}
+              <span className="font-bold text-foreground">{invitation?.business_name}</span>
+            </p>
+          </div>
+
+          {/* Clean Integrated Info Pill */}
+          <div className="rounded-2xl border border-border/70 bg-surface-muted/60 p-4 space-y-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground font-medium">Invited Email</span>
+              <span className="font-semibold text-foreground font-mono">{invitation?.email}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground font-medium">Assigned Role</span>
+              <span className="px-2 py-0.5 rounded-full font-bold bg-primary/10 text-primary border border-primary/20">
                 {ROLE_LABELS[(invitation?.role as AuthRole) || 'sales_rep']}
               </span>
             </div>
-            <div className="flex items-center justify-between text-small">
-              <span className="text-muted-foreground">Invited by</span>
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground font-medium">Invited by</span>
               <span className="font-medium text-foreground">{invitation?.invited_by}</span>
             </div>
           </div>
 
-          {/* Setup form */}
+          {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
             {submitError && <AuthAlert type="error" message={submitError} />}
 
+            {/* Full Name */}
             <div className="space-y-1.5">
-              <label htmlFor="fullName" className="text-label font-medium text-foreground">
-                Full name
+              <label htmlFor="fullName" className="text-sm font-semibold text-foreground block">
+                Full Name <span className="text-danger">*</span>
               </label>
-              <input
-                id="fullName"
-                type="text"
-                autoComplete="name"
-                placeholder="Enter your full name"
-                className="flex h-10 w-full rounded-lg border bg-surface px-3 py-2 text-body-small text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 border-input focus:ring-primary"
-                aria-invalid={!!errors.fullName}
-                aria-describedby={errors.fullName ? 'fullName-error' : undefined}
-                {...register('fullName')}
-              />
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+                <input
+                  id="fullName"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="Enter your full name"
+                  className={cn(
+                    'flex h-12 w-full rounded-2xl border bg-surface/90 pl-11 pr-4 text-sm text-foreground shadow-xs transition-all duration-200',
+                    'placeholder:text-muted-foreground/60',
+                    'focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary',
+                    errors.fullName ? 'border-danger' : 'border-input focus:ring-primary/20'
+                  )}
+                  aria-invalid={!!errors.fullName}
+                  aria-describedby={errors.fullName ? 'fullName-error' : undefined}
+                  {...register('fullName')}
+                />
+              </div>
               {errors.fullName && (
                 <p id="fullName-error" className="text-caption text-danger" role="alert">
                   {errors.fullName.message}
@@ -259,36 +283,50 @@ export default function AcceptInvitationPage() {
               )}
             </div>
 
-            <PasswordField
-              label="Password"
-              placeholder="Create a password"
-              autoComplete="new-password"
-              error={errors.password?.message}
-              {...register('password')}
-            />
+            {/* Password */}
+            <div className="space-y-2">
+              <PasswordField
+                label="Create Workspace Password *"
+                placeholder="Create strong password"
+                autoComplete="new-password"
+                className="h-12 rounded-2xl text-sm"
+                error={errors.password?.message}
+                {...register('password')}
+              />
+              <PasswordStrength password={passwordValue || ''} />
+            </div>
 
-            <PasswordStrength password={passwordValue || ''} />
-
-            <PasswordField
-              label="Confirm password"
-              placeholder="Confirm your password"
-              autoComplete="new-password"
-              error={errors.confirmPassword?.message}
-              {...register('confirmPassword')}
-            />
+            {/* Confirm Password */}
+            <div className="space-y-1.5">
+              <PasswordField
+                label="Confirm Workspace Password *"
+                placeholder="Confirm your password"
+                autoComplete="new-password"
+                className="h-12 rounded-2xl text-sm"
+                error={errors.confirmPassword?.message}
+                {...register('confirmPassword')}
+              />
+            </div>
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full mt-2 font-semibold shadow-xs"
               size="lg"
               disabled={isSubmitting}
               loading={isSubmitting}
             >
-              {isSubmitting ? 'Accepting...' : 'Accept invitation'}
+              {isSubmitting ? (
+                'Joining Workspace...'
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <span>Accept Invitation & Enter Workspace</span>
+                  <ArrowRight className="h-5 w-5" />
+                </span>
+              )}
             </Button>
           </form>
-        </AuthCard>
-      </div>
+        </div>
+      </AuthCard>
     </AuthLayout>
   )
 }

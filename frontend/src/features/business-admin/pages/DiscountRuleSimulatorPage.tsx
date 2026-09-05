@@ -168,7 +168,7 @@ function DiscountRuleSimulatorPage() {
                           <Select value={product.productId} onValueChange={v => handleProductChange(index, v)}>
                             <SelectTrigger className="w-full"><SelectValue placeholder="Select product" /></SelectTrigger>
                             <SelectContent>
-                              {productsData?.products.map(p => <SelectItem key={p.id} value={p.id}>{p.name} ({p.sku}) - {new Intl.NumberFormat('en-US', { style: 'currency', currency: p.currency || 'USD' }).format(p.unitPrice)}</SelectItem>)}
+                              {productsData?.products.map(p => <SelectItem key={p.id} value={p.id}>{p.name} ({p.sku}) - {new Intl.NumberFormat('en-IN', { style: 'currency', currency: p.currency || 'INR' }).format(p.unitPrice)}</SelectItem>)}
                             </SelectContent>
                           </Select>
                         </div>
@@ -182,7 +182,7 @@ function DiscountRuleSimulatorPage() {
                         </div>
                       </div>
                       {product.productId && selectedProduct(product.productId) && (
-                        <p className="text-xs text-muted-foreground">Unit Price: {new Intl.NumberFormat('en-US', { style: 'currency', currency: selectedProduct(product.productId)?.currency || 'USD' }).format(selectedProduct(product.productId)?.unitPrice || 0)}</p>
+                        <p className="text-xs text-muted-foreground">Unit Price: {new Intl.NumberFormat('en-IN', { style: 'currency', currency: selectedProduct(product.productId)?.currency || 'INR' }).format(selectedProduct(product.productId)?.unitPrice || 0)}</p>
                       )}
                     </div>
                   ))}
@@ -190,7 +190,7 @@ function DiscountRuleSimulatorPage() {
               </div>
 
               <div className="space-y-2 pt-2 border-t">
-                <label className="text-sm font-medium text-foreground flex items-center gap-2"><MoneyDisplay amount={dealValue} currency="USD" className="text-lg font-bold" />Deal Value</label>
+                <label className="text-sm font-medium text-foreground flex items-center gap-2"><MoneyDisplay amount={dealValue} currency="INR" className="text-lg font-bold" />Deal Value</label>
                 <p className="text-xs text-muted-foreground">Auto-calculated from products</p>
               </div>
 

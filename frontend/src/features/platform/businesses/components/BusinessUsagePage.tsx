@@ -301,16 +301,6 @@ export function BusinessUsagePage() {
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={usageTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="colorEvents" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-primary)" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="var(--color-primary)" stopOpacity={0} />
-                    </linearGradient>
-                    <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--color-info)" stopOpacity={0.15} />
-                      <stop offset="95%" stopColor="var(--color-info)" stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis
                     dataKey="date"
@@ -331,7 +321,8 @@ export function BusinessUsagePage() {
                     name="Events"
                     stroke="var(--color-primary)"
                     strokeWidth={2}
-                    fill="url(#colorEvents)"
+                    fill="var(--color-primary)"
+                    fillOpacity={0.08}
                   />
                   <Area
                     type="monotone"
@@ -339,7 +330,8 @@ export function BusinessUsagePage() {
                     name="Users"
                     stroke="var(--color-info)"
                     strokeWidth={2}
-                    fill="url(#colorUsers)"
+                    fill="var(--color-info)"
+                    fillOpacity={0.06}
                   />
                 </AreaChart>
               </ResponsiveContainer>

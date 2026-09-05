@@ -68,7 +68,7 @@ export const SIDEBAR_NAV: NavSection[] = [
     ],
   },
   {
-    section: 'PLATFORM (SUPER ADMIN)',
+    section: 'PLATFORM',
     roles: ['super_admin'],
     items: [
       { label: 'Platform Dashboard', path: '/platform/dashboard', icon: 'LayoutDashboard' },
@@ -164,7 +164,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'ANALYTICS & BI',
-    roles: ['sales_manager', 'finance', 'operations', 'business_admin', 'super_admin'],
+    roles: ['sales_manager', 'finance', 'operations', 'business_admin'],
     items: [
       { label: 'Executive Dashboard', path: '/analytics/executive', icon: 'BarChart3' },
       { label: 'Sales Analytics', path: '/analytics/sales', icon: 'TrendingUp' },

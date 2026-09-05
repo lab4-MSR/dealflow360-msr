@@ -12,6 +12,7 @@ import {
   UsersRound, Warehouse, X, Zap, CheckCircle2, Clock, Sliders, AlertTriangle,
   Play, Pause, ChevronLeft, Compass, Workflow, RefreshCw,
 } from 'lucide-react'
+import { LandingFooter } from '@/components/landing/LandingFooter'
 
 const modules = [
   ['Customer & CRM', 'Customer records, contacts and account context', UsersRound],
@@ -29,16 +30,16 @@ const modules = [
 ] as const
 
 const roles = [
-  ['Sales', 'Own the customer, deal and quotation journey.', 'Customer → Deal → Quote', BriefcaseBusiness],
-  ['Sales Manager', 'Review approvals, team performance and deal health.', 'Approval → Decision → Coaching', ClipboardCheck],
-  ['Operations', 'Execute inventory, allocation, fulfillment and shipping.', 'Order → Warehouse → Delivery', Truck],
-  ['Finance', 'Review invoices, payments, margin and financial risk.', 'Quote → Billing → Cash', IndianRupee],
-  ['Business Admin', 'Configure products, rules, pricing and tenant settings.', 'Rules → Controls → Governance', Gauge],
-  ['Customer', 'Review quotes, orders, shipments and invoices.', 'Quote → Order → Service', UsersRound],
+  ['Sales', 'Own the customer, deal and quotation journey.', 'Customer â†’ Deal â†’ Quote', BriefcaseBusiness],
+  ['Sales Manager', 'Review approvals, team performance and deal health.', 'Approval â†’ Decision â†’ Coaching', ClipboardCheck],
+  ['Operations', 'Execute inventory, allocation, fulfillment and shipping.', 'Order â†’ Warehouse â†’ Delivery', Truck],
+  ['Finance', 'Review invoices, payments, margin and financial risk.', 'Quote â†’ Billing â†’ Cash', IndianRupee],
+  ['Business Admin', 'Configure products, rules, pricing and tenant settings.', 'Rules â†’ Controls â†’ Governance', Gauge],
+  ['Customer', 'Review quotes, orders, shipments and invoices.', 'Quote â†’ Order â†’ Service', UsersRound],
 ] as const
 
 const lifecycle = ['Customer', 'Deal', 'Quotation', 'Approval', 'Order', 'Inventory', 'Fulfillment', 'Shipment', 'Delivery', 'Billing', 'Deal Health', 'Audit']
-const navItems = [['architecture', '360° View'], ['modules', 'Platform'], ['roles', 'Teams'], ['operations', 'Operations'], ['governance', 'Trust']] as const
+const navItems = [['architecture', '360Â° View'], ['modules', 'Platform'], ['roles', 'Teams'], ['operations', 'Operations'], ['governance', 'Trust']] as const
 
 const vectors360 = [
   {
@@ -298,23 +299,24 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
-      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 lg:px-8">
-        <div className="mx-auto max-w-[1440px] rounded-2xl border border-border/80 bg-background/90 shadow-elevation-2 backdrop-blur-xl">
-          <div className="flex h-[68px] items-center justify-between gap-3 px-3 sm:px-5">
-            <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="DealFlow360 home"><BrandMark /><span className="hidden text-h3 tracking-tight sm:block">DealFlow<span className="text-primary">360</span></span></Link>
-            <nav className="hidden items-center rounded-xl border border-border bg-surface-muted p-1 lg:flex" aria-label="Primary navigation">{navItems.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setActiveNav(id)} className={`relative rounded-lg px-3.5 py-2 text-small font-medium transition-colors ${activeNav === id ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>{activeNav === id && <motion.span layoutId="active-landing-nav" className="absolute inset-0 -z-0 rounded-lg bg-card shadow-elevation-1" transition={{ type: 'spring', stiffness: 380, damping: 30 }} />}<span className="relative z-10">{label}</span></a>)}</nav>
+
+      <motion.header initial={{ y: -18, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.45, ease: 'easeOut' }} className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="flex h-[72px] items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
+            <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="DealFlow360 home"><span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-elevation-1"><Layers3 className="h-5 w-5" /><span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2 border-background bg-success" /></span><span className="hidden text-h3 tracking-tight sm:block">DealFlow<span className="text-primary">360</span></span></Link>
+            <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary navigation">{navItems.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => setActiveNav(id)} aria-current={activeNav === id ? 'page' : undefined} className={`relative rounded-lg px-3.5 py-2 text-small font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${activeNav === id ? 'text-foreground' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'}`}>{activeNav === id && <motion.span layoutId="active-landing-nav" className="absolute inset-0 -z-0 rounded-lg bg-secondary" transition={{ type: 'spring', stiffness: 380, damping: 30 }} />}<span className="relative z-10">{label}</span></a>)}</nav>
             <div className="flex shrink-0 items-center gap-1.5 sm:gap-2"><button type="button" onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')} className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground" aria-label="Toggle theme">{resolvedTheme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</button><div className="hidden sm:block">{user ? <Button asChild size="sm"><Link to={enter}>Open workspace <ArrowRight className="ml-1 h-4 w-4" /></Link></Button> : <div className="flex items-center gap-1.5"><Button asChild variant="ghost" size="sm"><Link to="/login">Sign in</Link></Button><Button asChild size="sm"><Link to="/register-company">Get started <ArrowRight className="ml-1 h-4 w-4" /></Link></Button></div>}</div><button type="button" onClick={() => setMobileOpen(!mobileOpen)} className="flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:hidden" aria-label={mobileOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={mobileOpen}>{mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button></div>
           </div>
           {mobileOpen && <motion.nav initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="border-t border-border px-3 pb-3 pt-2 lg:hidden" aria-label="Mobile navigation"><div className="grid gap-1">{navItems.map(([id, label]) => <a key={id} href={`#${id}`} onClick={() => { setActiveNav(id); setMobileOpen(false) }} className={`rounded-lg px-3 py-3 text-small ${activeNav === id ? 'bg-primary-subtle font-medium text-primary' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'}`}>{label}</a>)}</div><div className="mt-2 border-t border-border pt-3">{user ? <Button asChild className="w-full"><Link to={enter}>Open workspace</Link></Button> : <div className="grid grid-cols-2 gap-2"><Button asChild variant="outline"><Link to="/login">Sign in</Link></Button><Button asChild><Link to="/register-company">Get started</Link></Button></div>}</div></motion.nav>}
         </div>
-      </header>
+      </motion.header>
 
-      <main className="pt-[84px]">
-        {/* ─── REBUILT ENTERPRISE HERO SECTION ─── */}
+      <main>
+        {/* â”€â”€â”€ REBUILT ENTERPRISE HERO SECTION â”€â”€â”€ */}
         <section className="relative isolate overflow-hidden border-b border-border/80 bg-surface-muted/60">
 
           <div className="mx-auto grid min-h-[620px] max-w-[1440px] items-center gap-10 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-16 lg:px-10 lg:py-12">
-            {/* ─── LEFT: VALUE PROPOSITION & ACTIONS ─── */}
+            {/* â”€â”€â”€ LEFT: VALUE PROPOSITION & ACTIONS â”€â”€â”€ */}
             <motion.div {...reveal()} className="flex flex-col">
               {/* Product Engine Announcement Pill */}
               <div className="mb-6 inline-flex w-fit items-center gap-2.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary backdrop-blur-md transition-all hover:border-primary/50">
@@ -323,7 +325,7 @@ export function LandingPage() {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
                 <span>Connected quote-to-cash workspace</span>
-                <span className="text-muted-foreground/60">•</span>
+                <span className="text-muted-foreground/60">â€¢</span>
                 <span className="font-medium text-foreground">Commercial + Operations</span>
                 <ChevronRight className="h-3.5 w-3.5 text-primary/70" />
               </div>
@@ -413,7 +415,7 @@ export function LandingPage() {
               </div>
             </motion.div>
 
-            {/* ─── RIGHT: INTERACTIVE CONSOLE PRODUCT PREVIEW ─── */}
+            {/* â”€â”€â”€ RIGHT: INTERACTIVE CONSOLE PRODUCT PREVIEW â”€â”€â”€ */}
             <motion.div {...reveal(0.15)} className="relative">
               {/* Outer decorative halo borders */}
               <div className="absolute -inset-4 rounded-[2.25rem] border border-primary/15" />
@@ -496,7 +498,7 @@ export function LandingPage() {
                           <h4 className="font-bold text-base text-foreground">Hyperion Cloud Infra Refresh</h4>
                           <span className="font-mono text-caption text-primary bg-primary/10 px-2 py-0.5 rounded">v3</span>
                         </div>
-                        <p className="text-caption text-muted-foreground mt-0.5">Customer: Hyperion Systems • Gold Tier Partner</p>
+                        <p className="text-caption text-muted-foreground mt-0.5">Customer: Hyperion Systems â€¢ Gold Tier Partner</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-caption font-medium px-2 py-1 rounded bg-secondary text-foreground">
@@ -510,9 +512,9 @@ export function LandingPage() {
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3">
                         <p className="text-[11px] text-muted-foreground">Deal Value</p>
                         <p className="text-base sm:text-lg font-bold tabular-nums text-foreground mt-0.5">
-                          ₹{finalValue.toLocaleString('en-IN')}
+                          â‚¹{finalValue.toLocaleString('en-IN')}
                         </p>
-                        <span className="text-[10px] text-muted-foreground line-through">₹{baseValue.toLocaleString('en-IN')}</span>
+                        <span className="text-[10px] text-muted-foreground line-through">â‚¹{baseValue.toLocaleString('en-IN')}</span>
                       </div>
 
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3">
@@ -596,17 +598,17 @@ export function LandingPage() {
                       <div className="rounded-lg border border-border/80 divide-y divide-border/60 text-xs">
                         <div className="flex items-center justify-between p-2.5">
                           <div>
-                            <p className="font-semibold text-foreground">Edge Compute Node Blade v4 (×20)</p>
-                            <p className="text-[10px] text-muted-foreground">Category: Hardware • Floor Price ₹45,000</p>
+                            <p className="font-semibold text-foreground">Edge Compute Node Blade v4 (Ã—20)</p>
+                            <p className="text-[10px] text-muted-foreground">Category: Hardware â€¢ Floor Price â‚¹45,000</p>
                           </div>
-                          <span className="font-mono font-medium tabular-nums text-foreground">₹9,00,000</span>
+                          <span className="font-mono font-medium tabular-nums text-foreground">â‚¹9,00,000</span>
                         </div>
                         <div className="flex items-center justify-between p-2.5">
                           <div>
-                            <p className="font-semibold text-foreground">High-Throughput NVMe SAN Array (×10)</p>
-                            <p className="text-[10px] text-muted-foreground">Category: Storage • Floor Price ₹95,000</p>
+                            <p className="font-semibold text-foreground">High-Throughput NVMe SAN Array (Ã—10)</p>
+                            <p className="text-[10px] text-muted-foreground">Category: Storage â€¢ Floor Price â‚¹95,000</p>
                           </div>
-                          <span className="font-mono font-medium tabular-nums text-foreground">₹9,50,000</span>
+                          <span className="font-mono font-medium tabular-nums text-foreground">â‚¹9,50,000</span>
                         </div>
                       </div>
                     </div>
@@ -619,7 +621,7 @@ export function LandingPage() {
                     <div className="flex items-center justify-between border-b border-border/70 pb-3">
                       <div>
                         <h4 className="font-bold text-base text-foreground">Sequential Approval Chain</h4>
-                        <p className="text-caption text-muted-foreground">Rule: "Gold Tier &gt;10% Discount or Deal Value &gt;₹1 Cr"</p>
+                        <p className="text-caption text-muted-foreground">Rule: "Gold Tier &gt;10% Discount or Deal Value &gt;â‚¹1 Cr"</p>
                       </div>
                       <span className="rounded-full bg-amber-500/10 text-amber-500 px-2.5 py-1 text-xs font-semibold border border-amber-500/20">
                         In Review (2/3)
@@ -661,7 +663,7 @@ export function LandingPage() {
                                 {s.status}
                               </span>
                             </div>
-                            <p className="text-[11px] text-muted-foreground mt-0.5">{s.actor} • {s.time}</p>
+                            <p className="text-[11px] text-muted-foreground mt-0.5">{s.actor} â€¢ {s.time}</p>
                           </div>
                         </div>
                       ))}
@@ -690,11 +692,11 @@ export function LandingPage() {
                           </span>
                           <span className="text-[11px] font-bold text-emerald-500">65% Allocated</span>
                         </div>
-                        <p className="text-caption text-muted-foreground">13 Nodes • 7 SAN Units</p>
+                        <p className="text-caption text-muted-foreground">13 Nodes â€¢ 7 SAN Units</p>
                         <div className="w-full bg-border rounded-full h-1.5">
                           <div className="bg-primary h-1.5 rounded-full w-[65%]" />
                         </div>
-                        <p className="text-[10px] text-muted-foreground">Transit: 1 Business Day • Carrier: FedEx Freight</p>
+                        <p className="text-[10px] text-muted-foreground">Transit: 1 Business Day â€¢ Carrier: FedEx Freight</p>
                       </div>
 
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3.5 space-y-2">
@@ -704,11 +706,11 @@ export function LandingPage() {
                           </span>
                           <span className="text-[11px] font-bold text-emerald-500">35% Allocated</span>
                         </div>
-                        <p className="text-caption text-muted-foreground">7 Nodes • 3 SAN Units</p>
+                        <p className="text-caption text-muted-foreground">7 Nodes â€¢ 3 SAN Units</p>
                         <div className="w-full bg-border rounded-full h-1.5">
                           <div className="bg-sky-500 h-1.5 rounded-full w-[35%]" />
                         </div>
-                        <p className="text-[10px] text-muted-foreground">Transit: 2 Business Days • Carrier: UPS Freight</p>
+                        <p className="text-[10px] text-muted-foreground">Transit: 2 Business Days â€¢ Carrier: UPS Freight</p>
                       </div>
                     </div>
 
@@ -717,7 +719,7 @@ export function LandingPage() {
                         <PackageCheck className="h-4 w-4 text-emerald-500" />
                         <span>Fulfillment Optimization Result:</span>
                       </div>
-                      <strong className="font-semibold text-emerald-500">₹12,400 Freight Saved • 0 Backorders</strong>
+                      <strong className="font-semibold text-emerald-500">â‚¹12,400 Freight Saved â€¢ 0 Backorders</strong>
                     </div>
                   </div>
                 )}
@@ -767,86 +769,56 @@ export function LandingPage() {
             </motion.div>
           </div>
         </section>
-        {/* ─── END REBUILT HERO SECTION ─── */}
+        {/* â”€â”€â”€ END REBUILT HERO SECTION â”€â”€â”€ */}
 
-        {/* ─── FLAGSHIP 360° OPERATIONAL ARCHITECTURE & RADAR ─── */}
+        {/* â”€â”€â”€ FLAGSHIP 360Â° OPERATIONAL ARCHITECTURE & RADAR â”€â”€â”€ */}
         <section id="architecture" className="relative isolate overflow-hidden border-b border-border bg-surface-muted/30 py-20 sm:py-28 lg:py-32">
-          {/* Subtle ambient gradient */}
-          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,rgba(59,130,246,0.06),transparent)]" />
-
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
             {/* Header */}
             <motion.div {...reveal()} className="mx-auto max-w-3xl text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary backdrop-blur-md mb-4">
                 <Compass className="h-3.5 w-3.5" />
-                <span>DealFlow 360° Operational Engine</span>
-                <span className="text-muted-foreground/50">•</span>
+                <span>DealFlow 360Â° Operational Engine</span>
+                <span className="text-muted-foreground/50">â€¢</span>
                 <span className="text-foreground">Continuous Flywheel</span>
               </div>
               <h2 className="text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl text-foreground">
-                A true 360° view across your enterprise deal lifecycle.
+                A true 360Â° view across your enterprise deal lifecycle.
               </h2>
               <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">
                 Every department operates with targeted clarity, while every order, discount, stock reservation, and billing event remains locked to a single, server-authoritative source of truth.
               </p>
             </motion.div>
 
-            {/* Quick Interactive 360 Flywheel Controls & Segment Bar */}
-            <motion.div {...reveal(0.1)} className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-border bg-card/85 p-3.5 shadow-elevation-1 backdrop-blur-md">
-              <div className="flex items-center gap-3">
-                <Button
-                  type="button"
-                  variant={isTourPlaying ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setIsTourPlaying(!isTourPlaying)}
-                  className="rounded-xl font-semibold gap-2 transition-all cursor-pointer"
-                >
-                  {isTourPlaying ? (
-                    <>
-                      <Pause className="h-3.5 w-3.5 text-primary-foreground" />
-                      <span>Pause 360° Tour</span>
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-3.5 w-3.5 text-primary" />
-                      <span>Start 360° Deal Journey</span>
-                    </>
-                  )}
-                </Button>
-                <span className="hidden md:inline font-mono text-xs text-muted-foreground">
-                  Active Domain: <strong className="text-foreground font-semibold">Sector {activeVector.number} · {activeVector.shortTitle}</strong>
-                </span>
-              </div>
-
-              {/* Segmented Step Selector */}
-              <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-1 sm:pb-0">
-                {vectors360.map((v, idx) => {
-                  const isCur = activeVectorIndex === idx
-                  return (
-                    <button
-                      key={v.id}
-                      type="button"
-                      onClick={() => {
-                        setActiveVectorIndex(idx)
-                        setIsTourPlaying(false)
-                      }}
-                      className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
-                        isCur
-                          ? 'bg-primary text-primary-foreground font-bold shadow-sm'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                      }`}
-                    >
-                      <span className="font-mono text-[10px] opacity-80">{v.number}</span>
-                      <span>{v.shortTitle}</span>
-                    </button>
-                  )
-                })}
-              </div>
+            {/* Centered 360Â° activation control */}
+            <motion.div {...reveal(0.1)} className="mt-10 flex flex-col items-center gap-3 text-center">
+              <Button
+                type="button"
+                variant={isTourPlaying ? "default" : "outline"}
+                size="lg"
+                onClick={() => setIsTourPlaying(!isTourPlaying)}
+                className="rounded-xl gap-2 px-6 font-semibold shadow-elevation-1 transition-all hover:-translate-y-0.5"
+              >
+                {isTourPlaying ? (
+                  <>
+                    <Pause className="h-4 w-4 text-primary-foreground" />
+                    <span>Pause 360Â° Tour</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="h-4 w-4 text-primary" />
+                    <span>Start 360Â° Deal Journey</span>
+                  </>
+                )}
+              </Button>
+              <span className="font-mono text-xs text-muted-foreground">
+                Active Domain: <strong className="text-foreground font-semibold">Sector {activeVector.number} Â· {activeVector.shortTitle}</strong>
+              </span>
             </motion.div>
 
-            {/* Main Interactive 360° Arena */}
+            {/* Main Interactive 360Â° Arena */}
             <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-              {/* Left: The 360° Orbital Wheel Canvas */}
+              {/* Left: The 360Â° Orbital Wheel Canvas */}
               <motion.div {...reveal(0.15)} className="lg:col-span-5 flex flex-col items-center justify-center">
                 <div className="relative flex aspect-square w-full max-w-[460px] items-center justify-center p-3 sm:p-5">
                   {/* Outer ambient glow */}
@@ -922,7 +894,7 @@ export function LandingPage() {
 
                     <div className="mt-1 flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold text-emerald-500 border border-emerald-500/20">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
-                      <span>{isTourPlaying ? 'TOUR ACTIVE' : '360° SYNCED'}</span>
+                      <span>{isTourPlaying ? 'TOUR ACTIVE' : '360Â° SYNCED'}</span>
                     </div>
 
                     <button
@@ -1071,11 +1043,11 @@ export function LandingPage() {
                     ))}
                   </div>
 
-                  {/* Continuous 360° Data Handshake Bridge */}
+                  {/* Continuous 360Â° Data Handshake Bridge */}
                   <div className="mt-6 rounded-2xl border border-border/80 bg-surface-muted/30 p-4 space-y-2.5">
                     <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                       <Workflow className="h-3.5 w-3.5 text-primary" />
-                      Continuous 360° Data Handshake:
+                      Continuous 360Â° Data Handshake:
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center text-xs">
                       <div className="rounded-lg border border-border/70 bg-card p-2.5">
@@ -1126,64 +1098,152 @@ export function LandingPage() {
               </motion.div>
             </div>
 
-            {/* Bottom 360° Continuous Flow Tape */}
-            <motion.div {...reveal(0.25)} className="mt-12 rounded-2xl border border-border bg-card/75 p-4 sm:p-6 shadow-elevation-1 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4 text-primary" />
-                  <span className="text-small font-bold text-foreground">Continuous Flywheel Lifecycle Tape</span>
-                </div>
-                <span className="font-mono text-caption text-muted-foreground hidden sm:inline">Click any phase to inspect vector</span>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-                {vectors360.map((v, idx) => {
-                  const isCur = activeVectorIndex === idx
-                  const FIcon = v.icon
-                  return (
-                    <button
-                      key={v.id}
-                      type="button"
-                      onClick={() => {
-                        setActiveVectorIndex(idx)
-                        setIsTourPlaying(false)
-                      }}
-                      className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                        isCur
-                          ? 'border-primary bg-primary/10 shadow-sm ring-2 ring-primary/20'
-                          : 'border-border/60 bg-surface-muted/30 hover:bg-surface-muted hover:border-border'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-mono text-[10px] font-bold text-muted-foreground">{v.number}</span>
-                        <FIcon className={`h-3.5 w-3.5 ${isCur ? 'text-primary' : 'text-muted-foreground'}`} />
-                      </div>
-                      <p className={`mt-2 text-xs font-semibold truncate w-full ${isCur ? 'text-primary' : 'text-foreground'}`}>
-                        {v.shortTitle}
-                      </p>
-                      <span className="text-[10px] text-muted-foreground truncate w-full mt-0.5">
-                        {v.category}
-                      </span>
-                    </button>
-                  )
-                })}
-              </div>
-            </motion.div>
           </div>
         </section>
 
-        <section id="modules" className="border-y border-border bg-surface-muted"><div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28"><motion.div {...reveal()} className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end"><div><p className="text-label uppercase tracking-[0.2em] text-primary">Complete product structure</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">The workspaces behind every outcome.</h2></div><p className="max-w-md text-body leading-7 text-muted-foreground">Explore the full platform surface—from the first customer interaction to the last audit event.</p></motion.div><div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{modules.map(([title, text, Icon], index) => <motion.article {...reveal(index * 0.035)} key={title} whileHover={reducedMotion ? undefined : { y: -4 }} className="group rounded-xl border border-border bg-card p-5 shadow-elevation-1 transition-shadow hover:border-primary/40 hover:shadow-elevation-2"><div className="flex items-start justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-subtle text-primary"><Icon className="h-5 w-5" /></span><span className="font-mono text-caption text-muted-foreground">{String(index + 1).padStart(2, '0')}</span></div><h3 className="mt-5 text-h3">{title}</h3><p className="mt-2 min-h-10 text-body-small leading-6 text-muted-foreground">{text}</p><div className="mt-5 flex items-center text-small font-medium text-primary">Open domain <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></div></motion.article>)}</div></div></section>
+        <section id="modules" className="border-y border-border bg-surface-muted">
+          <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+            <motion.div {...reveal()} className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+              <div className="max-w-3xl">
+                <p className="text-label uppercase tracking-[0.2em] text-primary">Complete product structure</p>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">The workspaces behind every outcome.</h2>
+                <p className="mt-5 text-body leading-7 text-muted-foreground">Explore the full platform surface â€” from the first customer interaction to the last audit event.</p>
+              </div>
+              <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-caption text-muted-foreground shadow-elevation-1">
+                <span className="flex h-2 w-2 rounded-full bg-success" />
+                <span>12 connected domains</span>
+              </div>
+            </motion.div>
+            <div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {modules.map(([title, text, Icon], index) => (
+                <motion.article
+                  {...reveal(index * 0.035)}
+                  key={title}
+                  whileHover={reducedMotion ? undefined : { y: -6 }}
+                  className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-elevation-1 transition-shadow duration-300 hover:border-primary/40 hover:shadow-elevation-3"
+                >
+                  <div className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
+                  <div className="flex items-start justify-between">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-subtle text-primary transition-transform duration-300 group-hover:rotate-6 group-hover:scale-105"><Icon className="h-5 w-5" /></span>
+                    <span className="font-mono text-caption text-muted-foreground">{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h3 className="mt-6 text-h3">{title}</h3>
+                  <p className="mt-2 min-h-12 text-body-small leading-6 text-muted-foreground">{text}</p>
+                  <div className="mt-6 flex items-center justify-between border-t border-border pt-4 text-small font-medium text-primary">
+                    <span>Open domain</span>
+                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-        <section id="roles" className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28"><motion.div {...reveal()}><p className="text-label uppercase tracking-[0.2em] text-primary">Role-based workspaces</p><h2 className="mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">One platform. Different teams. Shared truth.</h2><p className="mt-5 max-w-2xl text-body leading-7 text-muted-foreground">Each role gets the right queue, decision context and action surface without losing the connected record.</p></motion.div><div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{roles.map(([title, text, flow, Icon], index) => <motion.div {...reveal(index * 0.05)} whileHover={reducedMotion ? undefined : { scale: 1.015 }} key={title} className="flex gap-4 rounded-xl border border-border bg-card p-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-secondary text-primary"><Icon className="h-5 w-5" /></span><div><h3 className="text-h3">{title}</h3><p className="mt-1 text-body-small leading-6 text-muted-foreground">{text}</p><p className="mt-4 flex items-center gap-1 font-mono text-caption text-primary">{flow} <ChevronRight className="h-3 w-3" /></p></div></motion.div>)}</div></section>
+        <section id="roles" className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+          <motion.div {...reveal()} className="max-w-3xl">
+            <p className="text-label uppercase tracking-[0.2em] text-primary">Role-based workspaces</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">One platform. Different teams. Shared truth.</h2>
+            <p className="mt-5 text-body leading-7 text-muted-foreground">Each role gets the right queue, decision context and action surface without losing the connected record.</p>
+          </motion.div>
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {roles.map(([title, text, flow, Icon], index) => (
+              <motion.article
+                {...reveal(index * 0.05)}
+                whileHover={reducedMotion ? undefined : { y: -5 }}
+                key={title}
+                className="group rounded-2xl border border-border bg-card p-5 shadow-elevation-1 transition-shadow duration-300 hover:border-primary/40 hover:shadow-elevation-2"
+              >
+                <div className="flex items-start justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary text-primary transition-transform duration-300 group-hover:scale-110"><Icon className="h-5 w-5" /></span>
+                  <span className="font-mono text-caption text-muted-foreground">0{index + 1}</span>
+                </div>
+                <h3 className="mt-6 text-h3">{title}</h3>
+                <p className="mt-2 min-h-12 text-body-small leading-6 text-muted-foreground">{text}</p>
+                <div className="mt-6 flex items-center gap-2 rounded-lg border border-border bg-surface-muted px-3 py-2 font-mono text-caption text-primary">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                  <span>{flow}</span>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </section>
 
-        <section id="operations" className="border-y border-border bg-slate-950 text-slate-50"><div className="mx-auto grid max-w-[1440px] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:px-10 lg:py-28"><motion.div {...reveal()}><p className="text-label uppercase tracking-[0.2em] text-sky-400">Operations execution layer</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">From confirmed order to delivered promise.</h2><p className="mt-5 max-w-xl text-body leading-7 text-slate-300">Inventory validation, warehouse allocation, partial fulfillment, backorders, shipment tracking and delivery status live in one operational chain.</p><Button asChild variant="secondary" className="mt-8"><Link to={user ? '/operations' : '/login'}>Explore Operations <ArrowRight className="ml-2 h-4 w-4" /></Link></Button></motion.div><motion.div {...reveal(0.15)} className="rounded-2xl border border-slate-700 bg-slate-900/80 p-5 shadow-2xl sm:p-8"><div className="mb-7 flex items-center justify-between"><span className="text-small font-semibold">Operational lifecycle</span><span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-caption text-emerald-300">server-authoritative</span></div><div className="flex flex-wrap gap-2">{lifecycle.map((item, index) => <motion.div key={item} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: index * 0.06 }} className="flex items-center gap-2"><span className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-small text-slate-200">{item}</span>{index < lifecycle.length - 1 && <ArrowRight className="h-3.5 w-3.5 text-sky-400" />}</motion.div>)}</div><div className="mt-8 grid gap-3 sm:grid-cols-3"><div className="rounded-lg border border-slate-700 bg-slate-800/70 p-4"><Boxes className="h-4 w-4 text-sky-400" /><p className="mt-3 text-small font-semibold">Inventory truth</p><p className="mt-1 text-caption text-slate-400">On hand · reserved · available</p></div><div className="rounded-lg border border-slate-700 bg-slate-800/70 p-4"><Truck className="h-4 w-4 text-amber-400" /><p className="mt-3 text-small font-semibold">Execution state</p><p className="mt-1 text-caption text-slate-400">Allocation · shipment · delivery</p></div><div className="rounded-lg border border-slate-700 bg-slate-800/70 p-4"><Activity className="h-4 w-4 text-emerald-400" /><p className="mt-3 text-small font-semibold">Exception control</p><p className="mt-1 text-caption text-slate-400">Backorder · delay · audit</p></div></div></motion.div></div></section>
+        <section id="operations" className="border-y border-border bg-surface-muted text-foreground dark:bg-slate-950 dark:text-slate-50">
+          <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
+            <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-center">
+              <motion.div {...reveal()}>
+                <p className="text-label uppercase tracking-[0.2em] text-primary">Operations execution layer</p>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">From confirmed order to delivered promise.</h2>
+                <p className="mt-5 max-w-xl text-body leading-7 text-muted-foreground dark:text-slate-300">Inventory validation, warehouse allocation, partial fulfillment, backorders, shipment tracking and delivery status live in one operational chain.</p>
+                <Button asChild variant="secondary" className="mt-8"><Link to={user ? '/operations' : '/login'}>Explore Operations <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
+                <div className="mt-10 grid grid-cols-3 gap-2">
+                  {['Inventory', 'Fulfillment', 'Delivery'].map((item, index) => <motion.div {...reveal(index * 0.08)} key={item} className="border-l border-border dark:border-slate-700 pl-3"><p className="font-mono text-caption text-primary">0{index + 1}</p><p className="mt-1 text-small font-semibold">{item}</p></motion.div>)}
+                </div>
+              </motion.div>
+              <motion.div {...reveal(0.15)} className="rounded-3xl border border-border dark:border-slate-700 bg-card dark:bg-slate-900/80 p-5 shadow-2xl sm:p-8">
+                <div className="flex items-center justify-between border-b border-border dark:border-slate-700 pb-5">
+                  <div><p className="text-small font-semibold">Operational lifecycle</p><p className="mt-1 text-caption text-muted-foreground dark:text-slate-400">One state at a time, fully traceable.</p></div>
+                  <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-caption text-emerald-300">server-authoritative</span>
+                </div>
+                <div className="mt-7 space-y-1">
+                  {lifecycle.map((item, index) => (
+                    <motion.div key={item} initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, amount: 0.4 }} transition={{ delay: index * 0.055 }} className="group flex items-center gap-3">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border dark:border-slate-700 bg-surface-muted dark:bg-slate-800 font-mono text-[10px] text-muted-foreground dark:text-slate-400 transition-colors group-hover:border-primary group-hover:text-primary">{String(index + 1).padStart(2, '0')}</span>
+                      <span className="flex-1 rounded-lg border border-slate-800 bg-surface-muted dark:bg-surface-muted dark:bg-slate-800/60 px-3 py-2 text-small text-foreground dark:text-slate-200 transition-colors group-hover:border-slate-600">{item}</span>
+                      {index < lifecycle.length - 1 && <span className="h-3 w-px bg-border dark:bg-slate-700" />}
+                    </motion.div>
+                  ))}
+                </div>
+                <div className="mt-7 grid gap-3 sm:grid-cols-3">
+                  {[
+                    ['Inventory truth', 'On hand Â· reserved Â· available', Boxes, 'text-primary'],
+                    ['Execution state', 'Allocation Â· shipment Â· delivery', Truck, 'text-warning'],
+                    ['Exception control', 'Backorder Â· delay Â· audit', Activity, 'text-success'],
+                  ].map(([title, text, Icon, color]) => <motion.div whileHover={reducedMotion ? undefined : { y: -3 }} key={String(title)} className="rounded-xl border border-border dark:border-slate-700 bg-surface-muted dark:bg-surface-muted dark:bg-slate-800/70 p-4"><Icon className={`h-4 w-4 ${String(color)}`} /><p className="mt-3 text-small font-semibold">{String(title)}</p><p className="mt-1 text-caption leading-5 text-muted-foreground dark:text-slate-400">{String(text)}</p></motion.div>)}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
 
-        <section id="governance" className="mx-auto grid max-w-[1440px] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-10 lg:py-28"><motion.div {...reveal()}><p className="text-label uppercase tracking-[0.2em] text-primary">Control plane</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">Built to be trusted with the important parts.</h2><p className="mt-5 max-w-xl text-body leading-7 text-muted-foreground">DealFlow360 treats authorization, tenant context, calculated state and audit history as product foundations—not afterthoughts.</p><div className="mt-8 grid gap-3 sm:grid-cols-2">{[['Tenant isolation', 'Every operational query is scoped to authenticated business context.', LockKeyhole], ['RBAC', 'Permissions shape actions while backend authorization remains authoritative.', UsersRound], ['Audit trail', 'Mutations preserve actor, timestamp, reason and before/after context.', ShieldCheck], ['Analytics integrity', 'Aggregate metrics distinguish orders, quantities, shipments and revenue.', BarChart3]].map(([title, text, Icon]) => <div key={String(title)} className="rounded-xl border border-border bg-card p-4"><Icon className="h-5 w-5 text-primary" /><p className="mt-4 text-small font-semibold">{String(title)}</p><p className="mt-1 text-caption leading-5 text-muted-foreground">{String(text)}</p></div>)}</div></motion.div><motion.div {...reveal(0.15)} className="relative rounded-2xl border border-border bg-card p-7 shadow-elevation-3"><div className="absolute right-7 top-7 flex h-12 w-12 items-center justify-center rounded-xl bg-success-subtle text-success"><ShieldCheck className="h-6 w-6" /></div><p className="font-mono text-caption text-primary">SYSTEM PRINCIPLES</p><h3 className="mt-4 max-w-sm text-2xl font-bold">A clear boundary between what the UI shows and what the domain decides.</h3><div className="mt-8 space-y-4">{['The backend validates every state transition.', 'The frontend exposes current state and next valid action.', 'Unavailable integrations remain visible as explicit boundaries.', 'Every operational mutation is designed to be traceable.'].map((item, index) => <div key={item} className="flex gap-3 border-t border-border pt-4 text-body-small"><span className="font-mono text-caption text-muted-foreground">0{index + 1}</span><span>{item}</span></div>)}</div></motion.div></section>
+        <section id="governance" className="mx-auto grid max-w-[1440px] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-10 lg:py-28">
+          <motion.div {...reveal()}>
+            <p className="text-label uppercase tracking-[0.2em] text-primary">Control plane</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">Built to be trusted with the important parts.</h2>
+            <p className="mt-5 max-w-xl text-body leading-7 text-muted-foreground">DealFlow360 treats authorization, tenant context, calculated state and audit history as product foundations â€” not afterthoughts.</p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              {[
+                ['Tenant isolation', 'Every operational query is scoped to authenticated business context.', LockKeyhole],
+                ['RBAC', 'Permissions shape actions while backend authorization remains authoritative.', UsersRound],
+                ['Audit trail', 'Mutations preserve actor, timestamp, reason and before/after context.', ShieldCheck],
+                ['Analytics integrity', 'Aggregate metrics distinguish orders, quantities, shipments and revenue.', BarChart3],
+              ].map(([title, text, Icon], index) => <motion.div {...reveal(index * 0.06)} whileHover={reducedMotion ? undefined : { y: -4 }} key={String(title)} className="rounded-2xl border border-border bg-card p-5 shadow-elevation-1 transition-shadow hover:shadow-elevation-2"><Icon className="h-5 w-5 text-primary" /><p className="mt-4 text-small font-semibold">{String(title)}</p><p className="mt-1 text-caption leading-5 text-muted-foreground">{String(text)}</p></motion.div>)}
+            </div>
+          </motion.div>
+          <motion.div {...reveal(0.15)} className="relative overflow-hidden rounded-3xl border border-border bg-card p-7 shadow-elevation-3">
+            <div className="flex items-center justify-between border-b border-border pb-5"><div><p className="font-mono text-caption tracking-[0.15em] text-primary">SYSTEM PRINCIPLES</p><p className="mt-2 text-small text-muted-foreground">Authority stays on the server.</p></div><ShieldCheck className="h-6 w-6 text-success" /></div>
+            <div className="mt-7 space-y-4">
+              {['The backend validates every state transition.', 'The frontend exposes current state and next valid action.', 'Unavailable integrations remain visible as explicit boundaries.', 'Every operational mutation is designed to be traceable.'].map((item, index) => <motion.div key={item} initial={{ opacity: 0, x: 12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.09 }} className="flex gap-4 border-t border-border pt-4 text-body-small"><span className="font-mono text-caption text-muted-foreground">0{index + 1}</span><span>{item}</span></motion.div>)}
+            </div>
+            <div className="mt-8 rounded-xl border border-success/25 bg-success-subtle p-4"><div className="flex items-center gap-2 text-small font-semibold text-success"><Check className="h-4 w-4" /> Audit-ready by design</div><p className="mt-2 text-caption leading-5 text-muted-foreground">Actor, timestamp, reason and before/after context remain attached to every critical mutation.</p></div>
+          </motion.div>
+        </section>
 
-        <section className="border-t border-primary/20 bg-primary text-primary-foreground"><div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-4 py-20 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-24"><div><p className="text-label uppercase tracking-[0.2em] text-primary-foreground/70">See the whole system</p><h2 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">Turn disconnected work into one confident flow.</h2><p className="mt-4 max-w-2xl text-body leading-7 text-primary-foreground/75">Start with the workspace that matters most, then connect the rest of the lifecycle as your operating model grows.</p></div><Button asChild size="lg" variant="secondary" className="shrink-0"><Link to={user ? enter : '/register-company'}>{user ? 'Open workspace' : 'Create your workspace'} <ArrowRight className="ml-2 h-4 w-4" /></Link></Button></div></section>
+        <motion.section {...reveal()} className="border-t border-primary/20 bg-primary text-primary-foreground">
+          <div className="mx-auto flex max-w-[1440px] flex-col gap-8 px-4 py-20 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-10 lg:py-24">
+            <div><p className="text-label uppercase tracking-[0.2em] text-primary-foreground/70">See the whole system</p><h2 className="mt-3 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">Turn disconnected work into one confident flow.</h2><p className="mt-4 max-w-2xl text-body leading-7 text-primary-foreground/75">Start with the workspace that matters most, then connect the rest of the lifecycle as your operating model grows.</p></div>
+            <motion.div whileHover={reducedMotion ? undefined : { scale: 1.03 }} whileTap={reducedMotion ? undefined : { scale: 0.98 }}><Button asChild size="lg" variant="secondary" className="shrink-0"><Link to={user ? enter : '/register-company'}>{user ? 'Open workspace' : 'Create your workspace'} <ArrowRight className="ml-2 h-4 w-4" /></Link></Button></motion.div>
+          </div>
+        </motion.section>
+
       </main>
 
-      <footer className="border-t border-border bg-card"><div className="mx-auto flex max-w-[1440px] flex-col gap-5 px-4 py-8 text-caption text-muted-foreground sm:px-6 md:flex-row md:items-center md:justify-between lg:px-10"><div className="flex items-center gap-2"><BrandMark /><span>DealFlow360</span></div><div className="flex flex-wrap gap-x-5 gap-y-2"><a href="#architecture" className="hover:text-foreground">Architecture</a><a href="#modules" className="hover:text-foreground">Modules</a><a href="#operations" className="hover:text-foreground">Operations</a><a href="#governance" className="hover:text-foreground">Governance</a></div><span>© {new Date().getFullYear()} DealFlow360</span></div></footer>
+      <LandingFooter navItems={navItems} user={user} reducedMotion={reducedMotion ?? false} />
+
     </div>
   )
 }
+
+
+
+

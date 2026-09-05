@@ -217,7 +217,7 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-page-enter">
       {/* ─── COMMAND CENTER HEADER ─── */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border/70 pb-5">
         <div>
@@ -225,7 +225,7 @@ export function DashboardPage() {
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Command Center
             </h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/20">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-subtle text-primary border border-primary/20">
               Active Enterprise Pipeline
             </span>
           </div>
@@ -235,19 +235,19 @@ export function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-2.5 flex-wrap">
-          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs h-9">
+          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
             <Link to="/sales/deals">
               <Briefcase className="h-3.5 w-3.5 text-muted-foreground" />
               <span>All Deals</span>
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs h-9">
+          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
             <Link to="/sales/quotations">
               <FileText className="h-3.5 w-3.5 text-muted-foreground" />
               <span>Quotations</span>
             </Link>
           </Button>
-          <Button asChild size="sm" className="gap-1.5 text-xs h-9 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-sm shadow-sky-500/20">
+          <Button asChild size="sm" className="gap-1.5 text-xs font-semibold shadow-xs">
             <Link to="/sales/quotations/new">
               <Plus className="h-3.5 w-3.5" />
               <span>Create Quotation</span>
@@ -260,66 +260,65 @@ export function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Active Pipeline Value */}
         <div
-          onClick={() => {}}
-          className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors"
+          className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer"
         >
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Active Deal Pipeline</span>
-            <ArrowUpRight className="h-3.5 w-3.5 text-emerald-400" />
+            <ArrowUpRight className="h-3.5 w-3.5 text-emerald-500" />
           </div>
-          <p className="text-2xl font-bold text-foreground tabular-nums">
+          <p className="text-2xl font-bold text-foreground font-numeric">
             ₹{(totalPipelineValue / 10000000).toFixed(1)} Cr
           </p>
-          <span className="text-[11px] font-semibold text-emerald-400">+14.2% MoM velocity</span>
+          <span className="text-[11px] font-semibold text-emerald-500">+14.2% MoM velocity</span>
         </div>
 
         {/* Card 2: Quotations In Review */}
-        <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+        <div className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Quotations In Flight</span>
-            <Layers className="h-3.5 w-3.5 text-sky-400" />
+            <Layers className="h-3.5 w-3.5 text-primary" />
           </div>
-          <p className="text-2xl font-bold text-foreground tabular-nums">
+          <p className="text-2xl font-bold text-foreground font-numeric">
             {quotations.length * 9}
           </p>
-          <span className="text-[11px] font-semibold text-sky-400">₹8.4 Cr proposal volume</span>
+          <span className="text-[11px] font-semibold text-primary">₹8.4 Cr proposal volume</span>
         </div>
 
         {/* Card 3: Margin Approvals Pending */}
-        <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+        <div className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Margin Approvals</span>
-            <Zap className="h-3.5 w-3.5 text-amber-400" />
+            <Zap className="h-3.5 w-3.5 text-amber-500" />
           </div>
-          <p className="text-2xl font-bold text-foreground tabular-nums">
+          <p className="text-2xl font-bold text-foreground font-numeric">
             {pendingApprovalsCount > 0 ? pendingApprovalsCount : '4'}
           </p>
-          <span className="text-[11px] font-semibold text-amber-400">SLA &lt; 2 hours</span>
+          <span className="text-[11px] font-semibold text-amber-500">SLA &lt; 2 hours</span>
         </div>
 
         {/* Card 4: Fulfillments Active */}
-        <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+        <div className="saas-card-interactive p-4.5 space-y-1.5 shadow-xs cursor-pointer">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground font-medium">
             <span>Split Fulfillments</span>
             <Truck className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
-          <p className="text-2xl font-bold text-foreground tabular-nums">34</p>
-          <span className="text-[11px] text-emerald-400 font-semibold">99.4% On-Schedule</span>
+          <p className="text-2xl font-bold text-foreground font-numeric">34</p>
+          <span className="text-[11px] text-emerald-500 font-semibold">99.4% On-Schedule</span>
         </div>
       </div>
 
       {/* ─── AI RECOMMENDATION CARD (Assetrix Style) ─── */}
       {showAiBanner && (
-        <div className="rounded-2xl border border-sky-500/30 bg-card p-5 sm:p-6 shadow-elevation-2 relative overflow-hidden">
+        <div className="rounded-2xl border border-primary/20 bg-card p-5 sm:p-6 shadow-elevation-1 relative overflow-hidden">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-4 border-b border-border/60">
             <div className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-lg bg-sky-500/15 flex items-center justify-center text-sky-400 shrink-0">
+              <div className="h-9 w-9 rounded-lg bg-primary-subtle flex items-center justify-center text-primary shrink-0">
                 <Sparkles className="h-4.5 w-4.5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-foreground">AI Margin Intelligence</span>
-                  <span className="text-[10px] px-2 py-0.2 rounded-full bg-sky-500/10 text-sky-400 font-mono">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary-subtle text-primary font-mono font-medium">
                     Discount Ceiling Anomaly Detected
                   </span>
                 </div>
@@ -330,7 +329,7 @@ export function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button asChild size="sm" className="h-8 text-xs bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold">
+              <Button asChild size="sm" className="h-8 text-xs font-semibold">
                 <Link to="/sales/deals/DEAL-8241">
                   <span>Review Deal Insight</span>
                   <ArrowRight className="h-3.5 w-3.5 ml-1" />
@@ -339,7 +338,7 @@ export function DashboardPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-8 text-xs text-muted-foreground hover:text-foreground"
+                className="h-8 text-xs"
                 onClick={() => setShowAiBanner(false)}
               >
                 Dismiss
@@ -393,12 +392,6 @@ export function DashboardPage() {
           <div className="h-64 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={VELOCITY_CHART_DATA}>
-                <defs>
-                  <linearGradient id="dashCyanArea" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4} />
-                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.0} />
-                  </linearGradient>
-                </defs>
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
                 <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
                 <Tooltip
@@ -414,7 +407,8 @@ export function DashboardPage() {
                   dataKey="velocity"
                   stroke="#0ea5e9"
                   strokeWidth={2}
-                  fill="url(#dashCyanArea)"
+                  fill="#0ea5e9"
+                  fillOpacity={0.08}
                 />
               </AreaChart>
             </ResponsiveContainer>

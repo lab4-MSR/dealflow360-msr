@@ -1,27 +1,29 @@
 import { type Transition } from 'framer-motion'
 
 /**
- * DealFlow360 Enterprise Motion Tokens & Variants
- * Built for professional enterprise SaaS: subtle, intentional, accessible, performant.
+ * DealFlow360 Enterprise SaaS Motion Tokens & Variants
+ * Built for high-performance enterprise SaaS: snappy, subtle, accessible, and fluid.
  */
 
 export const MOTION_DURATIONS = {
-  fast: 0.15,     // 150ms - buttons, hover, micro-interactions
-  normal: 0.22,   // 220ms - dropdowns, popovers, tabs, route transitions
-  emphasis: 0.32, // 320ms - modals, drawers, notifications
-  large: 0.45,    // 450ms - complex layout reflows
+  instant: 0.1,   // 100ms - micro-interactions, toggles
+  fast: 0.16,     // 160ms - buttons, hover, tooltips
+  normal: 0.2,    // 200ms - page transitions, tabs, popovers
+  emphasis: 0.28, // 280ms - modals, drawers, sheets
+  stagger: 0.035, // 35ms  - stagger between items
 } as const
 
 export const MOTION_EASINGS = {
-  easeOut: [0.16, 1, 0.3, 1],      // Natural deceleration for entering elements
-  easeInOut: [0.4, 0, 0.2, 1],    // Standard symmetric transition
-  easeIn: [0.7, 0, 0.84, 0],      // Quick acceleration for exiting elements
-  springSoft: { type: 'spring', damping: 28, stiffness: 340 } as Transition,
+  easeOut: [0.16, 1, 0.3, 1] as const,     // Natural deceleration (Linear/Vercel standard)
+  easeInOut: [0.4, 0, 0.2, 1] as const,   // Standard symmetric transition
+  easeIn: [0.7, 0, 0.84, 0] as const,     // Quick acceleration for exiting elements
+  springSnappy: { type: 'spring', damping: 24, stiffness: 400 } as Transition,
+  springSoft: { type: 'spring', damping: 28, stiffness: 320 } as Transition,
 } as const
 
-/** Subtle Page Transition variant: opacity 0 -> 1, y 6 -> 0 */
+/** Subtle Page Transition variant: snappy opacity 0 -> 1, y 4 -> 0 */
 export const pageMotionVariants = {
-  initial: { opacity: 0, y: 6 },
+  initial: { opacity: 0, y: 4 },
   animate: {
     opacity: 1,
     y: 0,
@@ -32,10 +34,47 @@ export const pageMotionVariants = {
   },
   exit: {
     opacity: 0,
-    y: -4,
+    y: -3,
     transition: {
       duration: MOTION_DURATIONS.fast,
       ease: MOTION_EASINGS.easeIn,
+    },
+  },
+}
+
+/** Stagger container for grids, cards, KPI counters, tables */
+export const staggerContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: MOTION_DURATIONS.stagger,
+      delayChildren: 0.02,
+    },
+  },
+}
+
+/** Stagger child item variant */
+export const staggerItemVariants = {
+  hidden: { opacity: 0, y: 6 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: MOTION_DURATIONS.normal,
+      ease: MOTION_EASINGS.easeOut,
+    },
+  },
+}
+
+/** Fade in variant */
+export const fadeInVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: MOTION_DURATIONS.fast,
+      ease: MOTION_EASINGS.easeOut,
     },
   },
 }
@@ -46,9 +85,30 @@ export const cardHoverTransition = {
   ease: MOTION_EASINGS.easeOut,
 }
 
+/** Tab content switch transition */
+export const tabContentMotionVariants = {
+  initial: { opacity: 0, y: 4 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: MOTION_DURATIONS.fast,
+      ease: MOTION_EASINGS.easeOut,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -2,
+    transition: {
+      duration: MOTION_DURATIONS.instant,
+      ease: MOTION_EASINGS.easeIn,
+    },
+  },
+}
+
 /** Dropdown menu variants */
 export const dropdownMotionVariants = {
-  initial: { opacity: 0, scale: 0.97, y: -4 },
+  initial: { opacity: 0, scale: 0.98, y: -4 },
   animate: {
     opacity: 1,
     scale: 1,
@@ -60,10 +120,10 @@ export const dropdownMotionVariants = {
   },
   exit: {
     opacity: 0,
-    scale: 0.97,
+    scale: 0.98,
     y: -4,
     transition: {
-      duration: 0.1,
+      duration: MOTION_DURATIONS.instant,
       ease: MOTION_EASINGS.easeIn,
     },
   },
@@ -77,14 +137,14 @@ export const modalMotionVariants = {
     scale: 1,
     y: 0,
     transition: {
-      duration: MOTION_DURATIONS.normal,
+      duration: MOTION_DURATIONS.emphasis,
       ease: MOTION_EASINGS.easeOut,
     },
   },
   exit: {
     opacity: 0,
     scale: 0.98,
-    y: 6,
+    y: 4,
     transition: {
       duration: MOTION_DURATIONS.fast,
       ease: MOTION_EASINGS.easeIn,
@@ -129,3 +189,4 @@ export const drawerMotionVariants = {
     },
   },
 }
+

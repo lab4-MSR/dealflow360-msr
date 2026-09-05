@@ -6,9 +6,10 @@ import { BrandMark } from '@/components/common/BrandMark'
 
 interface AuthLayoutProps {
   children: ReactNode
+  wideContent?: boolean
 }
 
-export function AuthLayout({ children }: AuthLayoutProps) {
+export function AuthLayout({ children, wideContent = false }: AuthLayoutProps) {
   const { resolvedTheme, setTheme } = useTheme()
 
   return (
@@ -39,7 +40,7 @@ export function AuthLayout({ children }: AuthLayoutProps) {
 
       {/* Main Form Center Box */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
-        <div className="w-full max-w-[440px]">
+        <div className={`w-full ${wideContent ? 'max-w-2xl' : 'max-w-[440px]'}`}>
           {children}
         </div>
       </div>

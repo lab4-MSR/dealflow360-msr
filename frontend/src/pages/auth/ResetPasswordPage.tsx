@@ -10,7 +10,7 @@ import { PasswordField } from '@/components/auth/PasswordField'
 import { PasswordStrength } from '@/components/auth/PasswordStrength'
 import { Button } from '@/components/ui/button'
 import { resetPasswordSchema, type ResetPasswordFormData } from '@/lib/schemas'
-import { ArrowLeft, CheckCircle2, KeyRound } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, KeyRound, Clock, XCircle, Sparkles } from 'lucide-react'
 
 type ResetStatus = 'idle' | 'invalid' | 'expired' | 'success'
 
@@ -52,7 +52,7 @@ export default function ResetPasswordPage() {
       } else if (code === 'INVALID_TOKEN') {
         setStatus('invalid')
       } else {
-        setSubmitError("We couldn't reset your password. Please try again.")
+        setSubmitError("We couldn't reset your password. Please verify the link or try requesting a new one.")
       }
     }
   }
@@ -60,32 +60,35 @@ export default function ResetPasswordPage() {
   if (status === 'invalid') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger-subtle">
-              <KeyRound className="h-6 w-6 text-danger" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-danger-subtle border border-danger/20 text-danger shadow-xl shadow-danger/10">
+              <XCircle className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Invalid link</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              That password reset link is invalid.
-            </p>
-          </div>
-          <AuthCard>
-            <div className="space-y-4">
-              <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Invalid or used link
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                This password reset link is invalid, malformed, or has already been used.
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Button asChild className="w-full font-semibold shadow-xs" size="lg">
                 <Link to="/forgot-password">
                   Request a new reset link
                 </Link>
               </Button>
-              <Button asChild variant="secondary" className="w-full" size="lg">
-                <Link to="/login">
+              <Button asChild variant="secondary" className="w-full font-semibold" size="lg">
+                <Link to="/login" className="flex items-center justify-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
-                  Back to sign in
+                  <span>Back to sign in</span>
                 </Link>
               </Button>
             </div>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -93,32 +96,35 @@ export default function ResetPasswordPage() {
   if (status === 'expired') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warning-subtle">
-              <KeyRound className="h-6 w-6 text-warning" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-warning-subtle border border-warning/20 text-warning shadow-xl shadow-warning/10">
+              <Clock className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Link expired</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              That password reset link has expired.
-            </p>
-          </div>
-          <AuthCard>
-            <div className="space-y-4">
-              <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Reset link expired
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                Password reset links expire after 15 minutes for your security. Please request a fresh reset link.
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              <Button asChild className="w-full font-semibold shadow-xs" size="lg">
                 <Link to="/forgot-password">
-                  Request a new reset link
+                  Request fresh reset link
                 </Link>
               </Button>
-              <Button asChild variant="secondary" className="w-full" size="lg">
-                <Link to="/login">
+              <Button asChild variant="secondary" className="w-full font-semibold" size="lg">
+                <Link to="/login" className="flex items-center justify-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
-                  Back to sign in
+                  <span>Back to sign in</span>
                 </Link>
               </Button>
             </div>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -126,82 +132,95 @@ export default function ResetPasswordPage() {
   if (status === 'success') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-success-subtle">
-              <CheckCircle2 className="h-6 w-6 text-success" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-success-subtle border border-success/20 text-success shadow-xl shadow-success/10">
+              <CheckCircle2 className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Password updated</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              Your password has been updated successfully.
-            </p>
-          </div>
-          <AuthCard>
-            <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Password updated
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                Your password has been updated successfully. You can now sign in with your new credentials.
+              </p>
+            </div>
+
+            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
               <Link to="/login">
                 Continue to sign in
               </Link>
             </Button>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
 
   return (
     <AuthLayout>
-      <div className="space-y-6">
-        <div className="text-center">
-          <h1 className="text-h2 font-semibold text-foreground">Set new password</h1>
-          <p className="mt-2 text-body-small text-muted-foreground">
-            Choose a strong password for your account.
-          </p>
-        </div>
+      <AuthCard>
+        <div className="space-y-7">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Credential Setup</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              Set new password
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              Choose a strong, unique password for your DealFlow360 account
+            </p>
+          </div>
 
-        <AuthCard>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {submitError && <AuthAlert type="error" message={submitError} />}
 
-            <PasswordField
-              label="New password"
-              placeholder="Enter new password"
-              autoComplete="new-password"
-              error={errors.password?.message}
-              {...register('password')}
-            />
+            <div className="space-y-2">
+              <PasswordField
+                label="New password"
+                placeholder="Enter new strong password"
+                autoComplete="new-password"
+                className="h-12 rounded-2xl text-sm"
+                error={errors.password?.message}
+                {...register('password')}
+              />
+              <PasswordStrength password={passwordValue || ''} />
+            </div>
 
-            <PasswordStrength password={passwordValue || ''} />
-
             <PasswordField
-              label="Confirm password"
-              placeholder="Confirm new password"
+              label="Confirm new password"
+              placeholder="Confirm your new password"
               autoComplete="new-password"
+              className="h-12 rounded-2xl text-sm"
               error={errors.confirmPassword?.message}
               {...register('confirmPassword')}
             />
 
             <Button
               type="submit"
-              className="w-full"
+              className="w-full font-semibold shadow-xs"
               size="lg"
               disabled={isSubmitting}
               loading={isSubmitting}
             >
-              {isSubmitting ? 'Updating...' : 'Reset password'}
+              {isSubmitting ? 'Updating credentials...' : 'Reset password & Sign in'}
             </Button>
           </form>
-        </AuthCard>
 
-        <p className="text-center">
-          <Link
-            to="/login"
-            className="inline-flex items-center gap-1.5 text-small font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to sign in
-          </Link>
-        </p>
-      </div>
+          <div className="pt-2 text-center border-t border-border/60">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to sign in</span>
+            </Link>
+          </div>
+        </div>
+      </AuthCard>
     </AuthLayout>
   )
 }

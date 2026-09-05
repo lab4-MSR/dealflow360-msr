@@ -63,17 +63,22 @@ export default function EmailVerificationPage() {
   if (status === 'verifying') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-subtle">
-              <RefreshCw className="h-6 w-6 text-primary animate-spin" />
+        <AuthCard>
+          <div className="text-center space-y-6 py-6">
+            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-sky-500/10 border border-sky-500/20 text-sky-500 shadow-xl shadow-sky-500/10 relative">
+              <span className="absolute inset-0 rounded-3xl animate-ping bg-sky-500/10 opacity-75" />
+              <RefreshCw className="h-12 w-12 text-sky-500 animate-spin" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Verifying your email</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              Please wait while we verify your email address...
-            </p>
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Verifying your email
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                Please wait a moment while we validate your security token and authorize workspace access...
+              </p>
+            </div>
           </div>
-        </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -81,24 +86,27 @@ export default function EmailVerificationPage() {
   if (status === 'success') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-success-subtle">
-              <CheckCircle2 className="h-6 w-6 text-success" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-success-subtle border border-success/20 text-success shadow-xl shadow-success/10">
+              <CheckCircle2 className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Email verified</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              Your email has been verified successfully.
-            </p>
-          </div>
-          <AuthCard>
-            <Button asChild className="w-full" size="lg">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Email verified successfully
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                Your email has been verified. You can now access your workspace and manage deals.
+              </p>
+            </div>
+
+            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
               <Link to="/login">
                 Continue to sign in
               </Link>
             </Button>
-          </AuthCard>
-        </div>
+          </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
@@ -106,144 +114,111 @@ export default function EmailVerificationPage() {
   if (status === 'invalid') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger-subtle">
-              <XCircle className="h-6 w-6 text-danger" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-danger-subtle border border-danger/20 text-danger shadow-xl shadow-danger/10">
+              <XCircle className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Invalid link</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              This verification link is invalid.
-            </p>
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Invalid verification link
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                This verification link is invalid, corrupted, or has already been used.
+              </p>
+            </div>
+
+            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
+              <Link to="/login">
+                Go to sign in
+              </Link>
+            </Button>
           </div>
-          <AuthCard>
-            <div className="space-y-3">
-              <Button asChild className="w-full" size="lg">
-                <Link to="/login">
-                  Go to sign in
-                </Link>
-              </Button>
-            </div>
-          </AuthCard>
-        </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
 
-  if (status === 'expired') {
+  if (status === 'expired' || status === 'failed') {
     return (
       <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warning-subtle">
-              <Clock className="h-6 w-6 text-warning" />
+        <AuthCard>
+          <div className="text-center space-y-6">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-warning-subtle border border-warning/20 text-warning shadow-xl shadow-warning/10">
+              <Clock className="h-10 w-10" />
             </div>
-            <h1 className="text-h2 font-semibold text-foreground">Link expired</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              This verification link has expired.
-            </p>
-          </div>
-          <AuthCard>
-            <div className="space-y-3">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+                Verification link expired
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+                This verification link has expired. You can easily request a new link below.
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-2">
               {error && <AuthAlert type="error" message={error} />}
               <Button
-                className="w-full"
+                className="w-full font-semibold shadow-xs"
                 size="lg"
                 onClick={handleResend}
                 disabled={resendCooldown > 0}
               >
                 {resendCooldown > 0
-                  ? `Resend in ${resendCooldown}s`
+                  ? `Resend available in ${resendCooldown}s`
                   : 'Resend verification email'}
               </Button>
-              <Button asChild variant="secondary" className="w-full" size="lg">
-                <Link to="/login">
+              <Button asChild variant="secondary" className="w-full font-semibold" size="lg">
+                <Link to="/login" className="flex items-center justify-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
-                  Back to sign in
+                  <span>Return to sign in</span>
                 </Link>
               </Button>
             </div>
-          </AuthCard>
-        </div>
-      </AuthLayout>
-    )
-  }
-
-  if (status === 'failed') {
-    return (
-      <AuthLayout>
-        <div className="space-y-6">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger-subtle">
-              <XCircle className="h-6 w-6 text-danger" />
-            </div>
-            <h1 className="text-h2 font-semibold text-foreground">Verification failed</h1>
-            <p className="mt-2 text-body-small text-muted-foreground">
-              We couldn&apos;t verify your email. Please try again.
-            </p>
           </div>
-          <AuthCard>
-            <div className="space-y-3">
-              {error && <AuthAlert type="error" message={error} />}
-              <Button
-                className="w-full"
-                size="lg"
-                onClick={handleResend}
-                disabled={resendCooldown > 0}
-              >
-                {resendCooldown > 0
-                  ? `Resend in ${resendCooldown}s`
-                  : 'Resend verification email'}
-              </Button>
-              <Button asChild variant="secondary" className="w-full" size="lg">
-                <Link to="/login">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to sign in
-                </Link>
-              </Button>
-            </div>
-          </AuthCard>
-        </div>
+        </AuthCard>
       </AuthLayout>
     )
   }
 
-  // idle — no token provided, show check-email state
+  // idle state
   return (
     <AuthLayout>
-      <div className="space-y-6">
-        <div className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary-subtle">
-            <Mail className="h-6 w-6 text-primary" />
+      <AuthCard>
+        <div className="text-center space-y-6">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10 border border-primary/20 text-primary shadow-xl shadow-primary/10">
+            <Mail className="h-10 w-10" />
           </div>
-          <h1 className="text-h2 font-semibold text-foreground">Check your email</h1>
-          <p className="mt-2 text-body-small text-muted-foreground">
-            We&apos;ve sent a verification link to your email address. Click the link to
-            verify your account.
-          </p>
-        </div>
-        <AuthCard>
-          <div className="space-y-3">
+          <div className="space-y-2">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+              Check your work email
+            </h1>
+            <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              We&apos;ve sent a verification link to your email address. Click the link to verify your workspace.
+            </p>
+          </div>
+
+          <div className="space-y-3 pt-2">
             {error && <AuthAlert type="error" message={error} />}
             <Button
-              className="w-full"
+              className="w-full font-semibold shadow-xs"
               size="lg"
               onClick={handleResend}
               disabled={resendCooldown > 0}
             >
               {resendCooldown > 0
-                ? `Resend in ${resendCooldown}s`
+                ? `Resend available in ${resendCooldown}s`
                 : 'Resend verification email'}
             </Button>
-            <Button asChild variant="secondary" className="w-full" size="lg">
-              <Link to="/login">
+            <Button asChild variant="secondary" className="w-full font-semibold" size="lg">
+              <Link to="/login" className="flex items-center justify-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                Back to sign in
+                <span>Return to sign in</span>
               </Link>
             </Button>
           </div>
-        </AuthCard>
-      </div>
+        </div>
+      </AuthCard>
     </AuthLayout>
   )
 }
