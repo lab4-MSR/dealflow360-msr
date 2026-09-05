@@ -389,7 +389,7 @@ export function SalesManagerDashboardPage() {
                         </td>
                         <td className="px-4 py-3 tabular-nums">₹{rep.quota.toLocaleString()}</td>
                         <td className="px-4 py-3 font-semibold text-foreground tabular-nums">
-                          ${rep.closed_revenue.toLocaleString()}
+                          ₹{rep.closed_revenue.toLocaleString()}
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
@@ -528,7 +528,7 @@ export function SalesManagerDashboardPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 font-semibold text-foreground tabular-nums">
-                      ${deal.deal_value.toLocaleString()}
+                      ₹{deal.deal_value.toLocaleString()}
                     </td>
                     <td className="px-4 py-3 text-foreground font-medium">{deal.rep_name}</td>
                     <td className="px-4 py-3">

@@ -45,12 +45,12 @@ export function FinanceDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-        <KpiCard label="Total Revenue" value={`?${(kpis.total_revenue || 0).toLocaleString("en-IN")}`} icon={<DollarSign className="h-5 w-5" />} />
-        <KpiCard label="Recurring Revenue" value={`?${(kpis.recurring_revenue || 0).toLocaleString("en-IN")}`} variant="success" icon={<TrendingUp className="h-5 w-5" />} />
-        <KpiCard label="Outstanding" value={`?${(kpis.outstanding_amount || 0).toLocaleString("en-IN")}`} variant="warning" icon={<Clock className="h-5 w-5" />} />
-        <KpiCard label="Collected" value={`?${(kpis.collected_amount || 0).toLocaleString("en-IN")}`} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
-        <KpiCard label="Overdue" value={`?${(kpis.overdue_amount || 0).toLocaleString("en-IN")}`} variant="danger" icon={<AlertTriangle className="h-5 w-5" />} />
-        <KpiCard label="One-Time" value={`?${(kpis.one_time_revenue || 0).toLocaleString("en-IN")}`} variant="info" icon={<FileText className="h-5 w-5" />} />
+        <KpiCard label="Total Revenue" value={`₹${(kpis.total_revenue || 0).toLocaleString("en-IN")}`} icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="Recurring Revenue" value={`₹${(kpis.recurring_revenue || 0).toLocaleString("en-IN")}`} variant="success" icon={<TrendingUp className="h-5 w-5" />} />
+        <KpiCard label="Outstanding" value={`₹${(kpis.outstanding_amount || 0).toLocaleString("en-IN")}`} variant="warning" icon={<Clock className="h-5 w-5" />} />
+        <KpiCard label="Collected" value={`₹${(kpis.collected_amount || 0).toLocaleString("en-IN")}`} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
+        <KpiCard label="Overdue" value={`₹${(kpis.overdue_amount || 0).toLocaleString("en-IN")}`} variant="danger" icon={<AlertTriangle className="h-5 w-5" />} />
+        <KpiCard label="One-Time" value={`₹${(kpis.one_time_revenue || 0).toLocaleString("en-IN")}`} variant="info" icon={<FileText className="h-5 w-5" />} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -71,8 +71,8 @@ export function FinanceDashboardPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <Link to="/finance/subscriptions" className="block"><KpiCard label="Active Subscriptions" value={kpis.active_subscriptions || 0} variant="success" icon={<TrendingUp className="h-5 w-5" />} /></Link>
-        <KpiCard label="MRR" value={`?${(kpis.mrr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
-        <KpiCard label="ARR" value={`?${(kpis.arr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="MRR" value={`₹${(kpis.mrr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="ARR" value={`₹${(kpis.arr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
         <KpiCard label="Renewals" value={kpis.renewals || 0} icon={<RefreshCw className="h-5 w-5" />} />
         <KpiCard label="Cancellations" value={kpis.cancellations || 0} variant="danger" icon={<XCircle className="h-5 w-5" />} />
       </div>

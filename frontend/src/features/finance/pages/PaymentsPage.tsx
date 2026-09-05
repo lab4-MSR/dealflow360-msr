@@ -33,7 +33,7 @@ export function PaymentsPage() {
 
       {kpis && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <KpiCard label="Total Collected" value={`?${(kpis.total_collected || 0).toLocaleString("en-IN")}`} variant="success" icon={<DollarSign className="h-5 w-5" />} />
+          <KpiCard label="Total Collected" value={`₹${(kpis.total_collected || 0).toLocaleString("en-IN")}`} variant="success" icon={<DollarSign className="h-5 w-5" />} />
           <KpiCard label="Successful" value={kpis.successful || 0} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
           <KpiCard label="Pending" value={kpis.pending || 0} variant="warning" icon={<Clock className="h-5 w-5" />} />
           <KpiCard label="Failed" value={kpis.failed || 0} variant="danger" icon={<XCircle className="h-5 w-5" />} />

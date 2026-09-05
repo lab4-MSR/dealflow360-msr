@@ -43,11 +43,11 @@ export function RevenueAnalyticsPage() {
 
       {/* Revenue KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-        <KpiCard label="Total Revenue" value={`?${(kpis.total_revenue || 0).toLocaleString("en-IN")}`} icon={<DollarSign className="h-5 w-5" />} />
-        <KpiCard label="One-Time" value={`?${(kpis.one_time_revenue || 0).toLocaleString("en-IN")}`} variant="info" icon={<BarChart3 className="h-5 w-5" />} />
-        <KpiCard label="Recurring" value={`?${(kpis.recurring_revenue || 0).toLocaleString("en-IN")}`} variant="success" icon={<TrendingUp className="h-5 w-5" />} />
-        <KpiCard label="MRR" value={`?${(kpis.mrr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
-        <KpiCard label="ARR" value={`?${(kpis.arr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="Total Revenue" value={`₹${(kpis.total_revenue || 0).toLocaleString("en-IN")}`} icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="One-Time" value={`₹${(kpis.one_time_revenue || 0).toLocaleString("en-IN")}`} variant="info" icon={<BarChart3 className="h-5 w-5" />} />
+        <KpiCard label="Recurring" value={`₹${(kpis.recurring_revenue || 0).toLocaleString("en-IN")}`} variant="success" icon={<TrendingUp className="h-5 w-5" />} />
+        <KpiCard label="MRR" value={`₹${(kpis.mrr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="ARR" value={`₹${(kpis.arr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
         <KpiCard label="Growth" value={`${(kpis.revenue_growth || 0).toFixed(1)}%`} variant={kpis.revenue_growth >= 0 ? "success" : "danger"} icon={<TrendingUp className="h-5 w-5" />} />
       </div>
 
@@ -57,10 +57,10 @@ export function RevenueAnalyticsPage() {
           <CardHeader><CardTitle>Revenue Breakdown</CardTitle><CardDescription>By revenue type</CardDescription></CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex justify-between items-center"><span className="text-muted-foreground">One-Time Revenue</span><span className="font-semibold">?{(breakdown.one_time || 0).toLocaleString("en-IN")}</span></div>
-              <div className="flex justify-between items-center"><span className="text-muted-foreground">Subscription Revenue</span><span className="font-semibold">?{(breakdown.subscription || 0).toLocaleString("en-IN")}</span></div>
-              <div className="flex justify-between items-center"><span className="text-muted-foreground">Product Revenue</span><span className="font-semibold">?{(breakdown.product || 0).toLocaleString("en-IN")}</span></div>
-              <div className="flex justify-between items-center"><span className="text-muted-foreground">Service Revenue</span><span className="font-semibold">?{(breakdown.service || 0).toLocaleString("en-IN")}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">One-Time Revenue</span><span className="font-semibold">₹{(breakdown.one_time || 0).toLocaleString("en-IN")}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">Subscription Revenue</span><span className="font-semibold">₹{(breakdown.subscription || 0).toLocaleString("en-IN")}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">Product Revenue</span><span className="font-semibold">₹{(breakdown.product || 0).toLocaleString("en-IN")}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">Service Revenue</span><span className="font-semibold">₹{(breakdown.service || 0).toLocaleString("en-IN")}</span></div>
             </div>
           </CardContent>
         </Card>
@@ -70,8 +70,8 @@ export function RevenueAnalyticsPage() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center"><span className="text-muted-foreground">Collection Rate</span><span className="font-semibold text-success">{collection.collection_rate || 0}%</span></div>
-              <div className="flex justify-between items-center"><span className="text-muted-foreground">Outstanding</span><span className="font-semibold">?{(collection.outstanding || 0).toLocaleString("en-IN")}</span></div>
-              <div className="flex justify-between items-center"><span className="text-muted-foreground">Overdue</span><span className="font-semibold text-danger">?{(collection.overdue || 0).toLocaleString("en-IN")}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">Outstanding</span><span className="font-semibold">₹{(collection.outstanding || 0).toLocaleString("en-IN")}</span></div>
+              <div className="flex justify-between items-center"><span className="text-muted-foreground">Overdue</span><span className="font-semibold text-danger">₹{(collection.overdue || 0).toLocaleString("en-IN")}</span></div>
               <div className="flex justify-between items-center"><span className="text-muted-foreground">Failed Payments</span><span className="font-semibold text-danger">{collection.failed_payments || 0}</span></div>
             </div>
           </CardContent>

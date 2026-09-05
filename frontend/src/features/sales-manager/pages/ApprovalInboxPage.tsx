@@ -357,7 +357,7 @@ export function ApprovalInboxPage() {
 
                         <td className="px-4 py-3">
                           <span className="font-bold text-foreground block tabular-nums">
-                            ${item.deal_value.toLocaleString()}
+                            ₹{item.deal_value.toLocaleString()}
                           </span>
                           <div className="flex items-center gap-1 mt-0.5">
                             <span className="text-muted-foreground">Margin:</span>

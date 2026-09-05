@@ -850,3 +850,27 @@ export const intelligenceService = {
     return { success: true }
   },
 }
+
+export const getIntelligenceDashboard = intelligenceService.getIntelligenceDashboard.bind(intelligenceService)
+export const getRiskOverview = intelligenceService.getRiskOverview.bind(intelligenceService)
+export const getHighRiskDeals = intelligenceService.getHighRiskDeals.bind(intelligenceService)
+export const getRiskDetails = intelligenceService.getRiskDetails.bind(intelligenceService)
+export const getRiskDetail = intelligenceService.getRiskDetails.bind(intelligenceService)
+export const getUpsellRecommendations = intelligenceService.getUpsellRecommendations.bind(intelligenceService)
+export const getCrossSellRecommendations = intelligenceService.getCrossSellRecommendations.bind(intelligenceService)
+export const getRecommendations = (type: 'upsell' | 'cross-sell', filters?: Record<string, string>) =>
+  type === 'upsell'
+    ? intelligenceService.getUpsellRecommendations(filters)
+    : intelligenceService.getCrossSellRecommendations(filters)
+export const getRecommendationDetails = intelligenceService.getRecommendationDetails.bind(intelligenceService)
+export const getRecommendationDetail = intelligenceService.getRecommendationDetails.bind(intelligenceService)
+export const applyRecommendation = intelligenceService.applyRecommendation.bind(intelligenceService)
+export const getDealHealthOverview = intelligenceService.getDealHealthOverview.bind(intelligenceService)
+export const getStalledDeals = intelligenceService.getStalledDeals.bind(intelligenceService)
+export const getDiscountAnomalies = intelligenceService.getDiscountAnomalies.bind(intelligenceService)
+export const dismissDiscountAnomaly = intelligenceService.dismissDiscountAnomaly.bind(intelligenceService)
+export const getDeliverySlippage = intelligenceService.getDeliverySlippage.bind(intelligenceService)
+export const getDecisionInsights = intelligenceService.getDecisionInsights.bind(intelligenceService)
+export const actOnDecisionInsight = intelligenceService.actOnDecisionInsight.bind(intelligenceService)
+
+export default intelligenceService

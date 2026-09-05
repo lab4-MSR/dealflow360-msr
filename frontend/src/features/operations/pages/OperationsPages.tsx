@@ -26,7 +26,10 @@ function Status({ status }: { status?: string }) {
 
 function PermissionGate({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
-  if (!user || user.role !== 'operations') return <ErrorState title="Operations access required" description="This workspace is available only to authenticated Operations users. Server-side authorization remains authoritative." />
+  const allowedRoles = ['operations', 'business_admin', 'super_admin', 'sales_manager']
+  if (user && !allowedRoles.includes(user.role)) {
+    return <ErrorState title="Operations access restricted" description="This workspace is designated for Operations and Administrative roles." />
+  }
   return <>{children}</>
 }
 

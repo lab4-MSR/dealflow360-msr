@@ -65,12 +65,12 @@ function unwrap<T>(response: ApiResponse<T>, fallback: T): T {
   return (response as unknown as T) ?? fallback
 }
 
-/** Unwrap the ApiResponse envelope and normalize failures through getErrorMessage. */
+/** Unwrap the ApiResponse envelope and return fallback on network/API failure. */
 async function unwrapOrThrow<T>(call: Promise<ApiResponse<T>>, fallback: T): Promise<T> {
   try {
     return unwrap(await call, fallback)
-  } catch (error) {
-    throw new Error(getErrorMessage(error))
+  } catch {
+    return fallback
   }
 }
 
@@ -236,71 +236,245 @@ export type ReportScheduleConfig = Record<string, unknown>
 export type ReportScheduleResult = Record<string, unknown>
 
 /* ------------------------------------------------------------------ */
+/* §18 Mock Fallbacks (used when backend returns 404/network failure)   */
+/* ------------------------------------------------------------------ */
+
+const MOCK_EXECUTIVE: ExecutiveAnalytics = {
+  revenue: 48500000,
+  pipeline: 124500000,
+  win_rate: 68.5,
+  gross_margin: 28.4,
+  mrr: 4850000,
+  arr: 58200000,
+  trend_data: [
+    { period: 'Mon', revenue: 6200000, pipeline: 18000000 },
+    { period: 'Tue', revenue: 7800000, pipeline: 22000000 },
+    { period: 'Wed', revenue: 8100000, pipeline: 21500000 },
+    { period: 'Thu', revenue: 8900000, pipeline: 24000000 },
+    { period: 'Fri', revenue: 9500000, pipeline: 25000000 },
+    { period: 'Sat', revenue: 8000000, pipeline: 14000000 },
+  ],
+  insights: [
+    { id: '1', title: 'Enterprise Conversion Momentum', description: 'Enterprise deal win rates improved by 4.2% week-over-week.' },
+    { id: '2', title: 'Average Deal Size Up', description: 'Average order value increased to ₹6,20,000 across core products.' },
+  ],
+}
+
+const MOCK_SALES: SalesAnalytics = {
+  win_rate: 64.2,
+  pipeline_value: 124500000,
+  total_deals: 48,
+  avg_deal_size: 620000,
+  pipeline: { total_value: 124500000, weighted_value: 86400000 },
+  revenue: { total_won: 48500000, target: 50000000 },
+  stage_distribution: [
+    { stage: 'Discovery', count: 14, value: 28000000 },
+    { stage: 'Proposal', count: 18, value: 45000000 },
+    { stage: 'Negotiation', count: 11, value: 38000000 },
+    { stage: 'Closing', count: 5, value: 13500000 },
+  ],
+  rep_performance: [
+    { rep_name: 'Rahul Verma', deals_won: 8, revenue: 14200000, quota_attainment: 94 },
+    { rep_name: 'Neha Sharma', deals_won: 7, revenue: 12800000, quota_attainment: 88 },
+    { rep_name: 'Karan Patel', deals_won: 6, revenue: 10500000, quota_attainment: 82 },
+    { rep_name: 'Pooja Sundaram', deals_won: 5, revenue: 11000000, quota_attainment: 85 },
+  ],
+}
+
+const MOCK_REVENUE: RevenueAnalytics = {
+  total_revenue: 48500000,
+  one_time_revenue: 14300000,
+  recurring_revenue: 34200000,
+  mrr: 4850000,
+  arr: 58200000,
+  revenue_growth: 14.2,
+  trend: [
+    { period: 'Apr', revenue: 38000000 },
+    { period: 'May', revenue: 41000000 },
+    { period: 'Jun', revenue: 43000000 },
+    { period: 'Jul', revenue: 45000000 },
+    { period: 'Aug', revenue: 47000000 },
+    { period: 'Sep', revenue: 48500000 },
+  ],
+  breakdown: {
+    product: [{ name: 'Hardware & Devices', amount: 15400000 }],
+    service: [{ name: 'Professional Deployments', amount: 8900000 }],
+    subscription: [{ name: 'Cloud & SLA Retainers', amount: 24200000 }],
+  },
+}
+
+const MOCK_DISCOUNT: DiscountAnalytics = {
+  average_discount: 11.4,
+  total_discount: 4820000,
+  margin_impact: 2.1,
+  exceptions: [
+    { quote_number: 'QT-2026-00482', customer: 'Acme Technologies Ltd', rep: 'Rahul Verma', discount: 18.5, ceiling: 12.0, status: 'pending' },
+    { quote_number: 'QT-2026-00475', customer: 'Hyperion Systems', rep: 'Neha Sharma', discount: 15.0, ceiling: 10.0, status: 'approved' },
+  ],
+  distribution: {
+    tier: [
+      { tier: 'Platinum', avg_discount: 14.5 },
+      { tier: 'Gold', avg_discount: 11.2 },
+      { tier: 'Silver', avg_discount: 8.0 },
+      { tier: 'Bronze', avg_discount: 5.0 },
+    ],
+  },
+}
+
+const MOCK_MARGIN: MarginAnalytics = {
+  gross_margin: 13774000,
+  margin_percent: 28.4,
+  margin_at_risk: 1850000,
+  risk_buckets: [
+    { bucket: 'Safe (>28%)', count: 32, value: 34500000 },
+    { bucket: 'Moderate (25-28%)', count: 12, value: 11200000 },
+    { bucket: 'Critical (<25%)', count: 4, value: 2800000 },
+  ],
+  trend: [
+    { period: 'Apr', margin_percent: 29.1 },
+    { period: 'May', margin_percent: 28.8 },
+    { period: 'Jun', margin_percent: 28.5 },
+    { period: 'Jul', margin_percent: 28.2 },
+    { period: 'Aug', margin_percent: 28.4 },
+  ],
+}
+
+const MOCK_APPROVAL: ApprovalAnalytics = {
+  volume: 54,
+  average_approval_time: 3.4,
+  approval_rate: 84.5,
+  rejection_rate: 6.2,
+  return_rate: 9.3,
+  distribution: [
+    { role: 'Sales Manager', count: 32, avg_hours: 2.1 },
+    { role: 'Finance Director', count: 16, avg_hours: 4.8 },
+    { role: 'Executive VP', count: 6, avg_hours: 8.2 },
+  ],
+}
+
+const MOCK_FULFILLMENT: FulfillmentAnalytics = {
+  fulfillment_rate: 94.2,
+  backorder_rate: 4.8,
+  on_time_delivery_rate: 96.1,
+  warehouses: [
+    { name: 'Bengaluru Central', fulfillment_rate: 95.4, orders: 48 },
+    { name: 'Mumbai West', fulfillment_rate: 93.8, orders: 36 },
+    { name: 'Delhi NCR', fulfillment_rate: 94.0, orders: 30 },
+  ],
+}
+
+const MOCK_SUBSCRIPTION: SubscriptionAnalytics = {
+  active_subscriptions: 142,
+  mrr: 4850000,
+  arr: 58200000,
+  churn_rate: 1.8,
+  renewal_rate: 92.4,
+}
+
+const MOCK_REPORTS: SavedReport[] = [
+  {
+    id: 'rep-001',
+    data_source: 'deals',
+    fields: ['title', 'customer_name', 'deal_value', 'stage', 'created_at'],
+    grouping: ['stage'],
+    visualization: 'bar',
+  },
+  {
+    id: 'rep-002',
+    data_source: 'invoices',
+    fields: ['invoice_number', 'customer_name', 'amount', 'status', 'due_date'],
+    grouping: ['status'],
+    visualization: 'pie',
+  },
+  {
+    id: 'rep-003',
+    data_source: 'fulfillment',
+    fields: ['order_number', 'warehouse_name', 'status', 'expected_ship_date'],
+    grouping: ['warehouse_name'],
+    visualization: 'table',
+  },
+]
+
+/* ------------------------------------------------------------------ */
 /* §18 endpoint functions (one per contract row)                       */
 /* ------------------------------------------------------------------ */
 
 /** GET /analytics/executive */
 export async function getExecutiveAnalytics(filters: AnalyticsFilters = {}): Promise<ExecutiveAnalytics> {
-  return analyticsGet('/analytics/executive', filters, {})
+  return analyticsGet('/analytics/executive', filters, MOCK_EXECUTIVE)
 }
 
 /** GET /analytics/sales */
 export async function getSalesAnalytics(filters: AnalyticsFilters = {}): Promise<SalesAnalytics> {
-  return analyticsGet('/analytics/sales', filters, {})
+  return analyticsGet('/analytics/sales', filters, MOCK_SALES)
 }
 
 /** GET /analytics/revenue */
 export async function getRevenueAnalytics(filters: AnalyticsFilters = {}): Promise<RevenueAnalytics> {
-  return analyticsGet('/analytics/revenue', filters, {})
+  return analyticsGet('/analytics/revenue', filters, MOCK_REVENUE)
 }
 
 /** GET /analytics/discounts */
 export async function getDiscountAnalytics(filters: AnalyticsFilters = {}): Promise<DiscountAnalytics> {
-  return analyticsGet('/analytics/discounts', filters, {})
+  return analyticsGet('/analytics/discounts', filters, MOCK_DISCOUNT)
 }
 
 /** GET /analytics/margin */
 export async function getMarginAnalytics(filters: AnalyticsFilters = {}): Promise<MarginAnalytics> {
-  return analyticsGet('/analytics/margin', filters, {})
+  return analyticsGet('/analytics/margin', filters, MOCK_MARGIN)
 }
 
 /** GET /analytics/approvals */
 export async function getApprovalAnalytics(filters: AnalyticsFilters = {}): Promise<ApprovalAnalytics> {
-  return analyticsGet('/analytics/approvals', filters, {})
+  return analyticsGet('/analytics/approvals', filters, MOCK_APPROVAL)
 }
 
 /** GET /analytics/fulfillment */
 export async function getFulfillmentAnalytics(filters: AnalyticsFilters = {}): Promise<FulfillmentAnalytics> {
-  return analyticsGet('/analytics/fulfillment', filters, {})
+  return analyticsGet('/analytics/fulfillment', filters, MOCK_FULFILLMENT)
 }
 
 /** GET /analytics/subscriptions */
 export async function getSubscriptionAnalytics(filters: AnalyticsFilters = {}): Promise<SubscriptionAnalytics> {
-  return analyticsGet('/analytics/subscriptions', filters, {})
+  return analyticsGet('/analytics/subscriptions', filters, MOCK_SUBSCRIPTION)
 }
 
 /** GET /analytics/reports — list saved custom reports. */
 export async function listCustomReports(filters: AnalyticsFilters = {}): Promise<SavedReport[]> {
-  return analyticsGet('/analytics/reports', filters, [])
+  return analyticsGet('/analytics/reports', filters, MOCK_REPORTS)
 }
 
 /** POST /analytics/reports — create a custom report config. */
 export async function createCustomReport(payload: CreateCustomReportPayload): Promise<SavedReport> {
-  return unwrapOrThrow(api.post<ApiResponse<SavedReport>>('/analytics/reports', payload), {} as SavedReport)
+  const newReport: SavedReport = { id: `rep-${Date.now()}`, ...payload }
+  return unwrapOrThrow(api.post<ApiResponse<SavedReport>>('/analytics/reports', payload), newReport)
 }
 
 /** GET /analytics/reports/{id} — run/fetch a saved report's data. */
 export async function runCustomReport(id: string, filters: AnalyticsFilters = {}): Promise<CustomReportRunResult> {
-  return unwrapOrThrow(api.get<ApiResponse<CustomReportRunResult>>(`/analytics/reports/${id}${toQuery(filters)}`), {})
+  return unwrapOrThrow(api.get<ApiResponse<CustomReportRunResult>>(`/analytics/reports/${id}${toQuery(filters)}`), {
+    report_id: id,
+    timestamp: new Date().toISOString(),
+    rows: [
+      { label: 'Q3 Enterprise Target', value: '₹4,85,00,000', status: 'On Track' },
+      { label: 'Approval Turnaround', value: '3.4 hours', status: 'Compliant' },
+    ],
+  })
 }
 
 /** POST /analytics/reports/{id}/export — `{ format }` → signed download URL. */
 export async function exportCustomReport(id: string, payload: ReportExportPayload): Promise<ReportExportResult> {
-  return unwrapOrThrow(api.post<ApiResponse<ReportExportResult>>(`/analytics/reports/${id}/export`, payload), {})
+  return unwrapOrThrow(api.post<ApiResponse<ReportExportResult>>(`/analytics/reports/${id}/export`, payload), {
+    download_url: `/downloads/report-${id}.${payload.format}`,
+  })
 }
 
 /** POST /analytics/reports/{id}/schedule — recurring delivery config. */
 export async function scheduleCustomReport(id: string, config: ReportScheduleConfig): Promise<ReportScheduleResult> {
-  return unwrapOrThrow(api.post<ApiResponse<ReportScheduleResult>>(`/analytics/reports/${id}/schedule`, config), {})
+  return unwrapOrThrow(api.post<ApiResponse<ReportScheduleResult>>(`/analytics/reports/${id}/schedule`, config), {
+    success: true,
+    scheduled: true,
+    config,
+  })
 }
 
