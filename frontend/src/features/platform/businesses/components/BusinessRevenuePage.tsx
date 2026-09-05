@@ -143,7 +143,7 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM d, yyyy')}
       </p>
@@ -318,7 +318,7 @@ export function BusinessRevenuePage() {
       </div>
 
       {/* Revenue Trend */}
-      <Card>
+      <Card className="border-0 shadow-none">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Revenue Trend</CardTitle>
           <div className="flex rounded-lg border border-border overflow-hidden">
@@ -351,7 +351,7 @@ export function BusinessRevenuePage() {
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={trendChartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <CartesianGrid stroke="none" />
                   <XAxis
                     dataKey="date"
                     tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -395,7 +395,7 @@ export function BusinessRevenuePage() {
       {/* Revenue Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* One-Time vs Subscription */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle>Revenue Breakdown</CardTitle>
           </CardHeader>
@@ -432,7 +432,7 @@ export function BusinessRevenuePage() {
                       formatter={(value: number) => formatCurrency(value, currency)}
                       contentStyle={{
                         backgroundColor: 'var(--color-card)',
-                        border: '1px solid var(--color-border)',
+                        border: 'none',
                         borderRadius: 8,
                         fontSize: 12,
                       }}
@@ -453,7 +453,7 @@ export function BusinessRevenuePage() {
         </Card>
 
         {/* By Product Category */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle>By Product Category</CardTitle>
           </CardHeader>
@@ -472,7 +472,7 @@ export function BusinessRevenuePage() {
                     layout="vertical"
                     margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" horizontal={false} />
+                    <CartesianGrid stroke="none" />
                     <XAxis
                       type="number"
                       tickFormatter={(val: number) => formatCompactCurrency(val, currency)}
@@ -492,7 +492,7 @@ export function BusinessRevenuePage() {
                       formatter={(value: number) => formatCurrency(value, currency)}
                       contentStyle={{
                         backgroundColor: 'var(--color-card)',
-                        border: '1px solid var(--color-border)',
+                        border: 'none',
                         borderRadius: 8,
                         fontSize: 12,
                       }}

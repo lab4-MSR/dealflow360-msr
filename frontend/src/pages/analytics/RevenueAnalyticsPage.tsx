@@ -180,8 +180,8 @@ export function RevenueAnalyticsPage() {
       )}
 
       {/* Revenue Trajectory & Multi-Stream Area Chart */}
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
+      <div className="rounded-xl border-0 bg-card p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3">
           <div>
             <h2 className="text-base font-semibold text-foreground">Revenue Trajectory by Stream</h2>
             <p className="text-xs text-muted-foreground">Historical progression of recurring subscriptions vs one-time professional contracts.</p>
@@ -211,8 +211,8 @@ export function RevenueAnalyticsPage() {
         <div className="h-[280px] w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-              <XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} />
+              <CartesianGrid stroke="none" />
+              <XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={11}
@@ -224,7 +224,7 @@ export function RevenueAnalyticsPage() {
                 formatter={(val: any) => [formatCurrency(val), '']}
                 contentStyle={{
                   backgroundColor: 'hsl(var(--popover))',
-                  borderColor: 'hsl(var(--border))',
+                  border: 'none',
                   borderRadius: '8px',
                   fontSize: '12px',
                 }}

@@ -11,7 +11,7 @@ const COLORS = ['var(--color-primary)', 'var(--color-success)', 'var(--color-war
 function ChartTooltipContent({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">{label}</p>
       {payload.map((entry, i) => (
         <p key={i} className="text-small tabular-nums">
@@ -116,13 +116,13 @@ export function PlatformAnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader><CardTitle>Business Growth</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={data.businessGrowth} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <CartesianGrid stroke="none" />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
@@ -136,13 +136,13 @@ export function PlatformAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader><CardTitle>Deal Volume</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data.dealVolume} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <CartesianGrid stroke="none" />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
@@ -158,13 +158,13 @@ export function PlatformAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader><CardTitle>Revenue Trend</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data.revenueTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <CartesianGrid stroke="none" />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}K`} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
@@ -177,7 +177,7 @@ export function PlatformAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader><CardTitle>Risk Distribution</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px] flex items-center">

@@ -28,7 +28,7 @@ function formatCurrency(amount: number, currency: string): string {
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM yyyy')}
       </p>
@@ -46,7 +46,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 
 export function RevenueOverview({ data }: RevenueOverviewProps) {
   return (
-    <Card>
+    <Card className="border-0 shadow-none">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -66,7 +66,7 @@ export function RevenueOverview({ data }: RevenueOverviewProps) {
         <div className="h-[220px] mb-6">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data.trend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+              <CartesianGrid stroke="none" />
               <XAxis
                 dataKey="date"
                 tickFormatter={(val: string) => format(parseISO(val), 'MMM')}

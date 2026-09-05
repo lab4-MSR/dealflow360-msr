@@ -78,7 +78,7 @@ const activityTypeIcon: Record<string, React.ElementType> = {
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM d, yyyy')}
       </p>
@@ -234,7 +234,7 @@ export function BusinessDetailsOverviewPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Deal Trend */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle>Deal Trend</CardTitle>
           </CardHeader>
@@ -243,7 +243,7 @@ export function BusinessDetailsOverviewPage() {
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={dealTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                    <CartesianGrid stroke="none" />
                     <XAxis
                       dataKey="date"
                       tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -270,7 +270,7 @@ export function BusinessDetailsOverviewPage() {
         </Card>
 
         {/* Revenue Trend */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <CardTitle>Revenue Trend</CardTitle>
           </CardHeader>
@@ -279,7 +279,7 @@ export function BusinessDetailsOverviewPage() {
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={revenueTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                    <CartesianGrid stroke="none" />
                     <XAxis
                       dataKey="date"
                       tickFormatter={(val: string) => format(parseISO(val), 'MMM')}

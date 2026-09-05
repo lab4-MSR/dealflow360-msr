@@ -214,9 +214,9 @@ export function SalesAnalyticsPage() {
         </div>
 
         {/* Pipeline Value by Stage Chart */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl border-0 bg-card p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-border/60">
+            <div className="flex items-center justify-between pb-3">
               <div>
                 <h2 className="text-base font-semibold text-foreground">Pipeline Value by Stage</h2>
                 <p className="text-xs text-muted-foreground">Stage-wise capital distribution in INR.</p>
@@ -226,8 +226,8 @@ export function SalesAnalyticsPage() {
             <div className="h-[250px] w-full pt-4">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stageDistribution} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                  <XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} />
+                  <CartesianGrid stroke="none" />
+                  <XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                   <YAxis
                     stroke="hsl(var(--muted-foreground))"
                     fontSize={11}
@@ -239,7 +239,7 @@ export function SalesAnalyticsPage() {
                     formatter={(val: any) => [formatCurrency(val), 'Pipeline Value']}
                     contentStyle={{
                       backgroundColor: 'hsl(var(--popover))',
-                      borderColor: 'hsl(var(--border))',
+                      border: 'none',
                       borderRadius: '8px',
                       fontSize: '12px',
                     }}
@@ -254,7 +254,7 @@ export function SalesAnalyticsPage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="pt-3 flex items-center justify-between text-xs text-muted-foreground">
             <span>Average deal duration: <strong>24.2 days</strong></span>
             <span className="text-emerald-500 font-medium">Fastest Velocity: Proposal → Won</span>
           </div>

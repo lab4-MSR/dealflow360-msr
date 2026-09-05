@@ -397,7 +397,7 @@ export function DashboardPage() {
       {/* ─── DUAL ROW: DEAL VELOCITY RECHARTS + SIDE QUEUES ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Monthly Deal Velocity Recharts Area */}
-        <div className="lg:col-span-8 p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
+        <div className="lg:col-span-8 p-5 rounded-2xl border-0 bg-card space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-foreground flex items-center gap-2">
@@ -416,12 +416,12 @@ export function DashboardPage() {
           <div className="h-64 w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={VELOCITY_CHART_DATA}>
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
-                <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
+                <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: 'var(--color-card)',
-                    border: '1px solid var(--color-border)',
+                    border: 'none',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}

@@ -167,7 +167,7 @@ export function BusinessAdminDashboard() {
       {/* Sales & Revenue Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Sales Overview */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Sales Overview</CardTitle>
@@ -206,11 +206,11 @@ export function BusinessAdminDashboard() {
             {sales?.dealTrend && sales.dealTrend.length > 0 ? (
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={sales.dealTrend}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
+                  <CartesianGrid stroke="none" />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--color-card)', border: 'none', borderRadius: '8px', fontSize: '12px' }}
                   />
                   <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} animationDuration={350} animationEasing="ease-out">
                     <LabelList dataKey="count" position="top" fill="var(--color-muted-foreground)" fontSize={11} />
@@ -224,7 +224,7 @@ export function BusinessAdminDashboard() {
         </Card>
 
         {/* Revenue Overview */}
-        <Card>
+        <Card className="border-0 shadow-none">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Revenue Overview</CardTitle>
@@ -267,11 +267,11 @@ export function BusinessAdminDashboard() {
             {revenue?.revenueTrend && revenue.revenueTrend.length > 0 ? (
               <ResponsiveContainer width="100%" height={200}>
                 <AreaChart data={revenue.revenueTrend} margin={{ top: 16, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
-                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
+                  <CartesianGrid stroke="none" />
+                  <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--color-card)', border: 'none', borderRadius: '8px', fontSize: '12px' }}
                     formatter={(value) => [`₹${Number(value).toLocaleString()}`, 'Revenue']}
                   />
                   <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} animationDuration={350} animationEasing="ease-out">

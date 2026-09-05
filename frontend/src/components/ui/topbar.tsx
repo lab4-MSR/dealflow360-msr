@@ -7,6 +7,8 @@ import { ROLE_LABELS, ROLE_DASHBOARD_MAP } from '@/types/auth'
 import { SIDEBAR_NAV } from '@/constants'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { NavbarSearch } from '@/components/ui/NavbarSearch'
+import { NotificationDropdown } from '@/components/ui/NotificationDropdown'
 import { cn } from '@/lib/utils'
 import {
   Search,
@@ -104,16 +106,13 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        navigate('/search')
-      } else if (e.key === 'Escape' && menuOpen) {
+      if (e.key === 'Escape' && menuOpen) {
         setMenuOpen(false)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [navigate, menuOpen])
+  }, [menuOpen])
 
   const handleSwitchAccount = async (email: string, pass: string) => {
     setMenuOpen(false)
@@ -200,22 +199,9 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
       <div className="flex-1" />
 
       {/* Actions */}
-      <div className="flex items-center gap-1">
-        {/* Global Search */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/search')}
-          aria-label="Global search (Ctrl+K)"
-          className="hidden md:inline-flex items-center gap-2 text-muted-foreground"
-        >
-          <Search className="h-4 w-4" />
-          <span className="text-small">Search...</span>
-          <kbd className="pointer-events-none ml-2 hidden h-5 select-none items-center gap-1 rounded border border-border bg-surface-muted px-1.5 text-caption font-medium text-muted-foreground md:flex">
-            <span className="text-[10px]">Ctrl</span>
-            <span className="text-[10px]">K</span>
-          </kbd>
-        </Button>
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* Global Search - Works directly on navbar, no separate search page */}
+        <NavbarSearch />
 
         {/* Help */}
         <Button
@@ -229,18 +215,8 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
           <HelpCircle className="h-4 w-4" />
         </Button>
 
-        {/* Notifications */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="text-muted-foreground relative"
-          onClick={() => navigate('/notifications')}
-          title="Notification Center"
-          aria-label="Notification Center"
-        >
-          <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-danger ring-2 ring-background animate-pulse" />
-        </Button>
+        {/* Notifications Pop-up */}
+        <NotificationDropdown />
 
         {/* Theme Toggle */}
         <Button

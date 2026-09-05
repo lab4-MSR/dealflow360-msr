@@ -8,7 +8,11 @@ export function useGlobalSearchShortcut() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
-        navigate('/search')
+        // Focus navbar search input directly without navigating to separate page
+        const searchInput = document.querySelector<HTMLInputElement>('input[placeholder*="Search deals"]')
+        if (searchInput) {
+          searchInput.focus()
+        }
       }
     }
 

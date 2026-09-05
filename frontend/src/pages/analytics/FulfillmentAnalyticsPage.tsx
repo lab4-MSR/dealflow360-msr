@@ -159,8 +159,8 @@ export function FulfillmentAnalyticsPage() {
       {/* Warehouse Hub Throughput & Carrier SLA Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Hub Throughput Bar Chart */}
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-border/60">
+        <div className="rounded-xl border-0 bg-card p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3">
             <div>
               <h2 className="text-base font-semibold text-foreground">Warehouse Hub Throughput</h2>
               <p className="text-xs text-muted-foreground">Order fulfillment rate % and throughput volume across facilities.</p>
@@ -171,8 +171,8 @@ export function FulfillmentAnalyticsPage() {
           <div className="h-[250px] w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={warehouseHubs} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} />
+                <CartesianGrid stroke="none" />
+                <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={11}
@@ -185,7 +185,7 @@ export function FulfillmentAnalyticsPage() {
                   formatter={(val: any) => [`${val}%`, 'Fulfillment Rate']}
                   contentStyle={{
                     backgroundColor: 'hsl(var(--popover))',
-                    borderColor: 'hsl(var(--border))',
+                    border: 'none',
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
