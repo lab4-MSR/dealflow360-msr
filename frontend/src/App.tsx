@@ -232,9 +232,11 @@ export function App() {
           <Route path="/customer-portal/dashboard" element={<CustomerDashboardPage />} />
           <Route path="/customer-portal/quotations" element={<CustomerMyQuotationsPage />} />
           <Route path="/customer-portal/quotations/:id" element={<CustomerQuotationDetailsPage />} />
-          <Route path="/customer-portal/review/:id" element={<ReviewQuotePage />} />
           <Route path="/customer-portal/counter-offer/:id" element={<CounterOfferPage />} />
           <Route path="/customer-portal/request-changes/:id" element={<RequestChangesPage />} />
+          <Route path="/customer-portal/quotations/:id/review" element={<ReviewQuotePage />} />
+          <Route path="/customer-portal/quotations/:id/counter-offer" element={<CounterOfferPage />} />
+          <Route path="/customer-portal/quotations/:id/request-changes" element={<RequestChangesPage />} />
           <Route path="/customer-portal/orders" element={<MyOrdersPage />} />
           <Route path="/customer-portal/orders/:id" element={<OrderDetailsPage />} />
           <Route path="/customer-portal/shipments" element={<ShipmentListPage />} />
@@ -290,16 +292,23 @@ export function App() {
           <Route path="/business-admin/users" element={<BusinessUsersListPage />} />
           <Route path="/business-admin/users/invite" element={<BusinessInviteUserPage />} />
           <Route path="/business-admin/users/:userId" element={<BusinessUserDetailsPage />} />
+          <Route path="/business-admin/users-access/users" element={<BusinessUsersListPage />} />
+          <Route path="/business-admin/users-access/invite" element={<BusinessInviteUserPage />} />
+          <Route path="/business-admin/users-access/users/:userId" element={<BusinessUserDetailsPage />} />
           <Route path="/business-admin/teams" element={<TeamsPage />} />
           <Route path="/business-admin/roles" element={<RolesPage />} />
           <Route path="/business-admin/roles/:roleId" element={<RoleDetailsPage />} />
+          <Route path="/business-admin/users-access/roles" element={<RolesPage />} />
+          <Route path="/business-admin/users-access/roles/:roleId" element={<RoleDetailsPage />} />
           {/* Customers */}
           <Route path="/business-admin/customers" element={<BusinessCustomersPage />} />
           <Route path="/business-admin/customers/create" element={<BusinessCreateCustomerPage />} />
+          <Route path="/business-admin/customers/new" element={<BusinessCreateCustomerPage />} />
           <Route path="/business-admin/customers/:id" element={<BusinessCustomerDetailsPage />} />
           {/* Products & Catalog */}
           <Route path="/business-admin/products" element={<ProductsPage />} />
           <Route path="/business-admin/products/create" element={<CreateProductPage />} />
+          <Route path="/business-admin/products/new" element={<CreateProductPage />} />
           <Route path="/business-admin/products/categories" element={<CategoriesPage />} />
           <Route path="/business-admin/products/:id" element={<ProductDetailsPage />} />
           {/* Pricing */}
@@ -307,6 +316,9 @@ export function App() {
           <Route path="/business-admin/pricing/lists" element={<PriceListsPage />} />
           <Route path="/business-admin/pricing/lists/create" element={<CreatePriceListPage />} />
           <Route path="/business-admin/pricing/lists/:id" element={<PriceListDetailsPage />} />
+          <Route path="/business-admin/pricing/price-lists" element={<PriceListsPage />} />
+          <Route path="/business-admin/pricing/price-lists/create" element={<CreatePriceListPage />} />
+          <Route path="/business-admin/pricing/price-lists/:id" element={<PriceListDetailsPage />} />
           <Route path="/business-admin/pricing/customer-pricing" element={<CustomerPricingPage />} />
           <Route path="/business-admin/pricing/volume-pricing" element={<VolumePricingPage />} />
           <Route path="/business-admin/pricing/history" element={<PricingHistoryPage />} />
@@ -318,24 +330,35 @@ export function App() {
           <Route path="/business-admin/discounts/margin" element={<MarginRulesPage />} />
           <Route path="/business-admin/discounts/simulator" element={<DiscountRuleSimulatorPage />} />
           <Route path="/business-admin/discounts/:id" element={<DiscountRuleDetailsPage />} />
+          <Route path="/business-admin/discount-governance/rules" element={<DiscountRulesPage />} />
+          <Route path="/business-admin/discount-governance/rules/create" element={<CreateDiscountRulePage />} />
+          <Route path="/business-admin/discount-governance/rules/:id" element={<DiscountRuleDetailsPage />} />
           {/* Approvals */}
           <Route path="/business-admin/approvals" element={<ApprovalRulesPage />} />
           <Route path="/business-admin/approvals/create" element={<CreateApprovalRulePage />} />
           <Route path="/business-admin/approvals/chains" element={<ApprovalChainsPage />} />
           <Route path="/business-admin/approvals/thresholds" element={<ApprovalThresholdsPage />} />
           <Route path="/business-admin/approvals/simulator" element={<ApprovalSimulatorPage />} />
-          {/* Warehouses */}
+          <Route path="/business-admin/approval-configuration/rules" element={<ApprovalRulesPage />} />
+          <Route path="/business-admin/approval-configuration/rules/create" element={<CreateApprovalRulePage />} />
+          {/* Warehouses & Shipping */}
           <Route path="/business-admin/warehouses" element={<WarehouseListPage />} />
           <Route path="/business-admin/warehouses/create" element={<CreateWarehousePage />} />
           <Route path="/business-admin/warehouses/shipping-rules" element={<ShippingRulesListPage />} />
           <Route path="/business-admin/warehouses/shipping-rules/create" element={<CreateShippingRulePage />} />
           <Route path="/business-admin/warehouses/:id" element={<WarehouseDetailsPage />} />
+          <Route path="/business-admin/shipping-rules" element={<ShippingRulesListPage />} />
+          <Route path="/business-admin/shipping-rules/create" element={<CreateShippingRulePage />} />
+          <Route path="/business-admin/shipping-rules/:id" element={<WarehouseDetailsPage />} />
           {/* Subscriptions */}
           <Route path="/business-admin/subscriptions" element={<SubscriptionPlansListPage />} />
           <Route path="/business-admin/subscriptions/create" element={<CreateSubscriptionPlanPage />} />
           <Route path="/business-admin/subscriptions/billing-cycles" element={<BillingCyclesPage />} />
           <Route path="/business-admin/subscriptions/proration-cancellation" element={<ProrationCancellationPage />} />
           <Route path="/business-admin/subscriptions/:id" element={<SubscriptionPlanDetailsPage />} />
+          <Route path="/business-admin/subscription-plans" element={<SubscriptionPlansListPage />} />
+          <Route path="/business-admin/subscription-plans/create" element={<CreateSubscriptionPlanPage />} />
+          <Route path="/business-admin/subscription-plans/:id" element={<SubscriptionPlanDetailsPage />} />
           {/* Other Admin Pages */}
           <Route path="/business-admin/deal-health" element={<BusinessDealHealthPage />} />
           <Route path="/business-admin/audit" element={<BusinessAuditTrailPage />} />
