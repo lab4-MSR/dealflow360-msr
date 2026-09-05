@@ -10,29 +10,49 @@ import { PasswordField } from '@/components/auth/PasswordField'
 import { Button } from '@/components/ui/button'
 import { loginSchema, type LoginFormData } from '@/lib/schemas'
 
+import { DEMO_USERS } from '@/services/auth'
+import { ROLE_DASHBOARD_MAP } from '@/types/auth'
+
 export default function LoginPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { login, clearError } = useAuth()
+  const { login, clearError, getDashboardPath } = useAuth()
   const [submitError, setSubmitError] = useState<string | null>(null)
 
-  const returnTo = searchParams.get('returnTo') || '/dashboard'
+  const rawReturnTo = searchParams.get('returnTo')
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '', rememberMe: false },
   })
 
+  const handleQuickLogin = async (email: string, pass: string) => {
+    setValue('email', email)
+    setValue('password', pass)
+    setSubmitError(null)
+    clearError()
+    try {
+      await login(email, pass)
+      const demoAccount = DEMO_USERS[email]
+      const target = rawReturnTo || (demoAccount ? ROLE_DASHBOARD_MAP[demoAccount.user.role] : getDashboardPath())
+      navigate(target, { replace: true })
+    } catch {
+      setSubmitError('Failed to sign in with demo account.')
+    }
+  }
+
   const onSubmit = async (data: LoginFormData) => {
     setSubmitError(null)
     clearError()
     try {
       await login(data.email, data.password)
-      navigate(returnTo, { replace: true })
+      const target = rawReturnTo && rawReturnTo !== '/dashboard' ? rawReturnTo : getDashboardPath()
+      navigate(target, { replace: true })
     } catch (err: unknown) {
       const axiosErr = err as { response?: { status?: number; data?: { error?: { code?: string; message?: string } } } }
       const status = axiosErr?.response?.status
@@ -141,13 +161,27 @@ export default function LoginPage() {
           </Link>
         </p>
 
-        {/* Demo credentials */}
-        <div className="rounded-lg border border-dashed border-border bg-muted/30 p-4 space-y-2">
-          <p className="text-caption font-medium text-muted-foreground text-center">Demo Credentials</p>
-          <div className="space-y-1 text-caption text-muted-foreground">
-            <p className="flex justify-between"><span className="font-medium">Super Admin:</span> <span className="font-mono">admin@dealflow360.com</span></p>
-            <p className="flex justify-between"><span className="font-medium">Business Admin:</span> <span className="font-mono">admin@acme.com</span></p>
-            <p className="flex justify-between"><span className="font-medium">Password:</span> <span className="font-mono">admin123</span></p>
+        {/* Demo credentials switcher */}
+        <div className="rounded-xl border border-border bg-surface-muted/50 p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-caption font-semibold text-foreground">Select Demo Role (1-Click Login)</p>
+            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded font-mono">pass: admin123</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {Object.entries(DEMO_USERS).map(([email, demo]) => (
+              <button
+                key={email}
+                type="button"
+                onClick={() => handleQuickLogin(email, demo.password)}
+                className="flex flex-col text-left p-2.5 rounded-lg border border-border/80 bg-surface hover:border-primary/60 hover:bg-surface-muted transition-all text-xs group cursor-pointer"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span className="font-semibold text-foreground group-hover:text-primary transition-colors">{demo.label}</span>
+                  <span className="text-[10px] font-mono text-muted-foreground uppercase">{demo.user.role.replace('_', ' ')}</span>
+                </div>
+                <span className="text-[11px] text-muted-foreground truncate mt-0.5">{email}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

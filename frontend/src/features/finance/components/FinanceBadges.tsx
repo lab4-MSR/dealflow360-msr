@@ -145,3 +145,21 @@ export function RiskBadge({ className, level, children, ...props }: RiskBadgePro
     </div>
   )
 }
+
+export function CurrencyValue({
+  value,
+  currency = 'INR',
+  className,
+}: {
+  value?: number | null
+  currency?: string
+  className?: string
+}) {
+  const num = typeof value === 'number' ? value : 0
+  return (
+    <span className={cn('tabular-nums font-medium', className)}>
+      ₹{num.toLocaleString('en-IN')}
+    </span>
+  )
+}
+

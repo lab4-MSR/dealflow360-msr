@@ -144,7 +144,7 @@ export const CustomerInvoiceDetailsPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {(invoice.items || []).map((item) => (
+                {(invoice.items || []).map((item: any) => (
                   <tr key={item.id}>
                     <td className="py-3 px-4 font-medium text-foreground">{item.description}</td>
                     <td className="py-3 px-3 text-right font-medium">{item.quantity}</td>
@@ -188,7 +188,7 @@ export const CustomerInvoiceDetailsPage: React.FC = () => {
             {(invoice.payments || []).length === 0 ? (
               <p className="text-xs text-muted-foreground">No payments recorded yet.</p>
             ) : (
-              (invoice.payments || []).map((p) => (
+              (invoice.payments || []).map((p: any) => (
                 <div key={p.id} className="p-3 rounded-lg border border-border bg-surface text-xs space-y-1">
                   <div className="flex justify-between font-semibold">
                     <span>{p.payment_method}</span>

@@ -40,9 +40,9 @@ export function ApprovalAnalyticsPage() {
       </AnalyticsSection>
       <AnalyticsSection title="Bottlenecks" description="Pending, SLA breach, and average wait time." isLoading={isLoading} isEmpty={!isLoading && !s.bottlenecks} error={error} onRetry={() => refetch()}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">Pending</p><p className="mt-1 text-lg font-semibold tabular-nums">{formatCountCompact(s.bottlenecks?.[0]?.pending ?? null)}</p></div>
-          <div className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">SLA Breach</p><p className="mt-1 text-lg font-semibold tabular-nums">{formatCountCompact(s.sla_breaches?.[0]?.count ?? null)}</p></div>
-          <div className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">Avg Wait Time</p><p className="mt-1 text-lg font-semibold tabular-nums">{formatDays(s.bottlenecks?.[0]?.avg_wait_time ?? null)}</p></div>
+          <div className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">Pending</p><p className="mt-1 text-lg font-semibold tabular-nums">{formatCountCompact((s.bottlenecks?.[0] as any)?.pending ?? null)}</p></div>
+          <div className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">SLA Breach</p><p className="mt-1 text-lg font-semibold tabular-nums">{formatCountCompact((s.sla_breaches?.[0] as any)?.count ?? null)}</p></div>
+          <div className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">Avg Wait Time</p><p className="mt-1 text-lg font-semibold tabular-nums">{formatDays((s.bottlenecks?.[0] as any)?.avg_wait_time ?? null)}</p></div>
         </div>
       </AnalyticsSection>
       <AnalyticsSection title="Decision Analysis" description="Approved, rejected, returned, and escalated." isLoading={isLoading} isEmpty={!isLoading && !s.distribution} error={error} onRetry={() => refetch()}>

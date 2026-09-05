@@ -171,6 +171,10 @@ export interface CustomerOrderDetail {
 /* 08.9 & 08.10 Shipments Types                                               */
 /* -------------------------------------------------------------------------- */
 
+export type CustomerShipment = CustomerShipmentDetail
+export type CustomerInvoice = CustomerInvoiceDetail
+export type CustomerSubscription = CustomerSubscriptionDetail
+
 export interface CustomerShipmentItem {
   product: string
   product_name?: string
@@ -548,7 +552,13 @@ export async function updateCustomerProfile(data: Partial<CustomerProfileData>):
   }
 }
 
-export async function changeCustomerPassword(payload: { current_password: string; new_password: string }): Promise<null> {
+export async function changeCustomerPassword(
+  payloadOrCurrent: { current_password: string; new_password: string } | string,
+  newPassword?: string
+): Promise<null> {
+  const payload = typeof payloadOrCurrent === 'string'
+    ? { current_password: payloadOrCurrent, new_password: newPassword || '' }
+    : payloadOrCurrent
   return portalPost('/account/change-password', payload, null)
 }
 

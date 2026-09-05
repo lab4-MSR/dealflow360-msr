@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { SIDEBAR_NAV } from '@/constants'
+import { useAuth } from '@/providers/AuthProvider'
 import {
   LayoutDashboard,
   FileText,
@@ -23,6 +24,13 @@ import {
   User,
   Package,
   RefreshCw,
+  Inbox,
+  CheckCircle2,
+  DollarSign,
+  Percent,
+  TrendingUp,
+  Receipt,
+  Shield,
 } from 'lucide-react'
 
 const iconMap: Record<string, React.ElementType> = {
@@ -45,6 +53,13 @@ const iconMap: Record<string, React.ElementType> = {
   Package,
   RefreshCw,
   Building2,
+  Inbox,
+  CheckCircle2,
+  DollarSign,
+  Percent,
+  TrendingUp,
+  Receipt,
+  Shield,
 }
 
 interface SidebarProps {
@@ -54,11 +69,28 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
   const location = useLocation()
+  const { user } = useAuth()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
 
   useEffect(() => {
     setIsMobileOpen(false)
   }, [location.pathname])
+
+  const role = user?.role
+
+  const visibleSections = SIDEBAR_NAV.map((section) => {
+    if (section.roles && role && !section.roles.includes(role)) {
+      return null
+    }
+    const visibleItems = section.items.filter((item) => {
+      if (item.roles && role && !item.roles.includes(role)) {
+        return false
+      }
+      return true
+    })
+    if (visibleItems.length === 0) return null
+    return { ...section, items: visibleItems }
+  }).filter(Boolean) as typeof SIDEBAR_NAV
 
   return (
     <>
@@ -79,10 +111,12 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         )}
       >
         {/* Logo */}
-        <div className={cn(
-          'flex h-16 items-center border-b border-sidebar-border',
-          collapsed ? 'justify-center px-2' : 'px-5'
-        )}>
+        <div
+          className={cn(
+            'flex h-16 items-center border-b border-sidebar-border',
+            collapsed ? 'justify-center px-2' : 'px-5'
+          )}
+        >
           {!collapsed && (
             <div className="flex items-center gap-2.5">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -101,19 +135,26 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         {/* Workspace Switcher */}
         {!collapsed && (
           <div className="px-3 py-3 border-b border-sidebar-border">
-            <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-small text-sidebar-foreground hover:bg-sidebar-accent transition-colors">
-              <Building2 className="h-4 w-4 text-muted-foreground" />
-              <span className="flex-1 text-left truncate">Acme Corp</span>
-            </button>
+            <div className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-small text-sidebar-foreground bg-sidebar-accent/50">
+              <Building2 className="h-4 w-4 text-primary shrink-0" />
+              <div className="flex-1 truncate">
+                <p className="truncate font-medium text-xs leading-none">
+                  {user?.businessName || 'DealFlow360'}
+                </p>
+                <p className="text-[10px] text-muted-foreground capitalize mt-0.5">
+                  {user?.role?.replace('_', ' ') || 'Workspace'}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-2">
-          {SIDEBAR_NAV.map((section) => (
+          {visibleSections.map((section) => (
             <div key={section.section} className="mb-4">
               {!collapsed && (
-                <span className="px-3 text-caption font-medium uppercase tracking-wider text-muted-foreground">
+                <span className="px-3 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
                   {section.section}
                 </span>
               )}

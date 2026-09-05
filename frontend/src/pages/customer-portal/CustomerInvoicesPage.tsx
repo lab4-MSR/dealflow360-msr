@@ -28,7 +28,7 @@ export const CustomerInvoicesPage: React.FC = () => {
     setLoading(true)
     try {
       const res = await getCustomerInvoices()
-      setInvoices(res)
+      setInvoices(res.invoices || [])
     } catch (err) {
       console.error('Failed to load customer invoices', err)
     } finally {
@@ -47,7 +47,7 @@ export const CustomerInvoicesPage: React.FC = () => {
       case 'pending':
         return <Badge className="bg-amber-500 text-white">Pending</Badge>
       case 'overdue':
-        return <Badge variant="destructive">Overdue</Badge>
+        return <Badge variant="danger">Overdue</Badge>
       default:
         return <Badge variant="secondary">Partial</Badge>
     }

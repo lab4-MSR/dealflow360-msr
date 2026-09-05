@@ -125,7 +125,7 @@ export const CustomerSubscriptionDetailsPage: React.FC = () => {
             <CardTitle className="text-base font-semibold">Included Service Level Entitlements</CardTitle>
           </CardHeader>
           <CardContent className="pt-4 space-y-2.5">
-            {subscription.features.map((feat, i) => (
+            {(subscription.features || []).map((feat: string, i: number) => (
               <div key={i} className="flex items-start gap-2.5 text-xs text-foreground">
                 <CheckCircle className="h-4 w-4 text-success shrink-0 mt-0.5" />
                 <span>{feat}</span>

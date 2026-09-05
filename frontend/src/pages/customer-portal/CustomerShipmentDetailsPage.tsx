@@ -124,7 +124,7 @@ export const CustomerShipmentDetailsPage: React.FC = () => {
           </CardHeader>
           <CardContent className="pt-6">
             <div className="space-y-6 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-              {(shipment.events || []).map((ev, i) => (
+              {(shipment.events || []).map((ev: any, i: number) => (
                 <div key={i} className="relative">
                   <div className="absolute -left-6 top-0.5 h-4 w-4 rounded-full border-2 border-primary bg-surface flex items-center justify-center">
                     <div className="h-1.5 w-1.5 rounded-full bg-primary" />
@@ -149,7 +149,7 @@ export const CustomerShipmentDetailsPage: React.FC = () => {
             <CardTitle className="text-base font-semibold">Package Contents ({shipment.item_count} items)</CardTitle>
           </CardHeader>
           <CardContent className="pt-4 space-y-3">
-            {(shipment.items || []).map((item, i) => (
+            {(shipment.items || []).map((item: any, i: number) => (
               <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border bg-surface">
                 <div>
                   <span className="text-xs font-semibold text-foreground block">{item.name}</span>

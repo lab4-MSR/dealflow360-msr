@@ -15,12 +15,13 @@ import type {
   OrgGeneralSettings,
 } from '@/types/shared'
 
-function unwrap<T>(response: ApiResponse<T>, fallback: T): T {
-  // Some backends return the payload directly; the contract wraps it in ApiResponse.
-  if (response && typeof response === 'object' && 'data' in response && 'success' in response) {
-    return (response as ApiResponse<T>).data ?? fallback
+function unwrap<T>(response: any, fallback: T): T {
+  if (!response) return fallback
+  const payload = response?.data !== undefined ? response.data : response
+  if (payload && typeof payload === 'object' && 'data' in payload && 'success' in payload) {
+    return (payload as ApiResponse<T>).data ?? fallback
   }
-  return (response as unknown as T) ?? fallback
+  return (payload as unknown as T) ?? fallback
 }
 
 /** Sign the current session out via the existing auth endpoint. */

@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   RefreshCw,
-  Search,
   ArrowRight,
-  ShieldCheck,
-  Zap,
   CheckCircle2,
 } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import { getCustomerSubscriptions, type CustomerSubscription } from '@/lib/customer-portal-api'
 
+function SubscriptionStatusBadge({ status }: { status: string }) {
+  const isOk = status === 'active'
+  return (
+    <Badge variant={isOk ? 'default' : 'secondary'} className="capitalize text-xs">
+      {status}
+    </Badge>
+  )
+}
+
 export const CustomerSubscriptionsPage: React.FC = () => {
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [subscriptions, setSubscriptions] = useState<CustomerSubscription[]>([])
 
@@ -44,80 +48,63 @@ export const CustomerSubscriptionsPage: React.FC = () => {
             <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <RefreshCw className="h-5 w-5" />
             </span>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">My Subscriptions</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">Subscriptions & Recurring Services</h1>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
             Manage your active recurring plans, SLA tiers, seat allocations, and automatic renewal dates.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={loadData} className="gap-1 text-xs">
-            <RefreshCw className="h-3.5 w-3.5" /> Refresh
-          </Button>
-        </div>
       </div>
 
-      {/* Subscriptions Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Skeleton className="h-64" />
-          <Skeleton className="h-64" />
+        <div className="flex h-48 items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
         </div>
+      ) : subscriptions.length === 0 ? (
+        <Card className="p-8 text-center text-muted-foreground">No subscriptions found.</Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {subscriptions.map((sub) => (
-            <Card key={sub.id} className="flex flex-col justify-between hover:border-primary/50 transition-colors">
-              <CardHeader className="pb-3 border-b border-border">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {subscriptions.map((sub: any) => (
+            <Card key={sub.id} className="p-5 flex flex-col justify-between hover:border-primary/50 transition-colors">
+              <div className="space-y-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <Badge className="bg-primary text-white text-[10px] uppercase mb-1.5">{sub.tier}</Badge>
-                    <CardTitle className="text-lg font-bold">{sub.plan_name}</CardTitle>
-                    <span className="text-xs text-muted-foreground">Renewal Date: {sub.next_renewal_date}</span>
+                    <h3 className="font-semibold text-base text-foreground">{sub.plan_name}</h3>
+                    <span className="text-xs text-muted-foreground font-mono">{sub.id}</span>
+                  </div>
+                  <SubscriptionStatusBadge status={sub.status} />
+                </div>
+
+                <div className="bg-surface-muted p-3 rounded-lg flex items-center justify-between">
+                  <div>
+                    <span className="text-xs text-muted-foreground block">Recurring Rate</span>
+                    <span className="text-xl font-bold text-foreground">₹{sub.amount.toLocaleString()}</span>
+                    <span className="text-xs text-muted-foreground capitalize"> / {sub.billing_cycle}</span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-bold text-foreground block">
-                      ₹{sub.recurring_amount.toLocaleString('en-IN')}
-                    </span>
-                    <span className="text-[11px] text-muted-foreground capitalize">/ {sub.billing_cycle}</span>
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent className="pt-4 space-y-4 text-xs">
-                {/* Seat usage */}
-                <div className="p-3 rounded-lg border border-border bg-surface-muted">
-                  <div className="flex justify-between font-medium mb-1">
-                    <span>Allocated Seats:</span>
-                    <span>
-                      {sub.seats.utilized} / {sub.seats.allocated} active
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-surface rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-primary rounded-full"
-                      style={{ width: `${(sub.seats.utilized / sub.seats.allocated) * 100}%` }}
-                    />
+                    <span className="text-xs text-muted-foreground block">Next Renewal</span>
+                    <span className="text-xs font-medium text-foreground">{sub.renewal_date || sub.next_billing_date}</span>
                   </div>
                 </div>
 
                 {/* Included features */}
                 <div className="space-y-1.5">
                   <span className="font-semibold text-foreground block text-xs">Plan Entitlements:</span>
-                  {sub.features.slice(0, 3).map((f, i) => (
+                  {(sub.features || []).slice(0, 3).map((f: string, i: number) => (
                     <div key={i} className="flex items-center gap-2 text-muted-foreground">
                       <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" />
                       <span>{f}</span>
                     </div>
                   ))}
-                  {sub.features.length > 3 && (
+                  {sub.features && sub.features.length > 3 && (
                     <span className="text-[11px] text-primary font-medium block">
                       +{sub.features.length - 3} additional enterprise features
                     </span>
                   )}
                 </div>
-              </CardContent>
+              </div>
 
-              <div className="p-4 border-t border-border flex items-center justify-between">
+              <div className="p-4 border-t border-border flex items-center justify-between mt-4">
                 <Badge variant={sub.status === 'active' ? 'default' : 'secondary'} className="capitalize text-xs">
                   {sub.status}
                 </Badge>

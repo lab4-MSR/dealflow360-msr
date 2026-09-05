@@ -37,7 +37,7 @@ export function SubscriptionsPage() {
           <KpiCard label="Active" value={kpis.active || 0} variant="success" icon={<Wrench className="h-5 w-5" />} />
           <KpiCard label="Trial" value={kpis.trialing || 0} variant="info" icon={<TrendingUp className="h-5 w-5" />} />
           <KpiCard label="Past Due" value={kpis.past_due || 0} variant="warning" icon={<RefreshCcw className="h-5 w-5" />} />
-          <KpiCard label="MRR" value={`?${(kpis.mrr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
+          <KpiCard label="MRR" value={`₹${(kpis.mrr || 0).toLocaleString("en-IN")}`} variant="info" icon={<DollarSign className="h-5 w-5" />} />
           <KpiCard label="Cancelled" value={kpis.cancelled || 0} variant="danger" icon={<XCircle className="h-5 w-5" />} />
         </div>
       )}
