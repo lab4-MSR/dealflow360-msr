@@ -205,15 +205,26 @@ export default function SignupPage() {
         </AuthCard>
 
         {/* Existing account prompt */}
-        <p className="text-center text-small text-muted-foreground">
-          Already have an account?{' '}
-          <Link
-            to="/login"
-            className="font-medium text-primary hover:text-primary-hover transition-colors"
-          >
-            Sign in
-          </Link>
-        </p>
+        <div className="text-center space-y-1.5 text-small text-muted-foreground">
+          <p>
+            Already have an account?{' '}
+            <Link
+              to="/login"
+              className="font-medium text-primary hover:text-primary-hover transition-colors"
+            >
+              Sign in
+            </Link>
+          </p>
+          <p className="text-caption text-muted-foreground/80">
+            Looking for structured organization onboarding?{' '}
+            <Link
+              to="/register-company"
+              className="font-medium text-primary hover:text-primary-hover transition-colors"
+            >
+              Register Company
+            </Link>
+          </p>
+        </div>
       </div>
     </AuthLayout>
   )

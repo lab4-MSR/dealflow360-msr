@@ -15,6 +15,8 @@ function RootLanding() {
 // Auth Pages (00. Public / Auth)
 import LoginPage from '@/pages/auth/LoginPage'
 import SignupPage from '@/pages/auth/SignupPage'
+import CompanyRegistrationPage from '@/pages/auth/CompanyRegistrationPage'
+import { LandingPage } from '@/pages/LandingPage'
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage'
 import ResetPasswordPage from '@/pages/auth/ResetPasswordPage'
 import AcceptInvitationPage from '@/pages/auth/AcceptInvitationPage'
@@ -217,6 +219,9 @@ import {
 export function App() {
   return (
     <Routes>
+      {/* ─── PUBLIC LANDING PAGE ─── */}
+      <Route path="/" element={<LandingPage />} />
+
       {/* ─── PUBLIC ERROR ROUTES ─── */}
       <Route path="/403" element={<UnauthorizedPage />} />
       <Route path="/404" element={<NotFoundPage />} />
@@ -227,6 +232,8 @@ export function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/register" element={<SignupPage />} />
+        <Route path="/register-company" element={<CompanyRegistrationPage />} />
+        <Route path="/company-registration" element={<CompanyRegistrationPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/accept-invitation" element={<AcceptInvitationPage />} />
@@ -235,8 +242,9 @@ export function App() {
 
       {/* ─── PROTECTED APPLICATION ROUTES ─── */}
       <Route element={<ProtectedRoute />}>
-        {/* Role-aware dynamic root landing */}
-        <Route path="/" element={<RootLanding />} />
+        {/* Role-aware dynamic workspace redirection */}
+        <Route path="/workspace" element={<RootLanding />} />
+        <Route path="/app" element={<RootLanding />} />
 
         {/* Customer Portal Layout Routes (08.x) */}
         <Route element={<RoleRoute allowedRoles={['customer', 'super_admin', 'business_admin']} />}>

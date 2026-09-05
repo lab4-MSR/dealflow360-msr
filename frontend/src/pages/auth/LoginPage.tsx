@@ -150,16 +150,27 @@ export default function LoginPage() {
           </form>
         </AuthCard>
 
-        {/* Sign up link */}
-        <p className="text-center text-small text-muted-foreground">
-          Don&apos;t have an account?{' '}
-          <Link
-            to="/signup"
-            className="font-medium text-primary hover:text-primary-hover transition-colors"
-          >
-            Get started
-          </Link>
-        </p>
+        {/* Sign up & Company registration link */}
+        <div className="text-center space-y-1.5 text-small text-muted-foreground">
+          <p>
+            Need an enterprise workspace?{' '}
+            <Link
+              to="/register-company"
+              className="font-semibold text-primary hover:text-primary-hover transition-colors underline-offset-4 hover:underline"
+            >
+              Register your company
+            </Link>
+          </p>
+          <div className="flex items-center justify-center gap-3 text-caption text-muted-foreground/80">
+            <Link to="/" className="hover:text-foreground transition-colors">
+              ← Back to Homepage
+            </Link>
+            <span>·</span>
+            <Link to="/signup" className="hover:text-foreground transition-colors">
+              Direct Sign Up
+            </Link>
+          </div>
+        </div>
 
         {/* Demo credentials switcher */}
         <div className="rounded-xl border border-border bg-surface-muted/50 p-4 space-y-3">
