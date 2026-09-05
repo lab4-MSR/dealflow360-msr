@@ -17,7 +17,7 @@ export function PercentageDisplay({ value, className, size = 'md' }: PercentageD
   const formatted = `${numericValue.toFixed(1)}%`
 
   return (
-    <span className={cn('font-medium', sizeClasses[size], className)}>
+    <span className={cn('font-medium whitespace-nowrap', sizeClasses[size], className)}>
       {formatted}
     </span>
   )

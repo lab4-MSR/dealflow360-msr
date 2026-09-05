@@ -42,7 +42,7 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        'h-12 px-4 text-left text-label font-medium text-muted-foreground align-middle',
+        'h-12 px-4 text-left text-label font-medium text-muted-foreground align-middle whitespace-nowrap',
         '[&:has([role=checkbox])]:pr-0',
         className
       )}

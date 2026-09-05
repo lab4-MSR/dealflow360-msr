@@ -40,13 +40,13 @@ function KpiCard({ className, variant, label, title, value, trend, change, icon,
   const displayLabel = label || title || ''
   return (
     <div className={cn(kpiCardVariants({ variant }), className)} {...props}>
-      <div className="flex items-start justify-between">
-        <div className="space-y-1">
-          <p className="text-caption font-medium text-muted-foreground">{displayLabel}</p>
-          <p className="text-h2 tabular-nums transition-all duration-200 ease-out">{value}</p>
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1 min-w-0 flex-1">
+          <p className="text-caption font-medium text-muted-foreground truncate" title={displayLabel}>{displayLabel}</p>
+          <p className="text-xl sm:text-h2 font-semibold tabular-nums transition-all duration-200 ease-out whitespace-nowrap overflow-hidden text-ellipsis">{value}</p>
           {trend && (
             <p className={cn(
-              'text-caption tabular-nums',
+              'text-caption tabular-nums whitespace-nowrap',
               trend.direction === 'up' && 'text-success',
               trend.direction === 'down' && 'text-danger',
               trend.direction === 'neutral' && 'text-muted-foreground'
@@ -57,13 +57,13 @@ function KpiCard({ className, variant, label, title, value, trend, change, icon,
             </p>
           )}
           {!trend && change && (
-            <p className="text-caption text-muted-foreground tabular-nums">
+            <p className="text-caption text-muted-foreground tabular-nums whitespace-nowrap truncate">
               {change.label}
             </p>
           )}
         </div>
         {icon && (
-          <div className="text-muted-foreground">
+          <div className="text-muted-foreground shrink-0 mt-0.5">
             {icon}
           </div>
         )}

@@ -14,7 +14,7 @@ export function DiscountIndicator({ allowed = 0, applied = 0, className, size = 
   const isOverDiscount = overDiscount > 0
 
   return (
-    <div className={cn('inline-flex items-center gap-2', className)}>
+    <div className={cn('inline-flex items-center gap-2 whitespace-nowrap shrink-0', className)}>
       <div className={cn(
         'inline-flex items-center gap-1.5 rounded-full font-medium',
         isOverDiscount

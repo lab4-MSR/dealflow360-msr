@@ -72,7 +72,7 @@ export function AnalyticsPageHeader({
       </div>
       <div className="flex flex-wrap items-center gap-2">
         <Select value={dateRange} onValueChange={onDateRangeChange}>
-          <SelectTrigger className="w-[150px]" aria-label="Date range">
+          <SelectTrigger className="w-full sm:w-[150px]" aria-label="Date range">
             <SelectValue placeholder="Date range" />
           </SelectTrigger>
           <SelectContent>
@@ -84,15 +84,15 @@ export function AnalyticsPageHeader({
           </SelectContent>
         </Select>
         {dateRange === 'custom' ? (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full sm:w-auto">
             <Input
               type="date"
               aria-label="From date"
               value={customFrom ?? ''}
               onChange={(event) => onCustomFromChange?.(event.target.value)}
-              className="w-[150px]"
+              className="flex-1 sm:w-[140px]"
             />
-            <span className="text-xs text-muted-foreground" aria-hidden="true">
+            <span className="text-xs text-muted-foreground shrink-0" aria-hidden="true">
               to
             </span>
             <Input
@@ -100,12 +100,12 @@ export function AnalyticsPageHeader({
               aria-label="To date"
               value={customTo ?? ''}
               onChange={(event) => onCustomToChange?.(event.target.value)}
-              className="w-[150px]"
+              className="flex-1 sm:w-[140px]"
             />
           </div>
         ) : null}
         <Select value={comparison} onValueChange={onComparisonChange}>
-          <SelectTrigger className="w-[220px]" aria-label="Comparison period">
+          <SelectTrigger className="w-full sm:w-[220px]" aria-label="Comparison period">
             <SelectValue placeholder="Comparison" />
           </SelectTrigger>
           <SelectContent>

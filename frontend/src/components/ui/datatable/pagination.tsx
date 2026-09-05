@@ -29,8 +29,8 @@ export function Pagination({ page, totalPages, total, perPage, onPageChange, cla
   }
 
   return (
-    <div className={cn('flex items-center justify-between', className)}>
-      <p className="text-small text-muted-foreground">
+    <div className={cn('flex flex-col sm:flex-row items-center justify-between gap-3', className)}>
+      <p className="text-small text-muted-foreground text-center sm:text-left whitespace-nowrap">
         Showing <span className="font-medium text-foreground">{start}</span> to{' '}
         <span className="font-medium text-foreground">{end}</span> of{' '}
         <span className="font-medium text-foreground">{total.toLocaleString()}</span> results
@@ -39,36 +39,41 @@ export function Pagination({ page, totalPages, total, perPage, onPageChange, cla
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 shrink-0"
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
           aria-label="Previous page"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        {pages.map((p, i) =>
-          p === '...' ? (
-            <span key={`ellipsis-${i}`} className="px-1 text-muted-foreground">
-              ...
-            </span>
-          ) : (
-            <Button
-              key={p}
-              variant={p === page ? 'default' : 'outline'}
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onPageChange(p)}
-              aria-label={`Page ${p}`}
-              aria-current={p === page ? 'page' : undefined}
-            >
-              {p}
-            </Button>
-          )
-        )}
+        <span className="text-xs text-muted-foreground px-2 sm:hidden font-medium whitespace-nowrap">
+          Page {page} of {totalPages}
+        </span>
+        <div className="hidden sm:flex items-center gap-1">
+          {pages.map((p, i) =>
+            p === '...' ? (
+              <span key={`ellipsis-${i}`} className="px-1 text-muted-foreground">
+                ...
+              </span>
+            ) : (
+              <Button
+                key={p}
+                variant={p === page ? 'default' : 'outline'}
+                size="icon"
+                className="h-8 w-8"
+                onClick={() => onPageChange(p)}
+                aria-label={`Page ${p}`}
+                aria-current={p === page ? 'page' : undefined}
+              >
+                {p}
+              </Button>
+            )
+          )}
+        </div>
         <Button
           variant="outline"
           size="icon"
-          className="h-8 w-8"
+          className="h-8 w-8 shrink-0"
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
           aria-label="Next page"

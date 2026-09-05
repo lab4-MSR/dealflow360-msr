@@ -48,8 +48,8 @@ function Drawer({ open, onClose, title, description, children, side = 'right', c
         aria-label={title || 'Drawer'}
         className={cn(
           'fixed z-50 inset-y-0 flex flex-col bg-card shadow-elevation-4 transition-transform duration-300 ease-out motion-reduce:transition-none',
-          side === 'right' && 'right-0 w-full max-w-[560px] border-l border-border',
-          side === 'left' && 'left-0 w-full max-w-[560px] border-r border-border',
+          side === 'right' && 'right-0 w-full max-w-[100vw] sm:max-w-[560px] border-l border-border',
+          side === 'left' && 'left-0 w-full max-w-[100vw] sm:max-w-[560px] border-r border-border',
           side === 'right' && (open ? 'translate-x-0' : 'translate-x-full'),
           side === 'left' && (open ? 'translate-x-0' : '-translate-x-full'),
           !open && 'pointer-events-none',
@@ -57,7 +57,7 @@ function Drawer({ open, onClose, title, description, children, side = 'right', c
         )}
       >
         {(title || description) && (
-          <div className="flex items-start justify-between p-6 border-b border-border">
+          <div className="flex items-start justify-between p-4 sm:p-6 border-b border-border">
             <div className="space-y-1">
               {title && <h2 className="text-h3 font-semibold">{title}</h2>}
               {description && <p className="text-body-small text-muted-foreground">{description}</p>}
@@ -72,7 +72,7 @@ function Drawer({ open, onClose, title, description, children, side = 'right', c
             </button>
           </div>
         )}
-        <div className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {children}
         </div>
       </div>

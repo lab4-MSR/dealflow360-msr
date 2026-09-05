@@ -27,7 +27,7 @@ export function MoneyDisplay({ amount, currency = 'INR', className, size = 'md' 
   }
 
   return (
-    <span className={cn('font-medium', sizeClasses[size], className)}>
+    <span className={cn('font-medium whitespace-nowrap', sizeClasses[size], className)}>
       {formatted}
     </span>
   )
