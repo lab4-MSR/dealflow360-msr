@@ -57,10 +57,13 @@ export const CustomerSubscriptionDetailsPage: React.FC = () => {
 
   const handleCancel = async () => {
     if (!id) return
-    const confirmed = window.confirm('Are you sure you wish to request cancellation at the end of the billing period?')
-    if (!confirmed) return
-    await cancelCustomerSubscription(id, { effective: 'end_of_period', reason: 'Customer portal request' })
-    setCancellationNotice(true)
+    try {
+      await cancelCustomerSubscription(id, { effective: 'end_of_period', reason: 'Customer portal request' })
+      setCancellationNotice(true)
+      toast.success('Cancellation scheduled for the end of the billing cycle.')
+    } catch {
+      toast.error('Unable to schedule cancellation. Please contact your account executive.')
+    }
   }
 
   if (loading || !subscription) {

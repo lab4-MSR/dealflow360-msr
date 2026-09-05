@@ -23,6 +23,9 @@ import {
   Download,
   ShieldCheck,
   CheckCircle2,
+  AlertTriangle,
+  CreditCard,
+  Truck,
 } from 'lucide-react'
 import {
   AreaChart,
@@ -55,7 +58,7 @@ interface QuotationItem {
 
 const DEFAULT_DEALS: DealItem[] = [
   {
-    id: 'AST-8241',
+    id: 'DEAL-8241',
     title: 'Acme Corp Annual Enterprise Expansion',
     customer: { name: 'Acme Technologies Ltd' },
     stage: 'negotiation',
@@ -64,7 +67,7 @@ const DEFAULT_DEALS: DealItem[] = [
     expected_close_date: '2026-09-30',
   },
   {
-    id: 'AST-8240',
+    id: 'DEAL-8240',
     title: 'Hyperion Server Infrastructure Refresh',
     customer: { name: 'Hyperion Systems' },
     stage: 'proposal',
@@ -73,7 +76,7 @@ const DEFAULT_DEALS: DealItem[] = [
     expected_close_date: '2026-10-15',
   },
   {
-    id: 'AST-8239',
+    id: 'DEAL-8239',
     title: 'Nexus SOC Platform Migration',
     customer: { name: 'Nexus Dynamics' },
     stage: 'closing',
@@ -82,7 +85,7 @@ const DEFAULT_DEALS: DealItem[] = [
     expected_close_date: '2026-09-25',
   },
   {
-    id: 'AST-8238',
+    id: 'DEAL-8238',
     title: 'FinEdge Core Banking API Connectors',
     customer: { name: 'FinEdge Financials' },
     stage: 'approved',
@@ -91,7 +94,7 @@ const DEFAULT_DEALS: DealItem[] = [
     expected_close_date: '2026-10-05',
   },
   {
-    id: 'AST-8237',
+    id: 'DEAL-8237',
     title: 'Vanguard Multi-Region Warehouse Logistics',
     customer: { name: 'Vanguard Global' },
     stage: 'fulfillment',
@@ -201,15 +204,15 @@ export function DashboardPage() {
   const handleExportDeals = () => {
     exportToCsv(
       deals.map((d) => ({
-        'Deal ID': d.id,
+        'Deal Reference': d.id,
         'Deal Title': d.title,
-        'Customer': d.customer?.name || 'N/A',
-        'Stage': d.stage,
+        'Enterprise Account': d.customer?.name || 'N/A',
+        'Pipeline Stage': d.stage,
         'Deal Value': d.deal_value,
         'Health Score': `${d.health_score}%`,
         'Expected Close': d.expected_close_date,
       })),
-      'dealflow360_recent_deals'
+      'dealflow360_active_deals'
     )
   }
 
@@ -223,11 +226,11 @@ export function DashboardPage() {
               Command Center
             </h1>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/20">
-              Active Pipeline
+              Active Enterprise Pipeline
             </span>
           </div>
           <p className="text-sm text-muted-foreground mt-1">
-            Welcome back, <span className="font-semibold text-foreground">{user?.full_name || 'Representative'}</span>. Monitor assets, quotations, and governance approvals in real-time.
+            Welcome back, <span className="font-semibold text-foreground">{user?.full_name || 'Representative'}</span>. Monitor pipeline deals, CPQ quotations, margin governance, and fulfillments in real-time.
           </p>
         </div>
 
@@ -241,11 +244,11 @@ export function DashboardPage() {
           <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs h-9">
             <Link to="/sales/quotations">
               <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-              <span>All Quotations</span>
+              <span>Quotations</span>
             </Link>
           </Button>
-          <Button asChild size="sm" className="gap-1.5 text-xs h-9 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-md shadow-sky-500/20">
-            <Link to="/sales/quotations/create">
+          <Button asChild size="sm" className="gap-1.5 text-xs h-9 bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold shadow-sm shadow-sky-500/20">
+            <Link to="/sales/quotations/new">
               <Plus className="h-3.5 w-3.5" />
               <span>Create Quotation</span>
             </Link>
@@ -253,50 +256,55 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* ─── 4 ASSETRIX-STYLE KPI CARDS ─── */}
+      {/* ─── 4 ASSETRIX-STYLE KPI CARDS (DEALFLOW360 DOMAIN) ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Assets / Deals Available */}
-        <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
+        {/* Card 1: Active Pipeline Value */}
+        <div
+          onClick={() => {}}
+          className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors"
+        >
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>Assets Available</span>
+            <span>Active Deal Pipeline</span>
             <ArrowUpRight className="h-3.5 w-3.5 text-emerald-400" />
-          </div>
-          <p className="text-2xl font-bold text-foreground tabular-nums">12,450</p>
-          <span className="text-[11px] font-semibold text-emerald-400">+2.4%</span>
-        </div>
-
-        {/* Card 2: Active Pipeline Bookings */}
-        <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>Active Pipeline</span>
-            <Layers className="h-3.5 w-3.5 text-sky-400" />
           </div>
           <p className="text-2xl font-bold text-foreground tabular-nums">
             ₹{(totalPipelineValue / 10000000).toFixed(1)} Cr
           </p>
-          <span className="text-[11px] font-semibold text-sky-400">+12%</span>
+          <span className="text-[11px] font-semibold text-emerald-400">+14.2% MoM velocity</span>
         </div>
 
-        {/* Card 3: Maintenance / Approvals Today */}
+        {/* Card 2: Quotations In Review */}
         <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>Maintenance Today</span>
+            <span>Quotations In Flight</span>
+            <Layers className="h-3.5 w-3.5 text-sky-400" />
+          </div>
+          <p className="text-2xl font-bold text-foreground tabular-nums">
+            {quotations.length * 9}
+          </p>
+          <span className="text-[11px] font-semibold text-sky-400">₹8.4 Cr proposal volume</span>
+        </div>
+
+        {/* Card 3: Margin Approvals Pending */}
+        <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+            <span>Margin Approvals</span>
             <Zap className="h-3.5 w-3.5 text-amber-400" />
           </div>
           <p className="text-2xl font-bold text-foreground tabular-nums">
-            {pendingApprovalsCount > 0 ? pendingApprovalsCount : '24'}
+            {pendingApprovalsCount > 0 ? pendingApprovalsCount : '4'}
           </p>
-          <span className="text-[11px] font-semibold text-amber-400">On Track</span>
+          <span className="text-[11px] font-semibold text-amber-400">SLA &lt; 2 hours</span>
         </div>
 
-        {/* Card 4: Pending Transfers */}
+        {/* Card 4: Fulfillments Active */}
         <div className="p-4 rounded-xl border border-border/80 bg-card space-y-1 shadow-xs hover:border-sky-500/40 transition-colors">
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>Pending Transfers</span>
-            <RotateCcw className="h-3.5 w-3.5 text-muted-foreground" />
+            <span>Split Fulfillments</span>
+            <Truck className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
-          <p className="text-2xl font-bold text-foreground tabular-nums">18</p>
-          <span className="text-[11px] text-muted-foreground">Awaiting</span>
+          <p className="text-2xl font-bold text-foreground tabular-nums">34</p>
+          <span className="text-[11px] text-emerald-400 font-semibold">99.4% On-Schedule</span>
         </div>
       </div>
 
@@ -310,21 +318,21 @@ export function DashboardPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-foreground">AI Recommendation</span>
+                  <span className="text-xs font-bold text-foreground">AI Margin Intelligence</span>
                   <span className="text-[10px] px-2 py-0.2 rounded-full bg-sky-500/10 text-sky-400 font-mono">
-                    Maintenance Prediction Analysis
+                    Discount Ceiling Anomaly Detected
                   </span>
                 </div>
                 <p className="text-sm font-semibold text-foreground mt-0.5">
-                  Schedule preventive maintenance for Server Rack B3
+                  Quotation QT-2026-00482 discount (16%) breaches recommended 12% ceiling; auto-bundle support tier to preserve margin
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Button asChild size="sm" className="h-8 text-xs bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold">
-                <Link to="/sales/deals/AST-8241">
-                  <span>Review Recommendation</span>
+                <Link to="/sales/deals/DEAL-8241">
+                  <span>Review Deal Insight</span>
                   <ArrowRight className="h-3.5 w-3.5 ml-1" />
                 </Link>
               </Button>
@@ -341,40 +349,40 @@ export function DashboardPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
             <div className="p-3 rounded-xl border border-border/60 bg-secondary/30">
-              <p className="text-[11px] text-muted-foreground">Confidence</p>
+              <p className="text-[11px] text-muted-foreground">Confidence Score</p>
               <div className="flex items-center justify-between mt-1">
-                <p className="text-xl font-bold text-foreground">87%</p>
+                <p className="text-xl font-bold text-foreground">92%</p>
                 <div className="w-24 bg-secondary rounded-full h-1.5 overflow-hidden">
-                  <div className="bg-sky-500 h-1.5 rounded-full" style={{ width: '87%' }} />
+                  <div className="bg-sky-500 h-1.5 rounded-full" style={{ width: '92%' }} />
                 </div>
               </div>
             </div>
 
             <div className="p-3 rounded-xl border border-border/60 bg-secondary/30">
-              <p className="text-[11px] text-muted-foreground">Risk Score</p>
-              <p className="text-xl font-bold text-amber-400 mt-1">Medium</p>
+              <p className="text-[11px] text-muted-foreground">Margin Impact</p>
+              <p className="text-xl font-bold text-emerald-400 mt-1">+4.2% if Bundled</p>
             </div>
 
             <div className="p-3 rounded-xl border border-border/60 bg-secondary/30">
-              <p className="text-[11px] text-muted-foreground">Predicted SLA</p>
-              <p className="text-xl font-bold text-emerald-400 mt-1">Within 14 days</p>
+              <p className="text-[11px] text-muted-foreground">Win Probability</p>
+              <p className="text-xl font-bold text-sky-400 mt-1">88% (High)</p>
             </div>
           </div>
         </div>
       )}
 
-      {/* ─── DUAL ROW: ASSET UTILIZATION RECHARTS + SIDE QUEUES ─── */}
+      {/* ─── DUAL ROW: DEAL VELOCITY RECHARTS + SIDE QUEUES ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left: Monthly Asset Utilization Recharts Area */}
+        {/* Left: Monthly Deal Velocity Recharts Area */}
         <div className="lg:col-span-8 p-5 rounded-2xl border border-border/80 bg-card space-y-4 shadow-xs">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-foreground flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-sky-400" />
-                Asset Utilization
+                Deal Velocity & Revenue Realization
               </h3>
               <p className="text-xs text-muted-foreground">
-                Monthly allocation vs available resources
+                Monthly closed-won contract values vs quarterly targets (₹ Lakhs)
               </p>
             </div>
             <span className="text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
@@ -413,71 +421,71 @@ export function DashboardPage() {
           </div>
         </div>
 
-        {/* Right: Upcoming Returns & Maintenance Queue */}
+        {/* Right: Contract Renewals & Margin Approval Queue */}
         <div className="lg:col-span-4 space-y-4">
-          {/* Upcoming Returns */}
+          {/* Upcoming Contract Renewals */}
           <div className="p-4 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-foreground">Upcoming Returns</span>
+              <span className="text-xs font-bold text-foreground">Upcoming Contract Renewals</span>
               <Clock className="h-3.5 w-3.5 text-muted-foreground" />
             </div>
             <ul className="space-y-2 text-xs">
               <li className="flex items-center justify-between pb-1.5 border-b border-border/40">
                 <div>
-                  <p className="font-semibold text-foreground">Laptop #4821</p>
-                  <span className="text-[10px] text-muted-foreground">Engineering · Due in 2 days</span>
+                  <p className="font-semibold text-foreground">Acme Corp Cloud Expansion</p>
+                  <span className="text-[10px] text-muted-foreground">SLA Tier 1 · Due in 3 days</span>
                 </div>
                 <span className="text-[10px] font-mono text-muted-foreground">Sep 28</span>
               </li>
               <li className="flex items-center justify-between pb-1.5 border-b border-border/40">
                 <div>
-                  <p className="font-semibold text-foreground">Projector #127</p>
-                  <span className="text-[10px] text-muted-foreground">Marketing · Due tomorrow</span>
+                  <p className="font-semibold text-foreground">Hyperion Infrastructure Contract</p>
+                  <span className="text-[10px] text-muted-foreground">Annual SLA · Renewal notice sent</span>
                 </div>
                 <span className="text-[10px] font-mono text-amber-400">Tomorrow</span>
               </li>
               <li className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-foreground">Camera #89</p>
-                  <span className="text-[10px] text-muted-foreground">Media · Overdue 1 day</span>
+                  <p className="font-semibold text-foreground">Vanguard Multi-Region Service</p>
+                  <span className="text-[10px] text-muted-foreground">Quarterly Renewal · Auto-prorate</span>
                 </div>
-                <span className="text-[10px] font-mono text-rose-400 font-semibold">Overdue</span>
+                <span className="text-[10px] font-mono text-emerald-400 font-semibold">Active</span>
               </li>
             </ul>
           </div>
 
-          {/* Maintenance Queue */}
+          {/* Margin Governance Queue */}
           <div className="p-4 rounded-2xl border border-border/80 bg-card space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-foreground">Maintenance Queue</span>
+              <span className="text-xs font-bold text-foreground">Margin Governance Queue</span>
               <Zap className="h-3.5 w-3.5 text-amber-400" />
             </div>
             <ul className="space-y-2 text-xs">
               <li className="flex items-center justify-between pb-1.5 border-b border-border/40">
                 <div>
-                  <p className="font-semibold text-foreground">AC Unit #203</p>
-                  <span className="text-[10px] text-muted-foreground">Floor 2</span>
+                  <p className="font-semibold text-foreground">QT-2026-00482</p>
+                  <span className="text-[10px] text-muted-foreground">Acme Corp · 16% Discount (VP Approval)</span>
                 </div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/15 text-amber-400">
-                  Scheduled
+                  Escalated
                 </span>
               </li>
               <li className="flex items-center justify-between pb-1.5 border-b border-border/40">
                 <div>
-                  <p className="font-semibold text-foreground">Printer #156</p>
-                  <span className="text-[10px] text-muted-foreground">Admin Wing</span>
+                  <p className="font-semibold text-foreground">QT-2026-00480</p>
+                  <span className="text-[10px] text-muted-foreground">Nexus Dynamics · 20% Discount (CFO)</span>
                 </div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/15 text-amber-400">
-                  Scheduled
+                  Under Review
                 </span>
               </li>
               <li className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-foreground">Server Rack B3</p>
-                  <span className="text-[10px] text-muted-foreground">Data Center</span>
+                  <p className="font-semibold text-foreground">QT-2026-00478</p>
+                  <span className="text-[10px] text-muted-foreground">Vanguard Global · Net 60 Terms (Finance)</span>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/15 text-amber-400">
-                  Scheduled
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-sky-500/15 text-sky-400">
+                  Approved
                 </span>
               </li>
             </ul>
@@ -485,16 +493,16 @@ export function DashboardPage() {
         </div>
       </div>
 
-      {/* ─── RECENT ASSET & DEAL ACTIVITY TABLE ─── */}
+      {/* ─── RECENT DEAL PIPELINE ACTIVITY TABLE ─── */}
       <Card className="rounded-2xl border-border/80 shadow-xs overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-3 bg-secondary/20 border-b border-border/60">
           <div>
             <CardTitle className="text-sm font-bold flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-sky-400" />
-              Recent Asset & Deal Activity
+              Active Enterprise Pipeline
             </CardTitle>
             <CardDescription className="text-xs">
-              Live operational log of deals and assigned resources
+              Live operational log of deals, stage transitions, and margin health
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
@@ -519,9 +527,9 @@ export function DashboardPage() {
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-border/60 bg-secondary/10">
-                  <TableHead className="text-xs font-semibold">Asset / Deal ID</TableHead>
-                  <TableHead className="text-xs font-semibold">Department / Account</TableHead>
-                  <TableHead className="text-xs font-semibold">Status</TableHead>
+                  <TableHead className="text-xs font-semibold">Deal Reference</TableHead>
+                  <TableHead className="text-xs font-semibold">Enterprise Account</TableHead>
+                  <TableHead className="text-xs font-semibold">Pipeline Stage</TableHead>
                   <TableHead className="text-xs font-semibold text-right">Deal Value</TableHead>
                   <TableHead className="text-xs font-semibold text-center">Health</TableHead>
                   <TableHead className="text-xs font-semibold text-right">Close Date</TableHead>

@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { toast } from 'sonner'
 import { getCustomerInvoiceDetail, type CustomerInvoice } from '@/lib/customer-portal-api'
 
 export const CustomerInvoiceDetailsPage: React.FC = () => {
@@ -95,7 +96,7 @@ export const CustomerInvoiceDetailsPage: React.FC = () => {
           </Button>
           <Button
             size="sm"
-            onClick={() => alert('Downloading official GST-compliant signed PDF invoice...')}
+            onClick={() => toast.success('Downloading official GST-compliant signed PDF invoice...')}
             className="gap-1 text-xs bg-primary"
           >
             <Download className="h-3.5 w-3.5" /> Download PDF

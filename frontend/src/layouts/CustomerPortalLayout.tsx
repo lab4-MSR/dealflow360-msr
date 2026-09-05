@@ -125,6 +125,21 @@ export function CustomerPortalLayout() {
                 })}
               </div>
 
+              {/* Enterprise App switch for staff */}
+              {user && user.role !== 'customer' && (
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:flex items-center gap-1.5 text-xs h-8 border-sky-500/30 text-sky-400 hover:bg-sky-500/10"
+                >
+                  <NavLink to={user.role === 'super_admin' ? '/platform' : '/dashboard'}>
+                    <Shield className="h-3.5 w-3.5" />
+                    <span>Internal Workspace</span>
+                  </NavLink>
+                </Button>
+              )}
+
               {/* Theme Toggle */}
               <button
                 type="button"

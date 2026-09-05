@@ -259,9 +259,13 @@ export function OrderDetailsPage() {
                   <TableRow key={shp.id}>
                     <TableCell className="font-semibold">{shp.shipment}</TableCell>
                     <TableCell>
-                      <span className="font-mono text-sm text-primary underline cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/customer-portal/shipments/${shp.id}`)}
+                        className="font-mono text-sm text-primary hover:underline cursor-pointer text-left"
+                      >
                         {shp.tracking}
-                      </span>
+                      </button>
                     </TableCell>
                     <TableCell>
                       <StatusBadge status={shp.status === 'delivered' ? 'approved' : 'pending'}>
@@ -290,13 +294,21 @@ export function OrderDetailsPage() {
             {/* View Shipment Action */}
             <Button onClick={() => setShipmentModalOpen(true)}>
               <Truck className="mr-2 h-4 w-4" aria-hidden="true" />
-              View Shipment
+              Quick Tracking
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/customer-portal/shipments')}>
+              <Truck className="mr-2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              Shipments Hub
             </Button>
 
             {/* View Invoice Action */}
             <Button variant="outline" onClick={() => setInvoiceModalOpen(true)}>
               <FileText className="mr-2 h-4 w-4" aria-hidden="true" />
-              View Invoice
+              Invoice Summary
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/customer-portal/invoices')}>
+              <FileText className="mr-2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+              Billing Hub
             </Button>
           </div>
         </CardContent>
