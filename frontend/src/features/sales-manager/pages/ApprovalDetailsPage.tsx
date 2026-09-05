@@ -29,7 +29,6 @@ import {
 } from '@/services/salesManager'
 import type { ApprovalDetailData } from '@/types/salesManager'
 import { useAuth } from '@/providers/AuthProvider'
-import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
 export function ApprovalDetailsPage() {

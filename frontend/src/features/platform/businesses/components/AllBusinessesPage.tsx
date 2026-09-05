@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Card, CardContent } from '@/components/ui/card'
@@ -122,11 +122,13 @@ export function AllBusinessesPage() {
     document.body.removeChild(link)
   }
 
-  const debouncedSearch = useMemo(() => {
-    return () => {
-      setFilters((prev) => ({ ...prev, search: searchInput || undefined, page: 1 }))
-    }
+  const handleSearch = useCallback(() => {
+    setFilters((prev) => ({ ...prev, search: searchInput || undefined, page: 1 }))
   }, [searchInput])
+
+  const debouncedSearch = useMemo(() => {
+    return handleSearch
+  }, [handleSearch])
 
   const handleFilterChange = (key: keyof BusinessListFilters, value: string | undefined) => {
     setFilters((prev) => ({ ...prev, [key]: value || undefined, page: 1 }))

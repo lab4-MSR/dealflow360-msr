@@ -1,8 +1,4 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-<<<<<<< HEAD
-=======
-import { useAuth } from '@/providers/AuthProvider'
->>>>>>> d39847e (fix(frontend): full-scale workflow audit, RBAC route isolation, and dead-end resolution)
 import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { CustomerPortalLayout } from '@/layouts/CustomerPortalLayout'
 import { ProtectedRoute, GuestRoute, RoleRoute } from '@/routes/guards'
