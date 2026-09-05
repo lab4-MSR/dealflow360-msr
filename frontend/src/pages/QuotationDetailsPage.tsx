@@ -76,6 +76,13 @@ export function QuotationDetailsPage() {
     loadQuote(activeVersion)
   }, [id, activeVersion])
 
+  useEffect(() => {
+    const v = Number(searchParams.get('version'))
+    if (v && v !== activeVersion) {
+      setActiveVersion(v)
+    }
+  }, [searchParams])
+
   const handleVersionChange = (newVersion: number) => {
     setActiveVersion(newVersion)
     const newParams = new URLSearchParams(searchParams)

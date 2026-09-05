@@ -974,6 +974,7 @@ export function useCreateDiscountRule() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-discount-rules'] })
       queryClient.invalidateQueries({ queryKey: ['ba-discount-rule-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['quotations'] })
     },
   })
 }
@@ -986,6 +987,7 @@ export function useUpdateDiscountRule() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-discount-rules'] })
       queryClient.invalidateQueries({ queryKey: ['ba-discount-rule-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['quotations'] })
     },
   })
 }
@@ -997,6 +999,7 @@ export function useDeleteDiscountRule() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-discount-rules'] })
       queryClient.invalidateQueries({ queryKey: ['ba-discount-rule-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['quotations'] })
     },
   })
 }
@@ -1333,6 +1336,7 @@ export function useCreateWarehouse() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-warehouses'] })
       queryClient.invalidateQueries({ queryKey: ['ba-warehouse-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['operations'] })
     },
   })
 }
@@ -1345,6 +1349,7 @@ export function useUpdateWarehouse() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-warehouses'] })
       queryClient.invalidateQueries({ queryKey: ['ba-warehouse-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['operations'] })
     },
   })
 }
@@ -1356,6 +1361,7 @@ export function useDeleteWarehouse() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-warehouses'] })
       queryClient.invalidateQueries({ queryKey: ['ba-warehouse-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['operations'] })
     },
   })
 }
@@ -1433,6 +1439,8 @@ export function useCreateSubscriptionPlan() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-subscription-plans'] })
       queryClient.invalidateQueries({ queryKey: ['ba-subscription-plan-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['customer-subscriptions'] })
+      queryClient.invalidateQueries({ queryKey: ['finance-subscriptions'] })
     },
   })
 }
@@ -1445,6 +1453,8 @@ export function useUpdateSubscriptionPlan() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-subscription-plans'] })
       queryClient.invalidateQueries({ queryKey: ['ba-subscription-plan-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['customer-subscriptions'] })
+      queryClient.invalidateQueries({ queryKey: ['finance-subscriptions'] })
     },
   })
 }
@@ -1456,6 +1466,8 @@ export function useDeleteSubscriptionPlan() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-subscription-plans'] })
       queryClient.invalidateQueries({ queryKey: ['ba-subscription-plan-kpis'] })
+      queryClient.invalidateQueries({ queryKey: ['customer-subscriptions'] })
+      queryClient.invalidateQueries({ queryKey: ['finance-subscriptions'] })
     },
   })
 }

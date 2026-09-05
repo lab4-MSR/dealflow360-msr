@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { authService } from '@/services/auth'
 import type { AuthUser, AuthState } from '@/types/auth'
 import { ROLE_DASHBOARD_MAP } from '@/types/auth'
@@ -22,6 +23,7 @@ interface AuthContextType extends AuthState {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient()
   const [user, setUser] = useState<AuthUser | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -59,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const response = await authService.login({ email, password })
         localStorage.setItem('dealflow360-access-token', response.access_token)
         localStorage.setItem('dealflow360-refresh-token', response.refresh_token)
+        queryClient.clear()
         setUser(response.user)
       } catch (err: unknown) {
         const axiosError = err as { response?: { data?: { error?: { message?: string } } } }
@@ -70,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoading(false)
       }
     },
-    []
+    [queryClient]
   )
 
   const signup = useCallback(
@@ -81,6 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const response = await authService.signup(payload)
         localStorage.setItem('dealflow360-access-token', response.access_token)
         localStorage.setItem('dealflow360-refresh-token', response.refresh_token)
+        queryClient.clear()
         setUser(response.user)
       } catch (err: unknown) {
         const axiosError = err as { response?: { data?: { error?: { message?: string } } } }
@@ -92,13 +96,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsLoading(false)
       }
     },
-    []
+    [queryClient]
   )
 
   const logout = useCallback(async () => {
     await authService.logout()
+    queryClient.clear()
     setUser(null)
-  }, [])
+  }, [queryClient])
 
   const getDashboardPath = useCallback(() => {
     if (!user) return '/dashboard'

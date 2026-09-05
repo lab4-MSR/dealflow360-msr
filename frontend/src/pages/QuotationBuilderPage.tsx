@@ -265,7 +265,7 @@ export function QuotationBuilderPage() {
             : recommendations.slice(0,3).map((r:Record<string,unknown>)=>(
               <div key={String(r.recommendation_id ?? r.product_id)} className="rounded-lg border p-2">
                 <p className="text-small font-medium">{String((r as {product_name?:string}).product_name)}</p><p className="text-caption text-muted-foreground">{String((r as {reason?:string}).reason)}</p>
-                <div className="flex gap-2 mt-1"><Badge variant="intelligence" className="text-caption">{String((r as {promotion_tag?:string}).promotion_tag ?? '')}</Badge><span className="text-caption tabular-nums">Δ ${String((r as {margin_delta?:number}).margin_delta ?? '')}</span><Button size="sm" variant="outline" className="ml-auto h-6 text-caption" onClick={async()=>{ if(!id) return; await apiClient.post(`/quotations/${id}/recommendations/${String(r.recommendation_id)}/add`); load(); toast.success('Added') }}>Add</Button></div>
+                <div className="flex gap-2 mt-1"><Badge variant="intelligence" className="text-caption">{String((r as {promotion_tag?:string}).promotion_tag ?? '')}</Badge><span className="text-caption tabular-nums">Δ ₹{String((r as {margin_delta?:number}).margin_delta ?? '')}</span><Button size="sm" variant="outline" className="ml-auto h-6 text-caption" onClick={async()=>{ if(!id) return; try { await apiClient.post(`/quotations/${id}/recommendations/${String(r.recommendation_id)}/add`); load(); toast.success('Recommendation added to quotation') } catch (err) { toast.error(getApiErrorMessage(err)) } }}>Add</Button></div>
               </div>
             ))}
           </CardContent>

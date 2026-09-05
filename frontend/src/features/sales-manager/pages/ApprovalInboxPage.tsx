@@ -27,8 +27,11 @@ import {
   returnApproval,
 } from '@/services/salesManager'
 import type { ApprovalQueueItem } from '@/types/salesManager'
+import { useAuth } from '@/providers/AuthProvider'
+import { toast } from 'sonner'
 
 export function ApprovalInboxPage() {
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [approvals, setApprovals] = useState<ApprovalQueueItem[]>([])
@@ -123,9 +126,28 @@ export function ApprovalInboxPage() {
   }
 
   const handleBulkApprove = async () => {
+    const selfCreated = selectedApprovalsList.filter(
+      (a) => user?.full_name && a.rep.name.toLowerCase() === user.full_name.toLowerCase()
+    )
+    const approvable = selectedApprovalsList.filter(
+      (a) => !user?.full_name || a.rep.name.toLowerCase() !== user.full_name.toLowerCase()
+    )
+
+    if (selfCreated.length > 0 && approvable.length === 0) {
+      toast.error('Cannot bulk approve: all selected items are self-authored quotations.')
+      return
+    }
+
     setBulkActionSubmitting(true)
     try {
-      await Promise.all(selectedIds.map(id => approveApproval(id, 'Bulk approved by Sales Manager')))
+      await Promise.all(approvable.map((a) => approveApproval(a.id, 'Bulk approved by Sales Manager')))
+      if (selfCreated.length > 0) {
+        toast.warning(
+          `Approved ${approvable.length} quotation${approvable.length > 1 ? 's' : ''}. ${selfCreated.length} skipped due to self-approval policy.`
+        )
+      } else {
+        toast.success(`Approved ${approvable.length} quotation${approvable.length > 1 ? 's' : ''}.`)
+      }
       setSelectedIds([])
       setBulkApproveOpen(false)
       await loadData()
@@ -318,6 +340,7 @@ export function ApprovalInboxPage() {
                 ) : (
                   approvals.map((item) => {
                     const isSelected = selectedIds.includes(item.id)
+                    const isSelf = Boolean(user?.full_name && item.rep.name.toLowerCase() === user.full_name.toLowerCase())
                     return (
                       <tr
                         key={item.id}
@@ -415,9 +438,15 @@ export function ApprovalInboxPage() {
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="h-7 w-7 p-0 text-success hover:bg-success-subtle hover:text-success"
-                              title="Quick Approve"
+                              disabled={isSelf}
+                              className={`h-7 w-7 p-0 ${
+                                isSelf
+                                  ? 'opacity-30 cursor-not-allowed text-muted-foreground'
+                                  : 'text-success hover:bg-success-subtle hover:text-success'
+                              }`}
+                              title={isSelf ? 'Self-approval prohibited' : 'Quick Approve'}
                               onClick={() => {
+                                if (isSelf) return
                                 setActiveItem(item)
                                 setApproveModalOpen(true)
                               }}

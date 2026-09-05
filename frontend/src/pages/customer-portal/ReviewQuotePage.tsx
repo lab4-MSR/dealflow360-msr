@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { getCustomerQuotationDetail, confirmQuotation, requestChanges, submitCounterOffer, type CustomerQuotationDetail } from '@/lib/customer-portal-api'
 import { formatCurrency } from '@/lib/analytics-format'
+import { toast } from 'sonner'
 
 export function ReviewQuotePage() {
   const { id } = useParams<{ id: string }>()
@@ -29,7 +30,22 @@ export function ReviewQuotePage() {
     if (dialog === 'accept') { await confirmQuotation(id) }
     else if (dialog === 'changes') { await requestChanges(id, { comment }) }
     else if (dialog === 'counter') { await submitCounterOffer(id, { counter_discount_percent: Number(counterDiscount) || 0, comment: comment || undefined }) }
-  }, onSuccess: () => { qc.invalidateQueries({ queryKey: ['customer-quotation'] }); setDialog(null); setComment(''); setCounterDiscount('') } })
+  }, onSuccess: () => {
+    const wasAccept = dialog === 'accept'
+    qc.invalidateQueries({ queryKey: ['customer-quotation'] })
+    qc.invalidateQueries({ queryKey: ['customer-quotations'] })
+    qc.invalidateQueries({ queryKey: ['customer-orders'] })
+    qc.invalidateQueries({ queryKey: ['customer-dashboard'] })
+    setDialog(null)
+    setComment('')
+    setCounterDiscount('')
+    if (wasAccept) {
+      toast.success('Quotation accepted! Order confirmed and routed to operations.')
+      navigate('/customer-portal/orders')
+    } else {
+      toast.success('Feedback recorded successfully.')
+    }
+  } })
 
   return (
     <div className="space-y-6">

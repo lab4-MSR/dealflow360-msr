@@ -28,9 +28,12 @@ import {
   returnApproval,
 } from '@/services/salesManager'
 import type { ApprovalDetailData } from '@/types/salesManager'
+import { useAuth } from '@/providers/AuthProvider'
+import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
 export function ApprovalDetailsPage() {
+  const { user } = useAuth()
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [data, setData] = useState<ApprovalDetailData | null>(null)
@@ -114,6 +117,13 @@ export function ApprovalDetailsPage() {
     )
   }
 
+  const isSelf = Boolean(
+    user && data?.rep && (
+      (data.rep.name && user.full_name && data.rep.name.toLowerCase() === user.full_name.toLowerCase()) ||
+      (data.rep.id && data.rep.id === user.user_id)
+    )
+  )
+
   return (
     <div className="space-y-6 pb-12">
       {/* Top Breadcrumb & Action Bar */}
@@ -149,14 +159,38 @@ export function ApprovalDetailsPage() {
             Reject
           </Button>
           <Button
-            className="bg-primary text-primary-foreground hover:bg-primary/90"
-            onClick={() => setApproveOpen(true)}
+            className={cn(
+              "bg-primary text-primary-foreground hover:bg-primary/90",
+              isSelf && "opacity-50 cursor-not-allowed"
+            )}
+            disabled={isSelf}
+            title={isSelf ? "Self-approval is prohibited by policy. Another manager must approve this quotation." : "Approve Quotation"}
+            onClick={() => {
+              if (isSelf) {
+                toast.error("Self-approval prohibited: you authored this quotation.")
+                return
+              }
+              setApproveOpen(true)
+            }}
           >
             <CheckCircle2 className="mr-1.5 h-4 w-4" />
             Approve Quotation
           </Button>
         </div>
       </div>
+
+      {/* Governance Notice for Self-Authored Quotations */}
+      {isSelf && (
+        <div className="rounded-xl border border-warning/40 bg-warning-subtle/50 p-3.5 flex items-center gap-3 text-xs text-warning">
+          <AlertTriangle className="h-5 w-5 shrink-0" />
+          <div>
+            <span className="font-bold text-foreground">Self-Approval Prohibited:</span>{' '}
+            <span>
+              You are listed as the sales representative for this deal ({data.rep.name}). Under DealFlow360 discount governance, another authorized manager or business admin must review and approve this quotation.
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Header Banner Card */}
       <Card className="border-border bg-card">
@@ -327,6 +361,42 @@ export function ApprovalDetailsPage() {
                   </Badge>
                 </div>
               ))}
+            </CardContent>
+          </Card>
+
+          {/* Post-Approval Workflow Progression */}
+          <Card className="border-border bg-card">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-small font-semibold flex items-center gap-2">
+                <Shield className="h-4 w-4 text-primary" />
+                Post-Approval Workflow Impact
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2.5 text-xs text-muted-foreground">
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                <span>
+                  <strong className="text-foreground">State Transition:</strong> Moves quote state from <code className="text-primary font-mono text-[11px]">pending_approval</code> → <code className="text-success font-mono text-[11px]">approved</code>.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                <span>
+                  <strong className="text-foreground">Sales Rep Action:</strong> Unblocks {data.rep.name} to dispatch quotation to customer portal.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                <span>
+                  <strong className="text-foreground">Customer Next Step:</strong> Client receives access to review, accept, or counter-offer in Customer Portal.
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary flex-shrink-0" />
+                <span>
+                  <strong className="text-foreground">Operations Handoff:</strong> Acceptance immediately triggers warehouse allocation in Operations queue.
+                </span>
+              </div>
             </CardContent>
           </Card>
         </div>

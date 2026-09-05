@@ -67,9 +67,10 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'BUSINESS ADMIN',
-    roles: ['business_admin', 'super_admin'],
+    roles: ['business_admin'],
     items: [
       { label: 'Admin Dashboard', path: '/business-admin/dashboard', icon: 'LayoutDashboard' },
+      { label: 'Company Profile', path: '/business-admin/organization/profile', icon: 'Settings' },
       { label: 'Users & Roles', path: '/business-admin/users', icon: 'Users' },
       { label: 'Customers', path: '/business-admin/customers', icon: 'Users' },
       { label: 'Products & Catalog', path: '/business-admin/products', icon: 'Package' },
@@ -80,12 +81,12 @@ export const SIDEBAR_NAV: NavSection[] = [
       { label: 'Subscription Plans', path: '/business-admin/subscriptions', icon: 'RefreshCw' },
       { label: 'Deal Health Monitor', path: '/business-admin/deal-health', icon: 'HeartPulse' },
       { label: 'Audit Trail', path: '/business-admin/audit', icon: 'Shield' },
-      { label: 'Company Profile', path: '/business-admin/organization/profile', icon: 'Settings' },
+      { label: 'Settings', path: '/business-admin/settings', icon: 'Settings' },
     ],
   },
   {
     section: 'SALES MANAGER',
-    roles: ['sales_manager', 'business_admin', 'super_admin'],
+    roles: ['sales_manager'],
     items: [
       { label: 'Manager Dashboard', path: '/sales-manager/dashboard', icon: 'LayoutDashboard' },
       { label: 'Approval Inbox', path: '/sales-manager/approvals', icon: 'Inbox' },
@@ -97,17 +98,17 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'SALES',
-    roles: ['sales_rep', 'sales_manager', 'business_admin', 'super_admin'],
+    roles: ['sales_rep'],
     items: [
       { label: 'Sales Dashboard', path: '/dashboard', icon: 'LayoutDashboard' },
       { label: 'Quotations', path: '/sales/quotations', icon: 'FileText' },
-      { label: 'My Customers', path: '/sales/customers', icon: 'Users' },
       { label: 'My Deals', path: '/sales/deals', icon: 'FileText' },
+      { label: 'My Customers', path: '/sales/customers', icon: 'Users' },
     ],
   },
   {
     section: 'FINANCE & BILLING',
-    roles: ['finance', 'business_admin', 'super_admin'],
+    roles: ['finance'],
     items: [
       { label: 'Finance Dashboard', path: '/finance/dashboard', icon: 'LayoutDashboard' },
       { label: 'High-Risk Approvals', path: '/finance/approvals/high-risk', icon: 'ShieldAlert' },
@@ -121,7 +122,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'OPERATIONS & FULFILLMENT',
-    roles: ['operations', 'business_admin', 'super_admin'],
+    roles: ['operations'],
     items: [
       { label: 'Operations Dashboard', path: '/operations', icon: 'LayoutDashboard' },
       { label: 'Fulfillment Queue', path: '/operations/fulfillment', icon: 'Truck' },
@@ -129,11 +130,12 @@ export const SIDEBAR_NAV: NavSection[] = [
       { label: 'Inventory & Stock', path: '/operations/inventory', icon: 'Package' },
       { label: 'Shipment Tracking', path: '/operations/shipping', icon: 'Truck' },
       { label: 'Backorders Queue', path: '/operations/backorders', icon: 'Truck' },
+      { label: 'Operations Analytics', path: '/operations/analytics', icon: 'BarChart3' },
     ],
   },
   {
     section: 'INTELLIGENCE',
-    roles: ['sales_manager', 'business_admin', 'super_admin'],
+    roles: ['sales_manager', 'business_admin'],
     items: [
       { label: 'Intelligence Command', path: '/intelligence', icon: 'Sparkles' },
       { label: 'Risk Overview', path: '/intelligence/risks', icon: 'ShieldAlert' },
@@ -142,8 +144,6 @@ export const SIDEBAR_NAV: NavSection[] = [
       { label: 'Cross-Sell Bundles', path: '/intelligence/recommendations/cross-sell', icon: 'Sparkles' },
       { label: 'Deal Health', path: '/intelligence/health', icon: 'HeartPulse' },
       { label: 'Stalled Deals', path: '/intelligence/health/stalled', icon: 'HeartPulse' },
-      { label: 'Discount Anomalies', path: '/intelligence/anomalies/discount', icon: 'Percent' },
-      { label: 'Delivery Slippage', path: '/intelligence/anomalies/delivery', icon: 'Truck' },
       { label: 'Decision Insights', path: '/intelligence/insights', icon: 'Sparkles' },
     ],
   },

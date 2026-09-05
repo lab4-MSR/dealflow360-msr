@@ -117,6 +117,7 @@ export function CustomerPortalLayout() {
                 })}
               </div>
 
+<<<<<<< HEAD
               {/* Theme Toggle */}
               <button
                 type="button"

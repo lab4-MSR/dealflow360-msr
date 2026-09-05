@@ -43,8 +43,14 @@ export function GuestRoute() {
   return <Outlet />
 }
 
-export function RoleRoute({ allowedRoles }: { allowedRoles: import('@/types/auth').AuthRole[] }) {
-  const { user, isAuthenticated, isLoading, getDashboardPath } = useAuth()
+export function RoleRoute({
+  allowedRoles,
+  requiredPermissions,
+}: {
+  allowedRoles?: import('@/types/auth').AuthRole[]
+  requiredPermissions?: string[]
+}) {
+  const { user, isAuthenticated, isLoading } = useAuth()
   const location = useLocation()
 
   if (isLoading) {
@@ -64,8 +70,20 @@ export function RoleRoute({ allowedRoles }: { allowedRoles: import('@/types/auth
     )
   }
 
-  if (!user || !allowedRoles.includes(user.role)) {
+  if (!user) {
     return <Navigate to="/403" replace />
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/403" replace />
+  }
+
+  if (requiredPermissions && requiredPermissions.length > 0) {
+    const userPerms = user.permissions || []
+    const hasAll = userPerms.includes('*') || requiredPermissions.every((p) => userPerms.includes(p))
+    if (!hasAll) {
+      return <Navigate to="/403" replace />
+    }
   }
 
   return <Outlet />

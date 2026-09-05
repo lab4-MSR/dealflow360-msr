@@ -1,8 +1,20 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+<<<<<<< HEAD
+=======
+import { useAuth } from '@/providers/AuthProvider'
+>>>>>>> d39847e (fix(frontend): full-scale workflow audit, RBAC route isolation, and dead-end resolution)
 import { DashboardLayout } from '@/layouts/DashboardLayout'
 import { CustomerPortalLayout } from '@/layouts/CustomerPortalLayout'
 import { ProtectedRoute, GuestRoute, RoleRoute } from '@/routes/guards'
 import { useAuth } from '@/providers/AuthProvider'
+
+function RootLanding() {
+  const { user, getDashboardPath } = useAuth()
+  if (!user) {
+    return <Navigate to="/login" replace />
+  }
+  return <Navigate to={getDashboardPath()} replace />
+}
 
 // Auth Pages (00. Public / Auth)
 import LoginPage from '@/pages/auth/LoginPage'
@@ -227,6 +239,9 @@ export function App() {
 
       {/* ─── PROTECTED APPLICATION ROUTES ─── */}
       <Route element={<ProtectedRoute />}>
+        {/* Role-aware dynamic root landing */}
+        <Route path="/" element={<RootLanding />} />
+
         {/* Customer Portal Layout Routes (08.x) */}
         <Route element={<RoleRoute allowedRoles={['customer', 'super_admin', 'business_admin']} />}>
           <Route element={<CustomerPortalLayout />}>
@@ -255,32 +270,12 @@ export function App() {
         </Route>
 
         {/* Internal Enterprise Dashboard Layout Routes */}
-        <Route element={<DashboardLayout />}>
-          {/* Main Sales Dashboard with Role Landing Redirection */}
-          <Route
-            path="/"
-            element={
-              (() => {
-                const { user, getDashboardPath } = useAuth()
-                if (user) {
-                  return <Navigate to={getDashboardPath()} replace />
-                }
-                return <Navigate to="/login" replace />
-              })()
-            }
-          />
-          <Route
-            path="/dashboard"
-            element={
-              (() => {
-                const { user } = useAuth()
-                if (user?.role === 'customer') {
-                  return <Navigate to="/customer-portal/dashboard" replace />
-                }
-                return <DashboardPage />
-              })()
-            }
-          />
+        <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'sales_manager', 'sales_rep', 'finance', 'operations']} />}>
+          <Route element={<DashboardLayout />}>
+            {/* Main Sales Dashboard */}
+            <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'sales_manager', 'sales_rep']} />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
+            </Route>
 
           {/* ─── PLATFORM / SUPER ADMIN (01.x) ─── */}
           <Route element={<RoleRoute allowedRoles={['super_admin']} />}>
@@ -445,6 +440,7 @@ export function App() {
             <Route path="/finance/billing/invoices" element={<FinanceInvoicesPage />} />
             <Route path="/finance/billing/invoices/:id" element={<FinanceInvoicesPage />} />
             <Route path="/finance/billing/payments" element={<FinancePaymentsPage />} />
+            <Route path="/finance/payments" element={<FinancePaymentsPage />} />
             <Route path="/finance/billing/failed" element={<FinanceFailedPaymentsPage />} />
             <Route path="/finance/subscriptions" element={<FinanceSubscriptionsPage />} />
             <Route path="/finance/subscriptions/:id" element={<FinanceSubscriptionsPage />} />
@@ -455,8 +451,10 @@ export function App() {
           {/* ─── OPERATIONS & FULFILLMENT (06.x) ─── */}
           <Route element={<RoleRoute allowedRoles={['super_admin', 'business_admin', 'operations']} />}>
             <Route path="/operations" element={<OperationsDashboardPage />} />
+            <Route path="/operations/dashboard" element={<OperationsDashboardPage />} />
             <Route path="/operations/fulfillment" element={<FulfillmentQueuePage />} />
             <Route path="/operations/fulfillment/:fulfillmentId" element={<FulfillmentDetailsPage />} />
+            <Route path="/operations/orders" element={<FulfillmentQueuePage />} />
             <Route path="/operations/shipments/:shipmentId" element={<ShipmentDetailsPage />} />
             <Route path="/operations/warehouses" element={<WarehouseOverviewPage />} />
             <Route path="/operations/inventory" element={<InventoryPage />} />
@@ -507,6 +505,7 @@ export function App() {
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Route>
+    </Route>
 
       {/* Catch-all route */}
       <Route path="*" element={<NotFoundPage />} />

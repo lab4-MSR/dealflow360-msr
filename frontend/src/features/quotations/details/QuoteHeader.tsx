@@ -27,6 +27,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { useAuth } from '@/providers/AuthProvider'
 import type { QuotationCompleteDetails } from '@/types/quotation'
 
 interface QuoteHeaderProps {
@@ -47,9 +48,19 @@ export function QuoteHeader({ quote, onVersionChange, onAction, actionLoading }:
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const { user } = useAuth()
   const { overview, permissions, approval } = quote
   const isLatestVersion = quote.version === quote.total_versions
   const canSend = permissions.can_send_to_customer && (quote.approval.approval_status === 'approved' || quote.approval.approval_status === 'not_required')
+
+  const isManagerOrAdmin = user?.role === 'sales_manager' || user?.role === 'business_admin' || user?.role === 'super_admin'
+  const isSelf = Boolean(
+    user && (
+      (overview.sales_rep_id && overview.sales_rep_id === user.user_id) ||
+      (overview.sales_rep_name && user.full_name && overview.sales_rep_name.toLowerCase() === user.full_name.toLowerCase())
+    )
+  )
+  const canApprove = isManagerOrAdmin && !isSelf
 
   return (
     <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
@@ -179,7 +190,7 @@ export function QuoteHeader({ quote, onVersionChange, onAction, actionLoading }:
               <span>Validate</span>
             </Button>
 
-            {approval.approval_required && approval.approval_status === 'pending' && (
+            {approval.approval_required && approval.approval_status === 'pending' && canApprove && (
               <Button
                 size="sm"
                 variant="default"
