@@ -32,7 +32,7 @@ export function FulfillmentSection({ fulfillment, currency }: FulfillmentSection
     is_preview,
   } = fulfillment
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   return (
     <section id="fulfillment" className="space-y-4">

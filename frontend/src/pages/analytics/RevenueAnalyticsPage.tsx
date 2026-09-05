@@ -4,7 +4,7 @@ import { DollarSign, RefreshCw, TrendingUp, BarChart3 } from 'lucide-react'
 import { AnalyticsPageHeader, AnalyticsSection, ChartFrame, KpiSkeletonGrid } from '@/components/analytics'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Button } from '@/components/ui/button'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ResponsiveContainer, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { getRevenueAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatPercent, kpiChange } from '@/lib/analytics-format'
@@ -47,7 +47,7 @@ export function RevenueAnalyticsPage() {
       </AnalyticsSection>
       <AnalyticsSection title="Revenue Breakdown" description="By product, service, subscription, and customer segment." isLoading={isLoading} isEmpty={!isLoading && !s.breakdown} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Revenue breakdown chart" emptyTitle="No breakdown data for this period.">
-          <ResponsiveContainer width="100%" height="100%"><BarChart data={s.breakdown ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="category" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="value" fill="hsl(var(--info))" name="Revenue" /></BarChart></ResponsiveContainer>
+          <ResponsiveContainer width="100%" height="100%"><BarChart data={(s.breakdown as any) ?? []} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}><CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" /><XAxis dataKey="category" stroke="hsl(var(--muted-foreground))" fontSize={12} /><YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} /><Tooltip /><Legend /><Bar dataKey="value" fill="hsl(var(--info))" name="Revenue" /></BarChart></ResponsiveContainer>
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Growth Analysis" description="New revenue, expansion, churn, and net growth." isLoading={isLoading} isEmpty={!isLoading && s.new_revenue == null} error={error} onRetry={() => refetch()}>

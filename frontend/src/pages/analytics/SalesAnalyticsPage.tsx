@@ -30,8 +30,8 @@ export function SalesAnalyticsPage() {
       <AnalyticsPageHeader title="Sales Analytics" description="Deep analysis of sales performance, pipeline, and conversions." dateRange={dateRange} onDateRangeChange={(v) => setDateRange(v as DateRange)} customFrom={customFrom} customTo={customTo} onCustomFromChange={setCustomFrom} onCustomToChange={setCustomTo} comparison={comparison} onComparisonChange={(v) => setComparison(v as Comparison)} actions={<Button variant="outline" size="sm" disabled><BarChart3 className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />Export</Button>} />
       {isLoading ? <KpiSkeletonGrid count={5} /> : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          <KpiCard label="Revenue" value={formatCurrencyCompact(s.revenue)} trend={kpiChange(s.revenue, s.revenue)} icon={<DollarSign className="h-5 w-5" />} />
-          <KpiCard label="Pipeline" value={formatCurrencyCompact(s.pipeline)} trend={kpiChange(s.pipeline, s.pipeline)} icon={<TrendingUp className="h-5 w-5" />} />
+          <KpiCard label="Revenue" value={formatCurrencyCompact((s as any).revenue)} trend={kpiChange((s as any).revenue, (s as any).revenue)} icon={<DollarSign className="h-5 w-5" />} />
+          <KpiCard label="Pipeline" value={formatCurrencyCompact((s as any).pipeline)} trend={kpiChange((s as any).pipeline, (s as any).pipeline)} icon={<TrendingUp className="h-5 w-5" />} />
           <KpiCard label="Deals" value={formatCountCompact(s.deals_count)} trend={kpiChange(s.deals_count, s.deals_count)} icon={<Award className="h-5 w-5" />} />
           <KpiCard label="Win Rate" value={formatPercent(s.win_rate)} trend={kpiChange(s.win_rate, s.win_rate)} icon={<Target className="h-5 w-5" />} />
           <KpiCard label="Avg Deal Value" value={formatCurrencyCompact(s.average_deal_value)} trend={kpiChange(s.average_deal_value, s.average_deal_value)} icon={<DollarSign className="h-5 w-5" />} />
@@ -48,7 +48,7 @@ export function SalesAnalyticsPage() {
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Pipeline Velocity" description="How quickly deals move through stages." isLoading={isLoading} isEmpty={!isLoading && s.velocity_days == null} error={error} onRetry={() => refetch()}>
-        <div className="rounded-lg border border-border p-6 text-center"><p className="text-sm text-muted-foreground">Average velocity: {s.velocity_days != null ? `${s.velocity_days} days` : '�'}</p></div>
+        <div className="rounded-lg border border-border p-6 text-center"><p className="text-sm text-muted-foreground">Average velocity: {s.velocity_days != null ? `${s.velocity_days} days` : '—'}</p></div>
       </AnalyticsSection>
       <AnalyticsSection title="Sales Performance" description="Rep, team, and customer performance." isLoading={isLoading} isEmpty={!isLoading && !s.rep_performance} error={error} onRetry={() => refetch()}>
         <ChartFrame ariaLabel="Rep performance chart" emptyTitle="No performance data for this period.">

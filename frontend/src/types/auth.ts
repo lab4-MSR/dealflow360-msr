@@ -77,7 +77,7 @@ export const ROLE_DASHBOARD_MAP: Record<AuthRole, string> = {
   sales_rep: '/dashboard',
   sales_manager: '/dashboard',
   finance: '/dashboard',
-  operations: '/dashboard',
+  operations: '/operations',
   customer: '/dashboard',
 }
 

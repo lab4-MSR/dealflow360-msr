@@ -150,7 +150,7 @@ export function BusinessAdminDashboard() {
         <KpiCard label="Pending Approvals" value={kpis?.pendingApprovals ?? 0} variant="warning" icon={<Clock className="h-5 w-5" />} />
         <KpiCard
           label="Revenue"
-          value={`$${(kpis?.revenue ?? 0).toLocaleString()}`}
+          value={`₹${(kpis?.revenue ?? 0).toLocaleString()}`}
           variant="success"
           icon={<DollarSign className="h-5 w-5" />}
         />
@@ -263,7 +263,7 @@ export function BusinessAdminDashboard() {
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
                   <Tooltip
                     contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: '8px', fontSize: '12px' }}
-                    formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
+                    formatter={(value) => [`₹${Number(value).toLocaleString()}`, 'Revenue']}
                   />
                   <Area type="monotone" dataKey="amount" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} />
                 </AreaChart>

@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
-import { AlertTriangle, Save, CheckCircle, Send, Shield, TrendingUp, Package, Truck, CreditCard, Lightbulb, DollarSign, Search, Plus, Trash2, Info } from 'lucide-react'
+import { AlertTriangle, Save, Send, Shield, TrendingUp, Package, Truck, CreditCard, Lightbulb, DollarSign, Search, Plus, Trash2, Info } from 'lucide-react'
 
 export function QuotationBuilderPage() {
   const { id } = useParams()
@@ -176,9 +176,9 @@ export function QuotationBuilderPage() {
                     <TableCell className="font-medium">{String((l as {product_name?:string}).product_name ?? String(l.product_id).slice(0,8))}</TableCell>
                     <TableCell className="font-mono text-caption">{String((l as {sku?:string}).sku ?? '—')}</TableCell>
                     <TableCell><Input type="number" min={1} defaultValue={String((l as {quantity?:number}).quantity ?? 1)} onBlur={e=>updateLine(String(l.id), {quantity: Number(e.target.value)})} disabled={!canEdit} className="w-20 h-8" /></TableCell>
-                    <TableCell className="tabular-nums">${Number((l as {unit_price?:number}).unit_price ?? 0).toLocaleString()}</TableCell>
+                    <TableCell className="tabular-nums">₹{Number((l as {unit_price?:number}).unit_price ?? 0).toLocaleString()}</TableCell>
                     <TableCell><div className="flex items-center gap-1"><Input type="number" min={0} max={100} defaultValue={String((l as {discount_percent?:number}).discount_percent ?? 0)} onBlur={e=>updateLine(String(l.id), {discount_percent: Number(e.target.value)})} disabled={!canEdit} className="w-16 h-8" /><span className="text-caption">%</span></div></TableCell>
-                    <TableCell className="tabular-nums">${Number((l as {net_price?:number}).net_price ?? 0).toLocaleString()}</TableCell>
+                    <TableCell className="tabular-nums">₹{Number((l as {net_price?:number}).net_price ?? 0).toLocaleString()}</TableCell>
                     <TableCell className="tabular-nums">{String((l as {margin_percent?:number}).margin_percent ?? '—')}%</TableCell>
                     <TableCell><Button variant="ghost" size="sm" onClick={()=>removeLine(String(l.id))} disabled={!canEdit}><Trash2 className="h-4 w-4" /></Button></TableCell>
                   </TableRow>
@@ -202,12 +202,12 @@ export function QuotationBuilderPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <Card><CardHeader><CardTitle className="text-small flex items-center gap-2"><DollarSign className="h-4 w-4" />Order Pricing</CardTitle></CardHeader><CardContent className="space-y-1 text-small tabular-nums">
-          <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>${Number((q as {pricing?:{subtotal?:number}}).pricing?.subtotal ?? 0).toLocaleString()}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Line Discount</span><span>-${Number((q as {pricing?:{line_discounts_total?:number}}).pricing?.line_discounts_total ?? 0).toLocaleString()}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Order Discount</span><span>-${Number((q as {pricing?:{order_discount?:number}}).pricing?.order_discount ?? 0).toLocaleString()}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Tax</span><span>${Number((q as {pricing?:{tax?:number}}).pricing?.tax ?? 0).toLocaleString()}</span></div>
-          <div className="flex justify-between"><span className="text-muted-foreground">Shipping</span><span>${Number((q as {pricing?:{shipping?:number}}).pricing?.shipping ?? 0).toLocaleString()}</span></div>
-          <div className="flex justify-between font-semibold border-t pt-2"><span>Grand Total</span><span>${Number((q as {pricing?:{grand_total?:number}}).pricing?.grand_total ?? 0).toLocaleString()} {String((q as {pricing?:{currency?:string}}).pricing?.currency ?? '')}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>₹{Number((q as {pricing?:{subtotal?:number}}).pricing?.subtotal ?? 0).toLocaleString()}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Line Discount</span><span>-₹{Number((q as {pricing?:{line_discounts_total?:number}}).pricing?.line_discounts_total ?? 0).toLocaleString()}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Order Discount</span><span>-₹{Number((q as {pricing?:{order_discount?:number}}).pricing?.order_discount ?? 0).toLocaleString()}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Tax</span><span>₹{Number((q as {pricing?:{tax?:number}}).pricing?.tax ?? 0).toLocaleString()}</span></div>
+          <div className="flex justify-between"><span className="text-muted-foreground">Shipping</span><span>₹{Number((q as {pricing?:{shipping?:number}}).pricing?.shipping ?? 0).toLocaleString()}</span></div>
+          <div className="flex justify-between font-semibold border-t pt-2"><span>Grand Total</span><span>₹{Number((q as {pricing?:{grand_total?:number}}).pricing?.grand_total ?? 0).toLocaleString()} {String((q as {pricing?:{currency?:string}}).pricing?.currency ?? '')}</span></div>
           <p className="text-caption text-muted-foreground">Backend authoritative — no frontend float math.</p>
         </CardContent></Card>
 
@@ -234,9 +234,9 @@ export function QuotationBuilderPage() {
           <CardContent className="space-y-1 text-small">
             {margin ? (
               <>
-                <div className="flex justify-between"><span className="text-muted-foreground">Gross Margin</span><span className="tabular-nums">${Number((evalData as {margin?:{gross_margin:number}}).margin?.gross_margin ?? 0).toLocaleString()}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Gross Margin</span><span className="tabular-nums">₹{Number((evalData as {margin?:{gross_margin:number}}).margin?.gross_margin ?? 0).toLocaleString()}</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Margin %</span><span className={Number(margin.margin_percent) < Number(margin.minimum_margin_percent) ? 'text-danger font-semibold' : ''}>{margin.margin_percent}%</span></div>
-                <div className="flex justify-between"><span className="text-muted-foreground">Target</span><span>{margin.target_margin_percent ?? margin.minimum_margin_percent}%</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Target</span><span>{(margin as any).target_margin_percent ?? margin.minimum_margin_percent}%</span></div>
                 <div className="flex justify-between"><span className="text-muted-foreground">Minimum</span><span>{margin.minimum_margin_percent}%</span></div>
                 <Badge variant={margin.margin_impact==='critical'?'danger':margin.margin_impact==='warning'?'warning':'secondary'} className="mt-2">{String(margin.margin_impact)}</Badge>
               </>

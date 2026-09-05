@@ -26,7 +26,7 @@ export function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           label="Total Revenue"
-          value="$284,500"
+          value="₹2,84,500"
           trend={{ value: 12.5, direction: 'up' }}
           icon={<DollarSign className="h-5 w-5" />}
         />
@@ -171,7 +171,7 @@ export function DashboardPage() {
             <p className="text-small text-muted-foreground">Small (13/20)</p>
             <p className="text-caption text-muted-foreground">Caption (12/16)</p>
             <p className="text-label text-muted-foreground">Label (13/18)</p>
-            <p className="text-body tabular-nums">Tabular: $12,345.67 | 23.5% | 1,234</p>
+            <p className="text-body tabular-nums">Tabular: ₹12,345.67 | 23.5% | 1,234</p>
           </div>
         </CardContent>
       </Card>

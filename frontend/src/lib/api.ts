@@ -26,6 +26,15 @@ export interface ApiSuccessResponse<T> {
 
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse
 
+export interface SearchParams {
+  q: string
+  type?: string
+  status?: string
+  date_from?: string
+  date_to?: string
+  owner_id?: string
+}
+
 const apiClient = axios.create({
   baseURL: '/api/v1',
   headers: { 'Content-Type': 'application/json' },
@@ -33,7 +42,7 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('dealflow360-access-token')
+  const token = localStorage.getItem('dealflow360-access-token') || localStorage.getItem('access_token')
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`
   }

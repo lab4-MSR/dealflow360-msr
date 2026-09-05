@@ -14,7 +14,7 @@ export function Topbar() {
   const { resolvedTheme, setTheme } = useTheme()
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/95 pl-20 pr-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:pr-6 lg:px-6">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-small text-muted-foreground">
         <span className="text-foreground font-medium">Dashboard</span>

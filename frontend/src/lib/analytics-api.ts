@@ -84,12 +84,14 @@ async function analyticsGet<T>(path: string, filters: AnalyticsFilters, fallback
 
 /** GET /analytics/executive — cross-functional executive KPIs + insights. */
 export interface ExecutiveAnalytics {
+  [key: string]: any
   kpis?: Record<string, number | null>
   insights?: Record<string, unknown>[]
 }
 
 /** GET /analytics/sales — pipeline, revenue, deals, win rate, stages/velocity, performance, funnel. */
 export interface SalesAnalytics {
+  [key: string]: any
   pipeline?: Record<string, unknown>
   revenue?: Record<string, unknown>
   deals?: Record<string, unknown>
@@ -104,6 +106,7 @@ export interface SalesAnalytics {
 
 /** GET /analytics/revenue — total/one-time/recurring revenue, MRR, ARR, growth, trend, breakdown. */
 export interface RevenueAnalytics {
+  [key: string]: any
   total_revenue?: number | null
   one_time_revenue?: number | null
   recurring_revenue?: number | null
@@ -121,6 +124,7 @@ export interface RevenueAnalytics {
 
 /** GET /analytics/discounts — average/total discount, exceptions, margin impact, distribution, governance. */
 export interface DiscountAnalytics {
+  [key: string]: any
   average_discount?: number | null
   total_discount?: number | null
   exceptions?: Record<string, unknown>[]
@@ -136,6 +140,7 @@ export interface DiscountAnalytics {
 
 /** GET /analytics/margin — gross margin, margin %, margin-at-risk, breakdown, risk buckets, trend. */
 export interface MarginAnalytics {
+  [key: string]: any
   gross_margin?: number | null
   margin_percent?: number | null
   margin_at_risk?: number | null
@@ -146,6 +151,7 @@ export interface MarginAnalytics {
 
 /** GET /analytics/approvals — volume, average approval time, rates, distribution, bottlenecks/SLA. */
 export interface ApprovalAnalytics {
+  [key: string]: any
   volume?: number | null
   average_approval_time?: number | null
   approval_rate?: number | null
@@ -158,6 +164,7 @@ export interface ApprovalAnalytics {
 
 /** GET /analytics/fulfillment — fulfillment/backorder/on-time rates, warehouse + shipping metrics. */
 export interface FulfillmentAnalytics {
+  [key: string]: any
   fulfillment_rate?: number | null
   backorder_rate?: number | null
   on_time_delivery_rate?: number | null
@@ -167,6 +174,7 @@ export interface FulfillmentAnalytics {
 
 /** GET /analytics/subscriptions — active subs, MRR/ARR, churn, renewal rate, growth, behavior. */
 export interface SubscriptionAnalytics {
+  [key: string]: any
   active_subscriptions?: number | null
   mrr?: number | null
   arr?: number | null

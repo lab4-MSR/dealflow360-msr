@@ -43,36 +43,51 @@ export const SIDEBAR_NAV = [
     section: 'SALES',
     items: [
       { label: 'Dashboard', path: '/', icon: 'LayoutDashboard' },
-      { label: 'Quotations', path: '/quotations', icon: 'FileText' },
-      { label: 'Customers', path: '/customers', icon: 'Users' },
+      { label: 'Quotations', path: '/sales/quotations', icon: 'FileText' },
+      { label: 'Customers', path: '/sales/customers', icon: 'Users' },
+      { label: 'Deals', path: '/sales/deals', icon: 'FileText' },
+    ],
+  },
+  {
+    section: 'INTELLIGENCE',
+    items: [
+      { label: 'Intelligence Command', path: '/intelligence', icon: 'Sparkles' },
+      { label: 'Risk Overview', path: '/intelligence/risks', icon: 'ShieldAlert' },
+      { label: 'High Risk Deals', path: '/intelligence/risks/high', icon: 'ShieldAlert' },
+      { label: 'Upsell Engine', path: '/intelligence/recommendations/upsell', icon: 'Sparkles' },
+      { label: 'Cross-Sell Bundles', path: '/intelligence/recommendations/cross-sell', icon: 'Sparkles' },
+      { label: 'Deal Health', path: '/intelligence/health', icon: 'HeartPulse' },
+      { label: 'Stalled Deals', path: '/intelligence/health/stalled', icon: 'HeartPulse' },
+      { label: 'Discount Anomalies', path: '/intelligence/anomalies/discount', icon: 'ShieldAlert' },
+      { label: 'Delivery Slippage', path: '/intelligence/anomalies/delivery', icon: 'Truck' },
+      { label: 'Decision Insights', path: '/intelligence/insights', icon: 'Sparkles' },
     ],
   },
   {
     section: 'OPERATIONS',
     items: [
-      { label: 'Fulfillment', path: '/fulfillment', icon: 'Truck' },
-      { label: 'Warehouses', path: '/warehouses', icon: 'Warehouse' },
+      { label: 'Operations Dashboard', path: '/operations', icon: 'BarChart3' },
+      { label: 'Fulfillment Queue', path: '/operations/fulfillment', icon: 'Truck' },
+      { label: 'Warehouses', path: '/operations/warehouses', icon: 'Warehouse' },
+      { label: 'Inventory', path: '/operations/inventory', icon: 'Warehouse' },
+      { label: 'Shipment Tracking', path: '/operations/shipping', icon: 'Truck' },
+      { label: 'Backorders', path: '/operations/backorders', icon: 'Truck' },
     ],
   },
   {
-    section: 'FINANCE',
+    section: 'CUSTOMER PORTAL',
     items: [
-      { label: 'Billing', path: '/billing', icon: 'CreditCard' },
-    ],
-  },
-  {
-    section: 'ANALYTICS',
-    items: [
-      { label: 'Reports', path: '/reports', icon: 'BarChart3' },
-      { label: 'Deal Health', path: '/deal-health', icon: 'HeartPulse' },
+      { label: 'Portal Dashboard', path: '/customer-portal', icon: 'LayoutDashboard' },
+      { label: 'Portal Quotations', path: '/customer-portal/quotations', icon: 'FileText' },
+      { label: 'Portal Shipments', path: '/customer-portal/shipments', icon: 'Truck' },
+      { label: 'Portal Invoices', path: '/customer-portal/invoices', icon: 'CreditCard' },
+      { label: 'Portal Subscriptions', path: '/customer-portal/subscriptions', icon: 'RefreshCw' },
     ],
   },
   {
     section: 'ADMIN',
     items: [
-      { label: 'Users', path: '/admin/users', icon: 'UserCog' },
-      { label: 'Rules', path: '/admin/rules', icon: 'SlidersHorizontal' },
-      { label: 'Settings', path: '/admin/settings', icon: 'Settings' },
+      { label: 'Settings', path: '/settings', icon: 'Settings' },
     ],
   },
 ]

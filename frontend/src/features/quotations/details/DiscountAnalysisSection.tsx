@@ -19,7 +19,7 @@ export function DiscountAnalysisSection({ analysis, currency }: DiscountAnalysis
     setExpandedRules((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
   const hasExcess = analysis.excess_discount > 0
 
   return (

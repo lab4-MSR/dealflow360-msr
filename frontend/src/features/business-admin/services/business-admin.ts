@@ -276,7 +276,7 @@ export async function fetchDashboardAlerts(): Promise<DashboardAlert[]> {
   } catch {
     return [
       { id: '1', title: 'High-risk deal requires attention', description: 'Cloud Services deal with GlobalNet has exceeded risk threshold.', severity: 'critical', timestamp: '2026-09-05T08:00:00Z', actionLabel: 'Review Deal', actionPath: '/dashboard/deals' },
-      { id: '2', title: 'Pending approvals blocking pipeline', description: '12 quotations are awaiting approval, affecting $340K in pipeline value.', severity: 'warning', timestamp: '2026-09-05T07:30:00Z', actionLabel: 'Review Approvals', actionPath: '/dashboard/approvals' },
+      { id: '2', title: 'Pending approvals blocking pipeline', description: '12 quotations are awaiting approval, affecting ₹340K in pipeline value.', severity: 'warning', timestamp: '2026-09-05T07:30:00Z', actionLabel: 'Review Approvals', actionPath: '/dashboard/approvals' },
       { id: '3', title: 'Low stock alert', description: '5 products are out of stock and 23 are below reorder level.', severity: 'attention', timestamp: '2026-09-04T18:00:00Z', actionLabel: 'View Inventory', actionPath: '/dashboard/inventory' },
     ]
   }
@@ -1002,12 +1002,12 @@ export async function fetchProducts(filters: ProductFilters = {}): Promise<{ pro
   } catch {
     return {
       products: [
-        { id: 'p1', name: 'Enterprise Suite', sku: 'ENT-001', category: 'Software', unitPrice: 5000, currency: 'USD', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 45, createdAt: '2024-01-20' },
-        { id: 'p2', name: 'Professional Suite', sku: 'PRO-001', category: 'Software', unitPrice: 2500, currency: 'USD', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 82, createdAt: '2024-01-20' },
-        { id: 'p3', name: 'Starter Pack', sku: 'STR-001', category: 'Software', unitPrice: 500, currency: 'USD', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 156, createdAt: '2024-01-20' },
-        { id: 'p4', name: 'Premium Support', sku: 'SUP-001', category: 'Services', unitPrice: 12000, currency: 'USD', unit: 'year', status: 'active', stock: 50, lowStockThreshold: 5, hasVariants: false, variantCount: 0, salesCount: 28, createdAt: '2024-02-15' },
-        { id: 'p5', name: 'Onboarding Package', sku: 'OBP-001', category: 'Services', unitPrice: 3000, currency: 'USD', unit: 'package', status: 'active', stock: 20, lowStockThreshold: 5, hasVariants: false, variantCount: 0, salesCount: 67, createdAt: '2024-03-01' },
-        { id: 'p6', name: 'Legacy Module', sku: 'LEG-001', category: 'Software', unitPrice: 800, currency: 'USD', unit: 'license', status: 'discontinued', stock: 0, lowStockThreshold: 0, hasVariants: false, variantCount: 0, salesCount: 12, createdAt: '2024-01-20' },
+        { id: 'p1', name: 'Enterprise Suite', sku: 'ENT-001', category: 'Software', unitPrice: 5000, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 45, createdAt: '2024-01-20' },
+        { id: 'p2', name: 'Professional Suite', sku: 'PRO-001', category: 'Software', unitPrice: 2500, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 82, createdAt: '2024-01-20' },
+        { id: 'p3', name: 'Starter Pack', sku: 'STR-001', category: 'Software', unitPrice: 500, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 156, createdAt: '2024-01-20' },
+        { id: 'p4', name: 'Premium Support', sku: 'SUP-001', category: 'Services', unitPrice: 12000, currency: 'INR', unit: 'year', status: 'active', stock: 50, lowStockThreshold: 5, hasVariants: false, variantCount: 0, salesCount: 28, createdAt: '2024-02-15' },
+        { id: 'p5', name: 'Onboarding Package', sku: 'OBP-001', category: 'Services', unitPrice: 3000, currency: 'INR', unit: 'package', status: 'active', stock: 20, lowStockThreshold: 5, hasVariants: false, variantCount: 0, salesCount: 67, createdAt: '2024-03-01' },
+        { id: 'p6', name: 'Legacy Module', sku: 'LEG-001', category: 'Software', unitPrice: 800, currency: 'INR', unit: 'license', status: 'discontinued', stock: 0, lowStockThreshold: 0, hasVariants: false, variantCount: 0, salesCount: 12, createdAt: '2024-01-20' },
       ],
       total: 6, page: 1, perPage: 25, totalPages: 1,
     }
@@ -1035,11 +1035,11 @@ export async function fetchProductById(id: string): Promise<ProductDetail> {
     return json.data
   } catch {
     return {
-      id, name: 'Enterprise Suite', sku: 'ENT-001', category: 'Software', unitPrice: 5000, currency: 'USD', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 45, createdAt: '2024-01-20',
+      id, name: 'Enterprise Suite', sku: 'ENT-001', category: 'Software', unitPrice: 5000, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 45, createdAt: '2024-01-20',
       variants: [],
       priceLists: [
-        { priceListId: 'pl1', priceListName: 'Standard', price: 5000, currency: 'USD' },
-        { priceListId: 'pl2', priceListName: 'Enterprise', price: 4500, currency: 'USD' },
+        { priceListId: 'pl1', priceListName: 'Standard', price: 5000, currency: 'INR' },
+        { priceListId: 'pl2', priceListName: 'Enterprise', price: 4500, currency: 'INR' },
       ],
       inventoryHistory: [
         { id: 'inv1', type: 'in', quantity: 100, date: '2026-08-01', reference: 'Initial stock' },
@@ -1221,9 +1221,9 @@ export async function fetchPriceLists(filters: PriceListFilters = {}): Promise<{
   } catch {
     return {
       priceLists: [
-        { id: 'pl1', name: 'Standard Pricing', description: 'Default pricing for all customers', currency: 'USD', status: 'active', scope: 'all', itemCount: 6, createdAt: '2024-01-20', updatedAt: '2026-08-15' },
-        { id: 'pl2', name: 'Enterprise Pricing', description: 'Discounted pricing for enterprise tier customers', currency: 'USD', status: 'active', scope: 'tier', tierScope: 'platinum', itemCount: 6, createdAt: '2024-03-01', updatedAt: '2026-09-01' },
-        { id: 'pl3', name: 'Partner Pricing', description: 'Special pricing for partner accounts', currency: 'USD', status: 'draft', scope: 'customer', itemCount: 3, createdAt: '2026-08-01', updatedAt: '2026-08-01' },
+        { id: 'pl1', name: 'Standard Pricing', description: 'Default pricing for all customers', currency: 'INR', status: 'active', scope: 'all', itemCount: 6, createdAt: '2024-01-20', updatedAt: '2026-08-15' },
+        { id: 'pl2', name: 'Enterprise Pricing', description: 'Discounted pricing for enterprise tier customers', currency: 'INR', status: 'active', scope: 'tier', tierScope: 'platinum', itemCount: 6, createdAt: '2024-03-01', updatedAt: '2026-09-01' },
+        { id: 'pl3', name: 'Partner Pricing', description: 'Special pricing for partner accounts', currency: 'INR', status: 'draft', scope: 'customer', itemCount: 3, createdAt: '2026-08-01', updatedAt: '2026-08-01' },
       ],
       total: 3, page: 1, perPage: 25, totalPages: 1,
     }
@@ -1251,14 +1251,14 @@ export async function fetchPriceListById(id: string): Promise<PriceListDetail> {
     return json.data
   } catch {
     return {
-      id, name: 'Standard Pricing', description: 'Default pricing for all customers', currency: 'USD', status: 'active', scope: 'all', itemCount: 6, createdAt: '2024-01-20', updatedAt: '2026-08-15',
+      id, name: 'Standard Pricing', description: 'Default pricing for all customers', currency: 'INR', status: 'active', scope: 'all', itemCount: 6, createdAt: '2024-01-20', updatedAt: '2026-08-15',
       items: [
-        { id: 'pli1', productId: 'p1', productName: 'Enterprise Suite', productSku: 'ENT-001', unitPrice: 5000, currency: 'USD' },
-        { id: 'pli2', productId: 'p2', productName: 'Professional Suite', productSku: 'PRO-001', unitPrice: 2500, currency: 'USD' },
-        { id: 'pli3', productId: 'p3', productName: 'Starter Pack', productSku: 'STR-001', unitPrice: 500, currency: 'USD' },
-        { id: 'pli4', productId: 'p4', productName: 'Premium Support', productSku: 'SUP-001', unitPrice: 12000, currency: 'USD' },
-        { id: 'pli5', productId: 'p5', productName: 'Onboarding Package', productSku: 'OBP-001', unitPrice: 3000, currency: 'USD' },
-        { id: 'pli6', productId: 'p6', productName: 'Legacy Module', productSku: 'LEG-001', unitPrice: 800, currency: 'USD' },
+        { id: 'pli1', productId: 'p1', productName: 'Enterprise Suite', productSku: 'ENT-001', unitPrice: 5000, currency: 'INR' },
+        { id: 'pli2', productId: 'p2', productName: 'Professional Suite', productSku: 'PRO-001', unitPrice: 2500, currency: 'INR' },
+        { id: 'pli3', productId: 'p3', productName: 'Starter Pack', productSku: 'STR-001', unitPrice: 500, currency: 'INR' },
+        { id: 'pli4', productId: 'p4', productName: 'Premium Support', productSku: 'SUP-001', unitPrice: 12000, currency: 'INR' },
+        { id: 'pli5', productId: 'p5', productName: 'Onboarding Package', productSku: 'OBP-001', unitPrice: 3000, currency: 'INR' },
+        { id: 'pli6', productId: 'p6', productName: 'Legacy Module', productSku: 'LEG-001', unitPrice: 800, currency: 'INR' },
       ],
     }
   }
@@ -1315,12 +1315,12 @@ export async function fetchCustomerPricing(customerId: string): Promise<Customer
   } catch {
     return {
       customer: { id: customerId, name: 'Acme Corp', tier: 'gold', tierDisplayName: 'Gold' },
-      priceList: { id: 'pl1', name: 'Standard Pricing', currency: 'USD' },
+      priceList: { id: 'pl1', name: 'Standard Pricing', currency: 'INR' },
       products: [
-        { productId: 'p1', productName: 'Enterprise Suite', productSku: 'ENT-001', standardPrice: 5000, priceListPrice: 4500, volumePrice: null, customerOverride: null, effectivePrice: 4500, currency: 'USD', priceSource: 'price_list', hasOverride: false },
-        { productId: 'p2', productName: 'Professional Suite', productSku: 'PRO-001', standardPrice: 2500, priceListPrice: 2250, volumePrice: null, customerOverride: 2100, effectivePrice: 2100, currency: 'USD', priceSource: 'override', hasOverride: true },
-        { productId: 'p3', productName: 'Starter Pack', productSku: 'STR-001', standardPrice: 500, priceListPrice: 475, volumePrice: 450, customerOverride: null, effectivePrice: 450, currency: 'USD', priceSource: 'volume', hasOverride: false },
-        { productId: 'p4', productName: 'Premium Support', productSku: 'SUP-001', standardPrice: 12000, priceListPrice: null, volumePrice: null, customerOverride: null, effectivePrice: 12000, currency: 'USD', priceSource: 'standard', hasOverride: false },
+        { productId: 'p1', productName: 'Enterprise Suite', productSku: 'ENT-001', standardPrice: 5000, priceListPrice: 4500, volumePrice: null, customerOverride: null, effectivePrice: 4500, currency: 'INR', priceSource: 'price_list', hasOverride: false },
+        { productId: 'p2', productName: 'Professional Suite', productSku: 'PRO-001', standardPrice: 2500, priceListPrice: 2250, volumePrice: null, customerOverride: 2100, effectivePrice: 2100, currency: 'INR', priceSource: 'override', hasOverride: true },
+        { productId: 'p3', productName: 'Starter Pack', productSku: 'STR-001', standardPrice: 500, priceListPrice: 475, volumePrice: 450, customerOverride: null, effectivePrice: 450, currency: 'INR', priceSource: 'volume', hasOverride: false },
+        { productId: 'p4', productName: 'Premium Support', productSku: 'SUP-001', standardPrice: 12000, priceListPrice: null, volumePrice: null, customerOverride: null, effectivePrice: 12000, currency: 'INR', priceSource: 'standard', hasOverride: false },
       ],
     }
   }
@@ -1365,19 +1365,19 @@ export async function fetchVolumePricingRules(filters: VolumePricingFilters = {}
     return {
       rules: [
         { id: 'vp1', productId: 'p1', productName: 'Enterprise Suite', productSku: 'ENT-001', status: 'active', createdAt: '2024-03-01', updatedAt: '2026-08-15', tiers: [
-          { id: 't1', minQuantity: 1, maxQuantity: 9, unitPrice: 5000, currency: 'USD' },
-          { id: 't2', minQuantity: 10, maxQuantity: 49, unitPrice: 4500, discountPercent: 10, currency: 'USD' },
-          { id: 't3', minQuantity: 50, maxQuantity: 99, unitPrice: 4000, discountPercent: 20, currency: 'USD' },
-          { id: 't4', minQuantity: 100, unitPrice: 3500, discountPercent: 30, currency: 'USD' },
+          { id: 't1', minQuantity: 1, maxQuantity: 9, unitPrice: 5000, currency: 'INR' },
+          { id: 't2', minQuantity: 10, maxQuantity: 49, unitPrice: 4500, discountPercent: 10, currency: 'INR' },
+          { id: 't3', minQuantity: 50, maxQuantity: 99, unitPrice: 4000, discountPercent: 20, currency: 'INR' },
+          { id: 't4', minQuantity: 100, unitPrice: 3500, discountPercent: 30, currency: 'INR' },
         ]},
         { id: 'vp2', productId: 'p2', productName: 'Professional Suite', productSku: 'PRO-001', status: 'active', createdAt: '2024-04-01', updatedAt: '2026-09-01', tiers: [
-          { id: 't5', minQuantity: 1, maxQuantity: 19, unitPrice: 2500, currency: 'USD' },
-          { id: 't6', minQuantity: 20, maxQuantity: 99, unitPrice: 2200, discountPercent: 12, currency: 'USD' },
-          { id: 't7', minQuantity: 100, unitPrice: 1900, discountPercent: 24, currency: 'USD' },
+          { id: 't5', minQuantity: 1, maxQuantity: 19, unitPrice: 2500, currency: 'INR' },
+          { id: 't6', minQuantity: 20, maxQuantity: 99, unitPrice: 2200, discountPercent: 12, currency: 'INR' },
+          { id: 't7', minQuantity: 100, unitPrice: 1900, discountPercent: 24, currency: 'INR' },
         ]},
         { id: 'vp3', productId: 'p3', productName: 'Starter Pack', productSku: 'STR-001', status: 'inactive', createdAt: '2024-05-01', updatedAt: '2026-07-01', tiers: [
-          { id: 't8', minQuantity: 1, maxQuantity: 49, unitPrice: 500, currency: 'USD' },
-          { id: 't9', minQuantity: 50, unitPrice: 425, discountPercent: 15, currency: 'USD' },
+          { id: 't8', minQuantity: 1, maxQuantity: 49, unitPrice: 500, currency: 'INR' },
+          { id: 't9', minQuantity: 50, unitPrice: 425, discountPercent: 15, currency: 'INR' },
         ]},
       ],
       total: 3, page: 1, perPage: 25, totalPages: 1,
@@ -1507,7 +1507,7 @@ export async function fetchDiscountRules(filters: DiscountRuleFilters = {}): Pro
         { id: 'dr3', name: 'Software Category Cap', description: 'Category-level discount cap for all software products', type: 'category', priority: 20, scope: { categoryId: 'cat1' }, maxDiscountPercent: 10, lineDiscountPercent: 10, conditions: {}, approvalRequired: true, approvalLevel: 'sales_manager', status: 'active', createdAt: '2024-04-01', updatedAt: '2026-08-01' },
         { id: 'dr4', name: 'Services Category Cap', description: 'Category-level discount cap for services', type: 'category', priority: 20, scope: { categoryId: 'cat2' }, maxDiscountPercent: 8, lineDiscountPercent: 8, minMarginPercent: 30, conditions: {}, approvalRequired: true, approvalLevel: 'finance', status: 'active', createdAt: '2024-04-01', updatedAt: '2026-08-01' },
         { id: 'dr5', name: 'Minimum Margin Guard', description: 'Global minimum margin protection across all products', type: 'margin', priority: 5, scope: { isGlobal: true }, maxDiscountPercent: 25, minMarginPercent: 15, marginThreshold: 10, riskBehavior: 'require_approval', conditions: {}, approvalRequired: true, approvalLevel: 'finance', status: 'active', createdAt: '2024-01-15', updatedAt: '2026-07-01' },
-        { id: 'dr6', name: 'Large Deal Override', description: 'Additional discount allowance for deals above $100K', type: 'global', priority: 30, scope: { isGlobal: true }, maxDiscountPercent: 22, conditions: { minDealValue: 100000 }, approvalRequired: true, approvalLevel: 'sales_manager_then_finance', status: 'active', createdAt: '2024-06-01', updatedAt: '2026-09-01' },
+        { id: 'dr6', name: 'Large Deal Override', description: 'Additional discount allowance for deals above ₹100K', type: 'global', priority: 30, scope: { isGlobal: true }, maxDiscountPercent: 22, conditions: { minDealValue: 100000 }, approvalRequired: true, approvalLevel: 'sales_manager_then_finance', status: 'active', createdAt: '2024-06-01', updatedAt: '2026-09-01' },
       ],
       total: 6, page: 1, perPage: 25, totalPages: 1,
     }
@@ -1874,7 +1874,7 @@ export async function fetchApprovalRules(filters: ApprovalRuleFilters = {}): Pro
     return {
       rules: [
         { id: 'ar1', name: 'High Discount Approval', description: 'Require finance approval for discounts above 15%', priority: 10, triggerType: 'discount_threshold', triggerConfig: { discountThreshold: 15 }, approvalLevel: 'finance', chainId: 'ac1', chainName: 'Finance Approval', sla: { approvalTimeMinutes: 1440, escalationTimeMinutes: 2880 }, status: 'active', createdAt: '2024-01-15', updatedAt: '2026-08-01' },
-        { id: 'ar2', name: 'Large Deal Approval', description: 'Sales manager approval for deals above $100K', priority: 20, triggerType: 'deal_value', triggerConfig: { dealValueMin: 100000 }, approvalLevel: 'sales_manager', chainId: 'ac2', chainName: 'Manager Approval', sla: { approvalTimeMinutes: 480, escalationTimeMinutes: 1440 }, status: 'active', createdAt: '2024-02-01', updatedAt: '2026-07-15' },
+        { id: 'ar2', name: 'Large Deal Approval', description: 'Sales manager approval for deals above ₹100K', priority: 20, triggerType: 'deal_value', triggerConfig: { dealValueMin: 100000 }, approvalLevel: 'sales_manager', chainId: 'ac2', chainName: 'Manager Approval', sla: { approvalTimeMinutes: 480, escalationTimeMinutes: 1440 }, status: 'active', createdAt: '2024-02-01', updatedAt: '2026-07-15' },
         { id: 'ar3', name: 'Critical Margin Approval', description: 'Multi-level approval when margin is critically low', priority: 5, triggerType: 'margin', triggerConfig: { marginMax: 15 }, approvalLevel: 'multi_level', chainId: 'ac3', chainName: 'Critical Margin Chain', sla: { approvalTimeMinutes: 720, escalationTimeMinutes: 1440 }, status: 'active', createdAt: '2024-03-01', updatedAt: '2026-09-01' },
         { id: 'ar4', name: 'Platinum Tier Approval', description: 'Special approval chain for platinum tier high-value deals', priority: 15, triggerType: 'compound', triggerConfig: { customerTier: 'platinum', dealValueMin: 50000, discountThreshold: 10 }, approvalLevel: 'multi_level', chainId: 'ac3', chainName: 'Critical Margin Chain', sla: { approvalTimeMinutes: 480, escalationTimeMinutes: 960 }, status: 'active', createdAt: '2024-04-01', updatedAt: '2026-09-05' },
         { id: 'ar5', name: 'High Risk Deal Flag', description: 'Flag high-risk deals for review', priority: 25, triggerType: 'risk_score', triggerConfig: { riskScoreMin: 70 }, approvalLevel: 'sales_manager', sla: { approvalTimeMinutes: 240, escalationTimeMinutes: 480 }, status: 'inactive', createdAt: '2024-05-01', updatedAt: '2026-06-01' },
@@ -1983,7 +1983,7 @@ export async function fetchApprovalChains(filters: ApprovalChainFilters = {}): P
         { id: 'ac1', name: 'Finance Approval', description: 'Single-step finance approval', triggerDescription: 'Discount > 15%', steps: [
           { id: 'acs1', order: 1, approverType: 'role', approverId: 'r4', approverName: 'Sarah Lee', approverRole: 'Finance', slaMinutes: 1440, escalationToId: 'u1', escalationToName: 'John Doe' },
         ], logic: 'sequential', status: 'active', createdAt: '2024-01-15', updatedAt: '2026-08-01' },
-        { id: 'ac2', name: 'Manager Approval', description: 'Sales manager approval for medium deals', triggerDescription: 'Deal value > $100K', steps: [
+        { id: 'ac2', name: 'Manager Approval', description: 'Sales manager approval for medium deals', triggerDescription: 'Deal value > ₹100K', steps: [
           { id: 'acs2', order: 1, approverType: 'role', approverId: 'r2', approverName: 'Jane Smith', approverRole: 'Sales Manager', slaMinutes: 480, escalationToId: 'u1', escalationToName: 'John Doe' },
         ], logic: 'sequential', status: 'active', createdAt: '2024-02-01', updatedAt: '2026-07-15' },
         { id: 'ac3', name: 'Critical Margin Chain', description: 'Multi-level approval for critical margin situations', triggerDescription: 'Margin < 15% or compound triggers', steps: [
@@ -2160,7 +2160,7 @@ export async function simulateApproval(data: ApprovalSimulatorRequest): Promise<
       triggeredRules: [
         ...(hasHighDiscount ? [{ id: 'ar1', name: 'High Discount Approval', reason: `Discount ${data.discountPercent}% exceeds 15% threshold` }] : []),
         ...(hasLowMargin ? [{ id: 'ar3', name: 'Critical Margin Approval', reason: `Margin ${data.marginPercent ?? 25}% below 15% threshold` }] : []),
-        ...(hasHighValue ? [{ id: 'ar2', name: 'Large Deal Approval', reason: `Deal value $${data.dealValue.toLocaleString()} exceeds $100,000` }] : []),
+        ...(hasHighValue ? [{ id: 'ar2', name: 'Large Deal Approval', reason: `Deal value ₹${data.dealValue.toLocaleString()} exceeds ₹100,000` }] : []),
       ],
       escalation: approvalRequired ? { slaMinutes: hasLowMargin ? 1440 : 480, escalationPath: 'Auto-escalate to Business Admin' } : null,
       decision: approvalRequired ? 'approval_required' : 'auto_approve',

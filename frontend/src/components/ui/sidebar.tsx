@@ -16,6 +16,8 @@ import {
   Settings,
   ChevronLeft,
   Building2,
+  Sparkles,
+  ShieldAlert,
   Bell,
   HelpCircle,
   User,
@@ -35,6 +37,8 @@ const iconMap: Record<string, React.ElementType> = {
   UserCog,
   SlidersHorizontal,
   Settings,
+  Sparkles,
+  ShieldAlert,
   Bell,
   HelpCircle,
   User,
@@ -42,7 +46,6 @@ const iconMap: Record<string, React.ElementType> = {
   RefreshCw,
   Building2,
 }
-
 
 interface SidebarProps {
   collapsed?: boolean
@@ -110,32 +113,30 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
           {SIDEBAR_NAV.map((section) => (
             <div key={section.section} className="mb-4">
               {!collapsed && (
-                <div className="px-3 mb-1.5">
-                  <span className="text-caption font-medium text-muted-foreground uppercase tracking-wider">
-                    {section.section}
-                  </span>
-                </div>
+                <span className="px-3 text-caption font-medium uppercase tracking-wider text-muted-foreground">
+                  {section.section}
+                </span>
               )}
-              <div className="space-y-0.5">
+              <div className="mt-1 space-y-0.5">
                 {section.items.map((item) => {
-                  const Icon = iconMap[item.icon] || LayoutDashboard
-                  const isActive = location.pathname === item.path
-
+                  const Icon = iconMap[item.icon] || FileText
                   return (
                     <NavLink
                       key={item.path}
                       to={item.path}
-                      className={cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-colors',
-                        isActive
-                          ? 'bg-sidebar-accent text-sidebar-primary'
-                          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
-                        collapsed && 'justify-center px-2'
-                      )}
                       title={collapsed ? item.label : undefined}
+                      className={({ isActive }) =>
+                        cn(
+                          'flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-colors',
+                          collapsed && 'justify-center px-2',
+                          isActive
+                            ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                            : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'
+                        )
+                      }
                     >
-                      <Icon className={cn('h-4 w-4 shrink-0', isActive && 'text-sidebar-primary')} />
-                      {!collapsed && <span>{item.label}</span>}
+                      <Icon className="h-4 w-4 shrink-0" />
+                      {!collapsed && <span className="truncate">{item.label}</span>}
                     </NavLink>
                   )
                 })}
@@ -145,14 +146,17 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
         </nav>
 
         {/* Collapse toggle */}
-        <div className="border-t border-sidebar-border p-2 hidden lg:block">
-          <button
-            onClick={onToggle}
-            className="flex w-full items-center justify-center rounded-lg px-3 py-2 text-small text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
-          >
-            <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
-          </button>
-        </div>
+        {onToggle && (
+          <div className="p-2 border-t border-sidebar-border">
+            <button
+              onClick={onToggle}
+              className="flex w-full items-center justify-center rounded-lg p-2 text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              <ChevronLeft className={cn('h-4 w-4 transition-transform', collapsed && 'rotate-180')} />
+            </button>
+          </div>
+        )}
       </aside>
     </>
   )

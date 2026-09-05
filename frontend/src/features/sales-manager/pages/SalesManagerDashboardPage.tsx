@@ -132,7 +132,7 @@ export function SalesManagerDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <KpiCard
           label="Team Pipeline Value"
-          value={`$${(kpis.team_pipeline_value / 1000).toFixed(0)}k`}
+          value={`₹${(kpis.team_pipeline_value / 100000).toFixed(1)}L`}
           trend={{ value: kpis.pipeline_trend_percent, direction: 'up' }}
           icon={<DollarSign className="h-4 w-4" />}
         />
@@ -223,7 +223,7 @@ export function SalesManagerDashboardPage() {
                     <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
                       <span>Customer: <strong className="text-foreground">{item.customer.name}</strong></span>
                       <span>Rep: <strong className="text-foreground">{item.rep.name}</strong></span>
-                      <span>Value: <strong className="text-foreground">${item.deal_value.toLocaleString()}</strong></span>
+                      <span>Value: <strong className="text-foreground">₹{item.deal_value.toLocaleString()}</strong></span>
                     </div>
 
                     <div className="flex items-center gap-2 text-xs pt-1">
@@ -387,7 +387,7 @@ export function SalesManagerDashboardPage() {
                           {rep.name}
                           <span className="block text-[11px] text-muted-foreground">{rep.open_deals_count} active deals</span>
                         </td>
-                        <td className="px-4 py-3 tabular-nums">${rep.quota.toLocaleString()}</td>
+                        <td className="px-4 py-3 tabular-nums">₹{rep.quota.toLocaleString()}</td>
                         <td className="px-4 py-3 font-semibold text-foreground tabular-nums">
                           ${rep.closed_revenue.toLocaleString()}
                         </td>

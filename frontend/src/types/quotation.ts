@@ -1,4 +1,4 @@
-import type { RiskLevel, Status, UserRole } from './index'
+import type { RiskLevel, UserRole } from './index'
 
 export type QuotationStatus =
   | 'draft'

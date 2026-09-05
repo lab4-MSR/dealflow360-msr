@@ -13,11 +13,11 @@ const sizeClasses = {
   lg: 'text-h3 tabular-nums',
 }
 
-export function MoneyDisplay({ amount, currency = 'USD', className, size = 'md' }: MoneyDisplayProps) {
-  const formatted = new Intl.NumberFormat('en-US', {
+export function MoneyDisplay({ amount, currency = 'INR', className, size = 'md' }: MoneyDisplayProps) {
+  const formatted = new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency,
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
   }).format(amount)
 
   return (

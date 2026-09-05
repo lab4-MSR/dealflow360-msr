@@ -1,4 +1,4 @@
-import type { RiskLevel, Status } from './index'
+import type { RiskLevel } from './index'
 
 export type CustomerTier = 'bronze' | 'silver' | 'gold' | 'platinum'
 export type ApprovalPriority = 'urgent' | 'high' | 'medium' | 'normal'

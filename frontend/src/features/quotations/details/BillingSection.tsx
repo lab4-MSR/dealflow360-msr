@@ -30,7 +30,7 @@ export function BillingSection({ billing, currency }: BillingSectionProps) {
     payment_status,
   } = billing
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   return (
     <section id="billing" className="space-y-4">

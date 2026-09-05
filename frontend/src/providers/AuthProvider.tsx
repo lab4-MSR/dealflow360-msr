@@ -12,6 +12,7 @@ import { ROLE_DASHBOARD_MAP } from '@/types/auth'
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>
+  signup: (payload: { full_name: string; email: string; password: string; business_name: string }) => Promise<void>
   logout: () => Promise<void>
   refreshSession: () => Promise<void>
   getDashboardPath: () => string
@@ -72,6 +73,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     []
   )
 
+  const signup = useCallback(
+    async (payload: { full_name: string; email: string; password: string; business_name: string }) => {
+      setError(null)
+      setIsLoading(true)
+      try {
+        const response = await authService.signup(payload)
+        localStorage.setItem('dealflow360-access-token', response.access_token)
+        localStorage.setItem('dealflow360-refresh-token', response.refresh_token)
+        setUser(response.user)
+      } catch (err: unknown) {
+        const axiosError = err as { response?: { data?: { error?: { message?: string } } } }
+        const message =
+          axiosError?.response?.data?.error?.message || 'We could not create your account. Please try again.'
+        setError(message)
+        throw err
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    []
+  )
+
   const logout = useCallback(async () => {
     await authService.logout()
     setUser(null)
@@ -90,6 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         error,
         login,
+        signup,
         logout,
         refreshSession,
         getDashboardPath,
@@ -103,6 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext)
+  debugger
   if (!context) {
     throw new Error('useAuth must be used within an AuthProvider')
   }

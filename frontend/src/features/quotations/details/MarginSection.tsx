@@ -10,7 +10,7 @@ interface MarginSectionProps {
 }
 
 export function MarginSection({ margin, currency, canViewCost = true }: MarginSectionProps) {
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
   const isBelowMinimum = margin.margin_percent < margin.minimum_margin
   const isBelowTarget = margin.margin_percent < margin.target_margin
 

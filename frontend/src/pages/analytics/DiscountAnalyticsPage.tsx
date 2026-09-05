@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Tag, AlertTriangle, ShieldCheck, BarChart3 } from 'lucide-react'
+import { Tag, AlertTriangle, ShieldCheck, BarChart3, TrendingUp } from 'lucide-react'
 import { AnalyticsPageHeader, AnalyticsSection, ChartFrame, KpiSkeletonGrid } from '@/components/analytics'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Badge } from '@/components/ui/badge'

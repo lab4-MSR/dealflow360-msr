@@ -111,7 +111,7 @@ export function PlatformAnalyticsPage() {
         <KpiCard label="Businesses" value={data.kpis.businesses} icon={<Building2 className="h-5 w-5" />} />
         <KpiCard label="Users" value={data.kpis.users.toLocaleString()} icon={<Users className="h-5 w-5" />} />
         <KpiCard label="Deals" value={data.kpis.deals.toLocaleString()} icon={<FileText className="h-5 w-5" />} />
-        <KpiCard label="Revenue" value={`$${(data.kpis.revenue / 1000000).toFixed(2)}M`} icon={<DollarSign className="h-5 w-5" />} />
+        <KpiCard label="Revenue" value={`₹${(data.kpis.revenue / 1000000).toFixed(2)}Cr`} icon={<DollarSign className="h-5 w-5" />} />
         <KpiCard label="Growth" value={`${data.kpis.growth}%`} icon={<TrendingUp className="h-5 w-5" />} variant="success" />
       </div>
 
@@ -160,7 +160,7 @@ export function PlatformAnalyticsPage() {
                 <LineChart data={data.revenueTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
-                  <YAxis tickFormatter={(v: number) => `$${(v / 1000).toFixed(0)}K`} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
+                  <YAxis tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}K`} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
                   <Line type="monotone" dataKey="revenue" name="Revenue" stroke="var(--color-primary)" strokeWidth={2} dot={{ fill: 'var(--color-primary)', r: 3 }} />
                 </LineChart>
@@ -203,7 +203,7 @@ export function PlatformAnalyticsPage() {
               {data.revenueByBusiness.map((item) => (
                 <div key={item.name} className="flex items-center gap-3">
                   <span className="text-small text-foreground truncate min-w-0 flex-1">{item.name}</span>
-                  <span className="text-small font-medium tabular-nums">${item.revenue.toLocaleString()}</span>
+                  <span className="text-small font-medium tabular-nums">₹{item.revenue.toLocaleString()}</span>
                 </div>
               ))}
             </div>

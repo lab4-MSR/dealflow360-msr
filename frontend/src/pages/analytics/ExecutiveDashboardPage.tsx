@@ -35,7 +35,7 @@ export function ExecutiveDashboardPage() {
           <KpiCard label="Revenue" value={formatCurrencyCompact(s.revenue)} trend={kpiChange(s.revenue, s.revenue)} icon={<DollarSign className="h-5 w-5" />} />
           <KpiCard label="Pipeline" value={formatCurrencyCompact(s.pipeline)} trend={kpiChange(s.pipeline, s.pipeline)} icon={<TrendingUp className="h-5 w-5" />} />
           <KpiCard label="Win Rate" value={formatPercent(s.win_rate)} trend={kpiChange(s.win_rate, s.win_rate)} icon={<Target className="h-5 w-5" />} />
-          <KpiCard label="Gross Margin" value={formatPercent(s.gross_margin)} trend={kpiChange(s.gross_margin, s.gross_margin)} icon={<Percent className="h-5 w-5" />} />
+          <KpiCard label="Gross Margin" value={formatPercent((s as any).gross_margin)} trend={kpiChange((s as any).gross_margin, (s as any).gross_margin)} icon={<Percent className="h-5 w-5" />} />
           <KpiCard label="MRR" value={formatCurrencyCompact(s.mrr)} trend={kpiChange(s.mrr, s.mrr)} icon={<DollarSign className="h-5 w-5" />} />
           <KpiCard label="ARR" value={formatCurrencyCompact(s.arr)} trend={kpiChange(s.arr, s.arr)} icon={<DollarSign className="h-5 w-5" />} />
         </div>
@@ -46,13 +46,13 @@ export function ExecutiveDashboardPage() {
         </ChartFrame>
       </AnalyticsSection>
       <AnalyticsSection title="Financial" description="Revenue, margin, outstanding, and collection." isLoading={isLoading} isEmpty={!isLoading && s.revenue == null} error={error} onRetry={() => refetch()}>
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[['Revenue', formatCurrencyCompact(s.revenue)], ['Margin', formatPercent(s.gross_margin)], ['Outstanding', '�'], ['Collection', '�']].map(([l, v]) => (<div key={l} className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">{l}</p><p className="mt-1 text-lg font-semibold tabular-nums">{v}</p></div>))}</div>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{[['Revenue', formatCurrencyCompact(s.revenue)], ['Margin', formatPercent((s as any).gross_margin)], ['Outstanding', '—'], ['Collection', '—']].map(([l, v]) => (<div key={l} className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">{l}</p><p className="mt-1 text-lg font-semibold tabular-nums">{v}</p></div>))}</div>
       </AnalyticsSection>
       <AnalyticsSection title="Operations" description="Fulfillment, backorders, delivery, and inventory." isLoading={isLoading} isEmpty={!isLoading} error={error} onRetry={() => refetch()}>
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{['Fulfillment', 'Backorders', 'Delivery', 'Inventory'].map((l) => (<div key={l} className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">{l}</p><p className="mt-1 text-lg font-semibold tabular-nums">�</p></div>))}</div>
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">{['Fulfillment', 'Backorders', 'Delivery', 'Inventory'].map((l) => (<div key={l} className="rounded-lg border border-border p-4"><p className="text-xs text-muted-foreground">{l}</p><p className="mt-1 text-lg font-semibold tabular-nums">—</p></div>))}</div>
       </AnalyticsSection>
       <AnalyticsSection title="Risk" description="High-risk deals, discount exceptions, and deal health." isLoading={isLoading} isEmpty={!isLoading} error={error} onRetry={() => refetch()}>
-        <div className="flex flex-wrap items-center gap-3"><RiskBadge risk="high">High Risk Deals</RiskBadge><RiskBadge risk="medium">Discount Exceptions</RiskBadge><Badge variant="outline">Deal Health: �</Badge></div>
+        <div className="flex flex-wrap items-center gap-3"><RiskBadge risk="high">High Risk Deals</RiskBadge><RiskBadge risk="medium">Discount Exceptions</RiskBadge><Badge variant="outline">Deal Health: —</Badge></div>
       </AnalyticsSection>
       <AnalyticsSection title="Executive Insights" description="Data-derived trends, risks, opportunities, and recommended actions." isLoading={isLoading} isEmpty={!isLoading} error={error} onRetry={() => refetch()}>
         <div className="grid gap-4 md:grid-cols-2">{['Key Trends', 'Risks', 'Opportunities', 'Recommended Actions'].map((l) => (<div key={l} className="rounded-lg border border-border p-4"><p className="text-sm font-medium">{l}</p><p className="mt-1 text-xs text-muted-foreground">No insights available for the selected period.</p></div>))}</div>

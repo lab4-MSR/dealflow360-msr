@@ -69,7 +69,7 @@ function ApprovalRulesPage() {
   const getTriggerLabel = (rule: ApprovalRule) => {
     const config = rule.triggerConfig
     if (rule.triggerType === 'discount_threshold') return `Discount > ${config.discountThreshold}%`
-    if (rule.triggerType === 'deal_value') return config.dealValueMin ? `Deal ≥ $${config.dealValueMin.toLocaleString()}` : 'Deal Value'
+    if (rule.triggerType === 'deal_value') return config.dealValueMin ? `Deal ≥ ₹${config.dealValueMin.toLocaleString()}` : 'Deal Value'
     if (rule.triggerType === 'margin') return config.marginMax ? `Margin < ${config.marginMax}%` : 'Margin'
     if (rule.triggerType === 'risk_score') return config.riskScoreMin ? `Risk ≥ ${config.riskScoreMin}` : 'Risk Score'
     if (rule.triggerType === 'customer_tier') return `Tier: ${config.customerTier}`

@@ -13,7 +13,7 @@ interface PricingSectionProps {
 }
 
 export function PricingSection({ pricing }: PricingSectionProps) {
-  const curSymbol = pricing.currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   return (
     <section id="pricing" className="space-y-4">

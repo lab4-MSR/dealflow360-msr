@@ -1,0 +1,324 @@
+DEALFLOW360
+│
+├── 00. PUBLIC / AUTH
+│   │
+│   ├── Landing
+│   ├── Login
+│   ├── Forgot Password
+│   ├── Reset Password
+│   ├── Accept Invitation
+│   ├── Email Verification
+│   ├── 403 Unauthorized
+│   ├── 404 Not Found
+│   └── System Error
+│
+│
+├── 01. SUPER ADMIN / PLATFORM
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Businesses
+│   │   ├── All Businesses
+│   │   ├── Create Business
+│   │   └── Business Details
+│   │       ├── Overview
+│   │       ├── Users
+│   │       ├── Deals
+│   │       ├── Revenue
+│   │       ├── Usage
+│   │       ├── Health
+│   │       ├── Configuration
+│   │       └── Activity
+│   │
+│   ├── Platform Users
+│   │   ├── User List
+│   │   ├── User Details
+│   │   └── Invite User
+│   │
+│   ├── Platform Analytics
+│   │
+│   ├── Global Audit
+│   │
+│   ├── System Health
+│   │
+│   └── Platform Settings
+│
+│
+├── 02. BUSINESS ADMIN
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Organization
+│   │   ├── Company Profile
+│   │   ├── Branding
+│   │   ├── Localization
+│   │   ├── Currency & Tax
+│   │   └── Business Settings
+│   │
+│   ├── Users & Access
+│   │   ├── Users
+│   │   ├── User Details
+│   │   ├── Invite User
+│   │   ├── Teams
+│   │   ├── Roles
+│   │   └── Permissions
+│   │
+│   ├── Customers
+│   │   ├── Customer List
+│   │   ├── Create Customer
+│   │   └── Customer Details
+│   │       ├── Overview
+│   │       ├── Contacts
+│   │       ├── Deals
+│   │       ├── Orders
+│   │       ├── Billing
+│   │       ├── Purchase History
+│   │       └── Activity
+│   │
+│   ├── Products
+│   │   ├── Product List
+│   │   ├── Create Product
+│   │   └── Product Details
+│   │       ├── Overview
+│   │       ├── Pricing
+│   │       ├── Inventory
+│   │       ├── Sales History
+│   │       └── Activity
+│   │
+│   ├── Categories
+│   │   └── Category Management
+│   │
+│   ├── Pricing
+│   │   ├── Price Lists
+│   │   ├── Create Price List
+│   │   ├── Price List Details
+│   │   ├── Customer Pricing
+│   │   ├── Volume Pricing
+│   │   └── Pricing History
+│   │
+│   ├── Discount Governance
+│   │   ├── Discount Rules
+│   │   ├── Create Discount Rule
+│   │   ├── Rule Details
+│   │   ├── Customer Tier Rules
+│   │   ├── Category Rules
+│   │   ├── Margin Rules
+│   │   └── Rule Simulator
+│   │
+│   ├── Approval Configuration
+│   │   ├── Approval Rules
+│   │   ├── Create Approval Rule
+│   │   ├── Approval Chains
+│   │   ├── Thresholds
+│   │   └── Approval Simulator
+│   │
+│   ├── Warehouses
+│   │   ├── Warehouse List
+│   │   ├── Create Warehouse
+│   │   ├── Warehouse Details
+│   │   │   ├── Overview
+│   │   │   ├── Inventory
+│   │   │   ├── Stock Movements
+│   │   │   └── Shipments
+│   │   └── Shipping Rules
+│   │
+│   ├── Subscriptions
+│   │   ├── Plans
+│   │   ├── Create Plan
+│   │   ├── Plan Details
+│   │   ├── Billing Cycles
+│   │   └── Proration & Cancellation Rules
+│   │
+│   ├── Reports
+│   │
+│   ├── Deal Health
+│   │
+│   ├── Audit Trail
+│   │
+│   └── Settings
+│
+│
+├── 03. SALES
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Customers
+│   │   ├── My Customers
+│   │   └── Customer Details
+│   │
+│   ├── Deals
+│   │   ├── My Deals
+│   │   ├── Deal Details
+│   │   ├── Deal Timeline
+│   │   └── Deal Health
+│   │
+│   └── Quotations
+│       ├── All Quotations
+│       ├── Create Quotation
+│       ├── Quotation Builder
+│       └── Quotation Details
+│           ├── Overview
+│           ├── Line Items
+│           ├── Pricing
+│           ├── Discount Analysis
+│           ├── Margin
+│           ├── Risk
+│           ├── Recommendations
+│           ├── Approval
+│           ├── Negotiation
+│           ├── Fulfillment
+│           ├── Billing
+│           └── Audit
+│
+│
+├── 04. SALES MANAGER
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Approval Center
+│   │   ├── Approval Inbox
+│   │   ├── Approval Details
+│   │   └── Approval History
+│   │
+│   ├── Team Deals
+│   │   ├── Deal List
+│   │   ├── Deal Details
+│   │   └── Deal Timeline
+│   │
+│   ├── Team Performance
+│   │
+│   ├── Deal Health
+│   │
+│   └── Reports
+│
+│
+├── 05. FINANCE
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Approval Queue
+│   │   ├── High Risk Deals
+│   │   └── Financial Review
+│   │
+│   ├── Billing
+│   │   ├── Billing Overview
+│   │   ├── Invoices
+│   │   ├── Invoice Details
+│   │   ├── Payments
+│   │   └── Failed Payments
+│   │
+│   ├── Subscriptions
+│   │   ├── Active Subscriptions
+│   │   ├── Subscription Details
+│   │   └── Proration
+│   │
+│   ├── Revenue Analytics
+│   │
+│   └── Audit
+│
+│
+├── 06. OPERATIONS
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Fulfillment
+│   │   ├── Fulfillment Queue
+│   │   ├── Fulfillment Details
+│   │   └── Shipment Details
+│   │
+│   ├── Warehouse
+│   │   ├── Warehouse Overview
+│   │   ├── Inventory
+│   │   ├── Stock Movements
+│   │   └── Allocation
+│   │
+│   ├── Backorders
+│   │   ├── Backorder Queue
+│   │   └── Backorder Details
+│   │
+│   ├── Shipping
+│   │   └── Shipment Tracking
+│   │
+│   └── Operations Analytics
+│
+│
+├── 07. INTELLIGENCE
+│   │
+│   ├── Intelligence Dashboard
+│   │
+│   ├── Risk Center
+│   │   ├── Risk Overview
+│   │   ├── High Risk Deals
+│   │   └── Risk Details
+│   │
+│   ├── Recommendations
+│   │   ├── Upsell
+│   │   ├── Cross-sell
+│   │   └── Recommendation Details
+│   │
+│   ├── Deal Health
+│   │   ├── Health Overview
+│   │   ├── Stalled Deals
+│   │   ├── Discount Anomalies
+│   │   └── Delivery Slippage
+│   │
+│   └── Decision Insights
+│
+│
+├── 08. CUSTOMER PORTAL
+│   │
+│   ├── Dashboard
+│   │
+│   ├── Quotations
+│   │   ├── My Quotations
+│   │   └── Quotation Details
+│   │
+│   ├── Negotiation
+│   │   ├── Review Quote
+│   │   ├── Request Changes
+│   │   └── Counter Offer
+│   │
+│   ├── Orders
+│   │   ├── My Orders
+│   │   └── Order Details
+│   │
+│   ├── Shipments
+│   │   ├── Shipment List
+│   │   └── Shipment Details
+│   │
+│   ├── Billing
+│   │   ├── Invoices
+│   │   └── Invoice Details
+│   │
+│   ├── Subscriptions
+│   │   ├── My Subscriptions
+│   │   └── Subscription Details
+│   │
+│   └── Account
+│       ├── Profile
+│       ├── Company
+│       └── Preferences
+│
+│
+├── 09. ANALYTICS
+│   │
+│   ├── Executive Dashboard
+│   ├── Sales Analytics
+│   ├── Revenue Analytics
+│   ├── Discount Analytics
+│   ├── Margin Analytics
+│   ├── Approval Analytics
+│   ├── Fulfillment Analytics
+│   ├── Subscription Analytics
+│   └── Custom Reports
+│
+│
+└── 10. SHARED
+    │
+    ├── Global Search
+    ├── Notifications
+    ├── Notification Center
+    ├── Profile
+    ├── Preferences
+    ├── Help Center
+    └── Settings

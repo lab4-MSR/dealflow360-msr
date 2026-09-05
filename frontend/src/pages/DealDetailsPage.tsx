@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { Button } from '@/components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { AlertTriangle, Edit, Send, Eye, DollarSign, Percent, Shield, Package, Truck, CreditCard, HeartPulse } from 'lucide-react'
@@ -34,7 +33,7 @@ export function DealDetailsPage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-        <Card><CardContent className="pt-6"><p className="text-caption text-muted-foreground flex items-center gap-1"><DollarSign className="h-3 w-3" />Value</p><p className="text-h3 font-semibold tabular-nums">${Number((deal as {value?:number}).value ?? 0).toLocaleString()}</p></CardContent></Card>
+        <Card><CardContent className="pt-6"><p className="text-caption text-muted-foreground flex items-center gap-1"><DollarSign className="h-3 w-3" />Value</p><p className="text-h3 font-semibold tabular-nums">₹{Number((deal as {value?:number}).value ?? 0).toLocaleString()}</p></CardContent></Card>
         <Card><CardContent className="pt-6"><p className="text-caption text-muted-foreground flex items-center gap-1"><Percent className="h-3 w-3" />Discount</p><p className="text-h3 font-semibold">{String((deal as {discount_percent?:number}).discount_percent ?? '—')}%</p></CardContent></Card>
         <Card><CardContent className="pt-6"><p className="text-caption text-muted-foreground">Margin</p><p className="text-h3 font-semibold">{String((deal as {margin_percent?:number}).margin_percent ?? '—')}%</p></CardContent></Card>
         <Card><CardContent className="pt-6"><p className="text-caption text-muted-foreground flex items-center gap-1"><Shield className="h-3 w-3" />Risk</p><RiskBadge risk={String((deal as {risk_level?:string}).risk_level ?? 'low') as never} className="mt-1">{String((deal as {risk_level?:string}).risk_level ?? '—')}</RiskBadge></CardContent></Card>

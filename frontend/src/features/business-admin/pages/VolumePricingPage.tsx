@@ -53,7 +53,7 @@ function formatTiers(tiers: VolumePricingTierItem[]): string {
     .sort((a, b) => a.minQuantity - b.minQuantity)
     .map((t) => {
       const range = t.maxQuantity ? `${t.minQuantity}-${t.maxQuantity}` : `${t.minQuantity}+`
-      return `${range}: $${t.unitPrice.toLocaleString()}`
+      return `${range}: ₹${t.unitPrice.toLocaleString()}`
     })
     .join(' | ')
 }

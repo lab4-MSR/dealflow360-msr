@@ -37,7 +37,7 @@ const STAGE_VARIANT: Record<string, 'info' | 'warning' | 'success' | 'default' |
 }
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
+  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
 
 export function CustomerDetailsPage() {
   const { id } = useParams<{ id: string }>()

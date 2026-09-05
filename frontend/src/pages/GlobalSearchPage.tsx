@@ -12,7 +12,7 @@ import {
   type SearchScope as SearchScopeType,
   type FilterOptions,
 } from '@/components/search'
-import { api, type SearchParams, type SearchResponse } from '@/lib/api'
+import { api, type SearchParams, type SearchResponse, type SearchResult } from '@/lib/api'
 
 const INITIAL_FILTERS: SearchFiltersType = {
   type: [],
@@ -168,7 +168,7 @@ export function GlobalSearchPage() {
 
   const statusOptions = React.useMemo<FilterOptions['statuses']>(() => {
     const statusSet = new Set<string>()
-    results.forEach((r) => {
+    results.forEach((r: SearchResult) => {
       if (r.status) statusSet.add(r.status)
     })
     return Array.from(statusSet).map((s) => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))

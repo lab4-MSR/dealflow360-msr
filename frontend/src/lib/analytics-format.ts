@@ -100,11 +100,11 @@ export function formatDeltaText(delta: DeltaResult, digits = 1): string {
 export function kpiChange(
   current: number | null | undefined,
   previous: number | null | undefined,
-): { change: number; trend: 'up' | 'down' | 'neutral' } | undefined {
+): { value: number; direction: 'up' | 'down' | 'neutral' } | undefined {
   const delta = computeDelta(current, previous)
   if (delta.percent === null) return undefined
   return {
-    change: Number(delta.percent.toFixed(1)),
-    trend: delta.direction,
+    value: Number(delta.percent.toFixed(1)),
+    direction: delta.direction === 'flat' ? 'neutral' : delta.direction,
   }
 }

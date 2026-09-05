@@ -107,7 +107,7 @@ export function MyCustomersPage() {
                       <TableCell className="text-small">{String((c as { contacts?: Array<{name:string;is_primary:boolean}> }).contacts?.find(x=>x.is_primary)?.name ?? '—')}</TableCell>
                       <TableCell><Badge variant="secondary" className="capitalize">{String((c as {tier?:string}).tier ?? '—')}</Badge></TableCell>
                       <TableCell className="tabular-nums">{String((c as {active_deals?:number}).active_deals ?? '—')}</TableCell>
-                      <TableCell className="tabular-nums">{(c as {revenue?:number}).revenue ? `$${Number((c as {revenue:number}).revenue).toLocaleString()}` : '—'}</TableCell>
+                      <TableCell className="tabular-nums">{(c as {revenue?:number}).revenue ? `₹${Number((c as {revenue:number}).revenue).toLocaleString()}` : '—'}</TableCell>
                       <TableCell><StatusBadge status={String((c as {health?:string}).health ?? 'healthy') as never}>{String((c as {health?:string}).health ?? '—')}</StatusBadge></TableCell>
                       <TableCell className="text-caption">{String((c as {updated_at?:string}).updated_at ? new Date(String((c as {updated_at:string}).updated_at)).toLocaleDateString() : '—')}</TableCell>
                       <TableCell><Button variant="ghost" size="sm" asChild><Link to={`/sales/customers/${String(c.id)}`}>View</Link></Button></TableCell>

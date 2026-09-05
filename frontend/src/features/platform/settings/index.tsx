@@ -24,7 +24,7 @@ interface PlatformSettings {
 const MOCK_SETTINGS: PlatformSettings = {
   general: { platformName: 'DealFlow360', logo: '', defaultLanguage: 'en' },
   security: { authPolicy: 'email_password', passwordMinLength: 8, sessionDuration: '24h', mfaRequired: false, ipRestriction: '' },
-  defaults: { defaultCurrency: 'USD', defaultTimezone: 'UTC', localization: 'en-US' },
+  defaults: { defaultCurrency: 'INR', defaultTimezone: 'UTC', localization: 'en-US' },
   notifications: { emailNotifications: true, systemAlerts: true, adminNotifications: true },
   integrations: { emailProvider: 'smtp', storageProvider: 's3', externalServices: 'none' },
   maintenance: { maintenanceMode: false, lastBackup: '2026-09-05T02:00:00Z', nextScheduledBackup: '2026-09-06T02:00:00Z' },
@@ -253,7 +253,7 @@ export function PlatformSettingsPage() {
                 <p className="text-caption text-muted-foreground">Applied to new businesses/users where tenant-specific configuration has not been provided.</p>
                 <div className="space-y-2">
                   <Label>Default Currency</Label>
-                  <Select value={form?.defaults.defaultCurrency || 'USD'} onValueChange={(v) => updateField('defaults', 'defaultCurrency', v)} disabled={editingSection !== 'defaults'}>
+                  <Select value={form?.defaults.defaultCurrency || 'INR'} onValueChange={(v) => updateField('defaults', 'defaultCurrency', v)} disabled={editingSection !== 'defaults'}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="USD">USD - US Dollar</SelectItem>

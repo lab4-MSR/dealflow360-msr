@@ -34,7 +34,7 @@ export function ProductDetailDrawer({
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   return (
     <Drawer

@@ -250,7 +250,7 @@ export function ApprovalInboxPage() {
             </span>
             <span className="text-muted-foreground">|</span>
             <span className="text-muted-foreground">
-              Combined Deal Value: <strong className="text-foreground">${selectedTotalValue.toLocaleString()}</strong>
+              Combined Deal Value: <strong className="text-foreground">₹{selectedTotalValue.toLocaleString()}</strong>
             </span>
             {hasHighRiskInSelection && (
               <span className="inline-flex items-center gap-1 text-danger font-semibold bg-danger-subtle px-2 py-0.5 rounded">
@@ -517,7 +517,7 @@ export function ApprovalInboxPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Cumulative Value:</span>
-                <span className="font-bold text-foreground">${selectedTotalValue.toLocaleString()}</span>
+                <span className="font-bold text-foreground">₹{selectedTotalValue.toLocaleString()}</span>
               </div>
             </div>
 

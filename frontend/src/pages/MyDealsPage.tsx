@@ -66,7 +66,7 @@ export function MyDealsPage() {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-        <KpiCard label="Total Pipeline" value={total ? `$${total}` : '—'} icon={<TrendingUp className="h-5 w-5" />} />
+        <KpiCard label="Total Pipeline" value={total ? `₹${total}` : '—'} icon={<TrendingUp className="h-5 w-5" />} />
         <KpiCard label="Open Deals" value={String(total)} />
         <KpiCard label="Won" value="—" variant="success" />
         <KpiCard label="Lost" value="—" />
@@ -113,7 +113,7 @@ export function MyDealsPage() {
                     <TableRow key={String(d.id)}>
                       <TableCell><Link to={`/sales/deals/${String(d.id)}`} className="font-medium text-primary hover:underline">{String((d as {name?:string}).name ?? String(d.id).slice(0,8))}</Link></TableCell>
                       <TableCell>{String((d as {customer_name?:string}).customer_name ?? '—')}</TableCell>
-                      <TableCell className="tabular-nums">${Number((d as {value?:number}).value ?? 0).toLocaleString()}</TableCell>
+                      <TableCell className="tabular-nums">₹{Number((d as {value?:number}).value ?? 0).toLocaleString()}</TableCell>
                       <TableCell><Badge variant="secondary">{String((d as {stage?:string}).stage ?? '—')}</Badge></TableCell>
                       <TableCell className="tabular-nums">{String((d as {discount_percent?:number}).discount_percent ?? '—')}%</TableCell>
                       <TableCell className="tabular-nums">{String((d as {margin_percent?:number}).margin_percent ?? '—')}%</TableCell>

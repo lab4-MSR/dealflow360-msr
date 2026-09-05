@@ -39,7 +39,7 @@ export function LineItemsSection({
     setTimeout(() => setCopiedSku(null), 2000)
   }
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   return (
     <section id="line-items" className="space-y-4">

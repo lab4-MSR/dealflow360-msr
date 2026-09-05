@@ -7,17 +7,14 @@ export function DashboardLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <Sidebar
         collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
-      <div
-        className="transition-all duration-200"
-        style={{ marginLeft: sidebarCollapsed ? '72px' : '240px' }}
-      >
+      <div className={`transition-all duration-200 ${sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-[240px]'}`}>
         <Topbar />
-        <main className="p-6">
+        <main className="p-4 sm:p-6 lg:p-8">
           <div className="mx-auto max-w-[1600px]">
             <Outlet />
           </div>

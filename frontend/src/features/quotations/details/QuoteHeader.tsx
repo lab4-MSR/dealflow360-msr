@@ -146,7 +146,7 @@ export function QuoteHeader({ quote, onVersionChange, onAction, actionLoading }:
               Total Value
             </span>
             <span className="text-2xl font-bold font-mono tracking-tight tabular-nums text-foreground">
-              {quote.currency === 'INR' ? '₹' : '$'}
+              '₹'
               {quote.total_value.toLocaleString()}
             </span>
             <span className="text-[11px] text-muted-foreground block">

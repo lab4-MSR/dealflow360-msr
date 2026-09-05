@@ -51,7 +51,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
     deal_value: 128400,
     subtotal: 148000,
     net_price: 128400,
-    currency: 'USD',
+    currency: 'INR',
     requested_discount_percent: 18.5,
     allowed_discount_percent: 12.0,
     excess_discount_percent: 6.5,
@@ -156,9 +156,9 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
       },
     ],
     discount_analysis: {
-      what: 'Overall 18.5% blended discount ($19,600 reduction) against an approved baseline ceiling of 12.0%. Line 1 (Hardware) and Line 3 (Services) substantially exceed governance rules.',
-      why: 'Key renewal battle against competitor who quoted $124,000 for equivalent hardware footprint. Rep concession designed to capture 3-year recurring support & software retention.',
-      impact: 'Reduces deal gross margin from target 26.2% down to 21.8%. Total profit loss of $8,420 compared to standard tier pricing.',
+      what: 'Overall 18.5% blended discount (₹19,600 reduction) against an approved baseline ceiling of 12.0%. Line 1 (Hardware) and Line 3 (Services) substantially exceed governance rules.',
+      why: 'Key renewal battle against competitor who quoted ₹124,000 for equivalent hardware footprint. Rep concession designed to capture 3-year recurring support & software retention.',
+      impact: 'Reduces deal gross margin from target 26.2% down to 21.8%. Total profit loss of ₹8,420 compared to standard tier pricing.',
       next_action: 'Recommend partial concession: allow 14% on Edge Servers if customer commits to a 24-month software subscription term.',
       revenue_delta: -19600,
       margin_delta: -4.4,
@@ -172,7 +172,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
       ],
       margin_risk: 'high',
       customer_risk: 'low',
-      aggregate_note: 'Customer is tier 1 with pristine payment history (LTV $480k). Risk is purely concentrated in hardware margin compression and professional services utilization margin.',
+      aggregate_note: 'Customer is tier 1 with pristine payment history (LTV ₹480k). Risk is purely concentrated in hardware margin compression and professional services utilization margin.',
     },
     business_impact: {
       revenue_delta: -19600,
@@ -187,7 +187,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
         type: 'approval_condition',
         text: 'Approve with Condition: Cap Hardware discount at 14% and Services at 12%. Preserves blended margin at 24.1% while maintaining winning price advantage.',
         suggested_action: 'Return with specific counter-terms or execute Conditional Approval.',
-        expected_outcome: 'Recovers +$4,120 in gross margin with minimal customer pushback.',
+        expected_outcome: 'Recovers +₹4,120 in gross margin with minimal customer pushback.',
       },
       {
         id: 'rec-02',
@@ -227,7 +227,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
       revision_reason: 'Customer requested 5% further concession on hardware post-demo.',
       changes: [
         { field: 'Line 1 Discount', old_value: '15.0%', new_value: '20.0%', delta: '+5.0%' },
-        { field: 'Deal Total', old_value: '$134,640', new_value: '$128,400', delta: '-$6,240' },
+        { field: 'Deal Total', old_value: '₹134,640', new_value: '₹128,400', delta: '-₹6,240' },
         { field: 'Margin %', old_value: '24.2%', new_value: '21.8%', delta: '-2.4%' },
       ],
     },
@@ -262,7 +262,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
     deal_value: 74200,
     subtotal: 82500,
     net_price: 74200,
-    currency: 'USD',
+    currency: 'INR',
     requested_discount_percent: 10.0,
     allowed_discount_percent: 8.0,
     excess_discount_percent: 2.0,
@@ -325,7 +325,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
       },
     ],
     discount_analysis: {
-      what: '10.0% discount across software and hardware lines. Exceeds customer Silver tier limit (8%) by 2 percentage points ($1,650 delta).',
+      what: '10.0% discount across software and hardware lines. Exceeds customer Silver tier limit (8%) by 2 percentage points (₹1,650 delta).',
       why: 'Multi-year lock-in incentive for emerging fintech account.',
       impact: 'Healthy margin profile at 34.5% (above target 30%). Low financial risk.',
       next_action: 'Straightforward approval recommended.',
@@ -407,7 +407,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
     deal_value: 215000,
     subtotal: 268000,
     net_price: 215000,
-    currency: 'USD',
+    currency: 'INR',
     requested_discount_percent: 19.8,
     allowed_discount_percent: 15.0,
     excess_discount_percent: 4.8,
@@ -491,9 +491,9 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
       },
     ],
     discount_analysis: {
-      what: 'Blended 19.8% discount on a $268k contract. Gross margin drops to 19.4%, piercing the 20% minimum margin policy for hardware.',
-      why: 'Hyperion is negotiating a multi-phase contract worth $1.1M over 3 years. Initial fleet rollout requires aggressive hardware pricing to displace legacy GPS vendor.',
-      impact: 'Margin dilution of $14,200. However, software recurring revenue locks in $85,280 ARR with 71.8% gross margin.',
+      what: 'Blended 19.8% discount on a ₹268k contract. Gross margin drops to 19.4%, piercing the 20% minimum margin policy for hardware.',
+      why: 'Hyperion is negotiating a multi-phase contract worth ₹1.1M over 3 years. Initial fleet rollout requires aggressive hardware pricing to displace legacy GPS vendor.',
+      impact: 'Margin dilution of ₹14,200. However, software recurring revenue locks in ₹85,280 ARR with 71.8% gross margin.',
       next_action: 'Recommend approval with escalation note to Finance, citing high lifetime software value.',
       revenue_delta: -53000,
       margin_delta: -5.6,
@@ -587,7 +587,7 @@ export const MOCK_APPROVAL_QUEUE: ApprovalDetailData[] = [
     deal_value: 39500,
     subtotal: 48000,
     net_price: 39500,
-    currency: 'USD',
+    currency: 'INR',
     requested_discount_percent: 17.7,
     allowed_discount_percent: 5.0,
     excess_discount_percent: 12.7,
@@ -715,7 +715,7 @@ export const MOCK_APPROVAL_HISTORY: ApprovalHistoryItem[] = [
     customer_tier: 'gold',
     rep_name: 'Marcus Vance',
     deal_value: 184500,
-    currency: 'USD',
+    currency: 'INR',
     discount_percent: 14.0,
     margin_percent: 24.8,
     risk_score: 42,
@@ -739,7 +739,7 @@ export const MOCK_APPROVAL_HISTORY: ApprovalHistoryItem[] = [
     customer_tier: 'silver',
     rep_name: 'Elena Rostova',
     deal_value: 52000,
-    currency: 'USD',
+    currency: 'INR',
     discount_percent: 22.5,
     margin_percent: 12.0,
     risk_score: 85,
@@ -763,7 +763,7 @@ export const MOCK_APPROVAL_HISTORY: ApprovalHistoryItem[] = [
     customer_tier: 'platinum',
     rep_name: 'Julian Thorne',
     deal_value: 340000,
-    currency: 'USD',
+    currency: 'INR',
     discount_percent: 16.5,
     margin_percent: 23.2,
     risk_score: 62,
@@ -787,7 +787,7 @@ export const MOCK_APPROVAL_HISTORY: ApprovalHistoryItem[] = [
     customer_tier: 'gold',
     rep_name: 'Maya Lin',
     deal_value: 98000,
-    currency: 'USD',
+    currency: 'INR',
     discount_percent: 11.0,
     margin_percent: 28.4,
     risk_score: 25,
@@ -811,7 +811,7 @@ export const MOCK_APPROVAL_HISTORY: ApprovalHistoryItem[] = [
     customer_tier: 'silver',
     rep_name: 'Marcus Vance',
     deal_value: 67500,
-    currency: 'USD',
+    currency: 'INR',
     discount_percent: 15.0,
     margin_percent: 21.0,
     risk_score: 55,
@@ -839,7 +839,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'approval',
     deal_value: 128400,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-09-30',
     created_at: '2026-08-10',
     health_score: 64,
@@ -872,7 +872,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'approval',
     deal_value: 74200,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-09-22',
     created_at: '2026-08-20',
     health_score: 82,
@@ -896,7 +896,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'approval',
     deal_value: 215000,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-09-28',
     created_at: '2026-07-15',
     health_score: 58,
@@ -920,7 +920,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'approval',
     deal_value: 39500,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-10-15',
     created_at: '2026-08-28',
     health_score: 42,
@@ -944,7 +944,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'negotiation',
     deal_value: 95000,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-10-05',
     created_at: '2026-08-01',
     health_score: 76,
@@ -967,7 +967,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'closed_won',
     deal_value: 184500,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-09-02',
     created_at: '2026-07-20',
     health_score: 95,
@@ -990,7 +990,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'proposal',
     deal_value: 310000,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-11-15',
     created_at: '2026-08-15',
     health_score: 88,
@@ -1013,7 +1013,7 @@ export const MOCK_TEAM_DEALS: TeamDeal[] = [
     team_name: 'North America Enterprise',
     stage: 'discovery',
     deal_value: 62000,
-    currency: 'USD',
+    currency: 'INR',
     expected_close_date: '2026-10-30',
     created_at: '2026-09-01',
     health_score: 52,
@@ -1130,7 +1130,7 @@ export const MOCK_DISCOUNT_ANOMALIES: DiscountAnomaly[] = [
     explanation: {
       what: 'Hardware discount 20% exceeds category limit (10%) and tier ceiling (12%).',
       why: 'Competitive pressure against AWS Partner.',
-      impact: 'Reduces gross profit by $8,420; deal margin down to 21.8%.',
+      impact: 'Reduces gross profit by ₹8,420; deal margin down to 21.8%.',
       next_action: 'Offer counter-proposal: 14% hardware discount paired with 2-year software commitment.',
     },
   },
@@ -1233,7 +1233,7 @@ export const MOCK_DECISION_INSIGHTS: DecisionInsight[] = [
     severity: 'critical',
     what: 'Solaria BioTech quotation requested by Maya Lin contains an equipment margin of 6.25%, breaching minimum 15% governance.',
     why: 'Competitive displacement attempt without prior authorization.',
-    impact: 'If approved, generates $4,800 profit leakage on first delivery.',
+    impact: 'If approved, generates ₹4,800 profit leakage on first delivery.',
     who: 'Sales Manager (Action Required)',
     when: 'SLA expires in 8.5 hours',
     next_action: 'Return quotation to Maya Lin with instructions to constrain hardware discount to 5%.',
@@ -1242,7 +1242,7 @@ export const MOCK_DECISION_INSIGHTS: DecisionInsight[] = [
   },
   {
     id: 'ins-2',
-    title: 'Urgent SLA Breach Warning: Hyperion Fleet Tracking ($215,000)',
+    title: 'Urgent SLA Breach Warning: Hyperion Fleet Tracking (₹215,000)',
     category: 'sla',
     severity: 'high',
     what: 'Flagship Q3 deal approval has 1.2 hours remaining before SLA escalation to Regional Director.',
@@ -1261,7 +1261,7 @@ export const MOCK_DECISION_INSIGHTS: DecisionInsight[] = [
     severity: 'medium',
     what: 'Maya Lin is currently at 64% quota attainment with 2 stalled deals and high discount variance.',
     why: 'Relying heavily on aggressive discounts rather than value selling.',
-    impact: 'At current velocity, team will miss aggregate Q3 expansion target by $140k.',
+    impact: 'At current velocity, team will miss aggregate Q3 expansion target by ₹140k.',
     who: 'Sales Manager',
     when: 'Schedule before Weekly 1:1',
     next_action: 'Conduct pipeline review and enforce discount floor guidelines.',
@@ -1281,7 +1281,7 @@ export async function getSalesManagerDashboard(): Promise<{
   insights: DecisionInsight[]
 }> {
   try {
-    const [salesRes, inboxRes, healthRes] = await Promise.allSettled([
+    const [_salesRes, inboxRes, _healthRes] = await Promise.allSettled([
       apiClient.get('/analytics/sales'),
       apiClient.get('/approvals/inbox'),
       apiClient.get('/deal-health/overview'),
@@ -1380,7 +1380,8 @@ function filterMockApprovals(filters?: { tab?: string; rep?: string; tier?: stri
   }
 
   if (filters.rep && filters.rep !== 'all') {
-    list = list.filter(a => a.rep.id === filters.rep || a.rep.name.toLowerCase().includes(filters.rep.toLowerCase()))
+    const repVal = filters.rep
+    list = list.filter(a => a.rep.id === repVal || a.rep.name.toLowerCase().includes(repVal.toLowerCase()))
   }
   if (filters.tier && filters.tier !== 'all') {
     list = list.filter(a => a.customer.tier === filters.tier)
@@ -1611,7 +1612,7 @@ function getMockTimeline(dealId: string): DealTimelineEvent[] {
       id: 'tl-4',
       deal_id: dealId,
       title: 'Quotation Q-2026-00482 Version 1 Sent',
-      description: 'Initial proposal sent to client via customer portal. Terms: $134,640 net value.',
+      description: 'Initial proposal sent to client via customer portal. Terms: ₹134,640 net value.',
       category: 'quotation',
       timestamp: '2026-09-02T11:00:00Z',
       actor: { name: 'Marcus Vance', role: 'Sales Representative' },
@@ -1653,7 +1654,7 @@ export async function addDealCoachingNote(dealId: string, text: string): Promise
   return newNote
 }
 
-export async function getTeamPerformance(period = 'q3'): Promise<{
+export async function getTeamPerformance(_period = 'q3'): Promise<{
   reps: TeamPerformanceRep[]
   summary: {
     team_quota: number

@@ -14,7 +14,7 @@ const DEFAULT_PREFS: UserPreferences = {
   density: 'comfortable',
   language: 'en',
   timezone: 'UTC',
-  currency: 'USD',
+  currency: 'INR',
   date_format: 'MM/dd/yyyy',
   notifications: { email: true, in_app: true, approval: true, deal: true, billing: true },
 }

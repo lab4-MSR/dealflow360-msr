@@ -34,7 +34,7 @@ const GENERAL_DEFAULTS: GeneralSettingsValues = {
   support_email: '',
   language: 'en',
   timezone: 'UTC',
-  currency: 'USD',
+  currency: 'INR',
   date_format: 'MM/dd/yyyy',
   time_format: '12h',
 }
@@ -73,7 +73,7 @@ export function SettingsPage() {
       support_email: generalSection.support_email ?? '',
       language: localization.language ?? generalSection.default_language ?? 'en',
       timezone: localization.timezone ?? generalSection.default_timezone ?? 'UTC',
-      currency: localization.currency ?? 'USD',
+      currency: localization.currency ?? 'INR',
       date_format: localization.date_format ?? generalSection.date_format ?? 'MM/dd/yyyy',
       time_format: '12h',
     }

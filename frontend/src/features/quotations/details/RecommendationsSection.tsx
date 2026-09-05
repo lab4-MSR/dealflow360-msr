@@ -20,7 +20,7 @@ export function RecommendationsSection({
   const upsellRecs = recommendations.filter((r) => r.type === 'upsell')
   const crossSellRecs = recommendations.filter((r) => r.type === 'cross_sell')
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   const renderCard = (rec: RecommendationItem) => (
     <Card

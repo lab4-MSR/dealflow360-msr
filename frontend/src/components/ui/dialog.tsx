@@ -59,6 +59,10 @@ function DialogDescription({ className, ...props }: React.HTMLAttributes<HTMLPar
   return <p className={cn('text-body-small text-muted-foreground', className)} {...props} />
 }
 
+function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)} {...props} />
+}
+
 export {
   Dialog,
   DialogPortal,
@@ -67,6 +71,7 @@ export {
   DialogTrigger,
   DialogContent,
   DialogHeader,
+  DialogFooter,
   DialogTitle,
   DialogDescription,
 }

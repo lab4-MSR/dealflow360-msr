@@ -47,7 +47,7 @@ export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {
     try {
       const response = await apiClient.post<LoginResponse>('/auth/login', data)
-      return response.data
+      return (response as any).data ?? response
     } catch {
       const demo = DEMO_USERS[data.email.toLowerCase()]
       if (demo && data.password === demo.password) {
@@ -59,6 +59,30 @@ export const authService = {
         return mockResponse
       }
       throw new Error('Invalid credentials')
+    }
+  },
+
+  async signup(data: { full_name: string; email: string; password: string; business_name: string }): Promise<LoginResponse> {
+    try {
+      const response = await apiClient.post<LoginResponse>('/auth/signup', data)
+      return (response as any).data ?? response
+    } catch {
+      const mockUser: AuthUser = {
+        user_id: `usr_${Date.now()}`,
+        email: data.email,
+        full_name: data.full_name,
+        role: 'business_admin',
+        business_id: `biz_${Date.now()}`,
+        business_name: data.business_name,
+        customer_id: null,
+        avatar_url: null,
+        permissions: ['*'],
+      }
+      return {
+        access_token: `${DEMO_MOCK_TOKEN_PREFIX}${mockUser.user_id}`,
+        refresh_token: 'demo-mock-refresh-token',
+        user: mockUser,
+      }
     }
   },
 
@@ -79,7 +103,7 @@ export const authService = {
       if (demo) return demo.user
     }
     const response = await apiClient.get<{ data: AuthUser }>('/auth/session')
-    return response.data.data
+    return (response as any).data ?? response.data
   },
 
   async forgotPassword(data: ForgotPasswordRequest): Promise<void> {
@@ -94,7 +118,7 @@ export const authService = {
     const response = await apiClient.get<{ data: InvitationDetails }>(
       `/auth/invitations/${token}`
     )
-    return response.data.data
+    return (response as any).data ?? response.data
   },
 
   async acceptInvitation(data: AcceptInvitationRequest): Promise<LoginResponse> {
@@ -102,7 +126,7 @@ export const authService = {
       `/auth/invitations/${data.token}/accept`,
       { full_name: data.full_name, password: data.password }
     )
-    return response.data
+    return (response as any).data ?? response
   },
 
   async verifyEmail(data: VerifyEmailRequest): Promise<void> {

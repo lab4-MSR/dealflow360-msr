@@ -1,0 +1,6570 @@
+00.1 LANDING PAGE
+LANDING PAGE
+│
+├── Navbar
+│   ├── Logo
+│   ├── Features
+│   ├── How It Works
+│   ├── Solutions
+│   ├── Pricing
+│   ├── Resources
+│   ├── Login
+│   └── Get Started
+│
+├── Hero Section
+│   ├── Badge
+│   ├── Main Heading
+│   ├── Description
+│   ├── Primary CTA
+│   ├── Secondary CTA
+│   └── Product Preview
+│
+├── Trust Section
+│   ├── Trusted By
+│   └── Company Logos
+│
+├── Core Capabilities
+│   ├── Smart Discount Governance
+│   ├── Risk Scoring
+│   ├── Approval Automation
+│   ├── Upsell & Cross-sell
+│   ├── Warehouse Fulfillment
+│   └── Hybrid Billing
+│
+├── How It Works
+│   ├── Create Deal
+│   ├── Risk Analysis
+│   ├── Approval
+│   ├── Customer Negotiation
+│   ├── Fulfillment
+│   └── Billing
+│
+├── Intelligence Section
+│   ├── Risk Intelligence
+│   ├── Deal Health
+│   └── Recommendations
+│
+├── Enterprise Features
+│   ├── Multi-Tenant
+│   ├── Role-Based Access
+│   ├── Audit Trail
+│   ├── Analytics
+│   └── Security
+│
+├── Workflow Preview
+│   ├── Deal
+│   ├── Approval
+│   ├── Negotiation
+│   └── Fulfillment
+│
+├── CTA Section
+│   ├── Heading
+│   ├── Description
+│   └── Get Started
+│
+└── Footer
+    ├── Brand
+    ├── Product
+    ├── Solutions
+    ├── Resources
+    ├── Company
+    ├── Legal
+    └── Social Links
+00.2 LOGIN PAGE
+LOGIN PAGE
+│
+├── Branding
+│   ├── Logo
+│   └── Tagline
+│
+├── Login Form
+│   ├── Email
+│   ├── Password
+│   ├── Show / Hide Password
+│   ├── Remember Me
+│   ├── Forgot Password
+│   └── Login Button
+│
+├── Alternative Authentication
+│   └── SSO / Google (Optional)
+│
+├── Account Prompt
+│   ├── Don't Have Account
+│   └── Get Started
+│
+└── Footer
+    ├── Privacy
+    ├── Terms
+    └── Support
+00.3 FORGOT PASSWORD
+FORGOT PASSWORD PAGE
+│
+├── Branding
+│   ├── Logo
+│   └── Back to Login
+│
+├── Password Recovery
+│   ├── Heading
+│   ├── Description
+│   ├── Email Input
+│   └── Send Reset Link
+│
+├── Recovery Status
+│   ├── Success Message
+│   ├── Email Sent Confirmation
+│   └── Resend Link
+│
+└── Footer
+    ├── Privacy
+    ├── Terms
+    └── Support
+00.4 RESET PASSWORD
+RESET PASSWORD PAGE
+│
+├── Branding
+│   ├── Logo
+│   └── Back to Login
+│
+├── Reset Password Form
+│   ├── New Password
+│   ├── Show / Hide Password
+│   ├── Confirm Password
+│   ├── Password Strength
+│   ├── Password Requirements
+│   └── Reset Password
+│
+├── Reset Status
+│   ├── Success
+│   ├── Invalid Token
+│   └── Expired Token
+│
+└── Footer
+    ├── Privacy
+    ├── Terms
+    └── Support
+00.5 ACCEPT INVITATION
+ACCEPT INVITATION PAGE
+│
+├── Branding
+│   ├── Logo
+│   └── Company Logo
+│
+├── Invitation Information
+│   ├── Invitation Message
+│   ├── Invited Email
+│   ├── Company Name
+│   ├── Invited Role
+│   └── Invited By
+│
+├── Account Setup
+│   ├── Full Name
+│   ├── Password
+│   ├── Confirm Password
+│   └── Accept Invitation
+│
+├── Invitation Status
+│   ├── Valid Invitation
+│   ├── Expired Invitation
+│   ├── Already Accepted
+│   └── Invalid Invitation
+│
+└── Footer
+    ├── Privacy
+    ├── Terms
+    └── Support
+00.6 EMAIL VERIFICATION
+EMAIL VERIFICATION PAGE
+│
+├── Branding
+│   └── Logo
+│
+├── Verification State
+│   ├── Verification Icon
+│   ├── Heading
+│   ├── Description
+│   └── Verification Status
+│
+├── Verification Actions
+│   ├── Verify Email
+│   ├── Resend Verification Email
+│   └── Change Email
+│
+├── Success State
+│   ├── Email Verified
+│   └── Continue to Dashboard
+│
+└── Error State
+    ├── Invalid Link
+    ├── Expired Link
+    └── Verification Failed
+00.7 403 UNAUTHORIZED
+403 UNAUTHORIZED PAGE
+│
+├── Error Illustration
+│
+├── Error Information
+│   ├── 403 Code
+│   ├── Access Denied
+│   └── Explanation
+│
+├── Context
+│   ├── Required Permission
+│   └── Current Role
+│
+├── Actions
+│   ├── Go to Dashboard
+│   ├── Go Back
+│   └── Contact Administrator
+│
+└── Support
+    └── Help / Support
+
+Note: actual permission enforcement backend par hoga; 403 page sirf user-facing response hai.
+
+00.8 404 NOT FOUND
+404 NOT FOUND PAGE
+│
+├── Error Illustration
+│
+├── Error Information
+│   ├── 404 Code
+│   ├── Page Not Found
+│   └── Explanation
+│
+├── Actions
+│   ├── Go to Dashboard
+│   ├── Go Back
+│   └── Go Home
+│
+├── Suggested Navigation
+│   ├── Dashboard
+│   ├── Deals
+│   ├── Customers
+│   └── Help
+│
+└── Support
+    └── Help / Support
+00.9 SYSTEM ERROR
+SYSTEM ERROR PAGE
+│
+├── Error Illustration
+│
+├── Error Information
+│   ├── Error Code
+│   ├── Something Went Wrong
+│   └── Error Description
+│
+├── Error Reference
+│   └── Error ID
+│
+├── Actions
+│   ├── Try Again
+│   ├── Go to Dashboard
+│   └── Go Back
+│
+├── Support
+│   ├── Contact Support
+│   └── Report Problem
+│
+└── Technical Information
+    └── Error Details
+
+01. SUPER ADMIN / PLATFORM
+01.1 Dashboard
+SUPER ADMIN DASHBOARD
+│
+├── Page Header
+│   ├── Welcome / Overview
+│   ├── Date Range
+│   └── Quick Actions
+│
+├── Platform KPIs
+│   ├── Total Businesses
+│   ├── Active Businesses
+│   ├── Total Users
+│   ├── Total Deals
+│   ├── Total Revenue
+│   └── Platform Health
+│
+├── Business Overview
+│   ├── Business Growth
+│   ├── Active Businesses
+│   ├── Suspended Businesses
+│   └── New Businesses
+│
+├── Deal Overview
+│   ├── Total Deals
+│   ├── Pending Approvals
+│   ├── High Risk Deals
+│   ├── Completed Deals
+│   └── Deal Trend
+│
+├── Revenue Overview
+│   ├── Total Revenue
+│   ├── Revenue Trend
+│   └── Revenue by Business
+│
+├── Platform Activity
+│   ├── Recent Business Activity
+│   ├── Recent User Activity
+│   └── Recent System Activity
+│
+├── System Health
+│   ├── API
+│   ├── Database
+│   ├── Authentication
+│   └── Services
+│
+└── Alerts
+    ├── Critical Alerts
+    ├── Suspended Businesses
+    └── System Issues
+01.2 Businesses → All Businesses
+ALL BUSINESSES
+│
+├── Page Header
+│   ├── Title
+│   ├── Description
+│   └── Create Business
+│
+├── Overview
+│   ├── Total Businesses
+│   ├── Active
+│   ├── Suspended
+│   └── Pending Setup
+│
+├── Search & Filters
+│   ├── Search Business
+│   ├── Status
+│   ├── Plan
+│   ├── Created Date
+│   └── More Filters
+│
+├── Business Table
+│   ├── Business
+│   ├── Business Admin
+│   ├── Users
+│   ├── Deals
+│   ├── Revenue
+│   ├── Status
+│   ├── Created Date
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Activate
+│   ├── Suspend
+│   └── Export
+│
+└── Pagination
+01.3 Businesses → Create Business
+CREATE BUSINESS
+│
+├── Business Information
+│   ├── Business Name
+│   ├── Legal Name
+│   ├── Business Email
+│   ├── Phone
+│   ├── Website
+│   └── Industry
+│
+├── Business Address
+│   ├── Address
+│   ├── City
+│   ├── State
+│   ├── Country
+│   └── Postal Code
+│
+├── Business Admin
+│   ├── Full Name
+│   ├── Email
+│   └── Role
+│
+├── Branding
+│   ├── Logo
+│   ├── Primary Color
+│   └── Favicon
+│
+├── Business Configuration
+│   ├── Currency
+│   ├── Timezone
+│   ├── Tax Configuration
+│   └── Default Settings
+│
+├── Initial Setup
+│   ├── Create Admin
+│   ├── Send Invitation
+│   └── Activate Business
+│
+└── Actions
+    ├── Cancel
+    └── Create Business
+01.4 Businesses → Business Details → Overview
+BUSINESS DETAILS — OVERVIEW
+│
+├── Business Header
+│   ├── Business Logo
+│   ├── Business Name
+│   ├── Status
+│   ├── Business ID
+│   └── Actions
+│
+├── Business Summary
+│   ├── Business Admin
+│   ├── Industry
+│   ├── Created Date
+│   ├── Users
+│   └── Subscription / Plan
+│
+├── Performance KPIs
+│   ├── Total Deals
+│   ├── Revenue
+│   ├── Customers
+│   ├── Active Users
+│   └── Conversion Rate
+│
+├── Deal Performance
+│   ├── Deal Volume
+│   ├── Deal Value
+│   └── Deal Trend
+│
+├── Revenue Performance
+│   ├── Revenue Trend
+│   ├── Monthly Revenue
+│   └── Revenue Growth
+│
+├── Business Health
+│   ├── System Usage
+│   ├── User Activity
+│   ├── Deal Activity
+│   └── Risk Indicators
+│
+└── Recent Activity
+    ├── User Activity
+    ├── Deal Activity
+    └── Configuration Changes
+01.5 Business Details → Users
+BUSINESS USERS
+│
+├── Page Header
+│   ├── Business Name
+│   └── Invite User
+│
+├── User Overview
+│   ├── Total Users
+│   ├── Active Users
+│   ├── Pending Invitations
+│   └── Inactive Users
+│
+├── Search & Filters
+│   ├── Search User
+│   ├── Role
+│   ├── Status
+│   └── Team
+│
+├── Users Table
+│   ├── User
+│   ├── Role
+│   ├── Team
+│   ├── Status
+│   ├── Last Active
+│   ├── Joined Date
+│   └── Actions
+│
+└── Pagination
+01.6 Business Details → Deals
+BUSINESS DEALS
+│
+├── Page Header
+│   └── Business Name
+│
+├── Deal KPIs
+│   ├── Total Deals
+│   ├── Open Deals
+│   ├── Won Deals
+│   ├── Lost Deals
+│   └── Total Deal Value
+│
+├── Search & Filters
+│   ├── Search Deal
+│   ├── Status
+│   ├── Risk Level
+│   ├── Sales Rep
+│   └── Date Range
+│
+├── Deals Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Value
+│   ├── Risk
+│   ├── Status
+│   ├── Created Date
+│   └── Actions
+│
+└── Pagination
+01.7 Business Details → Revenue
+BUSINESS REVENUE
+│
+├── Revenue KPIs
+│   ├── Total Revenue
+│   ├── Monthly Revenue
+│   ├── Recurring Revenue
+│   ├── One-Time Revenue
+│   └── Growth
+│
+├── Revenue Trend
+│   ├── Monthly
+│   ├── Quarterly
+│   └── Yearly
+│
+├── Revenue Breakdown
+│   ├── One-Time
+│   ├── Subscription
+│   └── Product Category
+│
+├── Revenue by Product
+│
+├── Revenue by Customer
+│
+└── Revenue Transactions
+    ├── Transaction
+    ├── Customer
+    ├── Amount
+    ├── Type
+    ├── Date
+    └── Status
+01.8 Business Details → Usage
+BUSINESS USAGE
+│
+├── Usage Overview
+│   ├── Active Users
+│   ├── Active Deals
+│   ├── Quotations
+│   ├── Orders
+│   └── API Usage
+│
+├── User Activity
+│   ├── Daily Active Users
+│   └── Monthly Active Users
+│
+├── Deal Usage
+│   ├── Deals Created
+│   ├── Deals Updated
+│   └── Deals Completed
+│
+├── Feature Usage
+│   ├── Discount Engine
+│   ├── Approval Engine
+│   ├── Recommendations
+│   ├── Fulfillment
+│   └── Billing
+│
+└── Usage Trend
+01.9 Business Details → Health
+BUSINESS HEALTH
+│
+├── Overall Health
+│   ├── Health Score
+│   └── Health Status
+│
+├── Business Activity
+│   ├── User Activity
+│   ├── Deal Activity
+│   └── Customer Activity
+│
+├── Performance Indicators
+│   ├── Deal Conversion
+│   ├── Approval Delay
+│   ├── Fulfillment Delay
+│   └── Payment Issues
+│
+├── Risk Indicators
+│   ├── High Risk Deals
+│   ├── Discount Anomalies
+│   └── Stalled Deals
+│
+└── Health Alerts
+    ├── Critical
+    ├── Warning
+    └── Informational
+01.10 Business Details → Configuration
+BUSINESS CONFIGURATION
+│
+├── General
+│   ├── Business Information
+│   ├── Currency
+│   ├── Timezone
+│   └── Localization
+│
+├── Branding
+│   ├── Logo
+│   ├── Primary Color
+│   ├── Favicon
+│   └── Theme
+│
+├── Sales Configuration
+│   ├── Pricing
+│   ├── Discount Rules
+│   └── Approval Rules
+│
+├── Operations
+│   ├── Warehouses
+│   ├── Shipping
+│   └── Fulfillment
+│
+├── Billing
+│   ├── Billing Settings
+│   ├── Subscription Settings
+│   └── Proration Rules
+│
+└── Security
+    ├── Authentication
+    ├── Session Policy
+    └── Access Policy
+01.11 Business Details → Activity
+BUSINESS ACTIVITY
+│
+├── Activity Summary
+│   ├── Total Activities
+│   ├── User Actions
+│   ├── Deal Actions
+│   └── System Actions
+│
+├── Search & Filters
+│   ├── Search Activity
+│   ├── User
+│   ├── Activity Type
+│   ├── Date Range
+│   └── Severity
+│
+├── Activity Timeline
+│   ├── Actor
+│   ├── Action
+│   ├── Resource
+│   ├── Timestamp
+│   └── Details
+│
+└── Activity Details
+    ├── Before
+    ├── After
+    ├── Reason
+    └── Metadata
+01.12 Platform Users → User List
+PLATFORM USER LIST
+│
+├── Page Header
+│   └── Invite User
+│
+├── User KPIs
+│   ├── Total Users
+│   ├── Active
+│   ├── Pending
+│   └── Suspended
+│
+├── Search & Filters
+│   ├── Search
+│   ├── Role
+│   ├── Business
+│   └── Status
+│
+├── Users Table
+│   ├── User
+│   ├── Role
+│   ├── Business
+│   ├── Status
+│   ├── Last Active
+│   ├── Created
+│   └── Actions
+│
+└── Pagination
+01.13 Platform Users → User Details
+PLATFORM USER DETAILS
+│
+├── User Header
+│   ├── Avatar
+│   ├── Name
+│   ├── Email
+│   ├── Role
+│   └── Status
+│
+├── User Information
+│   ├── Contact Information
+│   ├── Business
+│   ├── Role
+│   └── Created Date
+│
+├── Access
+│   ├── Role
+│   ├── Permissions
+│   └── Access Scope
+│
+├── Activity
+│   ├── Login Activity
+│   ├── Platform Actions
+│   └── Recent Activity
+│
+└── Actions
+    ├── Edit
+    ├── Suspend
+    ├── Activate
+    └── Revoke Access
+01.14 Platform Users → Invite User
+INVITE PLATFORM USER
+│
+├── User Information
+│   ├── Full Name
+│   └── Email
+│
+├── Platform Access
+│   ├── Role
+│   └── Permissions
+│
+├── Business Scope
+│   ├── Platform Level
+│   └── Business Access
+│
+├── Invitation
+│   ├── Invitation Message
+│   └── Expiration
+│
+└── Actions
+    ├── Cancel
+    └── Send Invitation
+01.15 Platform Analytics
+PLATFORM ANALYTICS
+│
+├── Date & Filters
+│   ├── Date Range
+│   ├── Business
+│   └── Segment
+│
+├── Platform KPIs
+│   ├── Businesses
+│   ├── Users
+│   ├── Deals
+│   ├── Revenue
+│   └── Growth
+│
+├── Business Analytics
+│   ├── Business Growth
+│   ├── Active Businesses
+│   └── Business Distribution
+│
+├── Sales Analytics
+│   ├── Deal Volume
+│   ├── Deal Value
+│   ├── Conversion
+│   └── Risk Distribution
+│
+├── Revenue Analytics
+│   ├── Revenue Trend
+│   ├── Recurring Revenue
+│   └── Revenue by Business
+│
+├── Usage Analytics
+│   ├── Active Users
+│   ├── Feature Usage
+│   └── Platform Activity
+│
+└── Insights
+    ├── Growth Insights
+    ├── Risk Insights
+    └── Anomalies
+01.16 Global Audit
+GLOBAL AUDIT
+│
+├── Page Header
+│   └── Export
+│
+├── Audit Overview
+│   ├── Total Events
+│   ├── Security Events
+│   ├── Configuration Changes
+│   └── Administrative Actions
+│
+├── Search & Filters
+│   ├── Search
+│   ├── Business
+│   ├── User
+│   ├── Action
+│   ├── Resource
+│   ├── Severity
+│   └── Date Range
+│
+├── Audit Table
+│   ├── Timestamp
+│   ├── Actor
+│   ├── Business
+│   ├── Action
+│   ├── Resource
+│   ├── IP / Session
+│   ├── Severity
+│   └── Details
+│
+└── Audit Details
+    ├── Event Information
+    ├── Before
+    ├── After
+    ├── Reason
+    └── Metadata
+01.17 System Health
+SYSTEM HEALTH
+│
+├── Overall Status
+│   ├── System Status
+│   └── Uptime
+│
+├── Core Services
+│   ├── API
+│   ├── Database
+│   ├── Authentication
+│   ├── Background Jobs
+│   └── Storage
+│
+├── Performance
+│   ├── Response Time
+│   ├── Error Rate
+│   ├── Request Volume
+│   └── Throughput
+│
+├── Infrastructure
+│   ├── CPU
+│   ├── Memory
+│   ├── Storage
+│   └── Connections
+│
+├── Incidents
+│   ├── Active Incidents
+│   ├── Resolved Incidents
+│   └── Incident History
+│
+└── Health Timeline
+    ├── Events
+    ├── Warnings
+    └── Downtime
+01.18 Platform Settings
+PLATFORM SETTINGS
+│
+├── General
+│   ├── Platform Name
+│   ├── Logo
+│   └── Default Configuration
+│
+├── Security
+│   ├── Authentication Policy
+│   ├── Password Policy
+│   ├── Session Policy
+│   └── Security Controls
+│
+├── Platform Defaults
+│   ├── Default Currency
+│   ├── Default Timezone
+│   └── Localization
+│
+├── Notifications
+│   ├── Email Notifications
+│   ├── System Alerts
+│   └── Admin Notifications
+│
+├── Integrations
+│   ├── Email
+│   ├── Storage
+│   └── External Services
+│
+└── Maintenance
+    ├── Maintenance Mode
+    ├── System Backup
+    └── System Operations
+
+
+02. BUSINESS ADMIN — COMPLETE INTERNAL PAGE TREEVIEW
+02.1 Dashboard
+BUSINESS ADMIN DASHBOARD
+│
+├── Page Header
+│   ├── Welcome Message
+│   ├── Business Name
+│   ├── Date Range
+│   └── Quick Actions
+│
+├── Business Overview
+│   ├── Total Customers
+│   ├── Total Products
+│   ├── Active Deals
+│   ├── Pending Approvals
+│   ├── Revenue
+│   └── Active Subscriptions
+│
+├── Sales Overview
+│   ├── Total Deals
+│   ├── Won Deals
+│   ├── Lost Deals
+│   ├── Deal Conversion
+│   └── Deal Trend
+│
+├── Revenue Overview
+│   ├── Total Revenue
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   ├── Revenue Growth
+│   └── Revenue Trend
+│
+├── Approval Overview
+│   ├── Pending Approvals
+│   ├── High Risk Deals
+│   ├── Average Approval Time
+│   └── Approval Trend
+│
+├── Inventory Overview
+│   ├── Total Stock
+│   ├── Low Stock
+│   ├── Out of Stock
+│   ├── Backorders
+│   └── Warehouse Status
+│
+├── Deal Health
+│   ├── Healthy Deals
+│   ├── At Risk
+│   ├── Stalled
+│   ├── Discount Anomalies
+│   └── Delivery Slippage
+│
+├── Recent Deals
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Value
+│   ├── Risk
+│   ├── Status
+│   └── Actions
+│
+├── Recent Activity
+│   ├── User Activity
+│   ├── Deal Activity
+│   ├── Approval Activity
+│   └── System Activity
+│
+└── Alerts
+    ├── Critical Alerts
+    ├── Warnings
+    └── Attention Required
+02.2 Organization → Company Profile
+COMPANY PROFILE
+│
+├── Company Header
+│   ├── Company Logo
+│   ├── Company Name
+│   ├── Company Status
+│   └── Edit Profile
+│
+├── Basic Information
+│   ├── Legal Business Name
+│   ├── Display Name
+│   ├── Business Type
+│   ├── Industry
+│   ├── Registration Number
+│   └── Tax ID
+│
+├── Contact Information
+│   ├── Business Email
+│   ├── Phone
+│   ├── Website
+│   └── Support Email
+│
+├── Business Address
+│   ├── Address Line 1
+│   ├── Address Line 2
+│   ├── City
+│   ├── State
+│   ├── Country
+│   └── Postal Code
+│
+├── Primary Contact
+│   ├── Name
+│   ├── Email
+│   └── Phone
+│
+└── Actions
+    ├── Edit
+    └── Save Changes
+02.3 Organization → Branding
+BRANDING
+│
+├── Brand Identity
+│   ├── Company Logo
+│   ├── Favicon
+│   └── Brand Name
+│
+├── Brand Colors
+│   ├── Primary Color
+│   ├── Primary Hover
+│   ├── Primary Subtle
+│   └── Secondary Color
+│
+├── Application Branding
+│   ├── Login Branding
+│   ├── Sidebar Branding
+│   ├── Customer Portal Branding
+│   └── Email Branding
+│
+├── Theme
+│   ├── Light Mode
+│   ├── Dark Mode
+│   └── System Mode
+│
+├── Preview
+│   ├── Application Preview
+│   └── Customer Portal Preview
+│
+└── Actions
+    ├── Reset Branding
+    └── Save Changes
+02.4 Organization → Localization
+LOCALIZATION
+│
+├── Language
+│   ├── Default Language
+│   ├── Available Languages
+│   └── Language Preference
+│
+├── Time
+│   ├── Timezone
+│   ├── Date Format
+│   └── Time Format
+│
+├── Number Formatting
+│   ├── Decimal Separator
+│   ├── Thousands Separator
+│   └── Decimal Precision
+│
+├── Regional Settings
+│   ├── Country
+│   ├── Region
+│   └── Locale
+│
+└── Actions
+    └── Save Changes
+02.5 Organization → Currency & Tax
+CURRENCY & TAX
+│
+├── Currency
+│   ├── Default Currency
+│   ├── Supported Currencies
+│   ├── Currency Symbol
+│   └── Decimal Precision
+│
+├── Tax Configuration
+│   ├── Tax Enabled
+│   ├── Default Tax
+│   ├── Tax Rates
+│   ├── Tax Categories
+│   └── Tax Inclusive / Exclusive
+│
+├── Tax Rules
+│   ├── Product Tax Rules
+│   ├── Customer Tax Rules
+│   └── Location-Based Tax Rules
+│
+├── Invoice Settings
+│   ├── Tax Display
+│   └── Tax Calculation
+│
+└── Actions
+    ├── Add Tax Rate
+    └── Save Changes
+02.6 Organization → Business Settings
+BUSINESS SETTINGS
+│
+├── General Settings
+│   ├── Business Name
+│   ├── Default Currency
+│   ├── Default Timezone
+│   └── Default Language
+│
+├── Sales Settings
+│   ├── Quote Validity
+│   ├── Default Payment Terms
+│   ├── Default Price List
+│   └── Sales Configuration
+│
+├── Discount Settings
+│   ├── Discount Calculation
+│   ├── Maximum Discount Behavior
+│   └── Discount Approval
+│
+├── Approval Settings
+│   ├── Approval Required
+│   ├── Approval Sequence
+│   └── Approval Notifications
+│
+├── Fulfillment Settings
+│   ├── Default Warehouse
+│   ├── Allocation Strategy
+│   └── Backorder Behavior
+│
+├── Billing Settings
+│   ├── Invoice Settings
+│   ├── Payment Terms
+│   └── Subscription Billing
+│
+└── Actions
+    ├── Reset Defaults
+    └── Save Changes
+02.7 Users & Access → Users
+USERS
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Invite User
+│
+├── User Overview
+│   ├── Total Users
+│   ├── Active Users
+│   ├── Pending Invitations
+│   └── Inactive Users
+│
+├── Filters
+│   ├── Role
+│   ├── Team
+│   ├── Status
+│   └── Last Active
+│
+├── Users Table
+│   ├── User
+│   ├── Role
+│   ├── Team
+│   ├── Status
+│   ├── Last Active
+│   ├── Joined Date
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Activate
+│   ├── Deactivate
+│   ├── Change Role
+│   └── Export
+│
+└── Pagination
+02.8 Users & Access → User Details
+USER DETAILS
+│
+├── User Header
+│   ├── Avatar
+│   ├── Full Name
+│   ├── Email
+│   ├── Role
+│   └── Status
+│
+├── Profile
+│   ├── Personal Information
+│   ├── Contact Information
+│   └── Account Information
+│
+├── Access
+│   ├── Role
+│   ├── Permissions
+│   ├── Team
+│   └── Access Scope
+│
+├── Activity
+│   ├── Recent Activity
+│   ├── Login History
+│   └── Actions Performed
+│
+├── Security
+│   ├── Last Login
+│   ├── Active Sessions
+│   └── Security Status
+│
+└── Actions
+    ├── Edit User
+    ├── Change Role
+    ├── Deactivate
+    ├── Activate
+    └── Revoke Access
+02.9 Users & Access → Invite User
+INVITE USER
+│
+├── User Information
+│   ├── Full Name
+│   ├── Email
+│   └── Phone
+│
+├── Organization Access
+│   ├── Role
+│   ├── Team
+│   └── Permissions
+│
+├── Invitation Settings
+│   ├── Invitation Message
+│   ├── Expiration
+│   └── Send Welcome Email
+│
+└── Actions
+    ├── Cancel
+    └── Send Invitation
+02.10 Users & Access → Teams
+TEAMS
+│
+├── Page Header
+│   └── Create Team
+│
+├── Team Overview
+│   ├── Total Teams
+│   ├── Total Members
+│   └── Active Teams
+│
+├── Search & Filters
+│   ├── Search Team
+│   └── Status
+│
+├── Teams List
+│   ├── Team Name
+│   ├── Team Lead
+│   ├── Members
+│   ├── Deals
+│   ├── Status
+│   └── Actions
+│
+├── Team Details
+│   ├── Overview
+│   ├── Members
+│   ├── Deals
+│   └── Performance
+│
+└── Actions
+    ├── Create
+    ├── Edit
+    └── Delete / Archive
+02.11 Users & Access → Roles
+ROLES
+│
+├── Page Header
+│   └── Create Role
+│
+├── Role Overview
+│   ├── Total Roles
+│   ├── System Roles
+│   └── Custom Roles
+│
+├── Roles List
+│   ├── Role Name
+│   ├── Description
+│   ├── Users
+│   ├── Type
+│   └── Actions
+│
+├── Role Details
+│   ├── Role Information
+│   ├── Assigned Users
+│   └── Permissions
+│
+└── Actions
+    ├── Create
+    ├── Edit
+    ├── Duplicate
+    └── Archive
+02.12 Users & Access → Permissions
+PERMISSIONS
+│
+├── Permission Overview
+│   ├── Modules
+│   ├── Resources
+│   └── Actions
+│
+├── Permission Groups
+│   ├── Sales
+│   ├── Customers
+│   ├── Products
+│   ├── Pricing
+│   ├── Approvals
+│   ├── Warehouse
+│   ├── Billing
+│   ├── Reports
+│   └── Administration
+│
+├── Permission Matrix
+│   ├── View
+│   ├── Create
+│   ├── Edit
+│   ├── Delete
+│   ├── Approve
+│   └── Export
+│
+├── Role Assignment
+│   ├── Role
+│   └── Assigned Permissions
+│
+└── Actions
+    ├── Update Permissions
+    └── Save Changes
+02.13 Customers → Customer List
+CUSTOMER LIST
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Create Customer
+│
+├── Customer KPIs
+│   ├── Total Customers
+│   ├── Active Customers
+│   ├── New Customers
+│   └── At Risk Customers
+│
+├── Filters
+│   ├── Customer Tier
+│   ├── Status
+│   ├── Industry
+│   ├── Sales Rep
+│   └── Date
+│
+├── Customer Table
+│   ├── Customer
+│   ├── Tier
+│   ├── Contact
+│   ├── Deals
+│   ├── Revenue
+│   ├── Status
+│   ├── Last Activity
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Assign
+│   ├── Change Tier
+│   └── Export
+│
+└── Pagination
+02.14 Customers → Create Customer
+CREATE CUSTOMER
+│
+├── Customer Information
+│   ├── Company Name
+│   ├── Customer Type
+│   ├── Industry
+│   └── Website
+│
+├── Contact Information
+│   ├── Primary Contact
+│   ├── Email
+│   ├── Phone
+│   └── Job Title
+│
+├── Address
+│   ├── Billing Address
+│   └── Shipping Address
+│
+├── Commercial Settings
+│   ├── Customer Tier
+│   ├── Price List
+│   ├── Payment Terms
+│   └── Credit Limit
+│
+├── Sales Assignment
+│   ├── Sales Rep
+│   └── Team
+│
+└── Actions
+    ├── Cancel
+    └── Create Customer
+02.15 Customers → Customer Details
+CUSTOMER DETAILS
+│
+├── Customer Header
+│   ├── Company Logo
+│   ├── Company Name
+│   ├── Customer Tier
+│   ├── Status
+│   └── Actions
+│
+├── Overview
+│   ├── Customer Information
+│   ├── Primary Contact
+│   ├── Sales Rep
+│   └── Account Status
+│
+├── Contacts
+│   ├── Contact List
+│   ├── Primary Contact
+│   ├── Contact Details
+│   └── Add Contact
+│
+├── Deals
+│   ├── Total Deals
+│   ├── Open Deals
+│   ├── Won Deals
+│   ├── Lost Deals
+│   └── Deal List
+│
+├── Orders
+│   ├── Total Orders
+│   ├── Order Value
+│   ├── Order Status
+│   └── Order List
+│
+├── Billing
+│   ├── Outstanding
+│   ├── Paid
+│   ├── Overdue
+│   └── Invoice List
+│
+├── Purchase History
+│   ├── Products Purchased
+│   ├── Purchase Frequency
+│   ├── Total Spend
+│   └── Purchase Timeline
+│
+└── Activity
+    ├── Customer Activity
+    ├── Deal Activity
+    ├── Communication
+    └── Audit History
+02.16 Products → Product List
+PRODUCT LIST
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Create Product
+│
+├── Product KPIs
+│   ├── Total Products
+│   ├── Active Products
+│   ├── Low Stock
+│   └── Out of Stock
+│
+├── Filters
+│   ├── Category
+│   ├── Status
+│   ├── Product Type
+│   ├── Stock Status
+│   └── Price Range
+│
+├── Product Table
+│   ├── Product
+│   ├── SKU
+│   ├── Category
+│   ├── Price
+│   ├── Stock
+│   ├── Status
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Activate
+│   ├── Deactivate
+│   ├── Update Category
+│   └── Export
+│
+└── Pagination
+02.17 Products → Create Product
+CREATE PRODUCT
+│
+├── Basic Information
+│   ├── Product Name
+│   ├── SKU
+│   ├── Description
+│   ├── Product Type
+│   └── Category
+│
+├── Product Media
+│   ├── Product Image
+│   └── Gallery
+│
+├── Pricing
+│   ├── Base Price
+│   ├── Cost Price
+│   ├── Minimum Selling Price
+│   └── Default Price List
+│
+├── Inventory
+│   ├── Track Inventory
+│   ├── Initial Stock
+│   ├── Reorder Level
+│   └── Warehouse
+│
+├── Sales Configuration
+│   ├── Minimum Margin
+│   ├── Discount Eligibility
+│   └── Subscription Eligible
+│
+└── Actions
+    ├── Save Draft
+    └── Create Product
+02.18 Products → Product Details
+PRODUCT DETAILS
+│
+├── Product Header
+│   ├── Product Image
+│   ├── Product Name
+│   ├── SKU
+│   ├── Status
+│   └── Actions
+│
+├── Overview
+│   ├── Description
+│   ├── Category
+│   ├── Product Type
+│   └── Product Status
+│
+├── Pricing
+│   ├── Base Price
+│   ├── Cost Price
+│   ├── Minimum Price
+│   ├── Margin
+│   └── Price Lists
+│
+├── Inventory
+│   ├── Total Stock
+│   ├── Available Stock
+│   ├── Reserved Stock
+│   ├── Low Stock
+│   └── Warehouse Stock
+│
+├── Sales History
+│   ├── Units Sold
+│   ├── Revenue
+│   ├── Customers
+│   └── Sales Trend
+│
+└── Activity
+    ├── Product Changes
+    ├── Price Changes
+    ├── Inventory Changes
+    └── Audit History
+02.19 Categories → Category Management
+CATEGORY MANAGEMENT
+│
+├── Page Header
+│   └── Create Category
+│
+├── Category Overview
+│   ├── Total Categories
+│   ├── Active Categories
+│   └── Products
+│
+├── Category Tree
+│   ├── Parent Categories
+│   ├── Subcategories
+│   └── Nested Categories
+│
+├── Category Details
+│   ├── Name
+│   ├── Description
+│   ├── Parent Category
+│   ├── Products
+│   └── Status
+│
+├── Category Rules
+│   ├── Discount Ceiling
+│   ├── Minimum Margin
+│   └── Pricing Rules
+│
+└── Actions
+    ├── Create
+    ├── Edit
+    ├── Move
+    ├── Archive
+    └── Delete
+02.20 Pricing → Price Lists
+PRICE LISTS
+│
+├── Page Header
+│   └── Create Price List
+│
+├── Price List Overview
+│   ├── Total Price Lists
+│   ├── Active
+│   └── Default
+│
+├── Search & Filters
+│   ├── Search
+│   ├── Status
+│   ├── Currency
+│   └── Customer Segment
+│
+├── Price List Table
+│   ├── Name
+│   ├── Currency
+│   ├── Customer Segment
+│   ├── Products
+│   ├── Status
+│   ├── Validity
+│   └── Actions
+│
+└── Pagination
+02.21 Pricing → Create Price List
+CREATE PRICE LIST
+│
+├── Basic Information
+│   ├── Name
+│   ├── Description
+│   ├── Currency
+│   └── Customer Segment
+│
+├── Validity
+│   ├── Start Date
+│   └── End Date
+│
+├── Pricing Rules
+│   ├── Products
+│   ├── Base Price
+│   ├── Fixed Price
+│   ├── Percentage Adjustment
+│   └── Volume Pricing
+│
+├── Customer Assignment
+│   ├── Customer Tier
+│   └── Specific Customers
+│
+└── Actions
+    ├── Cancel
+    └── Create Price List
+02.22 Pricing → Price List Details
+PRICE LIST DETAILS
+│
+├── Price List Header
+│   ├── Name
+│   ├── Status
+│   ├── Currency
+│   └── Actions
+│
+├── Overview
+│   ├── Description
+│   ├── Customer Segment
+│   ├── Validity
+│   └── Products Count
+│
+├── Pricing Items
+│   ├── Product
+│   ├── SKU
+│   ├── Base Price
+│   ├── Selling Price
+│   ├── Discount
+│   └── Margin
+│
+├── Customer Assignment
+│   ├── Customer Tiers
+│   └── Customers
+│
+└── Pricing History
+    ├── Changes
+    ├── Changed By
+    ├── Date
+    └── Reason
+02.23 Pricing → Customer Pricing
+CUSTOMER PRICING
+│
+├── Customer Selection
+│   ├── Customer
+│   ├── Customer Tier
+│   └── Price List
+│
+├── Pricing Overview
+│   ├── Standard Price
+│   ├── Customer Price
+│   ├── Discount
+│   └── Margin
+│
+├── Product Pricing
+│   ├── Product
+│   ├── Standard Price
+│   ├── Customer Price
+│   └── Effective Discount
+│
+├── Customer Overrides
+│   ├── Product Override
+│   ├── Discount Override
+│   └── Validity
+│
+└── Actions
+    ├── Add Override
+    └── Save Changes
+02.24 Pricing → Volume Pricing
+VOLUME PRICING
+│
+├── Page Header
+│   └── Create Volume Rule
+│
+├── Volume Rules
+│   ├── Product
+│   ├── Minimum Quantity
+│   ├── Maximum Quantity
+│   ├── Unit Price
+│   ├── Discount
+│   └── Status
+│
+├── Rule Details
+│   ├── Quantity Range
+│   ├── Pricing Method
+│   ├── Discount
+│   └── Effective Period
+│
+└── Actions
+    ├── Create
+    ├── Edit
+    ├── Activate
+    └── Deactivate
+02.25 Pricing → Pricing History
+PRICING HISTORY
+│
+├── Search & Filters
+│   ├── Product
+│   ├── Price List
+│   ├── Customer
+│   ├── Changed By
+│   └── Date Range
+│
+├── History Table
+│   ├── Product
+│   ├── Previous Price
+│   ├── New Price
+│   ├── Changed By
+│   ├── Date
+│   └── Reason
+│
+└── Change Details
+    ├── Before
+    ├── After
+    ├── Actor
+    ├── Timestamp
+    └── Reason
+02.26 Discount Governance → Discount Rules
+DISCOUNT RULES
+│
+├── Page Header
+│   └── Create Discount Rule
+│
+├── Rule Overview
+│   ├── Total Rules
+│   ├── Active Rules
+│   ├── Customer Rules
+│   ├── Category Rules
+│   └── Margin Rules
+│
+├── Search & Filters
+│   ├── Customer Tier
+│   ├── Category
+│   ├── Rule Type
+│   ├── Status
+│   └── Priority
+│
+├── Rules Table
+│   ├── Rule Name
+│   ├── Type
+│   ├── Maximum Discount
+│   ├── Scope
+│   ├── Priority
+│   ├── Status
+│   └── Actions
+│
+└── Rule Evaluation
+    ├── Applicable Rules
+    ├── Rule Conflicts
+    └── Final Ceiling
+02.27 Discount Governance → Create Discount Rule
+CREATE DISCOUNT RULE
+│
+├── Rule Information
+│   ├── Rule Name
+│   ├── Description
+│   ├── Rule Type
+│   └── Priority
+│
+├── Scope
+│   ├── Customer Tier
+│   ├── Customer
+│   ├── Product
+│   ├── Category
+│   └── Global
+│
+├── Discount Limit
+│   ├── Maximum Discount
+│   ├── Line Discount
+│   └── Order Discount
+│
+├── Margin Protection
+│   ├── Minimum Margin
+│   ├── Margin Threshold
+│   └── Risk Behavior
+│
+├── Conditions
+│   ├── Deal Value
+│   ├── Quantity
+│   ├── Product
+│   ├── Customer
+│   └── Date
+│
+├── Approval Behavior
+│   ├── Approval Required
+│   ├── Approval Level
+│   └── Escalation
+│
+└── Actions
+    ├── Cancel
+    ├── Save Draft
+    └── Create Rule
+02.28 Discount Governance → Rule Details
+DISCOUNT RULE DETAILS
+│
+├── Rule Header
+│   ├── Rule Name
+│   ├── Status
+│   ├── Priority
+│   └── Actions
+│
+├── Rule Definition
+│   ├── Type
+│   ├── Scope
+│   ├── Conditions
+│   └── Effective Period
+│
+├── Discount Limits
+│   ├── Maximum Discount
+│   ├── Line Discount
+│   └── Order Discount
+│
+├── Margin Rules
+│   ├── Minimum Margin
+│   └── Margin Protection
+│
+├── Approval Behavior
+│   ├── Required Approval
+│   ├── Approval Level
+│   └── Escalation
+│
+├── Evaluation
+│   ├── Matching Conditions
+│   ├── Conflicts
+│   └── Final Decision
+│
+└── History
+    ├── Changes
+    ├── Actor
+    ├── Timestamp
+    └── Reason
+02.29 Discount Governance → Customer Tier Rules
+CUSTOMER TIER RULES
+│
+├── Customer Tiers
+│   ├── Bronze
+│   ├── Silver
+│   ├── Gold
+│   └── Platinum
+│
+├── Tier Configuration
+│   ├── Maximum Discount
+│   ├── Default Price List
+│   ├── Minimum Margin
+│   └── Approval Requirement
+│
+├── Tier Conditions
+│   ├── Revenue
+│   ├── Purchase Volume
+│   ├── Customer Lifetime
+│   └── Business Criteria
+│
+├── Customer Assignment
+│   ├── Customers
+│   └── Tier Assignment
+│
+└── Actions
+    ├── Create Tier
+    ├── Edit Tier
+    └── Save Changes
+02.30 Discount Governance → Category Rules
+CATEGORY RULES
+│
+├── Category Selection
+│   ├── Category
+│   └── Subcategory
+│
+├── Discount Limits
+│   ├── Maximum Discount
+│   ├── Line Discount
+│   └── Order Discount
+│
+├── Margin Rules
+│   ├── Minimum Margin
+│   └── Margin Threshold
+│
+├── Approval Behavior
+│   ├── Approval Required
+│   ├── Approval Level
+│   └── Escalation
+│
+├── Rule Priority
+│   ├── Category Priority
+│   └── Conflict Handling
+│
+└── Actions
+    ├── Add Rule
+    ├── Edit
+    └── Remove
+02.31 Discount Governance → Margin Rules
+MARGIN RULES
+│
+├── Margin Overview
+│   ├── Minimum Margin
+│   ├── Target Margin
+│   └── Critical Margin
+│
+├── Product Rules
+│   ├── Product
+│   └── Minimum Margin
+│
+├── Category Rules
+│   ├── Category
+│   └── Minimum Margin
+│
+├── Customer Rules
+│   ├── Customer Tier
+│   └── Minimum Margin
+│
+├── Risk Behavior
+│   ├── Low Margin
+│   ├── High Risk
+│   └── Critical Risk
+│
+└── Actions
+    ├── Create Rule
+    ├── Edit
+    └── Save
+02.32 Discount Governance → Rule Simulator
+DISCOUNT RULE SIMULATOR
+│
+├── Scenario Input
+│   ├── Customer
+│   ├── Customer Tier
+│   ├── Products
+│   ├── Quantities
+│   ├── Product Categories
+│   ├── Proposed Discount
+│   └── Deal Value
+│
+├── Rule Evaluation
+│   ├── Customer Tier Rule
+│   ├── Category Rule
+│   ├── Margin Rule
+│   └── Applicable Rules
+│
+├── Discount Result
+│   ├── Requested Discount
+│   ├── Allowed Discount
+│   ├── Excess Discount
+│   └── Final Decision
+│
+├── Risk Result
+│   ├── Risk Score
+│   ├── Risk Level
+│   └── Risk Factors
+│
+├── Approval Result
+│   ├── Approval Required
+│   ├── Approval Level
+│   └── Approval Chain
+│
+└── Explanation
+    ├── Why Allowed
+    ├── Why Restricted
+    └── Recommended Action
+02.33 Approval Configuration → Approval Rules
+APPROVAL RULES
+│
+├── Page Header
+│   └── Create Approval Rule
+│
+├── Rule Overview
+│   ├── Total Rules
+│   ├── Active Rules
+│   └── High Risk Rules
+│
+├── Search & Filters
+│   ├── Rule Type
+│   ├── Risk Level
+│   ├── Deal Value
+│   └── Status
+│
+├── Approval Rules Table
+│   ├── Rule Name
+│   ├── Trigger
+│   ├── Risk Level
+│   ├── Approval Level
+│   ├── Priority
+│   ├── Status
+│   └── Actions
+│
+└── Rule Evaluation
+    ├── Conditions
+    ├── Trigger
+    └── Result
+02.34 Approval Configuration → Create Approval Rule
+CREATE APPROVAL RULE
+│
+├── Rule Information
+│   ├── Rule Name
+│   ├── Description
+│   └── Priority
+│
+├── Trigger Conditions
+│   ├── Discount Threshold
+│   ├── Deal Value
+│   ├── Margin
+│   ├── Risk Score
+│   ├── Customer Tier
+│   └── Product Category
+│
+├── Approval Level
+│   ├── No Approval
+│   ├── Sales Manager
+│   ├── Finance
+│   └── Multi-Level
+│
+├── Approval Chain
+│   ├── Step 1
+│   ├── Step 2
+│   └── Escalation
+│
+├── SLA
+│   ├── Approval Time
+│   └── Escalation Time
+│
+└── Actions
+    ├── Cancel
+    ├── Save Draft
+    └── Create Rule
+02.35 Approval Configuration → Approval Chains
+APPROVAL CHAINS
+│
+├── Page Header
+│   └── Create Approval Chain
+│
+├── Chain List
+│   ├── Chain Name
+│   ├── Trigger
+│   ├── Steps
+│   ├── Status
+│   └── Actions
+│
+├── Chain Details
+│   ├── Trigger Conditions
+│   ├── Approval Steps
+│   │   ├── Step 1
+│   │   ├── Step 2
+│   │   └── Step 3
+│   ├── Approver
+│   ├── SLA
+│   └── Escalation
+│
+├── Chain Logic
+│   ├── Sequential
+│   ├── Parallel
+│   └── Conditional
+│
+└── Actions
+    ├── Create
+    ├── Edit
+    ├── Activate
+    └── Deactivate
+02.36 Approval Configuration → Thresholds
+APPROVAL THRESHOLDS
+│
+├── Deal Value Threshold
+│   ├── Low Value
+│   ├── Medium Value
+│   └── High Value
+│
+├── Discount Threshold
+│   ├── Safe
+│   ├── Review
+│   └── Escalation
+│
+├── Risk Threshold
+│   ├── Low Risk
+│   ├── Medium Risk
+│   ├── High Risk
+│   └── Critical Risk
+│
+├── Margin Threshold
+│   ├── Healthy
+│   ├── Warning
+│   └── Critical
+│
+├── Approval Mapping
+│   ├── Threshold
+│   ├── Approver
+│   └── Approval Chain
+│
+└── Actions
+    └── Save Thresholds
+02.37 Approval Configuration → Approval Simulator
+APPROVAL SIMULATOR
+│
+├── Scenario
+│   ├── Customer
+│   ├── Deal Value
+│   ├── Products
+│   ├── Discount
+│   ├── Margin
+│   └── Risk Score
+│
+├── Rule Evaluation
+│   ├── Discount Rules
+│   ├── Risk Rules
+│   ├── Margin Rules
+│   └── Value Thresholds
+│
+├── Approval Decision
+│   ├── Approval Required
+│   ├── Approval Level
+│   ├── Approval Chain
+│   └── Approver
+│
+├── Escalation
+│   ├── SLA
+│   └── Escalation Path
+│
+└── Explanation
+    ├── Triggered Rules
+    ├── Decision Reason
+    └── Recommended Action
+02.38 Warehouses → Warehouse List
+WAREHOUSE LIST
+│
+├── Page Header
+│   └── Create Warehouse
+│
+├── Warehouse KPIs
+│   ├── Total Warehouses
+│   ├── Active Warehouses
+│   ├── Total Inventory
+│   └── Low Stock Items
+│
+├── Search & Filters
+│   ├── Search
+│   ├── Location
+│   ├── Status
+│   └── Capacity
+│
+├── Warehouse Table
+│   ├── Warehouse
+│   ├── Location
+│   ├── Inventory
+│   ├── Capacity
+│   ├── Shipments
+│   ├── Status
+│   └── Actions
+│
+└── Pagination
+02.39 Warehouses → Create Warehouse
+CREATE WAREHOUSE
+│
+├── Warehouse Information
+│   ├── Warehouse Name
+│   ├── Warehouse Code
+│   ├── Type
+│   └── Status
+│
+├── Location
+│   ├── Address
+│   ├── City
+│   ├── State
+│   ├── Country
+│   └── Postal Code
+│
+├── Contact
+│   ├── Manager
+│   ├── Email
+│   └── Phone
+│
+├── Capacity
+│   ├── Storage Capacity
+│   ├── Current Capacity
+│   └── Capacity Threshold
+│
+├── Fulfillment Settings
+│   ├── Default Warehouse
+│   ├── Allocation Priority
+│   ├── Shipping Cost
+│   └── Shipment Priority
+│
+└── Actions
+    ├── Cancel
+    └── Create Warehouse
+02.40 Warehouses → Warehouse Details
+WAREHOUSE DETAILS
+│
+├── Warehouse Header
+│   ├── Warehouse Name
+│   ├── Warehouse Code
+│   ├── Location
+│   ├── Status
+│   └── Actions
+│
+├── Overview
+│   ├── Inventory Value
+│   ├── Total Products
+│   ├── Available Stock
+│   ├── Reserved Stock
+│   └── Capacity
+│
+├── Inventory
+│   ├── Product
+│   ├── SKU
+│   ├── Available
+│   ├── Reserved
+│   ├── Reorder Level
+│   └── Stock Status
+│
+├── Stock Movements
+│   ├── Incoming
+│   ├── Outgoing
+│   ├── Transfers
+│   └── Adjustments
+│
+└── Shipments
+    ├── Pending
+    ├── Processing
+    ├── Shipped
+    ├── Delivered
+    └── Shipment History
+02.41 Warehouses → Shipping Rules
+SHIPPING RULES
+│
+├── Rule Overview
+│   ├── Total Rules
+│   ├── Active Rules
+│   └── Default Rule
+│
+├── Rule Conditions
+│   ├── Destination
+│   ├── Warehouse
+│   ├── Order Value
+│   ├── Weight
+│   └── Product
+│
+├── Allocation Strategy
+│   ├── Stock Availability
+│   ├── Shipping Cost
+│   ├── Shipment Count
+│   └── Warehouse Priority
+│
+├── Shipping Methods
+│   ├── Standard
+│   ├── Express
+│   └── Priority
+│
+└── Actions
+    ├── Create Rule
+    ├── Edit
+    ├── Activate
+    └── Deactivate
+02.42 Subscriptions → Plans
+SUBSCRIPTION PLANS
+│
+├── Page Header
+│   └── Create Plan
+│
+├── Plan Overview
+│   ├── Total Plans
+│   ├── Active Plans
+│   └── Subscribers
+│
+├── Search & Filters
+│   ├── Plan Type
+│   ├── Billing Cycle
+│   ├── Status
+│   └── Price Range
+│
+├── Plans Table
+│   ├── Plan Name
+│   ├── Price
+│   ├── Billing Cycle
+│   ├── Subscribers
+│   ├── Status
+│   └── Actions
+│
+└── Pagination
+02.43 Subscriptions → Create Plan
+CREATE SUBSCRIPTION PLAN
+│
+├── Plan Information
+│   ├── Plan Name
+│   ├── Description
+│   └── Plan Type
+│
+├── Pricing
+│   ├── Price
+│   ├── Currency
+│   ├── Billing Cycle
+│   └── Billing Frequency
+│
+├── Plan Features
+│   ├── Features
+│   ├── Usage Limits
+│   └── Included Products / Services
+│
+├── Trial
+│   ├── Trial Enabled
+│   └── Trial Duration
+│
+├── Proration
+│   ├── Upgrade Rule
+│   ├── Downgrade Rule
+│   └── Proration Behavior
+│
+├── Cancellation
+│   ├── Cancellation Policy
+│   ├── Refund Policy
+│   └── Effective Date
+│
+└── Actions
+    ├── Cancel
+    ├── Save Draft
+    └── Create Plan
+02.44 Subscriptions → Plan Details
+SUBSCRIPTION PLAN DETAILS
+│
+├── Plan Header
+│   ├── Plan Name
+│   ├── Price
+│   ├── Billing Cycle
+│   ├── Status
+│   └── Actions
+│
+├── Overview
+│   ├── Description
+│   ├── Features
+│   ├── Limits
+│   └── Subscribers
+│
+├── Pricing
+│   ├── Price
+│   ├── Currency
+│   ├── Billing Cycle
+│   └── Billing Frequency
+│
+├── Subscription Metrics
+│   ├── Active Subscribers
+│   ├── New Subscribers
+│   ├── Churn
+│   └── Revenue
+│
+├── Proration
+│   ├── Upgrade
+│   ├── Downgrade
+│   └── Mid-Cycle Change
+│
+└── Cancellation
+    ├── Cancellation Rules
+    ├── Refund Rules
+    └── Effective Date
+02.45 Subscriptions → Billing Cycles
+BILLING CYCLES
+│
+├── Cycle Overview
+│   ├── Monthly
+│   ├── Quarterly
+│   ├── Semi-Annual
+│   └── Annual
+│
+├── Cycle Configuration
+│   ├── Cycle Name
+│   ├── Duration
+│   ├── Billing Date
+│   └── Renewal Behavior
+│
+├── Billing Rules
+│   ├── Automatic Renewal
+│   ├── Grace Period
+│   └── Failed Payment Behavior
+│
+└── Actions
+    ├── Create Cycle
+    ├── Edit
+    └── Activate / Deactivate
+02.46 Subscriptions → Proration & Cancellation Rules
+PRORATION & CANCELLATION RULES
+│
+├── Proration Configuration
+│   ├── Upgrade Proration
+│   ├── Downgrade Proration
+│   ├── Mid-Cycle Change
+│   ├── Remaining Period
+│   └── Billing Adjustment
+│
+├── Proration Calculation
+│   ├── Current Plan
+│   ├── New Plan
+│   ├── Remaining Days
+│   ├── Used Days
+│   ├── Credit
+│   ├── Charge
+│   └── Final Adjustment
+│
+├── Cancellation Rules
+│   ├── Immediate Cancellation
+│   ├── End-of-Period Cancellation
+│   ├── Cancellation Notice
+│   └── Cancellation Eligibility
+│
+├── Refund Rules
+│   ├── Refund Eligible
+│   ├── Full Refund
+│   ├── Partial Refund
+│   ├── No Refund
+│   └── Refund Calculation
+│
+└── Actions
+    ├── Test Calculation
+    └── Save Rules
+02.47 Reports
+REPORTS
+│
+├── Page Header
+│   ├── Date Range
+│   ├── Filters
+│   └── Export
+│
+├── Sales Reports
+│   ├── Deal Performance
+│   ├── Conversion
+│   ├── Sales Rep Performance
+│   └── Customer Performance
+│
+├── Revenue Reports
+│   ├── Total Revenue
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   └── Revenue Trend
+│
+├── Discount Reports
+│   ├── Discount Usage
+│   ├── Discount Exceptions
+│   ├── Discount by Customer
+│   └── Discount by Product
+│
+├── Margin Reports
+│   ├── Average Margin
+│   ├── Margin by Product
+│   ├── Margin by Deal
+│   └── Low Margin Deals
+│
+├── Approval Reports
+│   ├── Approval Volume
+│   ├── Approval Time
+│   ├── Rejections
+│   └── Escalations
+│
+├── Fulfillment Reports
+│   ├── Fulfillment Rate
+│   ├── Backorders
+│   ├── Delivery Time
+│   └── Warehouse Performance
+│
+└── Report Export
+    ├── CSV
+    ├── PDF
+    └── Scheduled Report
+02.48 Deal Health
+DEAL HEALTH
+│
+├── Health Overview
+│   ├── Healthy Deals
+│   ├── At Risk Deals
+│   ├── Critical Deals
+│   └── Stalled Deals
+│
+├── Health Score
+│   ├── Overall Score
+│   ├── Risk Score
+│   ├── Engagement
+│   ├── Approval Delay
+│   └── Fulfillment Status
+│
+├── Anomalies
+│   ├── Discount Anomalies
+│   ├── Margin Anomalies
+│   ├── Approval Delays
+│   └── Delivery Slippage
+│
+├── Deal Health Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Health
+│   ├── Risk
+│   ├── Last Activity
+│   └── Actions
+│
+└── Health Insights
+    ├── Critical Issues
+    ├── Recommended Actions
+    └── Trends
+02.49 Audit Trail
+AUDIT TRAIL
+│
+├── Audit Overview
+│   ├── Total Events
+│   ├── Configuration Changes
+│   ├── Approval Actions
+│   └── User Actions
+│
+├── Search & Filters
+│   ├── Search
+│   ├── User
+│   ├── Action
+│   ├── Resource
+│   ├── Module
+│   ├── Severity
+│   └── Date Range
+│
+├── Audit Table
+│   ├── Timestamp
+│   ├── User
+│   ├── Action
+│   ├── Resource
+│   ├── Module
+│   ├── Status
+│   └── Actions
+│
+└── Audit Details
+    ├── Event
+    ├── Actor
+    ├── Timestamp
+    ├── Before
+    ├── After
+    ├── Reason
+    └── Metadata
+02.50 Settings
+BUSINESS SETTINGS
+│
+├── General
+│   ├── Business Information
+│   ├── Currency
+│   ├── Timezone
+│   └── Localization
+│
+├── Appearance
+│   ├── Theme
+│   ├── Branding
+│   └── Interface Preferences
+│
+├── Notifications
+│   ├── Email Notifications
+│   ├── Approval Notifications
+│   ├── Deal Alerts
+│   ├── Inventory Alerts
+│   └── Billing Alerts
+│
+├── Security
+│   ├── Password Policy
+│   ├── Session Policy
+│   ├── Authentication
+│   └── Access Controls
+│
+├── Integrations
+│   ├── Email
+│   ├── Payment
+│   ├── Shipping
+│   └── External Services
+│
+└── Data & Privacy
+    ├── Data Export
+    ├── Data Retention
+    └── Privacy Settings
+✅ 02. BUSINESS ADMIN — COMPLETE NODE COVERAGE
+
+Tumhare diye hue ek bhi original node ko remove nahi kiya gaya:
+
+02. BUSINESS ADMIN
+│
+├── Dashboard
+│
+├── Organization
+│   ├── Company Profile
+│   ├── Branding
+│   ├── Localization
+│   ├── Currency & Tax
+│   └── Business Settings
+│
+├── Users & Access
+│   ├── Users
+│   ├── User Details
+│   ├── Invite User
+│   ├── Teams
+│   ├── Roles
+│   └── Permissions
+│
+├── Customers
+│   ├── Customer List
+│   ├── Create Customer
+│   └── Customer Details
+│       ├── Overview
+│       ├── Contacts
+│       ├── Deals
+│       ├── Orders
+│       ├── Billing
+│       ├── Purchase History
+│       └── Activity
+│
+├── Products
+│   ├── Product List
+│   ├── Create Product
+│   └── Product Details
+│       ├── Overview
+│       ├── Pricing
+│       ├── Inventory
+│       ├── Sales History
+│       └── Activity
+│
+├── Categories
+│   └── Category Management
+│
+├── Pricing
+│   ├── Price Lists
+│   ├── Create Price List
+│   ├── Price List Details
+│   ├── Customer Pricing
+│   ├── Volume Pricing
+│   └── Pricing History
+│
+├── Discount Governance
+│   ├── Discount Rules
+│   ├── Create Discount Rule
+│   ├── Rule Details
+│   ├── Customer Tier Rules
+│   ├── Category Rules
+│   ├── Margin Rules
+│   └── Rule Simulator
+│
+├── Approval Configuration
+│   ├── Approval Rules
+│   ├── Create Approval Rule
+│   ├── Approval Chains
+│   ├── Thresholds
+│   └── Approval Simulator
+│
+├── Warehouses
+│   ├── Warehouse List
+│   ├── Create Warehouse
+│   ├── Warehouse Details
+│   │   ├── Overview
+│   │   ├── Inventory
+│   │   ├── Stock Movements
+│   │   └── Shipments
+│   └── Shipping Rules
+│
+├── Subscriptions
+│   ├── Plans
+│   ├── Create Plan
+│   ├── Plan Details
+│   ├── Billing Cycles
+│   └── Proration & Cancellation Rules
+│
+├── Reports
+├── Deal Health
+├── Audit Trail
+└── Settings
+
+03. SALES — COMPLETE INTERNAL PAGE TREEVIEW
+03.1 Dashboard
+SALES DASHBOARD
+│
+├── Page Header
+│   ├── Welcome Message
+│   ├── Sales Rep Name
+│   ├── Date Range
+│   └── Quick Actions
+│       ├── Create Quotation
+│       └── View My Deals
+│
+├── Sales KPIs
+│   ├── Total Pipeline
+│   ├── Open Deals
+│   ├── Won Deals
+│   ├── Lost Deals
+│   ├── Win Rate
+│   └── Revenue
+│
+├── Quotation KPIs
+│   ├── Draft Quotations
+│   ├── Pending Approval
+│   ├── Sent to Customer
+│   ├── Negotiations
+│   └── Accepted
+│
+├── Approval Status
+│   ├── Pending Approval
+│   ├── Approved
+│   ├── Returned
+│   ├── Rejected
+│   └── High Risk
+│
+├── Pipeline
+│   ├── Lead / Opportunity
+│   ├── Quotation
+│   ├── Negotiation
+│   ├── Customer Review
+│   ├── Won
+│   └── Lost
+│
+├── Deal Health
+│   ├── Healthy
+│   ├── At Risk
+│   ├── Stalled
+│   └── Critical
+│
+├── Revenue Trend
+│   ├── Total Revenue
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   └── Revenue Trend Chart
+│
+├── Recent Deals
+│   ├── Deal
+│   ├── Customer
+│   ├── Value
+│   ├── Stage
+│   ├── Risk
+│   ├── Health
+│   └── Actions
+│
+├── Recent Quotations
+│   ├── Quote Number
+│   ├── Customer
+│   ├── Value
+│   ├── Discount
+│   ├── Status
+│   └── Actions
+│
+├── Recommendations
+│   ├── Upsell Opportunities
+│   ├── Cross-Sell Opportunities
+│   ├── At-Risk Customers
+│   └── Recommended Actions
+│
+└── Activity
+    ├── Recent Customer Activity
+    ├── Deal Updates
+    ├── Approval Updates
+    └── Negotiation Updates
+03.2 Customers → My Customers
+MY CUSTOMERS
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Quick Actions
+│
+├── Customer KPIs
+│   ├── Total Customers
+│   ├── Active Customers
+│   ├── New Customers
+│   └── At-Risk Customers
+│
+├── Filters
+│   ├── Customer Tier
+│   ├── Status
+│   ├── Industry
+│   ├── Customer Health
+│   └── Last Activity
+│
+├── Customer Table
+│   ├── Customer
+│   ├── Primary Contact
+│   ├── Customer Tier
+│   ├── Active Deals
+│   ├── Revenue
+│   ├── Health
+│   ├── Last Activity
+│   └── Actions
+│
+├── Customer Insights
+│   ├── Purchase History
+│   ├── Frequently Purchased Products
+│   ├── Upsell Opportunities
+│   └── Cross-Sell Opportunities
+│
+├── Bulk Actions
+│   ├── Export
+│   └── Assign / Reassign
+│
+└── Pagination
+03.3 Customers → Customer Details
+CUSTOMER DETAILS
+│
+├── Customer Header
+│   ├── Company Logo
+│   ├── Company Name
+│   ├── Customer Tier
+│   ├── Customer Health
+│   ├── Status
+│   └── Quick Actions
+│       ├── Create Quotation
+│       └── Contact Customer
+│
+├── Customer Overview
+│   ├── Company Information
+│   ├── Primary Contact
+│   ├── Email
+│   ├── Phone
+│   ├── Website
+│   └── Address
+│
+├── Commercial Profile
+│   ├── Customer Tier
+│   ├── Price List
+│   ├── Payment Terms
+│   ├── Credit Limit
+│   └── Discount Eligibility
+│
+├── Deal Summary
+│   ├── Total Deals
+│   ├── Open Deals
+│   ├── Won Deals
+│   ├── Lost Deals
+│   └── Pipeline Value
+│
+├── Purchase History
+│   ├── Total Purchases
+│   ├── Total Spend
+│   ├── Products Purchased
+│   └── Purchase Timeline
+│
+├── Active Quotations
+│   ├── Quote Number
+│   ├── Value
+│   ├── Status
+│   ├── Expiry
+│   └── Actions
+│
+├── Recommendations
+│   ├── Upsell
+│   ├── Cross-Sell
+│   ├── Frequently Bought Together
+│   └── Recommended Products
+│
+├── Customer Health
+│   ├── Health Score
+│   ├── Engagement
+│   ├── Deal Activity
+│   ├── Purchase Activity
+│   └── Risk Signals
+│
+└── Activity
+    ├── Customer Activity
+    ├── Deal Activity
+    ├── Quote Activity
+    └── Communication History
+03.4 Deals → My Deals
+MY DEALS
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Create Deal
+│
+├── Deal KPIs
+│   ├── Total Pipeline
+│   ├── Open Deals
+│   ├── Won
+│   ├── Lost
+│   └── At Risk
+│
+├── Pipeline Summary
+│   ├── Draft
+│   ├── Pending Approval
+│   ├── Approved
+│   ├── Customer Review
+│   ├── Negotiation
+│   ├── Confirmed
+│   └── Fulfillment
+│
+├── Filters
+│   ├── Stage
+│   ├── Customer
+│   ├── Deal Value
+│   ├── Risk
+│   ├── Health
+│   └── Date Range
+│
+├── View Options
+│   ├── Table View
+│   ├── Kanban View
+│   └── Pipeline View
+│
+├── Deals Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Value
+│   ├── Stage
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk
+│   ├── Health
+│   ├── Last Activity
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Export
+│   └── Update Stage
+│
+└── Pagination
+03.5 Deals → Deal Details
+DEAL DETAILS
+│
+├── Deal Header
+│   ├── Deal Name
+│   ├── Deal ID
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Deal Value
+│   ├── Stage
+│   ├── Health
+│   └── Actions
+│
+├── Deal Summary
+│   ├── Deal Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk Score
+│   ├── Probability
+│   └── Expected Close Date
+│
+├── Customer
+│   ├── Customer Information
+│   ├── Customer Tier
+│   ├── Contact
+│   └── Purchase History
+│
+├── Products
+│   ├── Product
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Discount
+│   ├── Line Total
+│   └── Margin
+│
+├── Approval
+│   ├── Approval Status
+│   ├── Current Approver
+│   ├── Approval Level
+│   ├── Risk
+│   └── Approval History
+│
+├── Customer Negotiation
+│   ├── Current Version
+│   ├── Customer Requests
+│   ├── Counter Offers
+│   └── Negotiation Status
+│
+├── Fulfillment
+│   ├── Inventory Status
+│   ├── Warehouse Allocation
+│   ├── Shipment Status
+│   └── Backorder
+│
+├── Billing
+│   ├── Billing Type
+│   ├── One-Time
+│   ├── Recurring
+│   ├── Invoice Status
+│   └── Payment Status
+│
+├── Deal Health
+│   ├── Health Score
+│   ├── Risk Signals
+│   ├── Stalled Indicators
+│   └── Recommended Action
+│
+└── Actions
+    ├── Edit
+    ├── Submit
+    ├── Send to Customer
+    └── View Quotation
+03.6 Deals → Deal Timeline
+DEAL TIMELINE
+│
+├── Timeline Header
+│   ├── Deal Name
+│   ├── Customer
+│   ├── Current Stage
+│   └── Current Status
+│
+├── Deal Lifecycle
+│   ├── Deal Created
+│   ├── Quotation Created
+│   ├── Submitted
+│   ├── Risk Calculated
+│   ├── Approval Requested
+│   ├── Approved
+│   ├── Sent to Customer
+│   ├── Customer Viewed
+│   ├── Negotiation
+│   ├── Re-Approval
+│   ├── Accepted
+│   ├── Order Confirmed
+│   ├── Fulfillment
+│   ├── Shipment
+│   ├── Backorder
+│   └── Billing
+│
+├── Timeline Events
+│   ├── Event Type
+│   ├── Actor
+│   ├── Timestamp
+│   ├── Description
+│   └── Reason
+│
+├── Version History
+│   ├── Version Number
+│   ├── Changes
+│   ├── Discount Change
+│   ├── Value Change
+│   ├── Risk Change
+│   └── Approval Impact
+│
+└── Filters
+    ├── All
+    ├── Sales
+    ├── Approval
+    ├── Customer
+    ├── Fulfillment
+    └── Billing
+03.7 Deals → Deal Health
+DEAL HEALTH
+│
+├── Health Header
+│   ├── Deal Name
+│   ├── Customer
+│   ├── Health Score
+│   └── Health Status
+│
+├── Health Score
+│   ├── Overall Score
+│   ├── Sales Activity
+│   ├── Customer Engagement
+│   ├── Approval Progress
+│   ├── Discount Risk
+│   ├── Margin Health
+│   └── Fulfillment Health
+│
+├── Risk Signals
+│   ├── Excess Discount
+│   ├── Margin Compression
+│   ├── Approval Delay
+│   ├── Customer Inactivity
+│   └── Delivery Slippage
+│
+├── Deal Anomalies
+│   ├── Discount Anomaly
+│   ├── Pricing Anomaly
+│   ├── Approval Anomaly
+│   └── Fulfillment Anomaly
+│
+├── Health Timeline
+│   ├── Score Changes
+│   ├── Triggered Events
+│   └── Risk Changes
+│
+└── Recommended Actions
+    ├── Contact Customer
+    ├── Review Discount
+    ├── Escalate Approval
+    ├── Adjust Fulfillment
+    └── Review Deal
+03.8 Quotations → All Quotations
+ALL QUOTATIONS
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Create Quotation
+│
+├── Quotation KPIs
+│   ├── Total Quotations
+│   ├── Draft
+│   ├── Pending Approval
+│   ├── Sent
+│   ├── Negotiation
+│   ├── Accepted
+│   └── Expired
+│
+├── Filters
+│   ├── Status
+│   ├── Customer
+│   ├── Deal
+│   ├── Risk
+│   ├── Value
+│   ├── Date
+│   └── Expiry
+│
+├── Quotations Table
+│   ├── Quote Number
+│   ├── Customer
+│   ├── Deal
+│   ├── Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk
+│   ├── Status
+│   ├── Expiry
+│   └── Actions
+│
+├── View Options
+│   ├── Table
+│   └── Kanban
+│
+├── Bulk Actions
+│   ├── Export
+│   ├── Send
+│   └── Archive
+│
+└── Pagination
+03.9 Quotations → Create Quotation
+CREATE QUOTATION
+│
+├── Customer
+│   ├── Select Customer
+│   ├── Customer Tier
+│   ├── Customer Price List
+│   └── Customer Information
+│
+├── Deal Information
+│   ├── Deal Name
+│   ├── Reference
+│   ├── Expected Close Date
+│   └── Sales Rep
+│
+├── Products
+│   ├── Add Product
+│   ├── Product Search
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Line Discount
+│   └── Line Total
+│
+├── Pricing
+│   ├── Subtotal
+│   ├── Line Discounts
+│   ├── Order Discount
+│   ├── Tax
+│   └── Grand Total
+│
+├── Margin
+│   ├── Revenue
+│   ├── Cost
+│   ├── Gross Margin
+│   ├── Margin %
+│   └── Minimum Margin Check
+│
+├── Discount Validation
+│   ├── Customer Tier Ceiling
+│   ├── Category Ceiling
+│   ├── Product Limit
+│   ├── Requested Discount
+│   ├── Allowed Discount
+│   └── Excess Discount
+│
+├── Risk Preview
+│   ├── Risk Score
+│   ├── Risk Level
+│   └── Risk Factors
+│
+└── Actions
+    ├── Save Draft
+    ├── Continue to Builder
+    └── Cancel
+03.10 Quotations → Quotation Builder
+QUOTATION BUILDER
+│
+├── Builder Header
+│   ├── Quote Number
+│   ├── Customer
+│   ├── Quote Status
+│   ├── Version
+│   └── Save Status
+│
+├── Customer Section
+│   ├── Customer
+│   ├── Customer Tier
+│   ├── Price List
+│   ├── Payment Terms
+│   └── Shipping Address
+│
+├── Product Line Editor
+│   ├── Add Product
+│   ├── Product Search
+│   ├── Product
+│   ├── SKU
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Line Discount
+│   ├── Net Price
+│   ├── Margin
+│   └── Remove Line
+│
+├── Order Pricing
+│   ├── Subtotal
+│   ├── Line Discount
+│   ├── Order Discount
+│   ├── Tax
+│   ├── Shipping
+│   └── Grand Total
+│
+├── Discount Governance
+│   ├── Customer Ceiling
+│   ├── Category Ceiling
+│   ├── Product Ceiling
+│   ├── Requested Discount
+│   ├── Allowed Discount
+│   ├── Excess
+│   └── Rule Explanation
+│
+├── Margin Intelligence
+│   ├── Gross Margin
+│   ├── Margin %
+│   ├── Target Margin
+│   ├── Minimum Margin
+│   └── Margin Impact
+│
+├── Risk Intelligence
+│   ├── Blended Risk Score
+│   ├── Risk Level
+│   ├── Line Risks
+│   ├── Aggregate Risk
+│   ├── Margin Risk
+│   └── Risk Explanation
+│
+├── Recommendations
+│   ├── Upsell
+│   ├── Cross-Sell
+│   ├── Recommended Product
+│   ├── Promotion
+│   └── Margin Delta
+│
+├── Approval Preview
+│   ├── Approval Required
+│   ├── Approval Level
+│   ├── Approver
+│   └── Approval Chain
+│
+├── Fulfillment Preview
+│   ├── Stock Availability
+│   ├── Warehouse Availability
+│   ├── Potential Split
+│   └── Backorder Risk
+│
+├── Billing
+│   ├── One-Time Items
+│   ├── Recurring Items
+│   ├── Billing Cycle
+│   └── Proration Preview
+│
+├── Customer Notes
+│   ├── Internal Notes
+│   └── Customer Notes
+│
+└── Actions
+    ├── Save Draft
+    ├── Validate Quote
+    ├── Submit for Approval
+    ├── Send to Customer
+    └── Cancel
+03.11 Quotations → Quotation Details
+QUOTATION DETAILS
+│
+├── Quote Header
+│   ├── Quote Number
+│   ├── Customer
+│   ├── Deal
+│   ├── Version
+│   ├── Status
+│   ├── Total Value
+│   └── Actions
+│
+├── Overview
+│   ├── Quote Information
+│   ├── Customer Information
+│   ├── Deal Information
+│   ├── Created By
+│   ├── Created Date
+│   ├── Expiry Date
+│   └── Current Version
+│
+├── Line Items
+│   ├── Product
+│   ├── SKU
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Line Discount
+│   ├── Net Price
+│   ├── Tax
+│   └── Line Total
+│
+├── Pricing
+│   ├── Subtotal
+│   ├── Line Discount
+│   ├── Order Discount
+│   ├── Shipping
+│   ├── Tax
+│   └── Grand Total
+│
+├── Discount Analysis
+│   ├── Customer Tier Limit
+│   ├── Category Limit
+│   ├── Product Limit
+│   ├── Requested Discount
+│   ├── Allowed Discount
+│   ├── Excess Discount
+│   ├── Violated Rules
+│   └── Discount Explanation
+│
+├── Margin
+│   ├── Revenue
+│   ├── Cost
+│   ├── Gross Margin
+│   ├── Margin %
+│   ├── Target Margin
+│   ├── Minimum Margin
+│   └── Margin Impact
+│
+├── Risk
+│   ├── Blended Risk Score
+│   ├── Risk Level
+│   ├── Line-Level Risk
+│   ├── Aggregate Risk
+│   ├── Margin Risk
+│   ├── Customer Risk
+│   └── Risk Explanation
+│
+├── Recommendations
+│   ├── Upsell Recommendations
+│   ├── Cross-Sell Recommendations
+│   ├── Product
+│   ├── Reason
+│   ├── Promotion
+│   ├── Margin Delta
+│   └── Add Recommendation
+│
+├── Approval
+│   ├── Approval Status
+│   ├── Approval Required
+│   ├── Current Level
+│   ├── Current Approver
+│   ├── Approval Chain
+│   ├── Approval History
+│   ├── Rejection Reason
+│   └── Return Reason
+│
+├── Negotiation
+│   ├── Negotiation Status
+│   ├── Customer Request
+│   ├── Counter Discount
+│   ├── Quantity Change
+│   ├── Price Change
+│   ├── Quote Version
+│   ├── Version Comparison
+│   ├── Risk Recalculation
+│   └── Re-Approval Status
+│
+├── Fulfillment
+│   ├── Inventory Status
+│   ├── Warehouse Allocation
+│   ├── Warehouse Split
+│   ├── Shipment Count
+│   ├── Shipping Cost
+│   ├── Fulfilled Quantity
+│   ├── Backordered Quantity
+│   └── Fulfillment Status
+│
+├── Billing
+│   ├── Billing Type
+│   ├── One-Time Items
+│   ├── Recurring Items
+│   ├── Billing Cycle
+│   ├── Subscription
+│   ├── Proration
+│   ├── Invoice
+│   └── Payment Status
+│
+└── Audit
+    ├── Created
+    ├── Edited
+    ├── Discount Changes
+    ├── Approval Events
+    ├── Customer Events
+    ├── Negotiation Events
+    ├── Fulfillment Events
+    ├── Billing Events
+    ├── Actor
+    ├── Timestamp
+    └── Reason
+
+
+04. SALES MANAGER — COMPLETE INTERNAL PAGE TREEVIEW
+04.1 Dashboard
+04.1 SALES MANAGER DASHBOARD
+│
+├── Page Header
+│   ├── Welcome Message
+│   ├── Manager Name
+│   ├── Team Selector
+│   ├── Date Range
+│   └── Quick Actions
+│       ├── Open Approval Center
+│       ├── View Team Deals
+│       └── View Reports
+│
+├── Team KPIs
+│   ├── Pipeline Value
+│   ├── Open Deals
+│   ├── Won Deals
+│   ├── Lost Deals
+│   ├── Win Rate
+│   └── Average Deal Value
+│
+├── Approval KPIs
+│   ├── Pending Approvals
+│   ├── High Risk Deals
+│   ├── Average Approval Time
+│   ├── Returned Deals
+│   └── Rejected Deals
+│
+├── Discount Governance
+│   ├── Average Discount
+│   ├── Deals Above Threshold
+│   ├── Discount Exceptions
+│   └── Margin Impact
+│
+├── Team Pipeline
+│   ├── Draft
+│   ├── Pending Approval
+│   ├── Approved
+│   ├── Customer Review
+│   ├── Negotiation
+│   ├── Confirmed
+│   └── Fulfillment
+│
+├── Deal Health
+│   ├── Healthy
+│   ├── At Risk
+│   ├── Stalled
+│   └── Critical
+│
+├── Team Performance
+│   ├── Revenue
+│   ├── Deals Won
+│   ├── Conversion Rate
+│   ├── Average Discount
+│   └── Average Deal Cycle
+│
+├── Approval Attention
+│   ├── Urgent Approvals
+│   ├── High Risk
+│   ├── SLA Breached
+│   └── Waiting for Review
+│
+├── Recent Team Deals
+│   ├── Deal
+│   ├── Sales Rep
+│   ├── Customer
+│   ├── Value
+│   ├── Discount
+│   ├── Risk
+│   ├── Health
+│   └── Actions
+│
+└── Alerts & Insights
+    ├── Approval Bottlenecks
+    ├── Discount Anomalies
+    ├── Stalled Deals
+    └── Recommended Actions
+04.2 Approval Center → Approval Inbox
+04.2 APPROVAL INBOX
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Refresh
+│
+├── Approval KPIs
+│   ├── Pending
+│   ├── High Risk
+│   ├── Urgent
+│   ├── SLA Breached
+│   └── Today's Requests
+│
+├── Filters
+│   ├── Risk Level
+│   ├── Discount Range
+│   ├── Deal Value
+│   ├── Sales Rep
+│   ├── Customer Tier
+│   ├── Product Category
+│   ├── Approval Age
+│   └── Status
+│
+├── Priority Queue
+│   ├── Critical
+│   ├── High
+│   ├── Medium
+│   └── Normal
+│
+├── Approval Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Deal Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk Score
+│   ├── Risk Level
+│   ├── Requested At
+│   ├── SLA
+│   ├── Status
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Assign
+│   └── Export
+│
+└── Pagination
+04.3 Approval Center → Approval Details
+04.3 APPROVAL DETAILS
+│
+├── Approval Header
+│   ├── Deal Name
+│   ├── Quote Number
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Approval Status
+│   ├── Risk Level
+│   └── SLA Status
+│
+├── Deal Summary
+│   ├── Deal Value
+│   ├── Original Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Margin %
+│   └── Expected Close
+│
+├── Customer Context
+│   ├── Customer Tier
+│   ├── Customer History
+│   ├── Previous Deals
+│   ├── Purchase History
+│   └── Previous Discounts
+│
+├── Line Items
+│   ├── Product
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Discount
+│   ├── Net Price
+│   ├── Cost
+│   ├── Margin
+│   └── Margin %
+│
+├── Discount Analysis
+│   ├── Customer Ceiling
+│   ├── Category Ceiling
+│   ├── Product Ceiling
+│   ├── Requested Discount
+│   ├── Allowed Discount
+│   ├── Excess Discount
+│   └── Violated Rules
+│
+├── Risk Analysis
+│   ├── Blended Risk Score
+│   ├── Risk Level
+│   ├── Line-Level Risk
+│   ├── Aggregate Risk
+│   ├── Margin Risk
+│   ├── Customer Risk
+│   └── Risk Explanation
+│
+├── Business Impact
+│   ├── Revenue Impact
+│   ├── Margin Impact
+│   ├── Discount Impact
+│   └── Fulfillment Impact
+│
+├── Recommendations
+│   ├── Suggested Discount
+│   ├── Alternative Products
+│   ├── Upsell
+│   ├── Cross-Sell
+│   └── Recommended Action
+│
+├── Approval Chain
+│   ├── Current Level
+│   ├── Previous Approvals
+│   ├── Current Approver
+│   ├── Next Approver
+│   └── Escalation
+│
+├── Version History
+│   ├── Current Version
+│   ├── Previous Version
+│   ├── Changes
+│   ├── Discount Changes
+│   ├── Price Changes
+│   └── Risk Changes
+│
+├── Audit Context
+│   ├── Submitted By
+│   ├── Submitted At
+│   ├── Last Modified By
+│   ├── Last Modified At
+│   └── Reason
+│
+└── Decision Actions
+    ├── Approve
+    ├── Reject
+    ├── Return for Changes
+    ├── Request Information
+    └── Add Internal Comment
+04.4 Approval Center → Approval History
+04.4 APPROVAL HISTORY
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Export
+│
+├── Approval Metrics
+│   ├── Total Decisions
+│   ├── Approved
+│   ├── Rejected
+│   ├── Returned
+│   └── Average Approval Time
+│
+├── Filters
+│   ├── Decision
+│   ├── Risk Level
+│   ├── Approver
+│   ├── Sales Rep
+│   ├── Customer
+│   └── Date Range
+│
+├── History Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Approver
+│   ├── Decision
+│   ├── Risk
+│   ├── Deal Value
+│   ├── Decision Date
+│   └── Actions
+│
+└── Decision Details
+    ├── Decision
+    ├── Reason
+    ├── Actor
+    ├── Timestamp
+    ├── Version
+    └── Comments
+04.5 Team Deals → Deal List
+04.5 TEAM DEAL LIST
+│
+├── Page Header
+│   ├── Title
+│   ├── Team Selector
+│   ├── Search
+│   └── Date Range
+│
+├── Deal KPIs
+│   ├── Pipeline
+│   ├── Open Deals
+│   ├── Won
+│   ├── Lost
+│   └── At Risk
+│
+├── Filters
+│   ├── Sales Rep
+│   ├── Stage
+│   ├── Customer
+│   ├── Deal Value
+│   ├── Risk
+│   ├── Health
+│   └── Date
+│
+├── View
+│   ├── Table
+│   ├── Kanban
+│   └── Pipeline
+│
+├── Deal Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Value
+│   ├── Stage
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk
+│   ├── Health
+│   ├── Last Activity
+│   └── Actions
+│
+└── Pagination
+04.6 Team Deals → Deal Details
+04.6 TEAM DEAL DETAILS
+│
+├── Deal Header
+│   ├── Deal Name
+│   ├── Deal ID
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Deal Value
+│   ├── Stage
+│   ├── Risk
+│   └── Health
+│
+├── Deal Summary
+│   ├── Revenue
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk Score
+│   ├── Probability
+│   └── Expected Close
+│
+├── Customer Context
+│   ├── Customer Tier
+│   ├── Purchase History
+│   ├── Previous Deals
+│   └── Previous Discounts
+│
+├── Quotation
+│   ├── Products
+│   ├── Pricing
+│   ├── Discounts
+│   ├── Margin
+│   └── Total
+│
+├── Approval
+│   ├── Status
+│   ├── Current Level
+│   ├── Approver
+│   └── History
+│
+├── Negotiation
+│   ├── Customer Requests
+│   ├── Counter Offers
+│   ├── Version History
+│   └── Re-Approval
+│
+├── Fulfillment
+│   ├── Stock
+│   ├── Warehouse
+│   ├── Allocation
+│   ├── Shipment
+│   └── Backorder
+│
+├── Billing
+│   ├── Billing Type
+│   ├── Invoice
+│   ├── Payment
+│   └── Subscription
+│
+└── Actions
+    ├── Review Approval
+    ├── View Timeline
+    └── Add Comment
+04.7 Team Deals → Deal Timeline
+04.7 TEAM DEAL TIMELINE
+│
+├── Timeline Header
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   └── Current Stage
+│
+├── Lifecycle
+│   ├── Deal Created
+│   ├── Quote Created
+│   ├── Submitted
+│   ├── Risk Calculated
+│   ├── Approval Requested
+│   ├── Approved
+│   ├── Sent to Customer
+│   ├── Customer Viewed
+│   ├── Negotiation
+│   ├── Re-Approval
+│   ├── Accepted
+│   ├── Confirmed
+│   ├── Fulfillment
+│   ├── Shipment
+│   ├── Backorder
+│   └── Billing
+│
+├── Event Details
+│   ├── Event Type
+│   ├── Actor
+│   ├── Timestamp
+│   ├── Description
+│   └── Reason
+│
+└── Filters
+    ├── All
+    ├── Sales
+    ├── Approval
+    ├── Customer
+    ├── Fulfillment
+    └── Billing
+04.8 Team Performance
+04.8 TEAM PERFORMANCE
+│
+├── Page Header
+│   ├── Team Selector
+│   ├── Date Range
+│   └── Export
+│
+├── Performance KPIs
+│   ├── Revenue
+│   ├── Pipeline
+│   ├── Deals Won
+│   ├── Win Rate
+│   ├── Average Deal Value
+│   └── Sales Cycle
+│
+├── Sales Rep Performance
+│   ├── Rep
+│   ├── Revenue
+│   ├── Deals
+│   ├── Win Rate
+│   ├── Average Discount
+│   ├── Margin
+│   └── Pipeline
+│
+├── Pipeline Analysis
+│   ├── Stage Distribution
+│   ├── Conversion
+│   ├── Pipeline Velocity
+│   └── Pipeline Trend
+│
+├── Revenue Analysis
+│   ├── Revenue Trend
+│   ├── Rep Revenue
+│   ├── Customer Revenue
+│   └── Product Revenue
+│
+├── Discount Performance
+│   ├── Average Discount
+│   ├── Discount Exceptions
+│   ├── Margin Impact
+│   └── Discount by Rep
+│
+└── Insights
+    ├── Top Performers
+    ├── Underperformers
+    ├── Bottlenecks
+    └── Recommended Actions
+04.9 Deal Health
+04.9 SALES MANAGER DEAL HEALTH
+│
+├── Health Overview
+│   ├── Healthy
+│   ├── At Risk
+│   ├── Stalled
+│   └── Critical
+│
+├── Health Metrics
+│   ├── Average Health Score
+│   ├── Risk Score
+│   ├── Customer Engagement
+│   ├── Approval Delay
+│   └── Fulfillment Risk
+│
+├── Health Filters
+│   ├── Sales Rep
+│   ├── Customer
+│   ├── Risk Level
+│   ├── Stage
+│   └── Date
+│
+├── Health Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Health Score
+│   ├── Risk
+│   ├── Last Activity
+│   ├── Stalled Days
+│   └── Actions
+│
+├── Anomalies
+│   ├── Discount Anomaly
+│   ├── Margin Anomaly
+│   ├── Approval Delay
+│   ├── Customer Inactivity
+│   └── Delivery Slippage
+│
+└── Recommendations
+    ├── Contact Customer
+    ├── Review Discount
+    ├── Escalate
+    └── Intervention Required
+04.10 Reports
+04.10 SALES MANAGER REPORTS
+│
+├── Page Header
+│   ├── Date Range
+│   ├── Team Selector
+│   ├── Filters
+│   └── Export
+│
+├── Sales Reports
+│   ├── Revenue
+│   ├── Pipeline
+│   ├── Deals Won
+│   ├── Deals Lost
+│   └── Conversion
+│
+├── Team Reports
+│   ├── Rep Performance
+│   ├── Team Comparison
+│   ├── Sales Cycle
+│   └── Productivity
+│
+├── Discount Reports
+│   ├── Discount Usage
+│   ├── Discount Exceptions
+│   ├── Discount by Rep
+│   └── Margin Impact
+│
+├── Approval Reports
+│   ├── Approval Volume
+│   ├── Approval Time
+│   ├── Rejections
+│   ├── Returns
+│   └── SLA Breaches
+│
+├── Deal Health Reports
+│   ├── Healthy Deals
+│   ├── At Risk
+│   ├── Stalled
+│   └── Critical
+│
+└── Export
+    ├── CSV
+    ├── PDF
+    └── Scheduled Report
+05. FINANCE — COMPLETE INTERNAL PAGE TREEVIEW
+05.1 Dashboard
+05.1 FINANCE DASHBOARD
+│
+├── Page Header
+│   ├── Welcome Message
+│   ├── Finance User
+│   ├── Date Range
+│   └── Quick Actions
+│
+├── Financial KPIs
+│   ├── Total Revenue
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   ├── Outstanding Amount
+│   ├── Collected Amount
+│   └── Overdue Amount
+│
+├── Approval KPIs
+│   ├── High Risk Deals
+│   ├── Pending Financial Review
+│   ├── Approved
+│   ├── Rejected
+│   └── SLA Breached
+│
+├── Billing KPIs
+│   ├── Total Invoices
+│   ├── Paid
+│   ├── Pending
+│   ├── Overdue
+│   └── Failed
+│
+├── Subscription KPIs
+│   ├── Active Subscriptions
+│   ├── Recurring Revenue
+│   ├── Renewals
+│   └── Cancellations
+│
+├── Revenue Trend
+│   ├── Revenue
+│   ├── One-Time
+│   ├── Recurring
+│   └── Growth
+│
+├── Cash Collection
+│   ├── Collected
+│   ├── Outstanding
+│   ├── Overdue
+│   └── Collection Trend
+│
+├── Financial Risk
+│   ├── High Risk Deals
+│   ├── Low Margin Deals
+│   ├── Discount Exceptions
+│   └── Failed Payments
+│
+├── Recent Invoices
+│   ├── Invoice
+│   ├── Customer
+│   ├── Amount
+│   ├── Due Date
+│   ├── Status
+│   └── Actions
+│
+└── Alerts
+    ├── Failed Payments
+    ├── Overdue Invoices
+    ├── High Risk Deals
+    └── Subscription Issues
+05.2 Approval Queue → High Risk Deals
+HIGH RISK DEALS
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   └── Refresh
+│
+├── Risk KPIs
+│   ├── Critical
+│   ├── High
+│   ├── Medium
+│   ├── Pending
+│   └── SLA Breached
+│
+├── Filters
+│   ├── Risk Level
+│   ├── Deal Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Customer Tier
+│   ├── Sales Rep
+│   └── Date
+│
+├── High Risk Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Deal Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk Score
+│   ├── Risk Factors
+│   ├── Submitted At
+│   ├── SLA
+│   └── Actions
+│
+└── Risk Summary
+    ├── Financial Risk
+    ├── Margin Risk
+    ├── Discount Risk
+    └── Customer Risk
+05.3 Approval Queue → Financial Review
+FINANCIAL REVIEW
+│
+├── Review Header
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Deal Value
+│   ├── Risk
+│   └── Approval Status
+│
+├── Financial Summary
+│   ├── Gross Revenue
+│   ├── Discount
+│   ├── Net Revenue
+│   ├── Cost
+│   ├── Gross Margin
+│   └── Margin %
+│
+├── Discount Review
+│   ├── Requested Discount
+│   ├── Allowed Discount
+│   ├── Excess
+│   ├── Discount Impact
+│   └── Discount Rules
+│
+├── Risk Review
+│   ├── Blended Risk Score
+│   ├── Risk Factors
+│   ├── Margin Risk
+│   └── Financial Risk
+│
+├── Payment Terms
+│   ├── Payment Terms
+│   ├── Credit Limit
+│   ├── Customer Exposure
+│   └── Outstanding Balance
+│
+├── Billing Structure
+│   ├── One-Time Items
+│   ├── Recurring Items
+│   ├── Billing Cycle
+│   ├── Subscription
+│   └── Proration
+│
+├── Financial Impact
+│   ├── Revenue Impact
+│   ├── Margin Impact
+│   ├── Cash Flow Impact
+│   └── Recurring Revenue Impact
+│
+├── Approval History
+│   ├── Manager Decision
+│   ├── Previous Finance Decisions
+│   └── Version History
+│
+└── Actions
+    ├── Approve
+    ├── Reject
+    ├── Return
+    ├── Request Information
+    └── Add Financial Note
+05.4 Billing → Billing Overview
+BILLING OVERVIEW
+│
+├── Page Header
+│   ├── Date Range
+│   ├── Filters
+│   └── Export
+│
+├── Billing KPIs
+│   ├── Total Billed
+│   ├── Collected
+│   ├── Outstanding
+│   ├── Overdue
+│   └── Failed
+│
+├── Revenue Breakdown
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   ├── Taxes
+│   └── Adjustments
+│
+├── Invoice Status
+│   ├── Draft
+│   ├── Sent
+│   ├── Paid
+│   ├── Overdue
+│   └── Failed
+│
+├── Collection Overview
+│   ├── Collection Rate
+│   ├── Outstanding
+│   ├── Overdue
+│   └── Collection Trend
+│
+├── Recent Billing Activity
+│   ├── Invoice Created
+│   ├── Payment Received
+│   ├── Payment Failed
+│   ├── Refund
+│   └── Adjustment
+│
+└── Alerts
+    ├── Overdue
+    ├── Failed
+    └── Payment Issues
+05.5 Billing → Invoices
+INVOICES
+│
+├── Page Header
+│   ├── Search
+│   ├── Date Range
+│   └── Export
+│
+├── Invoice KPIs
+│   ├── Total
+│   ├── Draft
+│   ├── Sent
+│   ├── Paid
+│   ├── Overdue
+│   └── Failed
+│
+├── Filters
+│   ├── Status
+│   ├── Customer
+│   ├── Billing Type
+│   ├── Amount
+│   └── Date
+│
+├── Invoice Table
+│   ├── Invoice Number
+│   ├── Customer
+│   ├── Deal
+│   ├── Amount
+│   ├── Due Date
+│   ├── Status
+│   ├── Payment Status
+│   └── Actions
+│
+├── Bulk Actions
+│   ├── Export
+│   ├── Send
+│   └── Mark / Update Status
+│
+└── Pagination
+05.6 Billing → Invoice Details
+INVOICE DETAILS
+│
+├── Invoice Header
+│   ├── Invoice Number
+│   ├── Customer
+│   ├── Invoice Date
+│   ├── Due Date
+│   ├── Status
+│   └── Actions
+│
+├── Customer Information
+│   ├── Company
+│   ├── Contact
+│   ├── Billing Address
+│   └── Tax Information
+│
+├── Invoice Items
+│   ├── Product / Service
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Discount
+│   ├── Tax
+│   └── Line Total
+│
+├── Totals
+│   ├── Subtotal
+│   ├── Discount
+│   ├── Tax
+│   ├── Adjustments
+│   └── Grand Total
+│
+├── Billing Type
+│   ├── One-Time
+│   ├── Recurring
+│   └── Subscription
+│
+├── Payment
+│   ├── Amount Paid
+│   ├── Amount Due
+│   ├── Payment Status
+│   ├── Payment Method
+│   └── Payment History
+│
+├── Subscription Context
+│   ├── Plan
+│   ├── Billing Cycle
+│   ├── Proration
+│   └── Renewal
+│
+└── Actions
+    ├── Send Invoice
+    ├── Record Payment
+    ├── Download / Export
+    ├── Refund
+    └── View Deal
+05.7 Billing → Payments
+PAYMENTS
+│
+├── Page Header
+│   ├── Search
+│   ├── Date Range
+│   └── Export
+│
+├── Payment KPIs
+│   ├── Total Collected
+│   ├── Successful
+│   ├── Pending
+│   ├── Failed
+│   └── Refunded
+│
+├── Filters
+│   ├── Status
+│   ├── Customer
+│   ├── Payment Method
+│   ├── Amount
+│   └── Date
+│
+├── Payment Table
+│   ├── Payment ID
+│   ├── Customer
+│   ├── Invoice
+│   ├── Amount
+│   ├── Method
+│   ├── Status
+│   ├── Date
+│   └── Actions
+│
+├── Payment Details
+│   ├── Transaction
+│   ├── Invoice
+│   ├── Amount
+│   ├── Method
+│   ├── Status
+│   ├── Timestamp
+│   └── Reference
+│
+└── Actions
+    ├── View Invoice
+    ├── Retry
+    └── Refund
+05.8 Billing → Failed Payments
+FAILED PAYMENTS
+│
+├── Page Header
+│   ├── Search
+│   ├── Date Range
+│   └── Refresh
+│
+├── Failure KPIs
+│   ├── Total Failed
+│   ├── Retry Pending
+│   ├── Retry Successful
+│   └── Critical Failures
+│
+├── Filters
+│   ├── Failure Reason
+│   ├── Customer
+│   ├── Invoice
+│   ├── Payment Method
+│   └── Date
+│
+├── Failed Payment Table
+│   ├── Customer
+│   ├── Invoice
+│   ├── Amount
+│   ├── Failure Reason
+│   ├── Failed At
+│   ├── Retry Status
+│   └── Actions
+│
+├── Failure Details
+│   ├── Transaction
+│   ├── Error
+│   ├── Failure Reason
+│   ├── Attempt Count
+│   ├── Last Attempt
+│   └── Next Retry
+│
+└── Actions
+    ├── Retry Payment
+    ├── Contact Customer
+    └── View Invoice
+05.9 Subscriptions → Active Subscriptions
+ACTIVE SUBSCRIPTIONS
+│
+├── Page Header
+│   ├── Search
+│   ├── Filters
+│   └── Export
+│
+├── Subscription KPIs
+│   ├── Active
+│   ├── Trial
+│   ├── Renewing Soon
+│   ├── Past Due
+│   └── Cancelled
+│
+├── Revenue KPIs
+│   ├── MRR
+│   ├── ARR
+│   ├── Recurring Revenue
+│   └── Expected Revenue
+│
+├── Filters
+│   ├── Plan
+│   ├── Customer
+│   ├── Status
+│   ├── Billing Cycle
+│   └── Renewal Date
+│
+├── Subscription Table
+│   ├── Subscription
+│   ├── Customer
+│   ├── Plan
+│   ├── Amount
+│   ├── Billing Cycle
+│   ├── Status
+│   ├── Renewal
+│   └── Actions
+│
+└── Pagination
+05.10 Subscriptions → Subscription Details
+SUBSCRIPTION DETAILS
+│
+├── Subscription Header
+│   ├── Subscription ID
+│   ├── Customer
+│   ├── Plan
+│   ├── Status
+│   ├── Current Period
+│   └── Actions
+│
+├── Subscription Overview
+│   ├── Start Date
+│   ├── Current Period
+│   ├── Next Billing Date
+│   ├── Renewal Date
+│   └── Status
+│
+├── Plan
+│   ├── Plan Name
+│   ├── Price
+│   ├── Billing Cycle
+│   ├── Features
+│   └── Limits
+│
+├── Billing
+│   ├── Current Amount
+│   ├── Next Amount
+│   ├── Billing History
+│   └── Payment Status
+│
+├── Proration
+│   ├── Previous Plan
+│   ├── New Plan
+│   ├── Remaining Period
+│   ├── Credit
+│   ├── Charge
+│   └── Final Adjustment
+│
+├── Cancellation
+│   ├── Cancellation Status
+│   ├── Cancellation Date
+│   ├── Effective Date
+│   └── Refund
+│
+└── Activity
+    ├── Plan Changes
+    ├── Billing Events
+    ├── Payment Events
+    └── Cancellation Events
+05.11 Subscriptions → Proration
+PRORATION
+│
+├── Page Header
+│   ├── Subscription
+│   ├── Customer
+│   └── Current Plan
+│
+├── Current Subscription
+│   ├── Current Plan
+│   ├── Current Price
+│   ├── Billing Cycle
+│   ├── Start Date
+│   └── Period End
+│
+├── New Subscription
+│   ├── New Plan
+│   ├── New Price
+│   ├── Effective Date
+│   └── Billing Cycle
+│
+├── Period Calculation
+│   ├── Total Period
+│   ├── Used Period
+│   ├── Remaining Period
+│   └── Remaining Days
+│
+├── Financial Calculation
+│   ├── Current Plan Credit
+│   ├── New Plan Charge
+│   ├── Net Adjustment
+│   └── Final Amount
+│
+├── Adjustment
+│   ├── Credit
+│   ├── Additional Charge
+│   └── Final Billing Amount
+│
+├── Explanation
+│   ├── Calculation Method
+│   ├── Calculation Inputs
+│   └── Calculation Breakdown
+│
+└── Actions
+    ├── Preview
+    ├── Apply Change
+    └── Cancel
+05.12 Revenue Analytics
+REVENUE ANALYTICS
+│
+├── Page Header
+│   ├── Date Range
+│   ├── Comparison Period
+│   ├── Filters
+│   └── Export
+│
+├── Revenue KPIs
+│   ├── Total Revenue
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   ├── MRR
+│   ├── ARR
+│   └── Revenue Growth
+│
+├── Revenue Trend
+│   ├── Daily
+│   ├── Weekly
+│   ├── Monthly
+│   └── Yearly
+│
+├── Revenue Breakdown
+│   ├── One-Time
+│   ├── Subscription
+│   ├── Product
+│   ├── Service
+│   └── Customer Segment
+│
+├── Customer Revenue
+│   ├── Top Customers
+│   ├── Revenue by Tier
+│   ├── Revenue by Industry
+│   └── Customer Growth
+│
+├── Subscription Analytics
+│   ├── MRR
+│   ├── ARR
+│   ├── New Subscriptions
+│   ├── Upgrades
+│   ├── Downgrades
+│   └── Churn
+│
+├── Collection Analytics
+│   ├── Collection Rate
+│   ├── Outstanding
+│   ├── Overdue
+│   └── Failed Payments
+│
+└── Financial Insights
+    ├── Revenue Growth
+    ├── Revenue Risk
+    ├── Collection Risk
+    └── Recommended Actions
+05.13 Audit
+FINANCE AUDIT
+│
+├── Audit Overview
+│   ├── Total Events
+│   ├── Financial Changes
+│   ├── Approval Decisions
+│   ├── Billing Events
+│   └── Payment Events
+│
+├── Search & Filters
+│   ├── Search
+│   ├── User
+│   ├── Action
+│   ├── Resource
+│   ├── Module
+│   ├── Event Type
+│   ├── Severity
+│   └── Date Range
+│
+├── Audit Table
+│   ├── Timestamp
+│   ├── User
+│   ├── Action
+│   ├── Resource
+│   ├── Amount
+│   ├── Status
+│   └── Actions
+│
+├── Financial Events
+│   ├── Invoice Created
+│   ├── Invoice Modified
+│   ├── Payment
+│   ├── Refund
+│   ├── Subscription Change
+│   ├── Proration
+│   └── Billing Adjustment
+│
+└── Audit Details
+    ├── Actor
+    ├── Timestamp
+    ├── Action
+    ├── Before
+    ├── After
+    ├── Reason
+    └── Metadata
+
+06. OPERATIONS
+06.1 Dashboard
+06.1 OPERATIONS DASHBOARD
+│
+├── Page Header
+│   ├── Welcome Message
+│   ├── Operations User
+│   ├── Date Range
+│   └── Quick Actions
+│       ├── Open Fulfillment Queue
+│       ├── View Backorders
+│       └── View Inventory
+│
+├── Operations KPIs
+│   ├── Orders to Fulfill
+│   ├── Ready to Ship
+│   ├── Partially Fulfilled
+│   ├── Backorders
+│   ├── In Transit
+│   └── Delivered
+│
+├── Inventory KPIs
+│   ├── Total Inventory
+│   ├── Low Stock
+│   ├── Out of Stock
+│   ├── Reserved Stock
+│   └── Available Stock
+│
+├── Fulfillment Status
+│   ├── Pending
+│   ├── Processing
+│   ├── Partially Fulfilled
+│   ├── Shipped
+│   └── Delivered
+│
+├── Warehouse Status
+│   ├── Warehouse
+│   ├── Available Stock
+│   ├── Reserved Stock
+│   ├── Capacity
+│   └── Status
+│
+├── Backorder Alerts
+│   ├── Total Backorders
+│   ├── Critical Backorders
+│   ├── Delayed Backorders
+│   └── Expected Restock
+│
+├── Shipping Overview
+│   ├── Shipments Today
+│   ├── In Transit
+│   ├── Delayed
+│   └── Delivered
+│
+├── Operational Alerts
+│   ├── Low Stock
+│   ├── Allocation Failure
+│   ├── Delivery Slippage
+│   ├── Backorder Delay
+│   └── Warehouse Capacity
+│
+└── Recent Operations
+    ├── Recent Fulfillments
+    ├── Recent Shipments
+    ├── Inventory Movements
+    └── Backorder Updates
+06.2 Fulfillment → Fulfillment Queue
+06.2 FULFILLMENT QUEUE
+│
+├── Page Header
+│   ├── Title
+│   ├── Search
+│   ├── Refresh
+│   └── Date Range
+│
+├── Fulfillment KPIs
+│   ├── Pending
+│   ├── Ready
+│   ├── Processing
+│   ├── Partial
+│   ├── Backorder
+│   └── Delayed
+│
+├── Filters
+│   ├── Fulfillment Status
+│   ├── Warehouse
+│   ├── Customer
+│   ├── Deal
+│   ├── Priority
+│   └── Date
+│
+├── Fulfillment Table
+│   ├── Order
+│   ├── Customer
+│   ├── Items
+│   ├── Quantity
+│   ├── Warehouse
+│   ├── Allocation Status
+│   ├── Fulfillment Status
+│   ├── Priority
+│   ├── Expected Ship Date
+│   └── Actions
+│
+├── Priority Queue
+│   ├── Critical
+│   ├── High
+│   ├── Normal
+│   └── Low
+│
+├── Bulk Actions
+│   ├── Allocate
+│   ├── Mark Processing
+│   └── Export
+│
+└── Pagination
+06.3 Fulfillment → Fulfillment Details
+06.3 FULFILLMENT DETAILS
+│
+├── Fulfillment Header
+│   ├── Fulfillment ID
+│   ├── Order
+│   ├── Customer
+│   ├── Status
+│   ├── Priority
+│   └── Actions
+│
+├── Order Summary
+│   ├── Order Value
+│   ├── Total Items
+│   ├── Total Quantity
+│   └── Order Date
+│
+├── Line Items
+│   ├── Product
+│   ├── SKU
+│   ├── Ordered Quantity
+│   ├── Allocated Quantity
+│   ├── Fulfilled Quantity
+│   ├── Backordered Quantity
+│   └── Status
+│
+├── Inventory Validation
+│   ├── Available Stock
+│   ├── Reserved Stock
+│   ├── Required Stock
+│   └── Stock Shortage
+│
+├── Warehouse Allocation
+│   ├── Selected Warehouse
+│   ├── Allocation Strategy
+│   ├── Warehouse Split
+│   ├── Shipping Cost
+│   └── Manual Override
+│
+├── Shipment
+│   ├── Shipment Count
+│   ├── Shipment Status
+│   ├── Carrier
+│   ├── Tracking
+│   └── Expected Delivery
+│
+├── Backorder
+│   ├── Backordered Items
+│   ├── Quantity
+│   ├── Expected Restock
+│   └── Backorder Status
+│
+├── Timeline
+│   ├── Order Confirmed
+│   ├── Inventory Checked
+│   ├── Allocation
+│   ├── Processing
+│   ├── Shipment
+│   └── Delivery
+│
+└── Actions
+    ├── Allocate
+    ├── Reallocate
+    ├── Create Shipment
+    ├── Create Backorder
+    └── Add Note
+06.4 Fulfillment → Shipment Details
+06.4 SHIPMENT DETAILS
+│
+├── Shipment Header
+│   ├── Shipment ID
+│   ├── Order
+│   ├── Customer
+│   ├── Status
+│   └── Tracking Number
+│
+├── Shipment Summary
+│   ├── Warehouse
+│   ├── Carrier
+│   ├── Shipping Method
+│   ├── Shipping Cost
+│   ├── Ship Date
+│   └── Expected Delivery
+│
+├── Shipment Items
+│   ├── Product
+│   ├── SKU
+│   ├── Quantity
+│   └── Fulfilled Quantity
+│
+├── Tracking
+│   ├── Tracking Number
+│   ├── Current Location
+│   ├── Current Status
+│   ├── Estimated Delivery
+│   └── Tracking Events
+│
+├── Delivery
+│   ├── Delivery Address
+│   ├── Delivery Status
+│   ├── Delivered At
+│   └── Delivery Confirmation
+│
+└── Actions
+    ├── Track Shipment
+    ├── Update Status
+    └── View Order
+06.5 Warehouse → Warehouse Overview
+06.5 WAREHOUSE OVERVIEW
+│
+├── Page Header
+│   ├── Warehouse Selector
+│   ├── Search
+│   └── Date Range
+│
+├── Warehouse KPIs
+│   ├── Total Stock
+│   ├── Available Stock
+│   ├── Reserved Stock
+│   ├── Low Stock
+│   └── Out of Stock
+│
+├── Capacity
+│   ├── Total Capacity
+│   ├── Used Capacity
+│   ├── Available Capacity
+│   └── Utilization %
+│
+├── Fulfillment
+│   ├── Pending Orders
+│   ├── Processing
+│   ├── Shipped
+│   └── Backorders
+│
+├── Warehouse Health
+│   ├── Inventory Health
+│   ├── Fulfillment Health
+│   ├── Capacity Health
+│   └── Shipping Health
+│
+└── Alerts
+    ├── Low Stock
+    ├── Capacity Warning
+    ├── Allocation Issues
+    └── Delayed Shipments
+06.6 Warehouse → Inventory
+06.6 INVENTORY
+│
+├── Page Header
+│   ├── Warehouse Selector
+│   ├── Search
+│   └── Export
+│
+├── Inventory KPIs
+│   ├── Total SKUs
+│   ├── Available Units
+│   ├── Reserved Units
+│   ├── Low Stock
+│   └── Out of Stock
+│
+├── Filters
+│   ├── Warehouse
+│   ├── Category
+│   ├── Stock Status
+│   └── Product
+│
+├── Inventory Table
+│   ├── Product
+│   ├── SKU
+│   ├── Warehouse
+│   ├── On Hand
+│   ├── Reserved
+│   ├── Available
+│   ├── Reorder Level
+│   ├── Status
+│   └── Actions
+│
+├── Inventory Details
+│   ├── Stock Breakdown
+│   ├── Reserved Stock
+│   ├── Available Stock
+│   ├── Incoming Stock
+│   └── Movement History
+│
+└── Actions
+    ├── View Product
+    ├── View Movements
+    └── Adjust Stock
+06.7 Warehouse → Stock Movements
+06.7 STOCK MOVEMENTS
+│
+├── Page Header
+│   ├── Search
+│   ├── Warehouse Selector
+│   └── Export
+│
+├── Movement KPIs
+│   ├── Stock In
+│   ├── Stock Out
+│   ├── Transfers
+│   ├── Reservations
+│   └── Adjustments
+│
+├── Filters
+│   ├── Movement Type
+│   ├── Product
+│   ├── Warehouse
+│   ├── User
+│   └── Date Range
+│
+├── Movement Table
+│   ├── Timestamp
+│   ├── Product
+│   ├── SKU
+│   ├── Warehouse
+│   ├── Movement Type
+│   ├── Quantity
+│   ├── Before
+│   ├── After
+│   ├── Actor
+│   └── Reason
+│
+└── Movement Details
+    ├── Movement Type
+    ├── Quantity
+    ├── Source
+    ├── Destination
+    ├── Actor
+    ├── Timestamp
+    └── Reason
+06.8 Warehouse → Allocation
+06.8 WAREHOUSE ALLOCATION
+│
+├── Page Header
+│   ├── Order
+│   ├── Customer
+│   ├── Allocation Status
+│   └── Actions
+│
+├── Allocation Requirements
+│   ├── Products
+│   ├── Required Quantity
+│   ├── Delivery Address
+│   └── Required Date
+│
+├── Warehouse Comparison
+│   ├── Warehouse
+│   ├── Available Stock
+│   ├── Distance
+│   ├── Shipping Cost
+│   ├── Capacity
+│   └── Allocation Score
+│
+├── Allocation Strategy
+│   ├── Stock Availability
+│   ├── Shipping Cost Weight
+│   ├── Shipment Count Weight
+│   └── Combined Score
+│
+├── Recommended Allocation
+│   ├── Primary Warehouse
+│   ├── Secondary Warehouse
+│   ├── Quantity Split
+│   └── Reason
+│
+├── Manual Override
+│   ├── Override Warehouse
+│   ├── Override Quantity
+│   ├── Override Reason
+│   └── Impact
+│
+└── Actions
+    ├── Apply Recommended Allocation
+    ├── Manual Allocation
+    ├── Recalculate
+    └── Confirm Allocation
+06.9 Backorders → Backorder Queue
+06.9 BACKORDER QUEUE
+│
+├── Page Header
+│   ├── Search
+│   ├── Refresh
+│   └── Export
+│
+├── Backorder KPIs
+│   ├── Total Backorders
+│   ├── Critical
+│   ├── Delayed
+│   ├── Awaiting Stock
+│   └── Ready to Fulfill
+│
+├── Filters
+│   ├── Status
+│   ├── Warehouse
+│   ├── Customer
+│   ├── Product
+│   ├── Priority
+│   └── Date
+│
+├── Backorder Table
+│   ├── Backorder
+│   ├── Order
+│   ├── Customer
+│   ├── Product
+│   ├── Quantity
+│   ├── Expected Stock
+│   ├── Priority
+│   ├── Status
+│   └── Actions
+│
+└── Priority
+    ├── Critical
+    ├── High
+    ├── Normal
+    └── Low
+06.10 Backorders → Backorder Details
+06.10 BACKORDER DETAILS
+│
+├── Backorder Header
+│   ├── Backorder ID
+│   ├── Order
+│   ├── Customer
+│   ├── Status
+│   └── Priority
+│
+├── Product Details
+│   ├── Product
+│   ├── SKU
+│   ├── Ordered Quantity
+│   ├── Fulfilled Quantity
+│   └── Backordered Quantity
+│
+├── Inventory Status
+│   ├── Current Stock
+│   ├── Reserved Stock
+│   ├── Incoming Stock
+│   └── Expected Availability
+│
+├── Warehouse
+│   ├── Original Warehouse
+│   ├── Alternative Warehouse
+│   ├── Current Allocation
+│   └── Reallocation Option
+│
+├── Customer Impact
+│   ├── Expected Delay
+│   ├── Expected Delivery
+│   └── Customer Notification
+│
+├── Timeline
+│   ├── Backorder Created
+│   ├── Stock Check
+│   ├── Restock Update
+│   ├── Reallocation
+│   └── Fulfillment
+│
+└── Actions
+    ├── Reallocate
+    ├── Fulfill
+    ├── Update Expected Date
+    └── Notify Customer
+06.11 Shipping → Shipment Tracking
+06.11 SHIPMENT TRACKING
+│
+├── Page Header
+│   ├── Search Tracking
+│   ├── Carrier Filter
+│   └── Date Range
+│
+├── Shipping KPIs
+│   ├── Total Shipments
+│   ├── In Transit
+│   ├── Delivered
+│   ├── Delayed
+│   └── Exception
+│
+├── Filters
+│   ├── Status
+│   ├── Carrier
+│   ├── Warehouse
+│   ├── Customer
+│   └── Date
+│
+├── Shipment Table
+│   ├── Shipment
+│   ├── Order
+│   ├── Customer
+│   ├── Carrier
+│   ├── Tracking
+│   ├── Status
+│   ├── Expected Delivery
+│   └── Actions
+│
+├── Shipment Tracking Details
+│   ├── Origin
+│   ├── Destination
+│   ├── Current Location
+│   ├── Tracking Events
+│   ├── Estimated Delivery
+│   └── Delivery Status
+│
+└── Alerts
+    ├── Delayed
+    ├── Delivery Exception
+    └── Slippage
+06.12 Operations Analytics
+06.12 OPERATIONS ANALYTICS
+│
+├── Page Header
+│   ├── Date Range
+│   ├── Warehouse
+│   ├── Filters
+│   └── Export
+│
+├── Fulfillment KPIs
+│   ├── Fulfillment Rate
+│   ├── Average Fulfillment Time
+│   ├── Partial Fulfillment Rate
+│   └── Backorder Rate
+│
+├── Warehouse Performance
+│   ├── Warehouse Throughput
+│   ├── Capacity Utilization
+│   ├── Inventory Turnover
+│   └── Allocation Efficiency
+│
+├── Shipping Performance
+│   ├── On-Time Delivery
+│   ├── Average Shipping Time
+│   ├── Delayed Shipments
+│   └── Shipping Cost
+│
+├── Backorder Analytics
+│   ├── Backorder Volume
+│   ├── Backorder Duration
+│   ├── Restock Time
+│   └── Customer Impact
+│
+└── Operational Insights
+    ├── Bottlenecks
+    ├── Capacity Risk
+    ├── Inventory Risk
+    ├── Delivery Risk
+    └── Recommended Actions
+07. INTELLIGENCE
+07.1 Intelligence Dashboard
+07.1 INTELLIGENCE DASHBOARD
+│
+├── Page Header
+│   ├── Intelligence Overview
+│   ├── Date Range
+│   └── Refresh
+│
+├── Intelligence KPIs
+│   ├── Active Risks
+│   ├── High Risk Deals
+│   ├── Recommendations
+│   ├── Deal Anomalies
+│   └── Critical Alerts
+│
+├── Risk Overview
+│   ├── Low
+│   ├── Medium
+│   ├── High
+│   └── Critical
+│
+├── Recommendation Overview
+│   ├── Upsell Opportunities
+│   ├── Cross-Sell Opportunities
+│   ├── Expected Revenue Impact
+│   └── Expected Margin Impact
+│
+├── Deal Health
+│   ├── Healthy
+│   ├── At Risk
+│   ├── Stalled
+│   └── Critical
+│
+├── Anomalies
+│   ├── Discount
+│   ├── Pricing
+│   ├── Approval
+│   └── Fulfillment
+│
+└── Decision Insights
+    ├── What Happened
+    ├── Why It Matters
+    ├── Business Impact
+    ├── Who Is Affected
+    ├── Urgency
+    └── Recommended Action
+07.2 Risk Center → Risk Overview
+07.2 RISK OVERVIEW
+│
+├── Risk KPIs
+│   ├── Total Deals
+│   ├── Low Risk
+│   ├── Medium Risk
+│   ├── High Risk
+│   └── Critical Risk
+│
+├── Risk Distribution
+│   ├── Risk Score Distribution
+│   ├── Risk by Stage
+│   ├── Risk by Customer Tier
+│   └── Risk by Product Category
+│
+├── Risk Drivers
+│   ├── Discount Risk
+│   ├── Margin Risk
+│   ├── Customer Risk
+│   ├── Aggregate Risk
+│   └── Pricing Risk
+│
+├── Risk Trend
+│   ├── Risk Score Trend
+│   ├── High Risk Trend
+│   └── Critical Risk Trend
+│
+└── High Risk Attention
+    ├── Critical Deals
+    ├── High Risk Deals
+    └── Recommended Actions
+07.3 Risk Center → High Risk Deals
+07.3 HIGH RISK DEALS
+│
+├── Page Header
+│   ├── Search
+│   ├── Risk Filter
+│   └── Date Range
+│
+├── Risk KPIs
+│   ├── Critical
+│   ├── High
+│   ├── Medium
+│   └── Escalated
+│
+├── Filters
+│   ├── Risk Level
+│   ├── Sales Rep
+│   ├── Customer
+│   ├── Discount
+│   ├── Margin
+│   └── Deal Value
+│
+├── Risk Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Value
+│   ├── Discount
+│   ├── Margin
+│   ├── Risk Score
+│   ├── Risk Level
+│   ├── Primary Risk
+│   └── Actions
+│
+└── Risk Distribution
+    ├── Discount
+    ├── Margin
+    ├── Customer
+    └── Aggregate
+07.4 Risk Center → Risk Details
+07.4 RISK DETAILS
+│
+├── Risk Header
+│   ├── Deal
+│   ├── Customer
+│   ├── Risk Score
+│   └── Risk Level
+│
+├── Risk Breakdown
+│   ├── Line Risk
+│   ├── Customer Risk
+│   ├── Category Risk
+│   ├── Margin Risk
+│   └── Aggregate Risk
+│
+├── Risk Factors
+│   ├── Discount Violation
+│   ├── Margin Compression
+│   ├── Multiple Small Violations
+│   ├── Customer Risk
+│   └── Other Signals
+│
+├── Risk Explanation
+│   ├── WHAT
+│   ├── WHY
+│   ├── IMPACT
+│   ├── WHO
+│   └── NEXT ACTION
+│
+├── Approval Impact
+│   ├── Approval Required
+│   ├── Current Level
+│   ├── Required Approver
+│   └── Escalation
+│
+├── Risk History
+│   ├── Previous Score
+│   ├── Current Score
+│   ├── Score Changes
+│   └── Trigger Events
+│
+└── Actions
+    ├── View Deal
+    ├── Review Approval
+    └── Investigate
+07.5 Recommendations → Upsell
+07.5 UPSELL
+│
+├── Page Header
+│   ├── Search
+│   ├── Customer Filter
+│   └── Product Filter
+│
+├── Upsell KPIs
+│   ├── Opportunities
+│   ├── High Confidence
+│   ├── Expected Revenue
+│   └── Expected Margin
+│
+├── Recommendation Cards
+│   ├── Customer
+│   ├── Current Product
+│   ├── Recommended Product
+│   ├── Reason
+│   ├── Confidence
+│   ├── Promotion
+│   ├── Revenue Delta
+│   └── Margin Delta
+│
+├── Recommendation Logic
+│   ├── Purchase History
+│   ├── Product Usage
+│   ├── Customer Tier
+│   ├── Promotion
+│   └── Minimum Margin
+│
+└── Actions
+    ├── Add to Deal
+    ├── View Customer
+    └── Dismiss
+07.6 Recommendations → Cross-sell
+07.6 CROSS-SELL
+│
+├── Page Header
+│   ├── Search
+│   └── Filters
+│
+├── Cross-Sell KPIs
+│   ├── Opportunities
+│   ├── High Confidence
+│   ├── Expected Revenue
+│   └── Expected Margin
+│
+├── Recommendations
+│   ├── Existing Product
+│   ├── Recommended Product
+│   ├── Frequently Bought Together
+│   ├── Reason
+│   ├── Confidence
+│   ├── Promotion
+│   ├── Revenue Delta
+│   └── Margin Delta
+│
+├── Recommendation Signals
+│   ├── Co-Purchase History
+│   ├── Customer Profile
+│   ├── Promotion
+│   └── Margin Threshold
+│
+└── Actions
+    ├── Add to Deal
+    ├── View Product
+    └── Dismiss
+07.7 Recommendations → Recommendation Details
+07.7 RECOMMENDATION DETAILS
+│
+├── Recommendation Header
+│   ├── Customer
+│   ├── Deal
+│   ├── Recommendation Type
+│   └── Confidence
+│
+├── Recommended Product
+│   ├── Product
+│   ├── SKU
+│   ├── Price
+│   ├── Promotion
+│   └── Availability
+│
+├── Why Recommended
+│   ├── Purchase History
+│   ├── Co-Purchase Pattern
+│   ├── Customer Profile
+│   └── Promotion
+│
+├── Financial Impact
+│   ├── Revenue Delta
+│   ├── Cost Delta
+│   ├── Margin Delta
+│   └── Margin %
+│
+├── Recommendation Logic
+│   ├── Matching Signals
+│   ├── Confidence Score
+│   ├── Minimum Margin Check
+│   └── Eligibility
+│
+└── Actions
+    ├── Add Product
+    ├── View Deal
+    └── Dismiss
+07.8 Deal Health → Health Overview
+07.8 HEALTH OVERVIEW
+│
+├── Health KPIs
+│   ├── Healthy
+│   ├── At Risk
+│   ├── Stalled
+│   └── Critical
+│
+├── Health Score
+│   ├── Overall Health
+│   ├── Sales Activity
+│   ├── Customer Engagement
+│   ├── Approval Progress
+│   ├── Discount Risk
+│   ├── Margin Health
+│   └── Fulfillment Health
+│
+├── Health Distribution
+│   ├── By Stage
+│   ├── By Sales Rep
+│   ├── By Customer
+│   └── By Value
+│
+├── Health Trend
+│   ├── Score Trend
+│   ├── Risk Trend
+│   └── Engagement Trend
+│
+└── Attention Required
+    ├── Stalled
+    ├── Critical
+    └── Recommended Actions
+07.9 Deal Health → Stalled Deals
+07.9 STALLED DEALS
+│
+├── Page Header
+│   ├── Search
+│   ├── Filters
+│   └── Date Range
+│
+├── Stalled KPIs
+│   ├── Total Stalled
+│   ├── Critical
+│   ├── Average Stalled Days
+│   └── High Value Stalled
+│
+├── Filters
+│   ├── Stage
+│   ├── Sales Rep
+│   ├── Customer
+│   ├── Stalled Days
+│   └── Deal Value
+│
+├── Stalled Deal Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Stage
+│   ├── Value
+│   ├── Last Activity
+│   ├── Stalled Days
+│   ├── Health
+│   └── Actions
+│
+└── Reasons
+    ├── Customer Inactivity
+    ├── Approval Delay
+    ├── Negotiation Delay
+    ├── Pricing Issue
+    └── Fulfillment Issue
+07.10 Deal Health → Discount Anomalies
+07.10 DISCOUNT ANOMALIES
+│
+├── Anomaly KPIs
+│   ├── Total Anomalies
+│   ├── High Severity
+│   ├── Medium Severity
+│   └── Resolved
+│
+├── Filters
+│   ├── Severity
+│   ├── Customer
+│   ├── Sales Rep
+│   ├── Product Category
+│   └── Date
+│
+├── Anomaly Table
+│   ├── Deal
+│   ├── Customer
+│   ├── Discount
+│   ├── Allowed Discount
+│   ├── Difference
+│   ├── Severity
+│   ├── Detected At
+│   └── Actions
+│
+├── Anomaly Explanation
+│   ├── WHAT
+│   ├── WHY
+│   ├── IMPACT
+│   └── Recommended Action
+│
+└── Actions
+    ├── View Deal
+    ├── Review Discount
+    └── Dismiss
+07.11 Deal Health → Delivery Slippage
+07.11 DELIVERY SLIPPAGE
+│
+├── Slippage KPIs
+│   ├── Delayed Orders
+│   ├── Critical Delays
+│   ├── Average Delay
+│   └── Customer Impact
+│
+├── Filters
+│   ├── Warehouse
+│   ├── Carrier
+│   ├── Customer
+│   ├── Delay Duration
+│   └── Date
+│
+├── Slippage Table
+│   ├── Order
+│   ├── Customer
+│   ├── Warehouse
+│   ├── Expected Delivery
+│   ├── Actual / Current ETA
+│   ├── Delay
+│   ├── Severity
+│   └── Actions
+│
+├── Slippage Reasons
+│   ├── Inventory Shortage
+│   ├── Warehouse Delay
+│   ├── Shipping Delay
+│   └── Backorder
+│
+└── Recommended Actions
+    ├── Reallocate
+    ├── Expedite
+    ├── Contact Customer
+    └── Review Fulfillment
+07.12 Decision Insights
+07.12 DECISION INSIGHTS
+│
+├── Page Header
+│   ├── Insight Search
+│   ├── Date Range
+│   └── Severity
+│
+├── Insight Summary
+│   ├── Critical Insights
+│   ├── High Priority
+│   ├── Medium Priority
+│   └── Resolved
+│
+├── Insight Cards
+│   ├── Title
+│   ├── Category
+│   ├── Severity
+│   ├── WHAT Happened
+│   ├── WHY It Happened
+│   ├── Business Impact
+│   ├── WHO Is Affected
+│   ├── WHEN
+│   └── NEXT ACTION
+│
+├── Insight Categories
+│   ├── Risk
+│   ├── Discount
+│   ├── Margin
+│   ├── Approval
+│   ├── Fulfillment
+│   ├── Billing
+│   └── Customer
+│
+└── Actions
+    ├── View Related Record
+    ├── Take Action
+    ├── Assign
+    └── Dismiss
+08. CUSTOMER PORTAL
+
+⚠️ Yahan internal margin, raw cost, internal risk score, approval comments aur internal notes kabhi expose nahi hone chahiye. Customer-facing view sirf customer-relevant information dikhayega.
+
+08.1 Dashboard
+08.1 CUSTOMER DASHBOARD
+│
+├── Page Header
+│   ├── Welcome
+│   ├── Customer Company
+│   └── Quick Actions
+│
+├── Account Summary
+│   ├── Open Quotations
+│   ├── Active Orders
+│   ├── Shipments
+│   ├── Outstanding Invoices
+│   └── Active Subscriptions
+│
+├── Quotation Summary
+│   ├── Awaiting Review
+│   ├── Negotiation
+│   ├── Accepted
+│   └── Expiring Soon
+│
+├── Order Summary
+│   ├── Processing
+│   ├── Shipped
+│   ├── Delivered
+│   └── Backordered
+│
+├── Billing Summary
+│   ├── Outstanding
+│   ├── Paid
+│   └── Overdue
+│
+├── Recent Activity
+│   ├── Quote Updates
+│   ├── Order Updates
+│   ├── Shipment Updates
+│   └── Billing Updates
+│
+└── Alerts
+    ├── Quote Expiry
+    ├── Shipment Delay
+    ├── Payment Due
+    └── Subscription Renewal
+08.2 Quotations → My Quotations
+08.2 MY QUOTATIONS
+│
+├── Page Header
+│   ├── Search
+│   └── Date Range
+│
+├── Quotation KPIs
+│   ├── Open
+│   ├── Awaiting Review
+│   ├── Negotiation
+│   ├── Accepted
+│   └── Expired
+│
+├── Filters
+│   ├── Status
+│   ├── Date
+│   ├── Value
+│   └── Expiry
+│
+├── Quotation Table
+│   ├── Quote Number
+│   ├── Date
+│   ├── Value
+│   ├── Status
+│   ├── Expiry
+│   └── Actions
+│
+└── Pagination
+08.3 Quotations → Quotation Details
+08.3 CUSTOMER QUOTATION DETAILS
+│
+├── Quote Header
+│   ├── Quote Number
+│   ├── Status
+│   ├── Issue Date
+│   ├── Expiry Date
+│   └── Actions
+│
+├── Seller Information
+│   ├── Company
+│   ├── Contact
+│   ├── Email
+│   └── Phone
+│
+├── Quote Items
+│   ├── Product
+│   ├── Description
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Discount
+│   └── Line Total
+│
+├── Pricing
+│   ├── Subtotal
+│   ├── Discount
+│   ├── Tax
+│   ├── Shipping
+│   └── Grand Total
+│
+├── Terms
+│   ├── Payment Terms
+│   ├── Delivery Terms
+│   └── Expiry
+│
+└── Actions
+    ├── Accept
+    ├── Reject
+    ├── Request Changes
+    └── Counter Offer
+08.4 Negotiation → Review Quote
+08.4 REVIEW QUOTE
+│
+├── Quote Summary
+│   ├── Products
+│   ├── Quantities
+│   ├── Pricing
+│   ├── Discount
+│   └── Total
+│
+├── Terms
+│   ├── Payment
+│   ├── Delivery
+│   └── Expiry
+│
+├── Customer Decision
+│   ├── Accept
+│   ├── Reject
+│   └── Request Changes
+│
+└── Actions
+    ├── Accept Quote
+    ├── Reject Quote
+    └── Negotiate
+08.5 Negotiation → Request Changes
+08.5 REQUEST CHANGES
+│
+├── Quote Context
+│   ├── Quote Number
+│   ├── Current Version
+│   └── Current Total
+│
+├── Change Request
+│   ├── Product
+│   ├── Quantity
+│   ├── Price
+│   ├── Discount
+│   ├── Delivery
+│   └── Other Request
+│
+├── Message
+│   ├── Customer Comment
+│   └── Attachment
+│
+├── Requested Changes Summary
+│   ├── Original
+│   ├── Requested
+│   └── Difference
+│
+└── Actions
+    ├── Submit Request
+    └── Cancel
+08.6 Negotiation → Counter Offer
+08.6 COUNTER OFFER
+│
+├── Quote Context
+│   ├── Quote Number
+│   ├── Current Version
+│   └── Current Total
+│
+├── Counter Offer
+│   ├── Product
+│   ├── Quantity
+│   ├── Requested Price
+│   ├── Requested Discount
+│   └── Requested Terms
+│
+├── Offer Summary
+│   ├── Current Offer
+│   ├── Customer Offer
+│   └── Difference
+│
+├── Message
+│   ├── Customer Note
+│   └── Supporting Information
+│
+└── Actions
+    ├── Submit Counter Offer
+    └── Cancel
+08.7 Orders → My Orders
+08.7 MY ORDERS
+│
+├── Page Header
+│   ├── Search
+│   └── Date Range
+│
+├── Order KPIs
+│   ├── Total Orders
+│   ├── Processing
+│   ├── Shipped
+│   ├── Delivered
+│   └── Backordered
+│
+├── Filters
+│   ├── Status
+│   ├── Date
+│   └── Value
+│
+├── Order Table
+│   ├── Order Number
+│   ├── Date
+│   ├── Value
+│   ├── Status
+│   ├── Shipment
+│   └── Actions
+│
+└── Pagination
+08.8 Orders → Order Details
+08.8 ORDER DETAILS
+│
+├── Order Header
+│   ├── Order Number
+│   ├── Status
+│   ├── Order Date
+│   └── Total
+│
+├── Order Items
+│   ├── Product
+│   ├── Quantity
+│   ├── Unit Price
+│   └── Total
+│
+├── Fulfillment
+│   ├── Fulfillment Status
+│   ├── Fulfilled Quantity
+│   ├── Backordered Quantity
+│   └── Expected Delivery
+│
+├── Shipments
+│   ├── Shipment
+│   ├── Tracking
+│   ├── Status
+│   └── ETA
+│
+├── Billing
+│   ├── Invoice
+│   ├── Amount
+│   └── Payment Status
+│
+└── Actions
+    ├── View Shipment
+    └── View Invoice
+08.9 Shipments → Shipment List
+08.9 SHIPMENT LIST
+│
+├── Page Header
+│   ├── Search
+│   └── Filters
+│
+├── Shipment KPIs
+│   ├── Processing
+│   ├── In Transit
+│   ├── Delivered
+│   └── Delayed
+│
+├── Shipment Table
+│   ├── Shipment
+│   ├── Order
+│   ├── Carrier
+│   ├── Tracking
+│   ├── Status
+│   ├── ETA
+│   └── Actions
+│
+└── Pagination
+08.10 Shipments → Shipment Details
+08.10 CUSTOMER SHIPMENT DETAILS
+│
+├── Shipment Header
+│   ├── Shipment ID
+│   ├── Order
+│   ├── Status
+│   └── Tracking Number
+│
+├── Delivery
+│   ├── Delivery Address
+│   ├── Carrier
+│   ├── Expected Delivery
+│   └── Delivery Status
+│
+├── Items
+│   ├── Product
+│   ├── Quantity
+│   └── Status
+│
+├── Tracking Timeline
+│   ├── Shipment Created
+│   ├── Picked
+│   ├── In Transit
+│   ├── Out for Delivery
+│   └── Delivered
+│
+└── Actions
+    └── Track Shipment
+08.11 Billing → Invoices
+08.11 CUSTOMER INVOICES
+│
+├── Page Header
+│   ├── Search
+│   └── Date Range
+│
+├── Invoice KPIs
+│   ├── Total
+│   ├── Paid
+│   ├── Outstanding
+│   └── Overdue
+│
+├── Filters
+│   ├── Status
+│   ├── Date
+│   └── Amount
+│
+├── Invoice Table
+│   ├── Invoice Number
+│   ├── Date
+│   ├── Due Date
+│   ├── Amount
+│   ├── Status
+│   └── Actions
+│
+└── Pagination
+08.12 Billing → Invoice Details
+08.12 CUSTOMER INVOICE DETAILS
+│
+├── Invoice Header
+│   ├── Invoice Number
+│   ├── Invoice Date
+│   ├── Due Date
+│   └── Status
+│
+├── Seller Information
+│   ├── Company
+│   ├── Address
+│   └── Contact
+│
+├── Invoice Items
+│   ├── Product / Service
+│   ├── Quantity
+│   ├── Unit Price
+│   ├── Discount
+│   ├── Tax
+│   └── Total
+│
+├── Totals
+│   ├── Subtotal
+│   ├── Discount
+│   ├── Tax
+│   └── Grand Total
+│
+├── Payment
+│   ├── Amount Paid
+│   ├── Amount Due
+│   ├── Payment Status
+│   └── Due Date
+│
+└── Actions
+    ├── Download
+    └── Pay
+08.13 Subscriptions → My Subscriptions
+08.13 MY SUBSCRIPTIONS
+│
+├── Page Header
+│   ├── Search
+│   └── Status Filter
+│
+├── Subscription KPIs
+│   ├── Active
+│   ├── Trial
+│   ├── Renewing Soon
+│   └── Cancelled
+│
+├── Subscription Table
+│   ├── Subscription
+│   ├── Plan
+│   ├── Amount
+│   ├── Billing Cycle
+│   ├── Status
+│   ├── Renewal Date
+│   └── Actions
+│
+└── Pagination
+08.14 Subscriptions → Subscription Details
+08.14 CUSTOMER SUBSCRIPTION DETAILS
+│
+├── Subscription Header
+│   ├── Subscription ID
+│   ├── Plan
+│   ├── Status
+│   └── Renewal Date
+│
+├── Plan Details
+│   ├── Plan Name
+│   ├── Features
+│   ├── Price
+│   └── Billing Cycle
+│
+├── Billing
+│   ├── Current Amount
+│   ├── Next Billing Date
+│   ├── Payment Status
+│   └── Billing History
+│
+├── Usage / Entitlements
+│   ├── Included Features
+│   ├── Usage
+│   └── Limits
+│
+├── Subscription Changes
+│   ├── Upgrades
+│   ├── Downgrades
+│   ├── Proration
+│   └── Effective Date
+│
+└── Actions
+    ├── Change Plan
+    ├── Cancel Subscription
+    └── View Billing
+08.15 Account → Profile
+08.15 CUSTOMER PROFILE
+│
+├── Profile Information
+│   ├── Name
+│   ├── Email
+│   ├── Phone
+│   ├── Job Title
+│   └── Profile Photo
+│
+├── Security
+│   ├── Change Password
+│   ├── Active Sessions
+│   └── Login Activity
+│
+└── Actions
+    ├── Edit Profile
+    └── Save Changes
+08.16 Account → Company
+08.16 CUSTOMER COMPANY
+│
+├── Company Information
+│   ├── Company Name
+│   ├── Logo
+│   ├── Website
+│   ├── Industry
+│   └── Company Size
+│
+├── Contact Information
+│   ├── Primary Contact
+│   ├── Email
+│   ├── Phone
+│   └── Address
+│
+├── Billing Information
+│   ├── Billing Address
+│   ├── Tax Information
+│   └── Payment Terms
+│
+└── Actions
+    └── Update Information
+08.17 Account → Preferences
+08.17 CUSTOMER PREFERENCES
+│
+├── Communication
+│   ├── Email Notifications
+│   ├── Quote Notifications
+│   ├── Order Notifications
+│   ├── Shipment Notifications
+│   └── Billing Notifications
+│
+├── Localization
+│   ├── Language
+│   ├── Timezone
+│   ├── Currency
+│   └── Date Format
+│
+├── Appearance
+│   ├── Theme
+│   └── Display Preferences
+│
+└── Actions
+    └── Save Preferences
+09. ANALYTICS
+09.1 Executive Dashboard
+09.1 EXECUTIVE DASHBOARD
+│
+├── Page Header
+│   ├── Date Range
+│   ├── Comparison Period
+│   └── Export
+│
+├── Executive KPIs
+│   ├── Revenue
+│   ├── Pipeline
+│   ├── Win Rate
+│   ├── Gross Margin
+│   ├── MRR
+│   └── ARR
+│
+├── Sales
+│   ├── Pipeline
+│   ├── Revenue
+│   ├── Win Rate
+│   └── Sales Trend
+│
+├── Financial
+│   ├── Revenue
+│   ├── Margin
+│   ├── Outstanding
+│   └── Collection
+│
+├── Operations
+│   ├── Fulfillment
+│   ├── Backorders
+│   ├── Delivery
+│   └── Inventory
+│
+├── Risk
+│   ├── High Risk Deals
+│   ├── Discount Exceptions
+│   └── Deal Health
+│
+└── Executive Insights
+    ├── Key Trends
+    ├── Risks
+    ├── Opportunities
+    └── Recommended Actions
+09.2 Sales Analytics
+09.2 SALES ANALYTICS
+│
+├── KPIs
+│   ├── Revenue
+│   ├── Pipeline
+│   ├── Deals
+│   ├── Win Rate
+│   └── Average Deal Value
+│
+├── Pipeline
+│   ├── Stage Distribution
+│   ├── Pipeline Trend
+│   └── Pipeline Velocity
+│
+├── Sales Performance
+│   ├── Rep Performance
+│   ├── Team Performance
+│   └── Customer Performance
+│
+└── Conversion
+    ├── Lead → Deal
+    ├── Deal → Quote
+    ├── Quote → Won
+    └── Win Rate
+09.3 Revenue Analytics
+09.3 REVENUE ANALYTICS
+│
+├── KPIs
+│   ├── Total Revenue
+│   ├── One-Time Revenue
+│   ├── Recurring Revenue
+│   ├── MRR
+│   ├── ARR
+│   └── Growth
+│
+├── Revenue Trend
+│   ├── Daily
+│   ├── Monthly
+│   └── Yearly
+│
+├── Revenue Breakdown
+│   ├── Product
+│   ├── Service
+│   ├── Subscription
+│   └── Customer Segment
+│
+└── Growth Analysis
+    ├── New Revenue
+    ├── Expansion
+    ├── Churn
+    └── Net Growth
+09.4 Discount Analytics
+09.4 DISCOUNT ANALYTICS
+│
+├── KPIs
+│   ├── Average Discount
+│   ├── Total Discount
+│   ├── Discount Exceptions
+│   └── Margin Impact
+│
+├── Discount Distribution
+│   ├── By Customer Tier
+│   ├── By Category
+│   ├── By Product
+│   └── By Sales Rep
+│
+├── Governance
+│   ├── Allowed Discounts
+│   ├── Violations
+│   ├── Approval Required
+│   └── Exceptions
+│
+└── Impact
+    ├── Revenue Impact
+    ├── Margin Impact
+    └── Risk Impact
+09.5 Margin Analytics
+09.5 MARGIN ANALYTICS
+│
+├── KPIs
+│   ├── Gross Margin
+│   ├── Margin %
+│   ├── Average Margin
+│   └── Margin at Risk
+│
+├── Margin Breakdown
+│   ├── Product
+│   ├── Category
+│   ├── Customer
+│   └── Sales Rep
+│
+├── Margin Risk
+│   ├── Below Target
+│   ├── Below Minimum
+│   ├── Discount Compression
+│   └── High Risk
+│
+└── Margin Trend
+    ├── Revenue
+    ├── Cost
+    ├── Gross Profit
+    └── Margin %
+09.6 Approval Analytics
+09.6 APPROVAL ANALYTICS
+│
+├── KPIs
+│   ├── Approval Volume
+│   ├── Average Approval Time
+│   ├── Approval Rate
+│   ├── Rejection Rate
+│   └── Return Rate
+│
+├── Approval Distribution
+│   ├── By Risk
+│   ├── By Sales Rep
+│   ├── By Manager
+│   └── By Deal Value
+│
+├── Bottlenecks
+│   ├── Pending
+│   ├── SLA Breach
+│   └── Average Wait Time
+│
+└── Decision Analysis
+    ├── Approved
+    ├── Rejected
+    ├── Returned
+    └── Escalated
+09.7 Fulfillment Analytics
+09.7 FULFILLMENT ANALYTICS
+│
+├── KPIs
+│   ├── Fulfillment Rate
+│   ├── Backorder Rate
+│   ├── On-Time Delivery
+│   └── Average Fulfillment Time
+│
+├── Warehouse Performance
+│   ├── Throughput
+│   ├── Capacity
+│   ├── Allocation Efficiency
+│   └── Inventory Turnover
+│
+├── Shipping
+│   ├── Shipments
+│   ├── Delays
+│   ├── Shipping Cost
+│   └── Delivery Time
+│
+└── Backorders
+    ├── Volume
+    ├── Duration
+    └── Customer Impact
+09.8 Subscription Analytics
+09.8 SUBSCRIPTION ANALYTICS
+│
+├── KPIs
+│   ├── Active Subscriptions
+│   ├── MRR
+│   ├── ARR
+│   ├── Churn
+│   └── Renewal Rate
+│
+├── Subscription Growth
+│   ├── New
+│   ├── Upgrades
+│   ├── Downgrades
+│   └── Cancellations
+│
+├── Revenue
+│   ├── MRR Trend
+│   ├── ARR Trend
+│   └── Recurring Revenue
+│
+└── Customer Behavior
+    ├── Retention
+    ├── Churn
+    ├── Renewal
+    └── Expansion
+09.9 Custom Reports
+09.9 CUSTOM REPORTS
+│
+├── Page Header
+│   ├── Create Report
+│   ├── Search
+│   └── Export
+│
+├── Report Builder
+│   ├── Data Source
+│   ├── Fields
+│   ├── Filters
+│   ├── Grouping
+│   ├── Sorting
+│   └── Aggregation
+│
+├── Visualization
+│   ├── Table
+│   ├── Bar Chart
+│   ├── Line Chart
+│   ├── Area Chart
+│   └── KPI
+│
+├── Saved Reports
+│   ├── Report Name
+│   ├── Owner
+│   ├── Last Updated
+│   └── Actions
+│
+└── Actions
+    ├── Save
+    ├── Export
+    ├── Schedule
+    └── Share
+10. SHARED
+10.1 Global Search
+10.1 GLOBAL SEARCH
+│
+├── Search Input
+│   ├── Query
+│   ├── Recent Searches
+│   └── Search Suggestions
+│
+├── Search Scope
+│   ├── Deals
+│   ├── Quotations
+│   ├── Customers
+│   ├── Products
+│   ├── Orders
+│   ├── Invoices
+│   └── Shipments
+│
+├── Results
+│   ├── Relevant Records
+│   ├── Category
+│   ├── Status
+│   └── Quick Actions
+│
+└── Filters
+    ├── Type
+    ├── Status
+    ├── Date
+    └── Owner
+10.2 Notifications
+10.2 NOTIFICATIONS
+│
+├── Notification Summary
+│   ├── Unread
+│   ├── Important
+│   └── All
+│
+├── Notification Types
+│   ├── Approval
+│   ├── Deal
+│   ├── Customer
+│   ├── Fulfillment
+│   ├── Billing
+│   ├── Subscription
+│   └── System
+│
+├── Notification Item
+│   ├── Title
+│   ├── Message
+│   ├── Timestamp
+│   ├── Priority
+│   └── Related Record
+│
+└── Actions
+    ├── Mark Read
+    ├── Mark All Read
+    └── Open Record
+10.3 Notification Center
+10.3 NOTIFICATION CENTER
+│
+├── Page Header
+│   ├── Search
+│   ├── Filter
+│   └── Mark All Read
+│
+├── Filters
+│   ├── All
+│   ├── Unread
+│   ├── Important
+│   ├── Approval
+│   ├── Deal
+│   ├── Billing
+│   └── Operations
+│
+├── Notification List
+│   ├── Notification
+│   ├── Category
+│   ├── Priority
+│   ├── Timestamp
+│   ├── Read Status
+│   └── Actions
+│
+└── Notification Details
+    ├── Message
+    ├── Related Record
+    ├── Timestamp
+    └── Action
+10.4 Profile
+10.4 PROFILE
+│
+├── Profile Header
+│   ├── Avatar
+│   ├── Name
+│   ├── Role
+│   ├── Email
+│   └── Tenant / Business
+│
+├── Personal Information
+│   ├── Name
+│   ├── Email
+│   ├── Phone
+│   └── Job Title
+│
+├── Security
+│   ├── Change Password
+│   ├── Active Sessions
+│   └── Login Activity
+│
+├── Account Status
+│   ├── Role
+│   ├── Permissions
+│   └── Account Status
+│
+└── Actions
+    ├── Edit Profile
+    ├── Change Password
+    └── Sign Out
+10.5 Preferences
+10.5 PREFERENCES
+│
+├── Appearance
+│   ├── Theme
+│   ├── Density
+│   └── Display Preferences
+│
+├── Localization
+│   ├── Language
+│   ├── Timezone
+│   ├── Currency
+│   └── Date Format
+│
+├── Notifications
+│   ├── Email
+│   ├── In-App
+│   ├── Approval Alerts
+│   ├── Deal Alerts
+│   └── Billing Alerts
+│
+└── Actions
+    └── Save Preferences
+10.6 Help Center
+10.6 HELP CENTER
+│
+├── Page Header
+│   ├── Search Help
+│   └── Contact Support
+│
+├── Help Categories
+│   ├── Getting Started
+│   ├── Sales
+│   ├── Approvals
+│   ├── Fulfillment
+│   ├── Billing
+│   ├── Subscriptions
+│   └── Account
+│
+├── Articles
+│   ├── Guides
+│   ├── FAQs
+│   └── Tutorials
+│
+├── Support
+│   ├── Contact Support
+│   ├── Support Ticket
+│   └── Ticket Status
+│
+└── Resources
+    ├── Documentation
+    ├── Business Rules
+    └── Release Notes
+10.7 Settings
+10.7 SHARED SETTINGS
+│
+├── General
+│   ├── Application Settings
+│   ├── Localization
+│   └── Date / Time
+│
+├── Appearance
+│   ├── Theme
+│   ├── Density
+│   └── Display
+│
+├── Notifications
+│   ├── Email Notifications
+│   ├── In-App Notifications
+│   └── Notification Preferences
+│
+├── Security
+│   ├── Password
+│   ├── Sessions
+│   ├── Login Security
+│   └── Authentication
+│
+├── Integrations
+│   ├── Connected Services
+│   ├── API
+│   └── Webhooks
+│
+├── Data & Privacy
+│   ├── Data Export
+│   ├── Privacy
+│   └── Data Retention
+│
+└── Actions
+    ├── Save
+    ├── Reset
+    └── Cancel

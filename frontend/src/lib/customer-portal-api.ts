@@ -518,6 +518,9 @@ export async function cancelSubscription(id: string, reason?: string): Promise<u
   return portalPost(`/subscriptions/${id}/cancel`, { effective: 'end_of_period', reason }, { success: true })
 }
 
+export const cancelCustomerSubscription = (id: string, payload?: any) =>
+  cancelSubscription(id, typeof payload === 'string' ? payload : payload?.reason)
+
 export async function changeSubscriptionPlan(id: string, newPlanId: string): Promise<unknown> {
   return portalPost(`/subscriptions/${id}/change-plan`, { new_plan_id: newPlanId }, { success: true })
 }

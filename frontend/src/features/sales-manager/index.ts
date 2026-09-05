@@ -1,0 +1,16 @@
+// Sales Manager Module Exports
+export { SalesManagerDashboardPage } from './pages/SalesManagerDashboardPage'
+export { ApprovalInboxPage } from './pages/ApprovalInboxPage'
+export { ApprovalDetailsPage } from './pages/ApprovalDetailsPage'
+export { ApprovalHistoryPage } from './pages/ApprovalHistoryPage'
+export { TeamDealListPage } from './pages/TeamDealListPage'
+export { TeamDealDetailsPage } from './pages/TeamDealDetailsPage'
+export { TeamDealTimelinePage } from './pages/TeamDealTimelinePage'
+export { TeamPerformancePage } from './pages/TeamPerformancePage'
+export { DealHealthManagerPage } from './pages/DealHealthManagerPage'
+export { SalesManagerReportsPage } from './pages/SalesManagerReportsPage'
+
+export { CustomerTierBadge } from './components/CustomerTierBadge'
+export { SlaCountdown } from './components/SlaCountdown'
+export { InsightCard } from './components/InsightCard'
+export { ApproveModal, RejectModal, ReturnModal } from './components/ApprovalActionModals'

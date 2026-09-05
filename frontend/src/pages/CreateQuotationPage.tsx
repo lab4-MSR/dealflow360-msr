@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
-import { AlertTriangle, Search, Plus, DollarSign, Shield, TrendingUp } from 'lucide-react'
+import { Search, Plus, DollarSign, Shield, TrendingUp } from 'lucide-react'
 
 export function CreateQuotationPage() {
   const navigate = useNavigate()
@@ -43,8 +43,7 @@ export function CreateQuotationPage() {
     setLines([...lines, { product_id: productId, quantity: 1, discount_percent: 0 }])
   }
 
-  const subtotal = lines.length // placeholder — authoritative is backend
-  const handleCreate = async () => {
+    const handleCreate = async () => {
     if (!customerId) { toast.error('Select a customer'); return }
     if (!dealName.trim()) { toast.error('Enter deal name'); return }
     setSubmitting(true)

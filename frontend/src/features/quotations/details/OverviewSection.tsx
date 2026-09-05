@@ -185,7 +185,7 @@ export function OverviewSection({ overview, currency, onJumpToVersions }: Overvi
             <div className="flex justify-between items-center py-1">
               <span className="text-muted-foreground">Total Deal Value</span>
               <span className="font-mono font-bold text-foreground">
-                {currency === 'INR' ? '₹' : '$'}
+                '₹'
                 {overview.deal_value.toLocaleString()}
               </span>
             </div>

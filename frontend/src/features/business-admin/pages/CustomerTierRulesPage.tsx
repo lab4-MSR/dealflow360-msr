@@ -184,13 +184,13 @@ export function CustomerTierRulesPage() {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Revenue</span>
                       <span className="text-foreground font-medium">
-                        {tier.revenueThreshold ? `$${tier.revenueThreshold.toLocaleString()}` : '—'}
+                        {tier.revenueThreshold ? `₹${tier.revenueThreshold.toLocaleString()}` : '—'}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Purchase Volume</span>
                       <span className="text-foreground font-medium">
-                        {tier.purchaseVolumeThreshold ? `$${tier.purchaseVolumeThreshold.toLocaleString()}` : '—'}
+                        {tier.purchaseVolumeThreshold ? `₹${tier.purchaseVolumeThreshold.toLocaleString()}` : '—'}
                       </span>
                     </div>
                     <div className="flex justify-between">

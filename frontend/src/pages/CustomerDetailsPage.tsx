@@ -75,7 +75,7 @@ export function CustomerDetailsPage() {
           <CardContent className="space-y-3 text-small">
             <div className="flex justify-between"><span className="text-muted-foreground">Price List</span><span className="font-mono text-caption">{String((customer as {default_price_list_id?:string}).default_price_list_id ?? '—')}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Payment Terms</span><span>{String((customer as {payment_terms?:string}).payment_terms ?? '—')}</span></div>
-            <div className="flex justify-between"><span className="text-muted-foreground">Credit Limit</span><span className="tabular-nums">{(customer as {credit_limit?:number}).credit_limit ? `$${Number((customer as {credit_limit:number}).credit_limit).toLocaleString()}` : '—'}</span></div>
+            <div className="flex justify-between"><span className="text-muted-foreground">Credit Limit</span><span className="tabular-nums">{(customer as {credit_limit?:number}).credit_limit ? `₹${Number((customer as {credit_limit:number}).credit_limit).toLocaleString()}` : '—'}</span></div>
             <div className="flex justify-between"><span className="text-muted-foreground">Discount Eligibility</span><Badge variant="secondary">—</Badge></div>
             <p className="text-caption text-muted-foreground pt-2 border-t">Values shown only when backend provides them; otherwise “—” (no fake).</p>
           </CardContent>

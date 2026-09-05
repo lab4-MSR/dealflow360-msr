@@ -285,7 +285,7 @@ export function BusinessDetailsOverviewPage() {
                       tickLine={false}
                     />
                     <YAxis
-                      tickFormatter={(val: number) => `$${(val / 1000).toFixed(0)}K`}
+                      tickFormatter={(val: number) => `₹${(val / 1000).toFixed(0)}K`}
                       tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
                       axisLine={false}
                       tickLine={false}

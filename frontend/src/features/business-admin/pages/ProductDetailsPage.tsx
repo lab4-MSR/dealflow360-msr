@@ -27,7 +27,7 @@ const MOVEMENT_VARIANT: Record<string, 'success' | 'danger' | 'info'> = {
 }
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
+  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
 
 export function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>()

@@ -32,7 +32,7 @@ const CATEGORY_VARIANT: Record<string, 'info' | 'success' | 'warning' | 'outline
 }
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
+  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
 
 export function ProductsPage() {
   const navigate = useNavigate()

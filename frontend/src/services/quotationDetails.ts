@@ -1,4 +1,4 @@
-import apiClient, { getApiErrorMessage } from '@/lib/api'
+import apiClient from '@/lib/api'
 import type {
   QuotationCompleteDetails,
   QuotationLineItem,
@@ -615,9 +615,9 @@ export function getMockQuotationDetails(id: string = 'QT-2026-00482', activeVers
     },
     audit: auditEvents,
     permissions: {
-      can_edit: status === 'draft' || status === 'under_negotiation',
+      can_edit: (status as string) === 'draft' || (status as string) === 'under_negotiation',
       can_validate: true,
-      can_submit_approval: status === 'draft' || status === 'under_negotiation',
+      can_submit_approval: (status as string) === 'draft' || (status as string) === 'under_negotiation',
       can_send_to_customer: approvalStatus === 'approved' || approvalStatus === 'not_required',
       can_approve: true, // In simulation mode we enable reviewing for the demo
       can_reject: true,

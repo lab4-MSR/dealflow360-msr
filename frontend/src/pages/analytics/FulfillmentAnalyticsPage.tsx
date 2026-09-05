@@ -29,7 +29,7 @@ export function FulfillmentAnalyticsPage() {
           <KpiCard label="Fulfillment Rate" value={formatPercent(s.fulfillment_rate)} trend={kpiChange(s.fulfillment_rate, s.fulfillment_rate)} icon={<Package className="h-5 w-5" />} />
           <KpiCard label="Backorder Rate" value={formatPercent(s.backorder_rate)} trend={kpiChange(s.backorder_rate, s.backorder_rate)} icon={<AlertTriangle className="h-5 w-5" />} />
           <KpiCard label="On-Time Delivery" value={formatPercent(s.on_time_delivery_rate)} trend={kpiChange(s.on_time_delivery_rate, s.on_time_delivery_rate)} icon={<Truck className="h-5 w-5" />} />
-          <KpiCard label="Avg Fulfillment Time" value={formatDays(s.average_fulfillment_time)} trend={kpiChange(s.average_fulfillment_time, s.average_fulfillment_time)} icon={<Clock className="h-5 w-5" />} />
+          <KpiCard label="Avg Fulfillment Time" value={formatDays((s as any).average_fulfillment_time)} trend={kpiChange((s as any).average_fulfillment_time, (s as any).average_fulfillment_time)} icon={<Clock className="h-5 w-5" />} />
         </div>
       )}
       <AnalyticsSection title="Warehouse Performance" description="Throughput, capacity, allocation efficiency, and inventory turnover." isLoading={isLoading} isEmpty={!isLoading && !s.warehouses} error={error} onRetry={() => refetch()}>

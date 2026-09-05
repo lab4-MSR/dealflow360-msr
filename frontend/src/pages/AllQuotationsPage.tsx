@@ -85,7 +85,7 @@ export function AllQuotationsPage() {
                       <TableCell className="font-mono text-small"><Link to={`/sales/quotations/${String(q.id)}`} className="text-primary hover:underline">{String(q.quote_number)}</Link></TableCell>
                       <TableCell>{String((q as {customer?:{name?:string}}).customer?.name ?? '—')}</TableCell>
                       <TableCell>{String((q as {deal_id?:string}).deal_id ? String((q as {deal_id:string}).deal_id).slice(0,6) : '—')}</TableCell>
-                      <TableCell className="tabular-nums">${Number((q as {pricing?:{grand_total?:number}}).pricing?.grand_total ?? 0).toLocaleString()}</TableCell>
+                      <TableCell className="tabular-nums">₹{Number((q as {pricing?:{grand_total?:number}}).pricing?.grand_total ?? 0).toLocaleString()}</TableCell>
                       <TableCell className="tabular-nums">{String((q as {discount_analysis?:{order_level?:{requested_discount_percent?:number}}}).discount_analysis?.order_level?.requested_discount_percent ?? '—')}%</TableCell>
                       <TableCell className="tabular-nums">{String((q as {margin?:{margin_percent?:number}}).margin?.margin_percent ?? '—')}%</TableCell>
                       <TableCell><RiskBadge risk={String((q as {risk?:{risk_level?:string}}).risk?.risk_level ?? 'low') as never}>{String((q as {risk?:{risk_level?:string}}).risk?.risk_level ?? '—')}</RiskBadge></TableCell>

@@ -28,7 +28,9 @@ const riskDotVariants: Record<string, string> = {
 
 export interface RiskBadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof riskVariants> {}
+    VariantProps<typeof riskVariants> {
+  size?: 'sm' | 'md' | 'lg' | string
+}
 
 function RiskBadge({ className, risk, children, ...props }: RiskBadgeProps) {
   return (

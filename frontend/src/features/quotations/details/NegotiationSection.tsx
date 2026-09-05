@@ -30,7 +30,7 @@ export function NegotiationSection({ negotiation, currency }: NegotiationSection
     re_approval_status,
   } = negotiation
 
-  const curSymbol = currency === 'INR' ? '₹' : '$'
+  const curSymbol = '₹'
 
   return (
     <section id="negotiation" className="space-y-4">
