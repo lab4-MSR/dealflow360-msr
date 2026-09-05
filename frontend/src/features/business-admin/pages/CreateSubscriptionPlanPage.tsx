@@ -55,7 +55,7 @@ export function CreateSubscriptionPlanPage() {
     resolver: zodResolver(createPlanSchema) as any,
     defaultValues: {
       planType: "monthly",
-      currency: "USD",
+      currency: "INR",
       billingCycle: "monthly",
       billingFrequency: 1,
       trialEnabled: false,
@@ -178,13 +178,13 @@ export function CreateSubscriptionPlanPage() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="currency">Currency <span className="text-danger">*</span></Label>
-                <Select onValueChange={(v) => setValue("currency", v)} defaultValue="USD">
+                <Select onValueChange={(v) => setValue("currency", v)} defaultValue="INR">
                   <SelectTrigger><SelectValue placeholder="Select currency" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="GBP">GBP</SelectItem>
-                    <SelectItem value="INR">INR</SelectItem>
+                    <SelectItem value="INR">INR (₹)</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                    <SelectItem value="AED">AED (د.إ)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

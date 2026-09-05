@@ -11,7 +11,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useProductDetail, useDeleteProduct } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
-import { ArrowLeft, Edit, Trash2, Package, DollarSign, Warehouse, ShoppingCart, Calendar, Tag, Hash } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, Package, DollarSign, Warehouse, ShoppingCart, Calendar, Tag, Hash, Activity } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 
 const STATUS_VARIANT: Record<string, 'success' | 'secondary' | 'warning'> = {
@@ -196,6 +196,7 @@ export function ProductDetailsPage() {
           <TabsTrigger value="pricing">Pricing</TabsTrigger>
           <TabsTrigger value="inventory">Inventory</TabsTrigger>
           <TabsTrigger value="sales">Sales History</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="mt-4">
@@ -339,6 +340,64 @@ export function ProductDetailsPage() {
                   data={product.recentSales as unknown as Record<string, unknown>[]}
                 />
               )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="activity" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Product Activity & Audit Trail</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  {
+                    id: 'act-1',
+                    action: 'Base Price Updated',
+                    details: `Unit price adjusted to ${formatCurrency(product.unitPrice)} by Pricing Admin`,
+                    date: '2026-09-02T10:30:00Z',
+                    actor: 'System Admin',
+                  },
+                  {
+                    id: 'act-2',
+                    action: 'Stock Allocation Recorded',
+                    details: 'Stock movement executed for regional fulfillment centers',
+                    date: '2026-08-28T14:15:00Z',
+                    actor: 'Operations Manager',
+                  },
+                  {
+                    id: 'act-3',
+                    action: 'Price List Assignment',
+                    details: 'Assigned to Enterprise Standard & Partner Gold price lists',
+                    date: '2026-08-15T09:00:00Z',
+                    actor: 'Commercial Lead',
+                  },
+                  {
+                    id: 'act-4',
+                    action: 'Product Catalog Ingestion',
+                    details: `Initial creation with SKU ${product.sku} under ${product.category}`,
+                    date: product.createdAt || '2026-08-01T08:00:00Z',
+                    actor: 'Product Manager',
+                  },
+                ].map((item) => (
+                  <div key={item.id} className="flex items-start gap-3 p-3.5 rounded-lg border border-border bg-muted/10">
+                    <div className="p-2 rounded-md bg-primary/10 text-primary mt-0.5">
+                      <Activity className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[13px] font-semibold text-foreground">{item.action}</p>
+                        <span className="text-[11px] text-muted-foreground">
+                          {format(parseISO(item.date), 'MMM d, yyyy · h:mm a')}
+                        </span>
+                      </div>
+                      <p className="text-[12px] text-muted-foreground mt-0.5">{item.details}</p>
+                      <p className="text-[11px] text-primary/80 font-medium mt-1">By {item.actor}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

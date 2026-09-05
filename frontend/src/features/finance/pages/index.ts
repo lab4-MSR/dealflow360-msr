@@ -1,8 +1,11 @@
 export { FinanceDashboardPage } from "./FinanceDashboardPage"
 export { InvoicesPage } from "./InvoicesPage"
+export { FinanceInvoiceDetailsPage } from "./FinanceInvoiceDetailsPage"
 export { HighRiskDealsPage } from "./HighRiskDealsPage"
 export { SubscriptionsPage } from "./SubscriptionsPage"
+export { FinanceSubscriptionDetailsPage } from "./FinanceSubscriptionDetailsPage"
 export { PaymentsPage } from "./PaymentsPage"
 export { FailedPaymentsPage } from "./FailedPaymentsPage"
 export { RevenueAnalyticsPage } from "./RevenueAnalyticsPage"
 export { FinanceAuditPage } from "./FinanceAuditPage"
+

@@ -143,9 +143,11 @@ import {
   FinanceDashboardPage,
   HighRiskDealsPage as FinanceHighRiskDealsPage,
   InvoicesPage as FinanceInvoicesPage,
+  FinanceInvoiceDetailsPage,
   PaymentsPage as FinancePaymentsPage,
   FailedPaymentsPage as FinanceFailedPaymentsPage,
   SubscriptionsPage as FinanceSubscriptionsPage,
+  FinanceSubscriptionDetailsPage,
   RevenueAnalyticsPage as FinanceRevenueAnalyticsPage,
   FinanceAuditPage,
 } from '@/features/finance/pages'
@@ -440,14 +442,14 @@ export function App() {
             <Route path="/finance/reviews/:id" element={<ApprovalDetailsPage />} />
             <Route path="/finance/approvals/:id" element={<ApprovalDetailsPage />} />
             <Route path="/finance/invoices" element={<FinanceInvoicesPage />} />
-            <Route path="/finance/invoices/:id" element={<FinanceInvoicesPage />} />
+            <Route path="/finance/invoices/:id" element={<FinanceInvoiceDetailsPage />} />
             <Route path="/finance/billing/invoices" element={<FinanceInvoicesPage />} />
-            <Route path="/finance/billing/invoices/:id" element={<FinanceInvoicesPage />} />
+            <Route path="/finance/billing/invoices/:id" element={<FinanceInvoiceDetailsPage />} />
             <Route path="/finance/billing/payments" element={<FinancePaymentsPage />} />
             <Route path="/finance/payments" element={<FinancePaymentsPage />} />
             <Route path="/finance/billing/failed" element={<FinanceFailedPaymentsPage />} />
             <Route path="/finance/subscriptions" element={<FinanceSubscriptionsPage />} />
-            <Route path="/finance/subscriptions/:id" element={<FinanceSubscriptionsPage />} />
+            <Route path="/finance/subscriptions/:id" element={<FinanceSubscriptionDetailsPage />} />
             <Route path="/finance/analytics" element={<FinanceRevenueAnalyticsPage />} />
             <Route path="/finance/audit" element={<FinanceAuditPage />} />
           </Route>

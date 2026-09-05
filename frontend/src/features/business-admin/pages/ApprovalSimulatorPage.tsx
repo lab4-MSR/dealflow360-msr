@@ -12,7 +12,7 @@ import { useCategories } from '../hooks/use-business-admin'
 import { useSimulateApproval } from '../hooks/use-business-admin'
 import type { ApprovalSimulatorRequest, ApprovalSimulatorResponse } from '../types'
 import { toast } from 'sonner'
-import { Plus, Minus, Search, RefreshCw, Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle, ArrowRight, Users, Package, Layers, DollarSign, BarChart, Target } from 'lucide-react'
+import { Plus, Minus, Search, RefreshCw, Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle, ArrowRight, Users, Package, Layers, IndianRupee, BarChart, Target } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { PercentageDisplay } from '@/components/shared'
 import { MoneyDisplay } from '@/components/shared'
@@ -124,8 +124,8 @@ function ApprovalSimulatorPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground flex items-center gap-2"><DollarSign className="h-4 w-4" />Deal Value</label>
-                <MoneyDisplay amount={dealValue} currency="USD" className="text-2xl font-bold" />
+                <label className="text-sm font-medium text-foreground flex items-center gap-2"><IndianRupee className="h-4 w-4" />Deal Value</label>
+                <MoneyDisplay amount={dealValue} currency="INR" className="text-2xl font-bold" />
                 <p className="text-xs text-muted-foreground">Auto-calculated from products</p>
               </div>
 
@@ -137,7 +137,7 @@ function ApprovalSimulatorPage() {
                 <div className="space-y-3">
                   {products.map((product, index) => (
                     <div key={index} className="rounded-lg border border-border p-4 space-y-3">
-                      <div className="flex items-center justify-between">
+                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">Line {index + 1}</span>
                         {products.length > 1 && <Button variant="ghost" size="icon" onClick={() => removeProduct(index)} className="text-danger"><Minus className="h-4 w-4" /></Button>}
                       </div>
@@ -147,7 +147,7 @@ function ApprovalSimulatorPage() {
                           <Select value={product.productId} onValueChange={v => handleProductChange(index, v)}>
                             <SelectTrigger className="w-full"><SelectValue placeholder="Select product" /></SelectTrigger>
                             <SelectContent>
-                              {productsData?.products.map(p => <SelectItem key={p.id} value={p.id}>{p.name} ({p.sku}) - {new Intl.NumberFormat('en-US', { style: 'currency', currency: p.currency || 'USD' }).format(p.unitPrice)}</SelectItem>)}
+                              {productsData?.products.map(p => <SelectItem key={p.id} value={p.id}>{p.name} ({p.sku}) - {new Intl.NumberFormat('en-IN', { style: 'currency', currency: p.currency || 'INR' }).format(p.unitPrice)}</SelectItem>)}
                             </SelectContent>
                           </Select>
                         </div>

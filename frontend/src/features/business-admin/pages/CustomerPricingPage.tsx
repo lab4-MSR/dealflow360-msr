@@ -19,7 +19,7 @@ import {
 } from '../hooks/use-business-admin'
 import type { CustomerPricingProduct, CustomerPricingOverride } from '../types'
 import { toast } from 'sonner'
-import { Search, DollarSign, Tag, Shield, Plus, Trash2, Eye, Package } from 'lucide-react'
+import { Search, IndianRupee, Tag, Shield, Plus, Trash2, Eye, Package } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { cn } from '@/lib/utils'
 
@@ -214,7 +214,7 @@ export function CustomerPricingPage() {
         productId: overrideForm.productId,
         productName: product.name,
         overridePrice: parseFloat(overrideForm.overridePrice),
-        currency: inspection?.priceList?.currency || 'USD',
+        currency: inspection?.priceList?.currency || 'INR',
         validFrom: overrideForm.validFrom || undefined,
         validUntil: overrideForm.validUntil || undefined,
       })

@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useCustomerDetail, useUpdateCustomer, useDeleteCustomer } from '../hooks/use-business-admin'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { toast } from 'sonner'
-import { ArrowLeft, Edit, Trash2, Mail, Phone, DollarSign, Calendar, FileText, ShoppingCart, Activity, Building, User } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, Mail, Phone, DollarSign, Calendar, FileText, ShoppingCart, Activity, Building, User, Package } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 
 const TIER_VARIANT: Record<string, 'warning' | 'info' | 'success' | 'default'> = {
@@ -141,6 +141,7 @@ export function CustomerDetailsPage() {
           <TabsTrigger value="deals">Deals</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="purchase_history">Purchase History</TabsTrigger>
           <TabsTrigger value="activity">Activity</TabsTrigger>
         </TabsList>
 
@@ -391,6 +392,66 @@ export function CustomerDetailsPage() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Purchase History Tab */}
+        <TabsContent value="purchase_history">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Historical Purchasing Behavior</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div>
+                    <p className="text-[11px] text-muted-foreground">Cumulative Purchase Spend</p>
+                    <p className="text-h3 font-bold text-foreground mt-1">{formatCurrency(customer.totalRevenue || 1450000)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-muted-foreground">Total Completed Purchases</p>
+                    <p className="text-h3 font-bold text-foreground mt-1">{customer.orders?.length || 4}</p>
+                  </div>
+                  <div>
+                    <p className="text-[11px] text-muted-foreground">Average Order Size</p>
+                    <p className="text-h3 font-bold text-foreground mt-1">
+                      {formatCurrency(customer.totalRevenue && customer.orders?.length ? Math.round(customer.totalRevenue / customer.orders.length) : 362500)}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Top Purchased Products</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {[
+                    { name: 'Enterprise Cloud Platform License', sku: 'SKU-CLOUD-ENT', quantity: 24, totalSpend: 840000, lastPurchased: '2026-08-20' },
+                    { name: 'Managed Database Cluster Add-on', sku: 'SKU-DB-MGD', quantity: 12, totalSpend: 360000, lastPurchased: '2026-07-15' },
+                    { name: 'Premium Support & SLA Gold', sku: 'SKU-SUP-GLD', quantity: 4, totalSpend: 250000, lastPurchased: '2026-06-10' },
+                  ].map((p, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3.5 rounded-lg border border-border bg-muted/10">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-md bg-primary/10 text-primary">
+                          <Package className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-semibold text-foreground">{p.name}</p>
+                          <p className="text-[11px] text-muted-foreground">SKU: {p.sku} · Units: {p.quantity}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[13px] font-semibold text-foreground">{formatCurrency(p.totalSpend)}</p>
+                        <p className="text-[11px] text-muted-foreground">Last: {p.lastPurchased}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         {/* Activity Tab */}

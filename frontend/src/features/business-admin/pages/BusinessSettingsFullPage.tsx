@@ -132,35 +132,36 @@ export function BusinessSettingsFullPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Currency</Label>
-                  <Select defaultValue={settings?.general?.currency || 'USD'}>
+                  <Select defaultValue={settings?.general?.currency || 'INR'}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
-                      <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="INR">INR - Indian Rupee</SelectItem>
+                      <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
+                      <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
+                      <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
+                      <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Timezone</Label>
-                  <Select defaultValue={settings?.general?.timezone || 'UTC'}>
+                  <Select defaultValue={settings?.general?.timezone || 'Asia/Kolkata'}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="Asia/Kolkata">India Standard Time (IST)</SelectItem>
                       <SelectItem value="UTC">UTC</SelectItem>
                       <SelectItem value="America/New_York">Eastern Time</SelectItem>
                       <SelectItem value="America/Chicago">Central Time</SelectItem>
                       <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
-                      <SelectItem value="Asia/Kolkata">India Standard Time</SelectItem>
                       <SelectItem value="Europe/London">GMT</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Locale</Label>
-                  <Select defaultValue={settings?.general?.locale || 'en-US'}>
+                  <Select defaultValue={settings?.general?.locale || 'en-IN'}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="en-IN">English (India)</SelectItem>
                       <SelectItem value="en-US">English (US)</SelectItem>
                       <SelectItem value="en-GB">English (UK)</SelectItem>
                       <SelectItem value="es">Spanish</SelectItem>

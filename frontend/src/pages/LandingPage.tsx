@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useAuth } from '@/providers/AuthProvider'
@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/button'
 import { BrandMark } from '@/components/common/BrandMark'
 import {
   Activity, ArrowDown, ArrowRight, BarChart3, Boxes, BriefcaseBusiness, Check, ChevronRight,
-  CircleDollarSign, ClipboardCheck, FileCheck2, Gauge, GitBranch, Layers3, LockKeyhole,
+  IndianRupee, ClipboardCheck, FileCheck2, Gauge, GitBranch, Layers3, LockKeyhole,
   Menu, Moon, PackageCheck, ReceiptText, RotateCcw, ShieldCheck, Sparkles, Sun, Truck,
   UsersRound, Warehouse, X, Zap, CheckCircle2, Clock, Sliders, AlertTriangle,
+  Play, Pause, ChevronLeft, Compass, Workflow, RefreshCw,
 } from 'lucide-react'
 
 const modules = [
@@ -31,13 +32,240 @@ const roles = [
   ['Sales', 'Own the customer, deal and quotation journey.', 'Customer → Deal → Quote', BriefcaseBusiness],
   ['Sales Manager', 'Review approvals, team performance and deal health.', 'Approval → Decision → Coaching', ClipboardCheck],
   ['Operations', 'Execute inventory, allocation, fulfillment and shipping.', 'Order → Warehouse → Delivery', Truck],
-  ['Finance', 'Review invoices, payments, margin and financial risk.', 'Quote → Billing → Cash', CircleDollarSign],
+  ['Finance', 'Review invoices, payments, margin and financial risk.', 'Quote → Billing → Cash', IndianRupee],
   ['Business Admin', 'Configure products, rules, pricing and tenant settings.', 'Rules → Controls → Governance', Gauge],
   ['Customer', 'Review quotes, orders, shipments and invoices.', 'Quote → Order → Service', UsersRound],
 ] as const
 
 const lifecycle = ['Customer', 'Deal', 'Quotation', 'Approval', 'Order', 'Inventory', 'Fulfillment', 'Shipment', 'Delivery', 'Billing', 'Deal Health', 'Audit']
-const navItems = [['architecture', 'Architecture'], ['modules', 'Platform'], ['roles', 'Teams'], ['operations', 'Operations'], ['governance', 'Trust']] as const
+const navItems = [['architecture', '360° View'], ['modules', 'Platform'], ['roles', 'Teams'], ['operations', 'Operations'], ['governance', 'Trust']] as const
+
+const vectors360 = [
+  {
+    id: 'crm',
+    number: '01',
+    category: 'Commercial & Accounts',
+    title: 'Customer Master & Pipeline Health',
+    shortTitle: 'CRM & Pipeline',
+    tagline: 'Buying committees, multi-contact hierarchies & real-time pipeline velocity',
+    description: 'Brings enterprise account hierarchies, stakeholder buying groups, and continuous stage health into one authoritative system, preventing disjointed sales communication.',
+    icon: UsersRound,
+    color: 'text-blue-500',
+    borderColor: 'border-blue-500/30',
+    bgBadge: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+    glowColor: 'rgba(59, 130, 246, 0.35)',
+    metrics: [
+      { label: 'Active Pipeline', value: '$48.5M', delta: '+14% MoM' },
+      { label: 'Account Health', value: '98.4%', delta: 'Prime Tier' },
+      { label: 'Committee Reach', value: '6.2 avg', delta: 'Multi-threaded' },
+    ],
+    handshake: {
+      inbound: 'Lead Intake & Account Mapping',
+      core: 'Account Hierarchy & Stage Telemetry',
+      outbound: 'Algorithmic CPQ & Quotations',
+    },
+    guardrail: 'Strict tenant isolation (business_id) with verified credit status check before deal progression.',
+    tables: ['customers', 'deals', 'contacts', 'activities'],
+    role: 'Account Executive / Sales Rep',
+    path: '/sales/deals',
+  },
+  {
+    id: 'cpq',
+    number: '02',
+    category: 'Algorithmic CPQ',
+    title: 'Dynamic CPQ & Margin Floor Engine',
+    shortTitle: 'CPQ & Pricing',
+    tagline: 'Multi-tier price books, volume breaks & automated margin preservation',
+    description: 'Instantly calculates line items across complex product matrices, volume tiers, and customer tier ceilings while strictly enforcing unit price floors in sub-second response times.',
+    icon: FileCheck2,
+    color: 'text-indigo-500',
+    borderColor: 'border-indigo-500/30',
+    bgBadge: 'bg-indigo-500/10 text-indigo-500 border-indigo-500/20',
+    glowColor: 'rgba(99, 102, 241, 0.35)',
+    metrics: [
+      { label: 'Quote Speed', value: '< 1.2s', delta: 'Sub-second' },
+      { label: 'Realized Margin', value: '38.4%', delta: 'Floor Guarded' },
+      { label: 'Active Rules', value: '142 Rules', delta: 'Auto-applied' },
+    ],
+    handshake: {
+      inbound: 'Deal Line Selection & Quantities',
+      core: 'Tier Ceilings & Floor Price Engine',
+      outbound: 'Multi-Tier Policy Approval Gate',
+    },
+    guardrail: 'Absolute unit cost floor protection. Any proposed discount exceeding tier ceiling triggers automatic governance.',
+    tables: ['quotations', 'quotation_lines', 'price_lists', 'discount_rules'],
+    role: 'Sales Rep / Pricing Specialist',
+    path: '/sales/quotations',
+  },
+  {
+    id: 'approvals',
+    number: '03',
+    category: 'Governance & Gate',
+    title: 'Autonomous Policy & Escalation Gate',
+    shortTitle: 'Multi-Tier Approvals',
+    tagline: 'Sequential approval chains, threshold SLAs & non-bypassable controls',
+    description: 'Evaluates quotation discounts, margin exceptions, and deal value thresholds. Routes token sequentially across Sales Manager, Director, and VP Finance without bypass risk.',
+    icon: ClipboardCheck,
+    color: 'text-amber-500',
+    borderColor: 'border-amber-500/30',
+    bgBadge: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+    glowColor: 'rgba(245, 158, 11, 0.35)',
+    metrics: [
+      { label: 'Median Turnaround', value: '4.2 min', delta: '-68% faster' },
+      { label: 'SLA Adherence', value: '99.4%', delta: 'Real-time timer' },
+      { label: 'Unauthorized Bypass', value: '$0.00', delta: '100% Enforced' },
+    ],
+    handshake: {
+      inbound: 'Simulated Discount & Quote Submission',
+      core: 'Multi-Tier Progressive Role SLA Chain',
+      outbound: 'Customer Negotiation Portal',
+    },
+    guardrail: 'Progressive level advancement: Sales Manager sign-off automatically advances token to Finance when discount > 15%.',
+    tables: ['approval_rules', 'approval_chains', 'approval_instances'],
+    role: 'Sales Manager / VP Finance',
+    path: '/sales-manager/approvals',
+  },
+  {
+    id: 'portal',
+    number: '04',
+    category: 'Customer Collaboration',
+    title: 'Customer Digital Negotiation Portal',
+    shortTitle: 'Customer Portal',
+    tagline: 'Transparent quote reviews, counter-offers & bilateral acceptance',
+    description: 'Empowers enterprise buyers with self-service quote inspection, structured counter-offer submissions, and real-time order and shipment tracking with cryptographic verification.',
+    icon: Sparkles,
+    color: 'text-violet-500',
+    borderColor: 'border-violet-500/30',
+    bgBadge: 'bg-violet-500/10 text-violet-500 border-violet-500/20',
+    glowColor: 'rgba(139, 92, 246, 0.35)',
+    metrics: [
+      { label: 'Closing Speed', value: '+2.8x', delta: 'Same-day close' },
+      { label: 'Counter Acceptance', value: '74.2%', delta: 'High conversion' },
+      { label: 'Buyer Satisfaction', value: '4.9 / 5.0', delta: 'Self-service' },
+    ],
+    handshake: {
+      inbound: 'Approved Quotation Token',
+      core: 'Bilateral Counter-Offer & e-Sign',
+      outbound: 'Order Locking & Fulfillment',
+    },
+    guardrail: 'Customer modifications create versioned counter-offers and re-trigger margin checks without loss of prior states.',
+    tables: ['portal_users', 'quotations', 'counter_offers', 'customer_sessions'],
+    role: 'Enterprise Buyer / Procurement Lead',
+    path: '/customer-portal/dashboard',
+  },
+  {
+    id: 'fulfillment',
+    number: '05',
+    category: 'Operations & Stock',
+    title: 'Split Fulfillment & Multi-Warehouse',
+    shortTitle: 'Warehouse Split',
+    tagline: 'Multi-hub inventory reservations, split shipping & zero backorders',
+    description: 'Analyzes inventory across regional fulfillment centers, splits lines to optimize shipping distance and freight cost, and triggers backorder replenishment automatically.',
+    icon: PackageCheck,
+    color: 'text-emerald-500',
+    borderColor: 'border-emerald-500/30',
+    bgBadge: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+    glowColor: 'rgba(16, 185, 129, 0.35)',
+    metrics: [
+      { label: 'Stock Truth Accuracy', value: '99.9%', delta: 'Real-time locks' },
+      { label: 'Dispatch Speed', value: '< 4.5 hrs', delta: 'Same-day pick' },
+      { label: 'Freight Savings', value: '18.6%', delta: 'Split optimization' },
+    ],
+    handshake: {
+      inbound: 'Confirmed Order Event',
+      core: 'Warehouse Allocation & Waybill Generation',
+      outbound: 'Carrier Transit & Invoicing',
+    },
+    guardrail: 'Transactional stock reservations prevent phantom inventory allocation and concurrent race conditions.',
+    tables: ['warehouses', 'inventory_items', 'fulfillment_orders', 'shipments'],
+    role: 'Operations Director / Warehouse Mgr',
+    path: '/operations',
+  },
+  {
+    id: 'billing',
+    number: '06',
+    category: 'Finance & Ledger',
+    title: 'Hybrid Invoicing & Proration Engine',
+    shortTitle: 'Billing & Cash',
+    tagline: 'Milestone invoicing, prorated renewals & automated ledger sync',
+    description: 'Harmonizes one-time physical equipment sales with recurring subscription billing into a unified invoice ledger with mathematical proration precision down to the penny.',
+    icon: ReceiptText,
+    color: 'text-sky-500',
+    borderColor: 'border-sky-500/30',
+    bgBadge: 'bg-sky-500/10 text-sky-500 border-sky-500/20',
+    glowColor: 'rgba(14, 165, 233, 0.35)',
+    metrics: [
+      { label: 'Reconciliation', value: '100%', delta: 'Automated' },
+      { label: 'DSO Reduction', value: '-14 Days', delta: 'Faster collection' },
+      { label: 'Proration Delta', value: '$0.00', delta: 'Exact penny math' },
+    ],
+    handshake: {
+      inbound: 'Delivery Verification Event',
+      core: 'Prorated Billing Schedule & Invoicing',
+      outbound: 'General Ledger & Revenue BI',
+    },
+    guardrail: 'Invoices generated only upon delivery confirmation or automated recurring billing cycle execution.',
+    tables: ['invoices', 'subscriptions', 'payments', 'proration_rules'],
+    role: 'Finance Controller / Billing Analyst',
+    path: '/finance/dashboard',
+  },
+  {
+    id: 'intelligence',
+    number: '07',
+    category: 'AI & Intelligence',
+    title: 'Deal Health & Predictive AI Radar',
+    shortTitle: 'Deal Health AI',
+    tagline: 'Predictive win probability, discount drift radar & expansion signals',
+    description: 'Continuously synthesizes commercial velocity, margin compression, inventory latency, and buyer touchpoints into an authoritative 0-100 Deal Health score.',
+    icon: Activity,
+    color: 'text-pink-500',
+    borderColor: 'border-pink-500/30',
+    bgBadge: 'bg-pink-500/10 text-pink-500 border-pink-500/20',
+    glowColor: 'rgba(236, 72, 153, 0.35)',
+    metrics: [
+      { label: 'Forecast Accuracy', value: '92.4%', delta: 'AI-Calibrated' },
+      { label: 'At-Risk Deal Saves', value: '$3.8M', delta: 'Proactive alerts' },
+      { label: 'Expansion Attached', value: '+22.4%', delta: 'Cross-sell AI' },
+    ],
+    handshake: {
+      inbound: 'Full Operational Telemetry Stream',
+      core: 'Composite Health Score & Risk Synthesis',
+      outbound: 'Executive BI & Rep Action Alerts',
+    },
+    guardrail: 'Deals with Health score < 40 trigger automated manager notification and mitigation checklist.',
+    tables: ['deal_health_scores', 'recommendations', 'risk_signals'],
+    role: 'Chief Revenue Officer / VP Sales',
+    path: '/sales/deals',
+  },
+  {
+    id: 'governance',
+    number: '08',
+    category: 'Control & Trust',
+    title: 'Enterprise Audit & Tenant Isolation',
+    shortTitle: 'Immutable Audit',
+    tagline: 'Cryptographic event logging, actor attribution & strict row-level security',
+    description: 'Guarantees that every commercial mutation, discount override, warehouse split, and invoice mutation is permanently captured in an append-only audit trail.',
+    icon: ShieldCheck,
+    color: 'text-emerald-500',
+    borderColor: 'border-emerald-500/30',
+    bgBadge: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+    glowColor: 'rgba(16, 185, 129, 0.35)',
+    metrics: [
+      { label: 'Audit Immutability', value: '100%', delta: 'Tamper-proof' },
+      { label: 'Tenant Isolation', value: 'Row-Level', delta: 'Multi-tenant RLS' },
+      { label: 'Compliance Posture', value: 'SOC2 Ready', delta: 'Continuous' },
+    ],
+    handshake: {
+      inbound: 'Every Backend Service Mutation',
+      core: 'Append-Only Actor & Before/After Diff',
+      outbound: 'Security SIEM & Compliance Hub',
+    },
+    guardrail: 'Immutable audit logs with user ID, IP address, timestamp, and json diff preserved indefinitely.',
+    tables: ['audit_logs', 'tenants', 'roles', 'permissions'],
+    role: 'Business Admin / Security Officer',
+    path: '/business-admin/audit',
+  },
+] as const
 
 const reveal = (delay = 0) => ({ initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, amount: 0.16 }, transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] as const } })
 
@@ -48,8 +276,19 @@ export function LandingPage() {
   const [activeNav, setActiveNav] = useState('architecture')
   const [heroTab, setHeroTab] = useState<'quote' | 'approval' | 'fulfillment' | 'risk'>('quote')
   const [demoDiscount, setDemoDiscount] = useState<number>(12)
+  const [activeVectorIndex, setActiveVectorIndex] = useState<number>(0)
+  const [isTourPlaying, setIsTourPlaying] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!isTourPlaying) return
+    const interval = setInterval(() => {
+      setActiveVectorIndex((prev) => (prev + 1) % vectors360.length)
+    }, 3500)
+    return () => clearInterval(interval)
+  }, [isTourPlaying])
   const reducedMotion = useReducedMotion()
   const enter = user ? getDashboardPath() : '/login'
+  const activeVector = vectors360[activeVectorIndex] ?? vectors360[0]
 
   const baseValue = 1850000
   const discountAmount = (baseValue * demoDiscount) / 100
@@ -59,7 +298,7 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
-      <header className="sticky top-0 z-50 px-3 pt-3 sm:px-5 lg:px-8">
+      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 lg:px-8">
         <div className="mx-auto max-w-[1440px] rounded-2xl border border-border/80 bg-background/90 shadow-elevation-2 backdrop-blur-xl">
           <div className="flex h-[68px] items-center justify-between gap-3 px-3 sm:px-5">
             <Link to="/" className="flex min-w-0 items-center gap-2.5" aria-label="DealFlow360 home"><BrandMark /><span className="hidden text-h3 tracking-tight sm:block">DealFlow<span className="text-primary">360</span></span></Link>
@@ -70,23 +309,11 @@ export function LandingPage() {
         </div>
       </header>
 
-      <main>
+      <main className="pt-[84px]">
         {/* ─── REBUILT ENTERPRISE HERO SECTION ─── */}
         <section className="relative isolate overflow-hidden border-b border-border/80 bg-surface-muted/60">
-          {/* Subtle architectural background grids & ambient light */}
-          <div className="pointer-events-none absolute inset-0 -z-10 opacity-70 [background-image:linear-gradient(var(--color-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-border)_1px,transparent_1px)] [background-size:48px_48px] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,black,transparent)]" />
-          <motion.div
-            className="pointer-events-none absolute -right-20 -top-20 -z-10 h-[580px] w-[580px] rounded-full bg-primary/20 blur-[130px]"
-            animate={reducedMotion ? undefined : { scale: [1, 1.15, 1], opacity: [0.4, 0.65, 0.4] }}
-            transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="pointer-events-none absolute -left-20 top-1/3 -z-10 h-[480px] w-[480px] rounded-full bg-sky-500/15 blur-[120px]"
-            animate={reducedMotion ? undefined : { scale: [1.1, 1, 1.1], opacity: [0.35, 0.55, 0.35] }}
-            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          />
 
-          <div className="mx-auto grid min-h-[760px] max-w-[1440px] items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_1.08fr] lg:gap-14 lg:px-10 lg:py-24">
+          <div className="mx-auto grid min-h-[620px] max-w-[1440px] items-center gap-10 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-16 lg:px-10 lg:py-12">
             {/* ─── LEFT: VALUE PROPOSITION & ACTIONS ─── */}
             <motion.div {...reveal()} className="flex flex-col">
               {/* Product Engine Announcement Pill */}
@@ -95,23 +322,23 @@ export function LandingPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                 </span>
-                <span>DealFlow360 v2.4 Engine</span>
+                <span>Connected quote-to-cash workspace</span>
                 <span className="text-muted-foreground/60">•</span>
-                <span className="font-medium text-foreground">Autonomous Quote-to-Cash</span>
+                <span className="font-medium text-foreground">Commercial + Operations</span>
                 <ChevronRight className="h-3.5 w-3.5 text-primary/70" />
               </div>
 
               {/* Main Headline */}
               <h1 className="text-4xl font-black leading-[1.06] tracking-tight sm:text-6xl lg:text-[68px]">
-                Stop deal slippage.{' '}
-                <span className="mt-1 block bg-gradient-to-r from-sky-400 via-primary to-indigo-500 bg-clip-text text-transparent">
-                  Govern every quote to cash.
+                Turn commercial decisions into{' '}
+                <span className="mt-1 block text-primary">
+                  controlled execution.
                 </span>
               </h1>
 
               {/* Subheading */}
               <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
-                Unite pipeline CRM, algorithmic discount rules, multi-tier approval chains, and multi-warehouse split fulfillment into one authoritative system of record.
+                Bring customers, deals, quotations, approvals, inventory, fulfillment, billing and analytics into one authoritative system of record.
               </p>
 
               {/* Primary Call to Actions */}
@@ -119,10 +346,10 @@ export function LandingPage() {
                 <Button
                   asChild
                   size="lg"
-                  className="h-12 rounded-xl bg-gradient-to-r from-sky-500 via-primary to-blue-600 px-7 font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:shadow-primary/40"
+                  className="h-12 rounded-xl bg-primary px-7 font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:bg-primary-hover hover:shadow-primary/40"
                 >
                   <Link to={enter}>
-                    {user ? 'Open Your Workspace' : 'Explore Platform Live'}
+                    {user ? 'Open your workspace' : 'Explore the platform'}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </Button>
@@ -133,7 +360,7 @@ export function LandingPage() {
                   className="h-12 rounded-xl border-border bg-card/60 px-6 backdrop-blur-sm hover:bg-surface-muted"
                 >
                   <a href="#architecture">
-                    View Architecture
+                    See the product flow
                     <ArrowDown className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
@@ -143,13 +370,13 @@ export function LandingPage() {
               <div className="mt-9 border-t border-border/80 pt-6">
                 <p className="mb-3 flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                   <Zap className="h-3.5 w-3.5 text-amber-400" />
-                  Explore by team role (1-click preview):
+                  Explore the platform by role:
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {[
                     { label: 'Sales Rep', role: 'sales_rep', path: '/dashboard', icon: BriefcaseBusiness },
                     { label: 'Sales Manager', role: 'sales_manager', path: '/sales-manager/dashboard', icon: ClipboardCheck },
-                    { label: 'Finance & Billing', role: 'finance', path: '/finance/dashboard', icon: CircleDollarSign },
+                    { label: 'Finance & Billing', role: 'finance', path: '/finance/dashboard', icon: IndianRupee },
                     { label: 'Operations', role: 'operations', path: '/operations', icon: Truck },
                     { label: 'Customer Portal', role: 'customer', path: '/customer-portal/dashboard', icon: UsersRound },
                   ].map((persona) => {
@@ -172,16 +399,16 @@ export function LandingPage() {
               {/* Trust Indicators */}
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-caption text-muted-foreground">
                 <span className="flex items-center gap-1.5 font-medium text-foreground/80">
-                  <Check className="h-3.5 w-3.5 text-success" /> Multi-Tenant RLS
+                  <Check className="h-3.5 w-3.5 text-success" /> Tenant-scoped access
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-foreground/80">
-                  <Check className="h-3.5 w-3.5 text-success" /> Sub-Second Margin Check
+                  <Check className="h-3.5 w-3.5 text-success" /> Backend-authoritative state
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-foreground/80">
-                  <Check className="h-3.5 w-3.5 text-success" /> Split Warehouse Routing
+                  <Check className="h-3.5 w-3.5 text-success" /> Role-aware actions
                 </span>
                 <span className="flex items-center gap-1.5 font-medium text-foreground/80">
-                  <Check className="h-3.5 w-3.5 text-success" /> Audit-Proof Governance
+                  <Check className="h-3.5 w-3.5 text-success" /> Traceable audit history
                 </span>
               </div>
             </motion.div>
@@ -199,7 +426,7 @@ export function LandingPage() {
                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               >
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span>AI Margin Guard: <strong className="text-success font-semibold">+$64,200</strong> saved</span>
+                <span>Live domain preview: <strong className="text-success font-semibold">quotation</strong></span>
               </motion.div>
 
               <motion.div
@@ -208,7 +435,7 @@ export function LandingPage() {
                 transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
               >
                 <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                <span>RLS Tenant Boundary: <strong className="text-foreground font-semibold">100% Isolated</strong></span>
+                <span>State boundary: <strong className="text-foreground font-semibold">server validated</strong></span>
               </motion.div>
 
               {/* Main Console Window */}
@@ -220,13 +447,13 @@ export function LandingPage() {
                     <span className="h-3 w-3 rounded-full bg-amber-500/80" />
                     <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
                     <span className="ml-2 font-mono text-[11px] text-muted-foreground hidden sm:inline">
-                      dealflow360://quote/QT-2026-00482/governance
+                      illustrative quote workspace / governance
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-emerald-500 border border-emerald-500/20">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      18ms P99
+                      product preview
                     </span>
                   </div>
                 </div>
@@ -283,9 +510,9 @@ export function LandingPage() {
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3">
                         <p className="text-[11px] text-muted-foreground">Deal Value</p>
                         <p className="text-base sm:text-lg font-bold tabular-nums text-foreground mt-0.5">
-                          ${finalValue.toLocaleString()}
+                          ₹{finalValue.toLocaleString('en-IN')}
                         </p>
-                        <span className="text-[10px] text-muted-foreground line-through">${baseValue.toLocaleString()}</span>
+                        <span className="text-[10px] text-muted-foreground line-through">₹{baseValue.toLocaleString('en-IN')}</span>
                       </div>
 
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3">
@@ -370,16 +597,16 @@ export function LandingPage() {
                         <div className="flex items-center justify-between p-2.5">
                           <div>
                             <p className="font-semibold text-foreground">Edge Compute Node Blade v4 (×20)</p>
-                            <p className="text-[10px] text-muted-foreground">Category: Hardware • Floor Price $45,000</p>
+                            <p className="text-[10px] text-muted-foreground">Category: Hardware • Floor Price ₹45,000</p>
                           </div>
-                          <span className="font-mono font-medium tabular-nums text-foreground">$900,000</span>
+                          <span className="font-mono font-medium tabular-nums text-foreground">₹9,00,000</span>
                         </div>
                         <div className="flex items-center justify-between p-2.5">
                           <div>
                             <p className="font-semibold text-foreground">High-Throughput NVMe SAN Array (×10)</p>
-                            <p className="text-[10px] text-muted-foreground">Category: Storage • Floor Price $95,000</p>
+                            <p className="text-[10px] text-muted-foreground">Category: Storage • Floor Price ₹95,000</p>
                           </div>
-                          <span className="font-mono font-medium tabular-nums text-foreground">$950,000</span>
+                          <span className="font-mono font-medium tabular-nums text-foreground">₹9,50,000</span>
                         </div>
                       </div>
                     </div>
@@ -392,7 +619,7 @@ export function LandingPage() {
                     <div className="flex items-center justify-between border-b border-border/70 pb-3">
                       <div>
                         <h4 className="font-bold text-base text-foreground">Sequential Approval Chain</h4>
-                        <p className="text-caption text-muted-foreground">Rule: "Gold Tier &gt;10% Discount or Deal Value &gt;$1M"</p>
+                        <p className="text-caption text-muted-foreground">Rule: "Gold Tier &gt;10% Discount or Deal Value &gt;₹1 Cr"</p>
                       </div>
                       <span className="rounded-full bg-amber-500/10 text-amber-500 px-2.5 py-1 text-xs font-semibold border border-amber-500/20">
                         In Review (2/3)
@@ -490,7 +717,7 @@ export function LandingPage() {
                         <PackageCheck className="h-4 w-4 text-emerald-500" />
                         <span>Fulfillment Optimization Result:</span>
                       </div>
-                      <strong className="font-semibold text-emerald-500">$12,400 Freight Saved • 0 Backorders</strong>
+                      <strong className="font-semibold text-emerald-500">₹12,400 Freight Saved • 0 Backorders</strong>
                     </div>
                   </div>
                 )}
@@ -542,7 +769,408 @@ export function LandingPage() {
         </section>
         {/* ─── END REBUILT HERO SECTION ─── */}
 
-        <motion.section {...reveal()} id="architecture" className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28"><div className="text-center"><p className="text-label uppercase tracking-[0.2em] text-primary">The product architecture</p><h2 className="mx-auto mt-3 max-w-3xl text-3xl font-bold tracking-tight sm:text-5xl">A 360° view of the commercial and operational system.</h2><p className="mx-auto mt-5 max-w-2xl text-body leading-7 text-muted-foreground">Every domain has a focused workspace. Shared entities and authoritative state connect the work across teams.</p></div><div className="relative mx-auto mt-14 max-w-5xl"><div className="absolute left-1/2 top-1/2 hidden h-px w-[75%] -translate-x-1/2 bg-border lg:block" /><div className="absolute left-1/2 top-1/2 hidden h-[75%] w-px -translate-x-1/2 -translate-y-1/2 bg-border lg:block" /><motion.div animate={reducedMotion ? undefined : { rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: 'linear' }} className="absolute left-1/2 top-1/2 hidden h-[380px] w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-primary/20 lg:block" /><div className="relative z-10 mx-auto flex h-36 w-36 flex-col items-center justify-center rounded-full border-2 border-primary/40 bg-card text-center shadow-elevation-3"><Layers3 className="h-7 w-7 text-primary" /><span className="mt-2 text-small font-bold">DealFlow360</span><span className="text-[10px] text-muted-foreground">system of record</span></div><div className="mt-8 grid gap-3 sm:grid-cols-2 lg:absolute lg:inset-0 lg:mt-0">{[['Commercial', 'Customers · Deals · Quotes', BriefcaseBusiness, 'lg:-translate-x-8 lg:-translate-y-24'], ['Decisioning', 'Approvals · Margin · Health', GitBranch, 'lg:translate-x-8 lg:-translate-y-24'], ['Execution', 'Inventory · Fulfillment · Shipping', Truck, 'lg:-translate-x-8 lg:translate-y-24'], ['Control', 'Billing · Analytics · Audit', ShieldCheck, 'lg:translate-x-8 lg:translate-y-24']].map(([title, text, Icon, position]) => <motion.div key={String(title)} whileHover={reducedMotion ? undefined : { y: -5 }} className={`rounded-xl border border-border bg-card p-4 shadow-elevation-1 lg:absolute lg:w-64 ${position}`}><div className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-subtle text-primary"><Icon className="h-4 w-4" /></span><div><p className="text-small font-semibold">{String(title)}</p><p className="mt-0.5 text-caption text-muted-foreground">{String(text)}</p></div></div></motion.div>)}</div></div></motion.section>
+        {/* ─── FLAGSHIP 360° OPERATIONAL ARCHITECTURE & RADAR ─── */}
+        <section id="architecture" className="relative isolate overflow-hidden border-b border-border bg-surface-muted/30 py-20 sm:py-28 lg:py-32">
+          {/* Subtle ambient gradient */}
+          <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,rgba(59,130,246,0.06),transparent)]" />
+
+          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+            {/* Header */}
+            <motion.div {...reveal()} className="mx-auto max-w-3xl text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary backdrop-blur-md mb-4">
+                <Compass className="h-3.5 w-3.5" />
+                <span>DealFlow 360° Operational Engine</span>
+                <span className="text-muted-foreground/50">•</span>
+                <span className="text-foreground">Continuous Flywheel</span>
+              </div>
+              <h2 className="text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl text-foreground">
+                A true 360° view across your enterprise deal lifecycle.
+              </h2>
+              <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">
+                Every department operates with targeted clarity, while every order, discount, stock reservation, and billing event remains locked to a single, server-authoritative source of truth.
+              </p>
+            </motion.div>
+
+            {/* Quick Interactive 360 Flywheel Controls & Segment Bar */}
+            <motion.div {...reveal(0.1)} className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-border bg-card/85 p-3.5 shadow-elevation-1 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <Button
+                  type="button"
+                  variant={isTourPlaying ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setIsTourPlaying(!isTourPlaying)}
+                  className="rounded-xl font-semibold gap-2 transition-all cursor-pointer"
+                >
+                  {isTourPlaying ? (
+                    <>
+                      <Pause className="h-3.5 w-3.5 text-primary-foreground" />
+                      <span>Pause 360° Tour</span>
+                    </>
+                  ) : (
+                    <>
+                      <Play className="h-3.5 w-3.5 text-primary" />
+                      <span>Start 360° Deal Journey</span>
+                    </>
+                  )}
+                </Button>
+                <span className="hidden md:inline font-mono text-xs text-muted-foreground">
+                  Active Domain: <strong className="text-foreground font-semibold">Sector {activeVector.number} · {activeVector.shortTitle}</strong>
+                </span>
+              </div>
+
+              {/* Segmented Step Selector */}
+              <div className="flex items-center gap-1 overflow-x-auto max-w-full pb-1 sm:pb-0">
+                {vectors360.map((v, idx) => {
+                  const isCur = activeVectorIndex === idx
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveVectorIndex(idx)
+                        setIsTourPlaying(false)
+                      }}
+                      className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                        isCur
+                          ? 'bg-primary text-primary-foreground font-bold shadow-sm'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                      }`}
+                    >
+                      <span className="font-mono text-[10px] opacity-80">{v.number}</span>
+                      <span>{v.shortTitle}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </motion.div>
+
+            {/* Main Interactive 360° Arena */}
+            <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Left: The 360° Orbital Wheel Canvas */}
+              <motion.div {...reveal(0.15)} className="lg:col-span-5 flex flex-col items-center justify-center">
+                <div className="relative flex aspect-square w-full max-w-[460px] items-center justify-center p-3 sm:p-5">
+                  {/* Outer ambient glow */}
+                  <div
+                    className="absolute inset-6 rounded-full blur-3xl opacity-25 transition-all duration-700 pointer-events-none"
+                    style={{ backgroundColor: activeVector.glowColor }}
+                  />
+
+                  {/* Outer SVG Orbit Tracks & Connector Beams */}
+                  <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 460 460">
+                    {/* Outer orbit circle */}
+                    <circle
+                      cx="230"
+                      cy="230"
+                      r="175"
+                      className="stroke-border/70 fill-none"
+                      strokeWidth="1.5"
+                      strokeDasharray="4 6"
+                    />
+                    {/* Secondary inner ring */}
+                    <circle
+                      cx="230"
+                      cy="230"
+                      r="115"
+                      className="stroke-border/40 fill-none"
+                      strokeWidth="1"
+                    />
+
+                    {/* Radiating tracks to all 8 nodes */}
+                    {vectors360.map((v, i) => {
+                      const angle = (i * 45 - 90) * (Math.PI / 180)
+                      const x = 230 + 175 * Math.cos(angle)
+                      const y = 230 + 175 * Math.sin(angle)
+                      const isCur = activeVectorIndex === i
+                      return (
+                        <g key={v.id}>
+                          <line
+                            x1="230"
+                            y1="230"
+                            x2={x}
+                            y2={y}
+                            stroke={isCur ? 'currentColor' : 'currentColor'}
+                            className={`transition-all duration-500 ${isCur ? 'text-primary stroke-2 opacity-90' : 'text-border/50 stroke-1 opacity-30'}`}
+                            strokeDasharray={isCur ? undefined : '3 4'}
+                          />
+                          {isCur && (
+                            <circle
+                              cx={x}
+                              cy={y}
+                              r="22"
+                              className="fill-primary/15 stroke-primary/50 animate-pulse"
+                              strokeWidth="2"
+                            />
+                          )}
+                        </g>
+                      )
+                    })}
+                  </svg>
+
+                  {/* Central System Hub */}
+                  <div className="relative z-10 flex h-36 w-36 sm:h-40 sm:w-40 flex-col items-center justify-center rounded-full border-2 border-primary/40 bg-card/95 p-3 text-center shadow-elevation-4 backdrop-blur-xl">
+                    <motion.div
+                      animate={reducedMotion ? undefined : { rotate: 360 }}
+                      transition={{ duration: 32, repeat: Infinity, ease: 'linear' }}
+                      className="absolute -inset-2 rounded-full border border-dashed border-primary/30 pointer-events-none"
+                    />
+
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-elevation-1">
+                      <Layers3 className="h-4.5 w-4.5" />
+                    </div>
+
+                    <span className="mt-1.5 text-xs font-black tracking-tight text-foreground">DealFlow<span className="text-primary">360</span></span>
+
+                    <div className="mt-1 flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-semibold text-emerald-500 border border-emerald-500/20">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
+                      <span>{isTourPlaying ? 'TOUR ACTIVE' : '360° SYNCED'}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsTourPlaying(!isTourPlaying)}
+                      className="mt-1.5 text-[10px] font-mono text-muted-foreground hover:text-primary transition-colors cursor-pointer flex items-center gap-1"
+                    >
+                      {isTourPlaying ? <Pause className="h-2.5 w-2.5" /> : <Play className="h-2.5 w-2.5 text-primary" />}
+                      <span>{isTourPlaying ? 'Pause' : 'Auto tour'}</span>
+                    </button>
+                  </div>
+
+                  {/* 8 Radial Interactive Nodes */}
+                  {vectors360.map((v, i) => {
+                    const angle = (i * 45 - 90) * (Math.PI / 180)
+                    const left = 50 + 38 * Math.cos(angle)
+                    const top = 50 + 38 * Math.sin(angle)
+                    const isCur = activeVectorIndex === i
+                    const VIcon = v.icon
+
+                    return (
+                      <div
+                        key={v.id}
+                        style={{ left: `${left}%`, top: `${top}%` }}
+                        className="absolute -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveVectorIndex(i)
+                            setIsTourPlaying(false)
+                          }}
+                          onMouseEnter={() => {
+                            if (!isTourPlaying) setActiveVectorIndex(i)
+                          }}
+                          className={`group relative flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-2xl border transition-all duration-300 cursor-pointer ${
+                            isCur
+                              ? 'scale-120 bg-card border-primary text-primary shadow-elevation-4 ring-4 ring-primary/20'
+                              : 'scale-100 bg-card/90 border-border text-muted-foreground hover:scale-110 hover:border-primary/50 hover:text-foreground shadow-elevation-1'
+                          }`}
+                          aria-label={v.title}
+                        >
+                          <VIcon className="h-5 w-5 transition-transform group-hover:scale-110" />
+
+                          {/* Node Number Badge */}
+                          <span className={`absolute -top-1.5 -right-1.5 flex h-4 w-4 sm:h-4.5 sm:w-4.5 items-center justify-center rounded-full font-mono text-[9px] font-bold ${
+                            isCur ? 'bg-primary text-primary-foreground' : 'bg-surface-muted text-muted-foreground border border-border'
+                          }`}>
+                            {v.number}
+                          </span>
+                        </button>
+
+                        {/* Compact Label */}
+                        <div className={`mt-1 text-center transition-all ${isCur ? 'opacity-100 font-bold' : 'opacity-70 font-medium'}`}>
+                          <span className={`rounded-md px-1.5 py-0.5 text-[9px] sm:text-[10px] whitespace-nowrap ${
+                            isCur ? 'bg-primary/10 text-primary border border-primary/20' : 'text-muted-foreground'
+                          }`}>
+                            {v.shortTitle}
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </motion.div>
+
+              {/* Right: The Deep Domain Inspector Console */}
+              <motion.div {...reveal(0.2)} className="lg:col-span-7">
+                <div className="rounded-3xl border border-border bg-card/95 p-6 sm:p-8 shadow-elevation-3 relative overflow-hidden backdrop-blur-md">
+                  {/* Top Accent Bar */}
+                  <div
+                    className="absolute top-0 inset-x-0 h-1.5 transition-all duration-500"
+                    style={{ backgroundColor: activeVector.glowColor }}
+                  />
+
+                  {/* Header: Sector ID & Navigation */}
+                  <div className="flex items-center justify-between gap-3 border-b border-border/80 pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold text-primary px-2.5 py-1 rounded-md bg-primary/10 border border-primary/20">
+                        SECTOR {activeVector.number} OF {vectors360.length}
+                      </span>
+                      <span className="font-mono text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        {activeVector.category}
+                      </span>
+                    </div>
+
+                    {/* Stepper Buttons */}
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 rounded-lg cursor-pointer"
+                        aria-label="Previous domain"
+                        onClick={() => {
+                          setActiveVectorIndex((prev) => (prev - 1 + vectors360.length) % vectors360.length)
+                          setIsTourPlaying(false)
+                        }}
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-8 w-8 rounded-lg cursor-pointer"
+                        aria-label="Next domain"
+                        onClick={() => {
+                          setActiveVectorIndex((prev) => (prev + 1) % vectors360.length)
+                          setIsTourPlaying(false)
+                        }}
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Title & Description */}
+                  <div className="mt-5 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${activeVector.bgBadge}`}>
+                        <activeVector.icon className="h-5 w-5" />
+                      </span>
+                      <div>
+                        <h3 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+                          {activeVector.title}
+                        </h3>
+                        <p className="text-caption font-medium text-primary">
+                          {activeVector.tagline}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-body-small leading-relaxed text-muted-foreground pt-1">
+                      {activeVector.description}
+                    </p>
+                  </div>
+
+                  {/* 3 Real-time KPI Metric Telemetry Cards */}
+                  <div className="mt-6 grid grid-cols-3 gap-2.5 sm:gap-3">
+                    {activeVector.metrics.map((m) => (
+                      <div key={m.label} className="rounded-xl border border-border/80 bg-surface-muted/50 p-3 sm:p-3.5 space-y-1">
+                        <p className="text-[11px] text-muted-foreground truncate">{m.label}</p>
+                        <p className="text-base sm:text-xl font-bold text-foreground tabular-nums">{m.value}</p>
+                        <span className="inline-block text-[10px] font-semibold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
+                          {m.delta}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Continuous 360° Data Handshake Bridge */}
+                  <div className="mt-6 rounded-2xl border border-border/80 bg-surface-muted/30 p-4 space-y-2.5">
+                    <p className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                      <Workflow className="h-3.5 w-3.5 text-primary" />
+                      Continuous 360° Data Handshake:
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center text-xs">
+                      <div className="rounded-lg border border-border/70 bg-card p-2.5">
+                        <span className="block text-[10px] text-muted-foreground uppercase font-mono">Inbound Stream</span>
+                        <span className="font-semibold text-foreground mt-0.5 block">{activeVector.handshake.inbound}</span>
+                      </div>
+                      <div className="rounded-lg border border-primary/30 bg-primary/5 p-2.5 text-primary">
+                        <span className="block text-[10px] uppercase font-mono">Core Processing</span>
+                        <span className="font-semibold mt-0.5 block">{activeVector.handshake.core}</span>
+                      </div>
+                      <div className="rounded-lg border border-border/70 bg-card p-2.5">
+                        <span className="block text-[10px] text-muted-foreground uppercase font-mono">Outbound Target</span>
+                        <span className="font-semibold text-foreground mt-0.5 block">{activeVector.handshake.outbound}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Guaranteed Domain Guardrail */}
+                  <div className="mt-4 rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-3.5 flex items-start gap-3 text-xs">
+                    <ShieldCheck className="h-5 w-5 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 block">Enforced Domain Guardrail</span>
+                      <p className="text-muted-foreground leading-relaxed mt-0.5 text-caption">
+                        {activeVector.guardrail}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Authoritative Entities & Role Action Footer */}
+                  <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-border/80 pt-4">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="font-mono text-[11px] text-muted-foreground mr-1">Tables:</span>
+                      {activeVector.tables.map((t) => (
+                        <span key={t} className="font-mono text-[10px] px-2 py-0.5 rounded-md bg-secondary text-foreground border border-border/60">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+
+                    <Button asChild size="sm" className="rounded-xl font-semibold gap-1.5 shrink-0">
+                      <Link to={user ? activeVector.path : `/login?returnTo=${encodeURIComponent(activeVector.path)}`}>
+                        <span>Explore {activeVector.shortTitle}</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Bottom 360° Continuous Flow Tape */}
+            <motion.div {...reveal(0.25)} className="mt-12 rounded-2xl border border-border bg-card/75 p-4 sm:p-6 shadow-elevation-1 backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <RefreshCw className="h-4 w-4 text-primary" />
+                  <span className="text-small font-bold text-foreground">Continuous Flywheel Lifecycle Tape</span>
+                </div>
+                <span className="font-mono text-caption text-muted-foreground hidden sm:inline">Click any phase to inspect vector</span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+                {vectors360.map((v, idx) => {
+                  const isCur = activeVectorIndex === idx
+                  const FIcon = v.icon
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => {
+                        setActiveVectorIndex(idx)
+                        setIsTourPlaying(false)
+                      }}
+                      className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        isCur
+                          ? 'border-primary bg-primary/10 shadow-sm ring-2 ring-primary/20'
+                          : 'border-border/60 bg-surface-muted/30 hover:bg-surface-muted hover:border-border'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full">
+                        <span className="font-mono text-[10px] font-bold text-muted-foreground">{v.number}</span>
+                        <FIcon className={`h-3.5 w-3.5 ${isCur ? 'text-primary' : 'text-muted-foreground'}`} />
+                      </div>
+                      <p className={`mt-2 text-xs font-semibold truncate w-full ${isCur ? 'text-primary' : 'text-foreground'}`}>
+                        {v.shortTitle}
+                      </p>
+                      <span className="text-[10px] text-muted-foreground truncate w-full mt-0.5">
+                        {v.category}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
 
         <section id="modules" className="border-y border-border bg-surface-muted"><div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28"><motion.div {...reveal()} className="flex flex-col justify-between gap-5 lg:flex-row lg:items-end"><div><p className="text-label uppercase tracking-[0.2em] text-primary">Complete product structure</p><h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">The workspaces behind every outcome.</h2></div><p className="max-w-md text-body leading-7 text-muted-foreground">Explore the full platform surface—from the first customer interaction to the last audit event.</p></motion.div><div className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{modules.map(([title, text, Icon], index) => <motion.article {...reveal(index * 0.035)} key={title} whileHover={reducedMotion ? undefined : { y: -4 }} className="group rounded-xl border border-border bg-card p-5 shadow-elevation-1 transition-shadow hover:border-primary/40 hover:shadow-elevation-2"><div className="flex items-start justify-between"><span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-subtle text-primary"><Icon className="h-5 w-5" /></span><span className="font-mono text-caption text-muted-foreground">{String(index + 1).padStart(2, '0')}</span></div><h3 className="mt-5 text-h3">{title}</h3><p className="mt-2 min-h-10 text-body-small leading-6 text-muted-foreground">{text}</p><div className="mt-5 flex items-center text-small font-medium text-primary">Open domain <ArrowRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" /></div></motion.article>)}</div></div></section>
 

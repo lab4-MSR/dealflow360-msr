@@ -9,11 +9,11 @@ import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useApprovalThresholds, useUpdateApprovalThresholds } from '../hooks/use-business-admin'
 import { useApprovalChains } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
-import { Save, ArrowRight, DollarSign, Percent, AlertTriangle, BarChart, Shield, Users, Settings } from 'lucide-react'
+import { Save, ArrowRight, IndianRupee, Percent, AlertTriangle, BarChart, Shield, Users, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const THRESHOLD_ICONS = {
-  dealValue: DollarSign,
+  dealValue: IndianRupee,
   discount: Percent,
   risk: AlertTriangle,
   margin: BarChart,
@@ -27,10 +27,10 @@ const ROLE_OPTIONS = [
 ]
 
 function ThresholdRangeCard({ label, min, max, currency, unit, onMinChange, onMaxChange, index, category }: any) {
-  const Icon = THRESHOLD_ICONS[category as keyof typeof THRESHOLD_ICONS] || DollarSign
+  const Icon = THRESHOLD_ICONS[category as keyof typeof THRESHOLD_ICONS] || IndianRupee
   const formatValue = (v: number | string, isMax = false) => {
     if (v === null || v === '' || v === undefined) return isMax ? '∞' : '0'
-    if (category === 'dealValue') return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(Number(v))
+    if (category === 'dealValue') return new Intl.NumberFormat('en-IN', { style: 'currency', currency: currency || 'INR' }).format(Number(v))
     return `${Number(v)}${unit || ''}`
   }
 
@@ -122,14 +122,14 @@ function ApprovalThresholdsPage() {
 
             <TabsContent value="dealValue" className="space-y-4">
               <Card>
-                <CardHeader><CardTitle className="flex items-center gap-2"><DollarSign className="h-5 w-5" />Deal Value Thresholds</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="flex items-center gap-2"><IndianRupee className="h-5 w-5" />Deal Value Thresholds</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   {dealValue.map((d, i) => (
                     <ThresholdRangeCard
                       key={i} label={d.label} min={d.min} max={d.max}
                       onMinChange={v => setDealValue(prev => prev.map((x, j) => j === i ? { ...x, min: v } : x))}
                       onMaxChange={v => setDealValue(prev => prev.map((x, j) => j === i ? { ...x, max: v } : x))}
-                      currency="USD" category="dealValue" index={i}
+                      currency="INR" category="dealValue" index={i}
                     />
                   ))}
                   <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-sm">

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
-import { Search, Plus, DollarSign, Shield, TrendingUp } from 'lucide-react'
+import { Search, Plus, IndianRupee, Shield, TrendingUp } from 'lucide-react'
 
 export function CreateQuotationPage() {
   const navigate = useNavigate()
@@ -110,7 +110,7 @@ export function CreateQuotationPage() {
             {filteredProducts.length===0 ? <p className="text-caption text-muted-foreground p-4 text-center col-span-2">No products — backend /products not yet seeded.</p>
             : filteredProducts.slice(0,20).map(p=>(
               <div key={String(p.id)} className="flex items-center justify-between rounded border p-2">
-                <div><p className="text-small font-medium">{String((p as {name?:string}).name)}</p><p className="text-caption text-muted-foreground font-mono">{String((p as {sku?:string}).sku ?? '')} · ${String((p as {price?:number}).price ?? '—')}</p></div>
+                <div><p className="text-small font-medium">{String((p as {name?:string}).name)}</p><p className="text-caption text-muted-foreground font-mono">{String((p as {sku?:string}).sku ?? '')} · ₹{String((p as {price?:number}).price ?? '—')}</p></div>
                 <Button size="sm" variant="outline" onClick={()=>addProduct(String(p.id))}><Plus className="h-3 w-3" />Add</Button>
               </div>
             ))}
@@ -135,7 +135,7 @@ export function CreateQuotationPage() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <Card><CardHeader><CardTitle className="text-small flex items-center gap-2"><DollarSign className="h-4 w-4" />Pricing</CardTitle></CardHeader><CardContent className="space-y-1 text-small tabular-nums">
+        <Card><CardHeader><CardTitle className="text-small flex items-center gap-2"><IndianRupee className="h-4 w-4" />Pricing</CardTitle></CardHeader><CardContent className="space-y-1 text-small tabular-nums">
           <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>— backend</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Line Discounts</span><span>—</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Order Discount</span><span>—</span></div>

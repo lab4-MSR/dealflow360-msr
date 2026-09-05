@@ -20,7 +20,7 @@ export function CreateProductPage() {
     description: '',
     category: 'Software',
     unitPrice: 0,
-    currency: 'USD',
+    currency: 'INR',
     unit: 'license',
     taxCategory: '',
     status: 'active',
@@ -141,10 +141,10 @@ export function CreateProductPage() {
                 <Select value={form.currency} onValueChange={(v) => updateField('currency', v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="USD">USD - US Dollar</SelectItem>
-                    <SelectItem value="EUR">EUR - Euro</SelectItem>
-                    <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                    <SelectItem value="INR">INR - Indian Rupee</SelectItem>
+                    <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
+                    <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
+                    <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
+                    <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

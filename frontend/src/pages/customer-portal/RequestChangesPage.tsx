@@ -239,13 +239,13 @@ export function RequestChangesPage() {
               {/* Price */}
               <div className="space-y-2">
                 <label htmlFor="price-input" className="text-sm font-medium text-foreground">
-                  Price ($)
+                  Price (₹)
                 </label>
                 <Input
                   id="price-input"
                   type="number"
                   step="0.01"
-                  placeholder={`Current: $${origPrice}`}
+                  placeholder={`Current: ₹${origPrice}`}
                   value={requestedPrice}
                   onChange={(e) => setRequestedPrice(e.target.value)}
                 />

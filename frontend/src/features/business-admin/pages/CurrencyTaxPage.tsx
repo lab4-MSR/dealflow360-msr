@@ -110,10 +110,10 @@ export function CurrencyTaxPage() {
               <Select value={form.defaultCurrency || 'INR'} onValueChange={(v) => updateField('defaultCurrency', v)} disabled={!isEditing}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="INR">INR — Indian Rupee</SelectItem>
-                  <SelectItem value="USD">USD — US Dollar</SelectItem>
-                  <SelectItem value="EUR">EUR — Euro</SelectItem>
-                  <SelectItem value="GBP">GBP — British Pound</SelectItem>
+                  <SelectItem value="INR">INR — Indian Rupee (₹)</SelectItem>
+                  <SelectItem value="EUR">EUR — Euro (€)</SelectItem>
+                  <SelectItem value="GBP">GBP — British Pound (£)</SelectItem>
+                  <SelectItem value="AED">AED — UAE Dirham (د.إ)</SelectItem>
                 </SelectContent>
               </Select>
             </div>

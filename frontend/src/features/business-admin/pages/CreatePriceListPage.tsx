@@ -50,7 +50,7 @@ export function CreatePriceListPage() {
   const [form, setForm] = useState<FormState>({
     name: '',
     description: '',
-    currency: 'USD',
+    currency: 'INR',
     customerSegment: 'all',
     effectiveFrom: '',
     effectiveUntil: '',
@@ -214,10 +214,10 @@ export function CreatePriceListPage() {
                 <Select value={form.currency} onValueChange={(v) => updateField('currency', v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="USD">USD</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="GBP">GBP</SelectItem>
-                    <SelectItem value="INR">INR</SelectItem>
+                    <SelectItem value="INR">INR (₹)</SelectItem>
+                    <SelectItem value="EUR">EUR (€)</SelectItem>
+                    <SelectItem value="GBP">GBP (£)</SelectItem>
+                    <SelectItem value="AED">AED (د.إ)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

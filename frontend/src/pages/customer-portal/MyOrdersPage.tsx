@@ -218,9 +218,9 @@ export function MyOrdersPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Values</SelectItem>
-                    <SelectItem value="under_10k">Under $10,000</SelectItem>
-                    <SelectItem value="10k_25k">$10,000 - $25,000</SelectItem>
-                    <SelectItem value="over_25k">Over $25,000</SelectItem>
+                    <SelectItem value="under_10k">Under ₹10,000</SelectItem>
+                    <SelectItem value="10k_25k">₹10,000 - ₹25,000</SelectItem>
+                    <SelectItem value="over_25k">Over ₹25,000</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -193,12 +193,10 @@ export default function CompanyRegistrationPage() {
                   className="flex h-10 w-full rounded-lg border bg-surface px-3 py-2 text-body-small text-foreground border-input focus:outline-none focus:ring-2 focus:ring-primary font-mono"
                   {...register('operatingCurrency')}
                 >
-                  <option value="INR">INR (₹) — Indian Rupee (Default)</option>
-                  <option value="USD">USD ($) — United States Dollar</option>
+                  <option value="INR">INR (₹) — Indian Rupee (India Standard)</option>
                   <option value="EUR">EUR (€) — Euro</option>
                   <option value="GBP">GBP (£) — British Pound</option>
                   <option value="AED">AED (د.إ) — UAE Dirham</option>
-                  <option value="SGD">SGD ($) — Singapore Dollar</option>
                 </select>
                 <p className="text-[11px] text-muted-foreground">
                   You can configure additional price lists and exchange rates after onboarding.

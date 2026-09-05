@@ -466,7 +466,7 @@ export const MOCK_CUSTOMER_DASHBOARD: CustomerDashboard = {
     {
       type: 'quotation',
       title: 'Counter Offer Submitted',
-      description: 'Counter offer of $10,500 submitted for Quotation Q-2026-00482 (V3).',
+      description: 'Counter offer of ₹10,500 submitted for Quotation Q-2026-00482 (V3).',
       timestamp: '2 hours ago',
     },
     {
@@ -818,7 +818,7 @@ const MOCK_ORDERS_DATA: CustomerOrderDetail[] = [
     status: 'processing',
     order_date: '2026-09-02',
     total: 11660.00,
-    currency: 'USD',
+    currency: 'INR',
     items: [
       { id: 'line-1', product: 'Laptop Pro (16-inch, 32GB RAM, 1TB SSD)', sku: 'LP-100', quantity: 10, unit_price: 1056.00, total: 10560.00 },
       { id: 'line-2', product: 'Setup & Onboarding Service', sku: 'SV-200', quantity: 1, unit_price: 1100.00, total: 1100.00 },
@@ -844,7 +844,7 @@ const MOCK_ORDERS_DATA: CustomerOrderDetail[] = [
     status: 'shipped',
     order_date: '2026-08-20',
     total: 24500.00,
-    currency: 'USD',
+    currency: 'INR',
     items: [
       { id: 'line-101', product: 'Enterprise Server Rack', sku: 'SR-500', quantity: 2, unit_price: 9750.00, total: 19500.00 },
       { id: 'line-102', product: 'Server Blade Module', sku: 'SB-102', quantity: 5, unit_price: 1000.00, total: 5000.00 },
@@ -870,7 +870,7 @@ const MOCK_ORDERS_DATA: CustomerOrderDetail[] = [
     status: 'delivered',
     order_date: '2026-08-10',
     total: 8900.00,
-    currency: 'USD',
+    currency: 'INR',
     items: [
       { id: 'line-201', product: 'Pro Workstation Desktop', sku: 'WS-300', quantity: 5, unit_price: 1780.00, total: 8900.00 },
     ],
@@ -897,7 +897,7 @@ function mockOrderListResponse(filters?: CustomerOrderFilters): CustomerOrderLis
     order_number: o.order_number,
     date: o.order_date,
     value: o.total,
-    currency: o.currency ?? 'USD',
+    currency: o.currency ?? 'INR',
     status: o.status,
     shipment: o.shipments[0]
       ? `${o.shipments[0].status === 'delivered' ? 'Delivered' : o.shipments[0].status === 'shipped' || o.shipments[0].status === 'in_transit' ? 'Shipped' : 'Processing'} (${o.shipments[0].tracking})`
@@ -1245,8 +1245,8 @@ const MOCK_SUBSCRIPTIONS_DATA: CustomerSubscriptionDetail[] = [
       ],
     },
     changes: {
-      upgrades: ['Global Multi-Region Plan ($2,999/mo)'],
-      downgrades: ['Professional Team Plan ($799/mo)'],
+      upgrades: ['Global Multi-Region Plan (₹24,999/mo)'],
+      downgrades: ['Professional Team Plan (₹6,999/mo)'],
       proration: 'Immediate prorated credit/charge applied on plan changes',
       effective_date: 'Next Billing Cycle (Oct 1, 2026)',
     },
@@ -1295,7 +1295,7 @@ const MOCK_SUBSCRIPTIONS_DATA: CustomerSubscriptionDetail[] = [
       usage: [{ metric: 'Trial Days Remaining', used: 6, limit: 14, unit: 'days' }],
     },
     changes: {
-      upgrades: ['Upgrade to Professional Plan ($799/mo)', 'Upgrade to Enterprise Plan ($1,499/mo)'],
+      upgrades: ['Upgrade to Professional Plan (₹6,999/mo)', 'Upgrade to Enterprise Plan (₹12,999/mo)'],
       downgrades: [],
       proration: 'No charge during trial',
       effective_date: 'Immediate upon upgrade',
@@ -1382,9 +1382,9 @@ const mockCustomerPreferences: CustomerPreferencesData = {
     billing_notifications: true,
   },
   localization: {
-    language: 'en-US',
-    timezone: 'America/Chicago',
-    currency: 'USD',
+    language: 'en-IN',
+    timezone: 'Asia/Kolkata',
+    currency: 'INR',
     date_format: 'YYYY-MM-DD',
   },
   appearance: {

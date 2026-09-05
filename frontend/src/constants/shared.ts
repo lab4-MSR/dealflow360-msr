@@ -97,10 +97,9 @@ export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
 
 export const CURRENCY_OPTIONS: Array<{ value: string; label: string; symbol: string }> = [
   { value: 'INR', label: 'INR — Indian Rupee', symbol: '₹' },
-  { value: 'USD', label: 'USD — US Dollar', symbol: '$' },
   { value: 'EUR', label: 'EUR — Euro', symbol: '€' },
   { value: 'GBP', label: 'GBP — British Pound', symbol: '£' },
-  { value: 'SGD', label: 'SGD — Singapore Dollar', symbol: 'S$' },
+  { value: 'AED', label: 'AED — UAE Dirham', symbol: 'د.إ' },
 ]
 
 export const DATE_FORMAT_OPTIONS: Array<{ value: string; label: string }> = [
