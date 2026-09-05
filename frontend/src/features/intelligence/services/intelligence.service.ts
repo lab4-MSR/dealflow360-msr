@@ -380,7 +380,8 @@ export const intelligenceService = {
   async getIntelligenceDashboard(): Promise<IntelligenceDashboardData> {
     try {
       const res = await apiClient.get<IntelligenceDashboardData>('/intelligence/dashboard')
-      if (res && res.kpis) return res
+      const data = (res as any)?.data || res
+      if (data && data.kpis) return data
     } catch {
       // Fallback to domain aggregate
     }
@@ -424,7 +425,8 @@ export const intelligenceService = {
   async getRiskOverview(): Promise<RiskOverviewData> {
     try {
       const res = await apiClient.get<RiskOverviewData>('/risk/overview')
-      if (res && res.kpis) return res
+      const data = (res as any)?.data || res
+      if (data && data.kpis) return data
     } catch {}
     return {
       kpis: {
@@ -516,7 +518,8 @@ export const intelligenceService = {
   async getRiskDetails(id: string): Promise<RiskDetailRecord> {
     try {
       const res = await apiClient.get<RiskDetailRecord>(`/risk/${id}`)
-      if (res && res.risk_score !== undefined) return res
+      const data = (res as any)?.data || res
+      if (data && data.risk_score !== undefined) return data
     } catch {}
     return {
       id: id || 'risk-001',
@@ -636,7 +639,8 @@ export const intelligenceService = {
   async getRecommendationDetails(id: string): Promise<RecommendationDetailRecord> {
     try {
       const res = await apiClient.get<RecommendationDetailRecord>(`/recommendations/${id}`)
-      if (res && res.why_recommended) return res
+      const data = (res as any)?.data || res
+      if (data && data.why_recommended) return data
     } catch {}
     const base = [...MOCK_UPSELL, ...MOCK_CROSS_SELL].find(r => r.id === id) || MOCK_UPSELL[0]
     return {
@@ -672,7 +676,7 @@ export const intelligenceService = {
   async applyRecommendation(recommendationId: string, dealId: string): Promise<{ success: boolean; message: string }> {
     try {
       const res = await apiClient.post<{ success: boolean; message: string }>(`/recommendations/${recommendationId}/apply`, { deal_id: dealId })
-      return res
+      return (res as any)?.data || res
     } catch {
       return { success: true, message: 'Recommended product line added to deal quotation and pricing re-evaluated.' }
     }
@@ -681,7 +685,8 @@ export const intelligenceService = {
   async getDealHealthOverview(): Promise<DealHealthOverviewData> {
     try {
       const res = await apiClient.get<DealHealthOverviewData>('/deal-health/overview')
-      if (res && res.kpis) return res
+      const data = (res as any)?.data || res
+      if (data && data.kpis) return data
     } catch {}
     return {
       kpis: {
@@ -787,7 +792,7 @@ export const intelligenceService = {
     return list
   },
 
-  async dismissDiscountAnomaly(id: string, reason: string): Promise<{ success: boolean }> {
+  async dismissDiscountAnomaly(id: string, reason: string = 'Reviewed and dismissed'): Promise<{ success: boolean }> {
     try {
       await apiClient.post(`/deal-health/discount-anomalies/${id}/dismiss`, { reason })
     } catch {
@@ -848,6 +853,19 @@ export const intelligenceService = {
       }
     }
     return { success: true }
+  },
+
+  getDashboard() {
+    return this.getIntelligenceDashboard()
+  },
+  getInsights(filters?: Record<string, string>) {
+    return this.getDecisionInsights(filters)
+  },
+  getDeliverySlippages(filters?: Record<string, string>) {
+    return this.getDeliverySlippage(filters)
+  },
+  actionInsight(id: string, action: string, assigneeId?: string, comment?: string) {
+    return this.actOnDecisionInsight(id, action, assigneeId, comment)
   },
 }
 

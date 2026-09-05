@@ -34,12 +34,14 @@ export const NOTIFICATION_CATEGORY_LABELS: Record<string, string> = {
 
 export const NOTIFICATION_PRIORITY_LABELS: Record<NotificationPriority, string> = {
   low: 'Low',
+  normal: 'Normal',
   medium: 'Medium',
   high: 'High',
 }
 
 export const NOTIFICATION_PRIORITY_VARIANT: Record<NotificationPriority, 'secondary' | 'warning' | 'danger'> = {
   low: 'secondary',
+  normal: 'secondary',
   medium: 'warning',
   high: 'danger',
 }

@@ -140,15 +140,20 @@ export function TeamPerformancePage() {
                     </td>
                   </tr>
                 ) : (
-                  data?.reps.map((rep) => (
-                    <tr key={rep.id} className="hover:bg-muted/30">
+                  data?.reps.map((rep) => {
+                    const closed = rep.closed_amount ?? rep.closed_revenue ?? 0
+                    const pipeline = rep.pipeline_amount ?? rep.active_pipeline ?? 0
+                    const winRate = rep.win_rate ?? rep.win_rate_percent ?? 0
+                    const avgDisc = rep.avg_discount ?? rep.avg_discount_percent ?? 0
+                    return (
+                    <tr key={rep.id || rep.rep_id} className="hover:bg-muted/30">
                       <td className="py-3">
                         <span className="font-semibold text-foreground block">{rep.name}</span>
                         <span className="text-caption text-muted-foreground">{rep.email}</span>
                       </td>
                       <td className="py-3 text-right tabular-nums">₹{rep.quota.toLocaleString()}</td>
                       <td className="py-3 text-right tabular-nums font-semibold text-foreground">
-                        ₹{rep.closed_amount.toLocaleString()}
+                        ₹{closed.toLocaleString()}
                       </td>
                       <td className="py-3 px-4">
                         <div className="space-y-1">
@@ -163,15 +168,15 @@ export function TeamPerformancePage() {
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 text-right tabular-nums">₹{rep.pipeline_amount.toLocaleString()}</td>
-                      <td className="py-3 text-right tabular-nums">{rep.win_rate}%</td>
+                      <td className="py-3 text-right tabular-nums">₹{pipeline.toLocaleString()}</td>
+                      <td className="py-3 text-right tabular-nums">{winRate}%</td>
                       <td className="py-3 text-right tabular-nums">
-                        <span className={rep.avg_discount > 15 ? 'text-danger font-semibold' : ''}>
-                          {rep.avg_discount}%
+                        <span className={avgDisc > 15 ? 'text-danger font-semibold' : ''}>
+                          {avgDisc}%
                         </span>
                       </td>
                     </tr>
-                  ))
+                  )})
                 )}
               </tbody>
             </table>

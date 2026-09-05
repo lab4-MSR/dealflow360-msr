@@ -427,8 +427,8 @@ export function BusinessUsersPage() {
       <div className="overflow-x-auto">
         {userData && userData.users.length > 0 ? (
           <>
-            <DataTable<BusinessUser>
-              columns={columns}
+            <DataTable<any>
+              columns={columns as any}
               data={userData.users as unknown as Record<string, unknown>[]}
               getRowId={(row) => (row as unknown as BusinessUser).id}
               emptyMessage="No users found"

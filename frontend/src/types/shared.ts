@@ -17,7 +17,7 @@ export type NotificationType =
   | 'subscription'
   | 'system'
 
-export type NotificationPriority = 'low' | 'medium' | 'high'
+export type NotificationPriority = 'low' | 'medium' | 'high' | 'normal' | (string & {})
 
 export type NotificationFilter =
   | 'all'
@@ -58,6 +58,7 @@ export type UserRole =
 export type AccountStatus = 'active' | 'suspended' | 'pending' | (string & {})
 
 export interface UserProfile {
+  id?: string
   user_id: string
   email: string
   full_name: string
@@ -66,6 +67,9 @@ export interface UserProfile {
   business_name?: string | null
   customer_id?: string | null
   avatar_url?: string | null
+  department?: string | null
+  timezone?: string | null
+  created_at?: string | null
   permissions?: string[]
   phone?: string | null
   job_title?: string | null
@@ -81,16 +85,20 @@ export interface ActiveSession {
   browser?: string | null
   location?: string | null
   ip?: string | null
+  ip_address?: string | null
   last_active?: string | null
   current?: boolean
+  is_current?: boolean
 }
 
 export interface LoginActivity {
   id: string
   timestamp?: string
   ip?: string | null
+  ip_address?: string | null
   location?: string | null
   user_agent?: string | null
+  status?: string
 }
 
 export interface UpdateProfilePayload {
@@ -146,9 +154,11 @@ export type ArticleType = 'guide' | 'faq' | 'tutorial'
 export interface HelpArticle {
   id: string
   category: HelpCategory | string
-  type: ArticleType
+  type?: ArticleType
   title: string
+  slug?: string
   summary?: string
+  content?: string
   url?: string
   updated_at?: string
 }
@@ -157,6 +167,9 @@ export interface SupportTicket {
   id: string
   subject: string
   status: string
+  title?: string
+  description?: string
+  priority?: string
   created_at?: string
   updated_at?: string
   messages?: Array<{ role: string; body: string; at?: string }>
@@ -166,6 +179,8 @@ export interface CreateTicketPayload {
   subject: string
   category: string
   message: string
+  title?: string
+  description?: string
   priority?: string
 }
 
@@ -176,18 +191,27 @@ export interface OrgLocalization {
   timezone?: string
   date_format?: string
   currency?: string
+  currency_symbol?: string
+  default_language?: string
+  default_timezone?: string
 }
 
 export interface OrgGeneralSettings {
   application_name?: string
+  company_name?: string
   support_email?: string
   default_language?: string
   default_timezone?: string
   date_format?: string
+  compliance_tier?: string
   [key: string]: unknown
 }
 
 export interface OrgSettings {
+  name?: string
+  domain?: string
+  fiscal_year_start?: string
+  default_currency?: string
   general?: OrgGeneralSettings
   localization?: OrgLocalization
   appearance?: {

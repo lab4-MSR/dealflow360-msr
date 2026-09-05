@@ -139,7 +139,7 @@ export function Sidebar({ collapsed = false, onToggle }: SidebarProps) {
               <Building2 className="h-4 w-4 text-primary shrink-0" />
               <div className="flex-1 truncate">
                 <p className="truncate font-medium text-xs leading-none">
-                  {user?.businessName || 'DealFlow360'}
+                  {user?.business_name || (user as any)?.businessName || 'DealFlow360'}
                 </p>
                 <p className="text-[10px] text-muted-foreground capitalize mt-0.5">
                   {user?.role?.replace('_', ' ') || 'Workspace'}

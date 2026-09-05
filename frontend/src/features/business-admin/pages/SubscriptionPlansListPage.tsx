@@ -190,7 +190,7 @@ export function SubscriptionPlansListPage() {
             <KpiCard label="Total Plans" value={kpis?.totalPlans ?? 0} icon={<Plus className="h-5 w-5" />} />
             <KpiCard label="Active Plans" value={kpis?.activePlans ?? 0} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
             <KpiCard label="Total Subscribers" value={formatNumber(kpis?.totalSubscribers ?? 0)} icon={<UserCog className="h-5 w-5" />} />
-            <KpiCard label="Inactive Plans" value={5 - (kpis?.activePlans ?? 0)} variant="secondary" icon={<AlertTriangle className="h-5 w-5" />} />
+            <KpiCard label="Inactive Plans" value={5 - (kpis?.activePlans ?? 0)} variant="default" icon={<AlertTriangle className="h-5 w-5" />} />
           </>
         )}
       </div>

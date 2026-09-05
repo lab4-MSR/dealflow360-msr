@@ -84,6 +84,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
 
 const MOCK_PROFILE: UserProfile = {
   id: 'usr-current',
+  user_id: 'usr-current',
   full_name: 'Shubham Kumar',
   email: 'shubhamkumar997800@gmail.com',
   role: 'super_admin',
@@ -243,11 +244,13 @@ export const sharedApi = {
   createSupportTicket: (payload: CreateTicketPayload): Promise<SupportTicket> => {
     const newTicket: SupportTicket = {
       id: `tick-${Date.now()}`,
-      title: payload.title,
-      description: payload.description,
-      priority: payload.priority,
+      subject: payload.subject || payload.title || 'Support Request',
+      title: payload.title || payload.subject || 'Support Request',
+      description: payload.description || payload.message,
+      priority: payload.priority || 'normal',
       status: 'open',
       created_at: new Date().toISOString(),
+      messages: payload.message ? [{ role: 'user', body: payload.message, at: new Date().toISOString() }] : [],
     }
     return api.post<ApiResponse<SupportTicket>>('/help/tickets', payload)
       .then((r) => unwrap<SupportTicket>(r, newTicket))
@@ -258,6 +261,7 @@ export const sharedApi = {
     api.get<ApiResponse<SupportTicket>>(`/help/tickets/${id}`)
       .then((r) => unwrap<SupportTicket>(r, {
         id,
+        subject: 'Support Inquiry',
         title: 'Support Inquiry',
         description: 'Details for ticket status',
         status: 'open',
@@ -266,6 +270,7 @@ export const sharedApi = {
       }))
       .catch(() => ({
         id,
+        subject: 'Support Inquiry',
         title: 'Support Inquiry',
         description: 'Details for ticket status',
         status: 'open',

@@ -8,7 +8,7 @@ function unwrap<T>(response: ApiResponse<T>, fallback: T): T {
   return (response as unknown as T) ?? fallback
 }
 
-async function unwrapOrThrow<T>(call: Promise<ApiResponse<T>>, fallback: T): Promise<T> {
+async function unwrapOrThrow<T>(call: Promise<any>, fallback: T): Promise<T> {
   try { return unwrap(await call, fallback) } catch (error) { throw new Error(getErrorMessage(error)) }
 }
 
@@ -200,12 +200,20 @@ export interface CustomerShipmentDetail {
   status: 'processing' | 'in_transit' | 'delivered' | 'delayed' | string
   tracking_number: string // e.g. FedEx 9823410244
   carrier: string // e.g. FedEx Express
+  courier?: string
+  shipped_date?: string
+  origin?: string
+  destination?: string
   delivery_address: string
   expected_delivery: string
+  estimated_delivery?: string
   delivery_date?: string
+  actual_delivery?: string
   delivery_status: string
   items: CustomerShipmentItem[]
+  item_count?: number
   timeline: TrackingTimelineStage[]
+  events?: Array<{ status?: string; timestamp?: string; location?: string; description?: string }>
   tracking_url?: string
   eta: string
 }
@@ -248,6 +256,7 @@ export interface CustomerInvoiceDetail {
   invoice_number: string
   date: string
   invoice_date?: string
+  issue_date?: string
   due_date: string
   status: 'paid' | 'outstanding' | 'overdue' | string
   seller: { company: string; address: string; contact: string }
@@ -256,6 +265,13 @@ export interface CustomerInvoiceDetail {
   payment: { amount_paid: number; amount_due: number; payment_status: string; due_date: string }
   download_url?: string
   amount: number
+  total_amount?: number
+  paid_amount?: number
+  balance_due?: number
+  subtotal?: number
+  tax_total?: number
+  order_number?: string
+  payments?: Array<{ id?: string; payment_method?: string; amount?: number; transaction_ref?: string; payment_date?: string; [key: string]: unknown }>
 }
 
 export interface InvoiceKpis {
@@ -308,10 +324,16 @@ export interface SubscriptionChanges {
 export interface CustomerSubscriptionDetail {
   id: string // Subscription ID
   plan_name: string
+  tier?: string
   amount: number
+  recurring_amount?: number
   billing_cycle: 'monthly' | 'quarterly' | 'semi_annual' | 'annual' | string
   status: 'active' | 'trial' | 'renewing_soon' | 'cancelled' | string
   renewal_date: string
+  next_renewal_date?: string
+  current_period_start?: string
+  current_period_end?: string
+  seats?: { utilized: number; allocated: number } | any
   features: string[]
   price: number
   current_amount: number

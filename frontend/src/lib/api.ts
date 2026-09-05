@@ -37,7 +37,8 @@ export interface SearchResult {
   type: string
   id: string
   title: string
-  subtitle: string
+  subtitle?: string
+  description?: string
   status?: string
   url: string
 }

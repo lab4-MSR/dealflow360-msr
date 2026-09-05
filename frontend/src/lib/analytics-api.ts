@@ -66,7 +66,7 @@ function unwrap<T>(response: ApiResponse<T>, fallback: T): T {
 }
 
 /** Unwrap the ApiResponse envelope and return fallback on network/API failure. */
-async function unwrapOrThrow<T>(call: Promise<ApiResponse<T>>, fallback: T): Promise<T> {
+async function unwrapOrThrow<T>(call: Promise<any>, fallback: T): Promise<T> {
   try {
     return unwrap(await call, fallback)
   } catch {

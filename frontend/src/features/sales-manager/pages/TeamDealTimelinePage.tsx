@@ -57,7 +57,7 @@ export function TeamDealTimelinePage() {
                         {new Date(event.timestamp).toLocaleDateString()} {new Date(event.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                       <Badge variant="outline" className="text-caption uppercase">
-                        {event.event_type}
+                        {event.event_type || event.category}
                       </Badge>
                     </div>
                     <h3 className="text-body font-semibold text-foreground">{event.title}</h3>

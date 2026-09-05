@@ -27,7 +27,7 @@ const STATUS_VARIANT: Record<string, 'success' | 'secondary' | 'danger'> = {
   suspended: 'danger',
 }
 
-const STAGE_VARIANT: Record<string, 'info' | 'warning' | 'success' | 'default' | 'secondary'> = {
+const STAGE_VARIANT: Record<string, 'info' | 'warning' | 'success' | 'default' | 'secondary' | 'danger'> = {
   prospecting: 'secondary',
   qualification: 'info',
   proposal: 'warning',

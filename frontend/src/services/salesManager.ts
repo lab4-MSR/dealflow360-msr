@@ -14,6 +14,7 @@ import type {
   DecisionInsight,
   ScheduledReportConfig,
   CoachingNote,
+  DealHealthOverview,
 } from '@/types/salesManager'
 
 // ============================================================================
@@ -1433,9 +1434,9 @@ export async function approveApproval(id: string, comment?: string): Promise<{ s
   }
 }
 
-export async function rejectApproval(id: string, reason: string): Promise<{ success: boolean; message: string }> {
+export async function rejectApproval(id: string, reason: string, comment?: string): Promise<{ success: boolean; message: string }> {
   try {
-    const res = await apiClient.post(`/approvals/${id}/reject`, { reason })
+    const res = await apiClient.post(`/approvals/${id}/reject`, { reason, comment })
     return res.data
   } catch {
     const item = MOCK_APPROVAL_QUEUE.find(a => a.id === id)
@@ -1445,10 +1446,10 @@ export async function rejectApproval(id: string, reason: string): Promise<{ succ
         item.approval_chain[0].status = 'completed'
         item.approval_chain[0].decision = 'rejected'
         item.approval_chain[0].decided_at = new Date().toISOString()
-        item.approval_chain[0].comments = reason
+        item.approval_chain[0].comments = comment ? `${reason}: ${comment}` : reason
       }
     }
-    return { success: true, message: 'Approval rejected' }
+    return { success: true, message: `Quotation approval rejected: ${reason}` }
   }
 }
 
@@ -1678,15 +1679,12 @@ export async function getTeamPerformance(_period = 'q3'): Promise<{
   }
 }
 
-export async function getDealHealthData(): Promise<{
-  counts: { healthy: number; at_risk: number; stalled: number; critical: number }
-  avg_health_score: number
-  factors: DealHealthFactors
-  discount_anomalies: DiscountAnomaly[]
-  stalled_deals: StalledDeal[]
-  delivery_slippage: DeliverySlippage[]
-}> {
+export async function getDealHealthData(): Promise<DealHealthOverview> {
   return {
+    healthy_count: 14,
+    at_risk_count: 6,
+    stalled_count: 3,
+    critical_count: 1,
     counts: {
       healthy: 14,
       at_risk: 6,
@@ -1705,14 +1703,45 @@ export async function getDealHealthData(): Promise<{
     discount_anomalies: MOCK_DISCOUNT_ANOMALIES,
     stalled_deals: MOCK_STALLED_DEALS,
     delivery_slippage: MOCK_DELIVERY_SLIPPAGE,
+    flagged_deals: [
+      {
+        id: 'deal-001',
+        name: 'Hyperion Cloud Infrastructure',
+        customer_name: 'Hyperion Systems',
+        rep_name: 'Priya Sharma',
+        value: 1250000,
+        status: 'critical',
+        reasons: ['Margin below 15% threshold', 'SLA breach in Stage 2 approval'],
+      },
+      {
+        id: 'deal-002',
+        name: 'Nexus ERP Migration',
+        customer_name: 'Nexus Corp',
+        rep_name: 'Rahul Verma',
+        value: 850000,
+        status: 'warning',
+        reasons: ['Stalled in negotiation for 18 days'],
+      },
+      {
+        id: 'deal-003',
+        name: 'Apex Data Platform Renewal',
+        customer_name: 'Apex Solutions',
+        rep_name: 'Ananya Roy',
+        value: 2100000,
+        status: 'warning',
+        reasons: ['Customer requested 30% discount anomaly'],
+      },
+    ],
   }
 }
 
-export async function scheduleReport(config: ScheduledReportConfig): Promise<{ success: boolean; message: string }> {
+export async function scheduleReport(config: ScheduledReportConfig | string, frequency = 'weekly'): Promise<{ success: boolean; message: string }> {
   try {
-    await apiClient.post('/analytics/reports/schedule', config)
-    return { success: true, message: `Report scheduled successfully (${config.frequency})` }
+    const payload = typeof config === 'string' ? { report_type: config, frequency, recipients: ['manager@acme.com'] } : config
+    await apiClient.post('/analytics/reports/schedule', payload)
+    return { success: true, message: `Report scheduled successfully (${payload.frequency})` }
   } catch {
-    return { success: true, message: `Report scheduled for delivery (${config.frequency}) to ${config.recipients.join(', ')}` }
+    const freq = typeof config === 'string' ? frequency : config.frequency
+    return { success: true, message: `Report scheduled for delivery (${freq})` }
   }
 }

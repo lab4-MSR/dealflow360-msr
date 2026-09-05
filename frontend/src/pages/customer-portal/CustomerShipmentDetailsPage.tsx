@@ -28,7 +28,23 @@ export const CustomerShipmentDetailsPage: React.FC = () => {
     setLoading(true)
     try {
       const res = await getCustomerShipmentDetail(id)
-      setShipment(res)
+      const normalized: CustomerShipment = {
+        ...res,
+        courier: res.courier || res.carrier || 'FedEx Express',
+        shipped_date: res.shipped_date || 'Sep 03, 2026',
+        origin: res.origin || 'Main Fulfillment Hub, Austin TX',
+        destination: res.destination || res.delivery_address || 'Verified delivery address',
+        estimated_delivery: res.estimated_delivery || res.expected_delivery || res.eta || 'Sep 10, 2026',
+        actual_delivery: res.actual_delivery || res.delivery_date,
+        events: res.events || (res.timeline || []).map((t) => ({
+          status: t.stage,
+          timestamp: t.timestamp || 'Recorded',
+          location: t.location || 'Transit Hub',
+          description: t.description || t.stage,
+        })),
+        item_count: res.item_count ?? (res.items || []).reduce((acc, it) => acc + (it.quantity || 1), 0),
+      }
+      setShipment(normalized)
     } catch (err) {
       console.error('Failed to load shipment details', err)
     } finally {

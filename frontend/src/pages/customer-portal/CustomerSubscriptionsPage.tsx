@@ -27,7 +27,8 @@ export const CustomerSubscriptionsPage: React.FC = () => {
     setLoading(true)
     try {
       const res = await getCustomerSubscriptions()
-      setSubscriptions(res)
+      const subs = res && 'subscriptions' in res ? res.subscriptions : (Array.isArray(res) ? res : [])
+      setSubscriptions(subs)
     } catch (err) {
       console.error('Failed to load subscriptions', err)
     } finally {

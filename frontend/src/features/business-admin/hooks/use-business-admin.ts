@@ -910,7 +910,7 @@ export function useCreateVolumePricingRule() {
 export function useUpdateVolumePricingRule() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: { tiers: Omit<VolumePricingTier, 'id'>[]; status?: string } }) =>
+    mutationFn: ({ id, data }: { id: string; data: { tiers?: Omit<VolumePricingTier, 'id'>[]; status?: string } }) =>
       updateVolumePricingRule(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ba-volume-pricing'] })

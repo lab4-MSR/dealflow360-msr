@@ -88,7 +88,7 @@ export function ShippingRulesListPage() {
       id: 'priority',
       header: 'Priority',
       accessorFn: (row) => (
-        <Badge variant={row.priority === 'high' ? 'destructive' : row.priority === 'normal' ? 'warning' : 'secondary'}>
+        <Badge variant={String(row.priority) === 'high' ? 'danger' : String(row.priority) === 'normal' ? 'warning' : 'secondary'}>
           {row.priority}
         </Badge>
       ),
@@ -96,13 +96,22 @@ export function ShippingRulesListPage() {
     {
       id: 'destination',
       header: 'Destination',
-      accessorFn: (row) => (
-        <div className="text-[11px] text-muted-foreground">
-          {row.destination.country}
-          {row.destination.state && `, ${row.destination.state}`}
-          {row.destination.postalCode && ` ${row.destination.postalCode}`}
-        </div>
-      ),
+      accessorFn: (row) => {
+        const dest = row.destination as any
+        return (
+          <div className="text-[11px] text-muted-foreground">
+            {typeof dest === 'object' && dest ? (
+              <>
+                {dest.country}
+                {dest.state && `, ${dest.state}`}
+                {dest.postalCode && ` ${dest.postalCode}`}
+              </>
+            ) : (
+              String(row.destination || '')
+            )}
+          </div>
+        )
+      },
     },
     {
       id: 'allocationStrategy',
@@ -197,8 +206,8 @@ export function ShippingRulesListPage() {
           <>
             <KpiCard label="Total Rules" value={kpis?.totalRules ?? 0} icon={<WarehouseIcon className="h-5 w-5" />} />
             <KpiCard label="Active Rules" value={kpis?.activeRules ?? 0} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
-            <KpiCard label="Default Rule" value={kpis?.defaultRule !== undefined ? 'Yes' : 'No'} variant={kpis?.defaultRule !== undefined ? 'success' : 'secondary'} icon={<CheckCircle className="h-5 w-5" />} />
-            <KpiCard label="Inactive Rules" value={5 - (kpis?.activeRules ?? 0)} variant="secondary" icon={<AlertTriangle className="h-5 w-5" />} />
+            <KpiCard label="Default Rule" value={kpis?.defaultRule !== undefined ? 'Yes' : 'No'} variant={kpis?.defaultRule !== undefined ? 'success' : 'default'} icon={<CheckCircle className="h-5 w-5" />} />
+            <KpiCard label="Inactive Rules" value={5 - (kpis?.activeRules ?? 0)} variant="default" icon={<AlertTriangle className="h-5 w-5" />} />
           </>
         )}
       </div>

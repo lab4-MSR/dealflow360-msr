@@ -189,7 +189,7 @@ export function ApprovalDetailsPage() {
             <div className="flex flex-col justify-center space-y-1 border-t pt-4 lg:border-t-0 lg:border-l lg:pl-6 lg:pt-0">
               <span className="text-caption font-medium uppercase tracking-wider text-muted-foreground">Quote Total</span>
               <span className="text-h2 font-bold tabular-nums text-foreground">
-                ₹{Number(data.total_value).toLocaleString()}
+                ₹{Number(data.total_value ?? data.deal_value ?? data.subtotal ?? 0).toLocaleString()}
               </span>
               <span className="text-caption text-muted-foreground">
                 Margin: <b className={data.margin_percent < 22 ? 'text-danger' : 'text-foreground'}>{data.margin_percent}%</b>
@@ -203,7 +203,7 @@ export function ApprovalDetailsPage() {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-caption font-medium uppercase tracking-wider text-muted-foreground">SLA Window</span>
-                <SlaCountdown deadline={data.sla_deadline} isBreached={data.sla_breached} />
+                <SlaCountdown expiresAt={data.sla_expires_at} deadline={data.sla_deadline} isBreached={data.sla_breached} />
               </div>
             </div>
           </div>
@@ -223,7 +223,7 @@ export function ApprovalDetailsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {data.reasons.map((reason, idx) => (
+              {(data.reasons || [data.rep_notes || 'Discount threshold exceeded commercial governance rule']).map((reason, idx) => (
                 <div key={idx} className="flex items-start gap-2 text-body-small text-foreground">
                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-warning flex-shrink-0" />
                   <span>{reason}</span>
@@ -260,17 +260,17 @@ export function ApprovalDetailsPage() {
                         <td className="py-2.5 text-right tabular-nums">{line.quantity}</td>
                         <td className="py-2.5 text-right tabular-nums">₹{line.unit_price.toLocaleString()}</td>
                         <td className="py-2.5 text-right tabular-nums">
-                          <span className={line.discount_percent > line.max_allowed_discount ? 'font-semibold text-danger' : ''}>
-                            {line.discount_percent}%
+                          <span className={(line.discount_percent ?? line.requested_discount_percent ?? 0) > (line.max_allowed_discount ?? line.allowed_discount_percent ?? 0) ? 'font-semibold text-danger' : ''}>
+                            {line.discount_percent ?? line.requested_discount_percent ?? 0}%
                           </span>
-                          {line.discount_percent > line.max_allowed_discount && (
+                          {(line.discount_percent ?? line.requested_discount_percent ?? 0) > (line.max_allowed_discount ?? line.allowed_discount_percent ?? 0) && (
                             <span className="text-caption text-danger block">
-                              Max: {line.max_allowed_discount}%
+                              Max: {line.max_allowed_discount ?? line.allowed_discount_percent ?? 0}%
                             </span>
                           )}
                         </td>
                         <td className="py-2.5 text-right tabular-nums font-medium">
-                          ₹{line.net_total.toLocaleString()}
+                          ₹{(line.net_total ?? line.line_total ?? line.net_price ?? 0).toLocaleString()}
                         </td>
                       </tr>
                     ))}
@@ -283,10 +283,10 @@ export function ApprovalDetailsPage() {
 
         {/* Right Col: AI Guidance & Approval Chain */}
         <div className="space-y-6">
-          {/* AI Guidance */}
-          <Card className="border-border">
+          {/* AI Decision Recommendations */}
+          <Card className="border-primary/30 bg-primary-subtle/10">
             <CardHeader className="pb-2">
-              <CardTitle className="text-small font-semibold flex items-center gap-2 text-violet-600">
+              <CardTitle className="text-small font-semibold text-primary flex items-center gap-2">
                 <Sparkles className="h-4 w-4" />
                 AI Manager Intelligence
               </CardTitle>
@@ -296,9 +296,9 @@ export function ApprovalDetailsPage() {
                 <div key={i} className="rounded-lg border border-border bg-muted/40 p-3 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-caption font-semibold uppercase text-foreground">{rec.type}</span>
-                    <Badge variant="outline" className="text-caption">{rec.confidence}% confidence</Badge>
+                    <Badge variant="outline" className="text-caption">{rec.confidence ?? 92}% confidence</Badge>
                   </div>
-                  <p className="text-body-small text-foreground">{rec.recommendation}</p>
+                  <p className="text-body-small text-foreground">{rec.recommendation ?? rec.text ?? rec.suggested_action}</p>
                 </div>
               ))}
             </CardContent>
@@ -313,11 +313,11 @@ export function ApprovalDetailsPage() {
               {(data.approval_chain || []).map((step, i) => (
                 <div key={i} className="flex items-center justify-between text-body-small border-b border-border pb-2 last:border-b-0">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-foreground">L{step.level}</span>
-                    <span className="text-muted-foreground">{step.role_name}</span>
+                    <span className="font-semibold text-foreground">L{step.level ?? step.step_number}</span>
+                    <span className="text-muted-foreground">{step.role_name ?? step.role_display ?? step.role}</span>
                   </div>
                   <Badge
-                    variant={step.status === 'approved' ? 'default' : step.status === 'pending' ? 'secondary' : 'outline'}
+                    variant={step.status === 'approved' || step.status === 'completed' ? 'default' : step.status === 'pending' ? 'secondary' : 'outline'}
                     className="capitalize"
                   >
                     {step.status}

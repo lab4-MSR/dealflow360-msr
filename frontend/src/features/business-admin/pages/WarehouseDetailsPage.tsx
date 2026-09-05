@@ -36,14 +36,14 @@ const STOCK_STATUS_VARIANT: Record<string, 'success' | 'warning' | 'danger'> = {
   out_of_stock: 'danger',
 }
 
-const MOVEMENT_TYPE_VARIANT: Record<string, 'default' | 'success' | 'warning' | 'info'> = {
+const MOVEMENT_TYPE_VARIANT: Record<string, 'default' | 'success' | 'warning' | 'info' | 'danger' | 'secondary'> = {
   incoming: 'success',
   outgoing: 'danger',
   transfer: 'info',
   adjustment: 'default',
 }
 
-const SHIPMENT_STATUS_VARIANT: Record<string, 'default' | 'success' | 'warning' | 'info' | 'danger'> = {
+const SHIPMENT_STATUS_VARIANT: Record<string, 'default' | 'success' | 'warning' | 'info' | 'danger' | 'secondary'> = {
   pending: 'secondary',
   processing: 'info',
   shipped: 'default',
@@ -197,7 +197,7 @@ function WarehouseDetailsPage() {
         </Card>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+      <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="inventory">Inventory</TabsTrigger>

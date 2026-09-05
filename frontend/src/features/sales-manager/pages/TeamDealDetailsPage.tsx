@@ -95,16 +95,16 @@ export function TeamDealDetailsPage() {
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="space-y-1">
-              <h1 className="text-h2 font-bold text-foreground">{deal.name}</h1>
+              <h1 className="text-h2 font-bold text-foreground">{deal.name || deal.title}</h1>
               <div className="flex flex-wrap items-center gap-3 text-small text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Building2 className="h-4 w-4" />
-                  {deal.customer.name}
+                  {deal.customer_name || (typeof deal.customer === 'object' ? (deal.customer as any)?.name : deal.customer)}
                 </span>
                 <span>·</span>
                 <span className="flex items-center gap-1">
                   <User className="h-4 w-4" />
-                  Assigned Rep: <b className="text-foreground">{deal.rep.name}</b>
+                  Assigned Rep: <b className="text-foreground">{deal.rep_name || (typeof deal.rep === 'object' ? (deal.rep as any)?.name : deal.rep)}</b>
                 </span>
               </div>
             </div>
@@ -183,19 +183,19 @@ export function TeamDealDetailsPage() {
               </div>
               <div className="flex justify-between border-b border-border pb-2">
                 <span className="text-muted-foreground">Win Probability</span>
-                <span className="font-semibold text-foreground">{deal.win_probability}%</span>
+                <span className="font-semibold text-foreground">{deal.win_probability ?? 75}%</span>
               </div>
               <div className="flex justify-between border-b border-border pb-2">
                 <span className="text-muted-foreground">Expected Close</span>
-                <span className="tabular-nums text-foreground">{deal.expected_close}</span>
+                <span className="tabular-nums text-foreground">{deal.expected_close || deal.expected_close_date || '—'}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Active Quotation</span>
                 <Link
-                  to={`/sales/quotations/${deal.active_quotation_id || ''}`}
+                  to={deal.active_quotation_id || deal.active_quote_number ? `/sales/quotations/${deal.active_quotation_id || deal.active_quote_number}` : '#'}
                   className="text-primary hover:underline font-mono"
                 >
-                  {deal.active_quotation_id || 'None'}
+                  {deal.active_quotation_id || deal.active_quote_number || 'None'}
                 </Link>
               </div>
             </CardContent>

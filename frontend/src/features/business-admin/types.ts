@@ -2,7 +2,7 @@
 
 // Base type with index signature for generic Table compatibility
 interface BaseEntity {
-  id: string
+  id?: string
   [key: string]: any
 }
 
@@ -157,18 +157,25 @@ export type BusinessSettingsUpdate = Partial<BusinessSettings>
 // ─── Users ────────────────────────────────────────────────
 
 export interface BusinessUser extends BaseEntity {
-  name: string
+  name?: string
+  fullName?: string
   email: string
   role: string
   status: string
   lastActive?: string
   teamId?: string
+  teamName?: string
+  joinedAt?: string
+  permissions?: string[]
+  phone?: string
 }
 
 export interface BusinessUserKpis {
   totalUsers: number
   activeUsers: number
-  pendingInvites: number
+  pendingInvites?: number
+  pendingInvitations?: number
+  inactiveUsers?: number
 }
 
 export interface BusinessUserFilters {
@@ -176,6 +183,7 @@ export interface BusinessUserFilters {
   role?: string
   status?: string
   teamId?: string
+  team?: string
   page?: number
   perPage?: number
 }
@@ -183,7 +191,9 @@ export interface BusinessUserFilters {
 export interface InviteUserInput {
   email: string
   name?: string
+  fullName?: string
   role: string
+  [key: string]: any
 }
 
 // ─── Teams ────────────────────────────────────────────────
@@ -193,7 +203,7 @@ export interface Team extends BaseEntity {
   description?: string
   memberCount?: number
   status?: string
-  lead?: string
+  lead?: any
 }
 
 export interface TeamDetail extends Team {
@@ -203,6 +213,7 @@ export interface TeamDetail extends Team {
 export interface TeamKpis {
   totalTeams: number
   activeTeams: number
+  totalMembers?: number
 }
 
 export interface TeamFilters {
@@ -224,12 +235,13 @@ export interface Role extends BaseEntity {
 }
 
 export interface RoleDetail extends Role {
-  permissions?: Record<string, string[]>
+  permissions?: Record<string, string[]> | any
 }
 
 export interface RoleKpis {
   totalRoles: number
   customRoles: number
+  systemRoles?: number
 }
 
 export interface RoleFilters {
@@ -253,12 +265,16 @@ export interface Customer extends BaseEntity {
 export interface CustomerKpis {
   totalCustomers: number
   activeCustomers: number
-  churnedCustomers: number
+  churnedCustomers?: number
+  totalRevenue?: number
+  averageDealSize?: number
 }
 
 export interface CustomerFilters {
   search?: string
   status?: string
+  tier?: string
+  ownerId?: string
   page?: number
   perPage?: number
 }
@@ -274,6 +290,9 @@ export interface CustomerCreateInput {
   email?: string
   company?: string
   phone?: string
+  tier?: string
+  status?: string
+  [key: string]: any
 }
 
 // ─── Products ─────────────────────────────────────────────
@@ -291,6 +310,7 @@ export interface ProductKpis {
   totalProducts: number
   activeProducts: number
   lowStock: number
+  totalValue?: number
 }
 
 export interface ProductFilters {
@@ -312,8 +332,16 @@ export interface ProductCreateInput {
   name: string
   sku?: string
   price?: number
+  unitPrice?: number
+  currency?: string
+  unit?: string
+  taxCategory?: string
+  stock?: number
+  lowStockThreshold?: number
+  status?: string
   category?: string
   description?: string
+  [key: string]: any
 }
 
 // ─── Categories ───────────────────────────────────────────
@@ -329,11 +357,14 @@ export interface Category extends BaseEntity {
 
 export interface CategoryKpis {
   totalCategories: number
+  totalSubcategories?: number
+  totalProducts?: number
 }
 
 export interface CategoryFilters {
   search?: string
   status?: string
+  parentId?: string
   page?: number
   perPage?: number
 }
@@ -354,6 +385,8 @@ export interface PriceList extends BaseEntity {
 export interface PriceListKpis {
   totalLists: number
   activeLists: number
+  draftLists?: number
+  totalItems?: number
 }
 
 export interface PriceListFilters {
@@ -372,7 +405,8 @@ export interface PriceListDetail extends PriceList {
 export interface PriceListItem extends BaseEntity {
   productId: string
   productName?: string
-  price: number
+  price?: number
+  unitPrice?: number
   currency?: string
 }
 
@@ -380,7 +414,10 @@ export interface PriceListCreateInput {
   name: string
   currency?: string
   description?: string
+  status?: string
+  scope?: any
   items?: PriceListItem[]
+  [key: string]: any
 }
 
 // ─── Customer Pricing ─────────────────────────────────────
@@ -405,26 +442,35 @@ export type CustomerPricingOverrideInput = Omit<CustomerPricingOverride, 'id'>
 export interface VolumePricingTier extends BaseEntity {
   minQuantity: number
   maxQuantity?: number
-  price: number
+  price?: number
+  unitPrice?: number
+  discountPercent?: number
+  currency?: string
 }
 
 export interface VolumePricingTierItem {
   minQuantity: number
   maxQuantity?: number
-  price: number
+  price?: number
+  unitPrice?: number
+  discountPercent?: number
+  currency?: string
 }
 
 export interface VolumePricingRule extends BaseEntity {
-  name: string
+  name?: string
   productId?: string
   productName?: string
   tiers: VolumePricingTier[]
   status?: string
+  [key: string]: any
 }
 
 export interface VolumePricingKpis {
   totalRules: number
   activeRules: number
+  totalTiers?: number
+  productsCovered?: number
 }
 
 export interface VolumePricingFilters {
@@ -440,7 +486,14 @@ export interface PricingHistoryEntry extends BaseEntity {
   entityType: string
   entityId: string
   entityName?: string
-  action: string
+  action?: string
+  field?: string
+  previousValue?: string
+  newValue?: string
+  actor?: string
+  actorRole?: string
+  reason?: string
+  timestamp?: string
   changedBy?: string
   changedAt?: string
   details?: string
@@ -449,6 +502,10 @@ export interface PricingHistoryEntry extends BaseEntity {
 export interface PricingHistoryFilters {
   search?: string
   entityType?: string
+  entityId?: string
+  actor?: string
+  dateFrom?: string
+  dateTo?: string
   page?: number
   perPage?: number
 }
@@ -461,29 +518,43 @@ export interface DiscountRule extends BaseEntity {
   type?: string
   value?: number
   maxDiscountPercent?: number
+  lineDiscountPercent?: number
+  orderDiscountPercent?: number
   minOrderValue?: number
+  minMarginPercent?: number
+  riskBehavior?: string
+  approvalRequired?: boolean
+  approvalLevel?: string
+  escalationBehavior?: string
+  target?: any
+  conditions?: any
   status?: string
   priority?: number
-  scope?: string
+  scope?: any
   orderLevel?: string
   productLevel?: string
   categoryLevel?: string
 }
 
 export interface DiscountRuleDetail extends DiscountRule {
-  conditions?: string
+  conditions?: any
   changelog?: any[]
 }
 
 export interface DiscountRuleKpis {
   totalRules: number
   activeRules: number
+  customerRules?: number
+  categoryRules?: number
+  marginRules?: number
 }
 
 export interface DiscountRuleFilters {
   search?: string
   status?: string
   type?: string
+  customerTier?: string
+  categoryId?: string
   page?: number
   perPage?: number
 }
@@ -494,19 +565,38 @@ export interface DiscountRuleCreateInput {
   type?: string
   value?: number
   maxDiscountPercent?: number
-  scope?: string
+  lineDiscountPercent?: number
+  orderDiscountPercent?: number
+  scope?: any
   status?: string
+  priority?: number
+  conditions?: any
+  minMarginPercent?: number
+  marginThreshold?: number
+  riskBehavior?: string
+  approvalRequired?: boolean
+  approvalLevel?: string
+  escalationBehavior?: string
+  [key: string]: any
 }
 
 // ─── Customer Tiers ───────────────────────────────────────
 
 export interface CustomerTierConfig extends BaseEntity {
-  name: string
+  name?: string
+  tier?: string
   displayName?: string
   discountPercent?: number
+  maxDiscountPercent?: number
+  defaultPriceListId?: string
+  defaultPriceListName?: string
+  minMarginPercent?: number
+  approvalRequired?: boolean
+  approvalLevel?: string
   minRevenue?: number
   customerCount?: number
   status?: string
+  updatedAt?: string
 }
 
 export interface CustomerTierKpis {
@@ -517,17 +607,27 @@ export interface CustomerTierKpis {
 
 export interface DiscountSimulatorRequest {
   customerId?: string
+  customerTier?: string
   productId?: string
   quantity?: number
   orderValue?: number
   tier?: string
+  [key: string]: any
 }
 
 export interface DiscountSimulatorResponse {
-  eligible: boolean
+  eligible?: boolean
   appliedDiscounts?: any[]
   finalPrice?: number
   savings?: number
+  lines?: any[]
+  orderLevel?: any
+  decision?: string
+  overallRisk?: string
+  approvalRequired?: boolean
+  approvalLevel?: string
+  approvalChain?: any[]
+  [key: string]: any
 }
 
 // ─── Category Discount Rules ─────────────────────────────
@@ -542,6 +642,8 @@ export interface CategoryDiscountRule extends BaseEntity {
 export interface CategoryDiscountRuleKpis {
   totalRules: number
   activeRules: number
+  categoriesCovered?: number
+  averageMaxDiscount?: number
 }
 
 // ─── Margin Rules ─────────────────────────────────────────
@@ -552,18 +654,22 @@ export interface MarginRule extends BaseEntity {
   type?: string
   targetMarginPercent?: number
   minimumMarginPercent?: number
-  scope?: string
+  scope?: any
   status?: string
   priority?: number
+  target?: any
 }
 
 export interface MarginRuleDetail extends MarginRule {
-  conditions?: string
+  conditions?: any
 }
 
 export interface MarginRuleKpis {
   totalRules: number
   activeRules: number
+  globalRules?: number
+  productRules?: number
+  categoryRules?: number
 }
 
 export interface MarginRuleFilters {
@@ -579,13 +685,19 @@ export interface MarginSimulationRequest {
   discountPercent?: number
   costBase?: number
   ruleId?: string
+  sellingPrice?: number
+  costPrice?: number
+  [key: string]: any
 }
 
 export interface MarginSimulationResponse {
-  marginPercent: number
-  marginAmount: number
-  passesThreshold: boolean
+  marginPercent?: number
+  marginAmount?: number
+  passesThreshold?: boolean
   warnings?: string[]
+  sellingPrice?: number
+  costPrice?: number
+  [key: string]: any
 }
 
 // ─── Approval Rules ───────────────────────────────────────
@@ -596,7 +708,7 @@ export interface ApprovalRule extends BaseEntity {
   type?: string
   triggerType?: string
   triggerConfig?: any
-  approvalLevel?: any[]
+  approvalLevel?: any
   threshold?: number
   status?: string
   priority?: number
@@ -617,6 +729,7 @@ export interface ApprovalRuleFilters {
   status?: string
   type?: string
   triggerType?: string
+  approvalLevel?: string
   page?: number
   perPage?: number
 }
@@ -635,7 +748,7 @@ export interface ApprovalChain extends BaseEntity {
 }
 
 export interface ApprovalChainDetail extends ApprovalChain {
-  steps?: { level: number; approverRole: string; required: boolean }[]
+  steps?: { id?: string; level?: number; approverRole?: string; required?: boolean; [key: string]: any }[]
 }
 
 export interface ApprovalChainKpis {
@@ -665,13 +778,23 @@ export interface ApprovalSimulatorRequest {
   dealValue?: number
   discountPercent?: number
   customerId?: string
+  products?: any[]
+  [key: string]: any
 }
 
 export interface ApprovalSimulatorResponse {
-  requiresApproval: boolean
+  requiresApproval?: boolean
+  approvalRequired?: boolean
   approvalLevel?: string
   estimatedTime?: string
   chain?: string
+  triggeredRules?: any[]
+  decision?: string
+  decisionReason?: string
+  approvalChain?: any[]
+  escalation?: any
+  recommendedAction?: string
+  [key: string]: any
 }
 
 // ─── Warehouses ───────────────────────────────────────────
@@ -694,11 +817,13 @@ export interface WarehouseKpis {
   totalWarehouses: number
   activeWarehouses: number
   lowStockItems: number
+  totalInventory?: number
 }
 
 export interface WarehouseFilters {
   search?: string
   status?: string
+  type?: string
   page?: number
   perPage?: number
 }
@@ -738,6 +863,7 @@ export interface ShippingRule extends BaseEntity {
 export interface ShippingRuleKpis {
   totalRules: number
   activeRules: number
+  defaultRule?: any
 }
 
 export interface ShippingRuleFilters {
@@ -785,6 +911,8 @@ export interface SubscriptionPlanKpis {
 export interface SubscriptionPlanFilters {
   search?: string
   status?: string
+  planType?: string
+  priceRange?: any
   page?: number
   perPage?: number
 }
@@ -1075,8 +1203,10 @@ export interface PlanFeature {
 
 export interface PlanUsageLimit {
   name: string
-  value: number
-  unit: string
+  value?: number
+  limit?: number
+  unit?: string
+  [key: string]: any
 }
 
 export interface SubscriptionPlanCreateInput {
@@ -1143,3 +1273,53 @@ export interface RefundRule extends BaseEntity {
   createdAt?: string
   updatedAt?: string
 }
+
+export interface ProrationRuleKpis {
+  totalRules: number
+  activeRules: number
+  [key: string]: any
+}
+
+export interface CancellationRuleKpis {
+  totalRules: number
+  activeRules?: number
+  [key: string]: any
+}
+
+export interface RefundRuleKpis {
+  totalRules: number
+  activeRules?: number
+  [key: string]: any
+}
+
+export type ShippingDestination = {
+  id?: string
+  country?: string
+  state?: string
+  postalCode?: string
+  zone?: string
+  [key: string]: any
+}
+
+export type ShippingProductFilter = {
+  id?: string
+  productId?: string
+  categoryId?: string
+  [key: string]: any
+}
+
+export type CustomerPricingProduct = {
+  id: string
+  name: string
+  sku: string
+  basePrice: number
+  customPrice?: number
+  discountPercent?: number
+  currency?: string
+  [key: string]: any
+}
+
+export type BusinessUserRole = 'admin' | 'manager' | 'sales_rep' | 'finance' | 'operations' | string
+
+export type DiscountRuleType = 'global' | 'customer' | 'category' | 'product' | 'margin' | string
+

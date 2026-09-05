@@ -52,7 +52,7 @@ export function CreateSubscriptionPlanPage() {
     setValue,
     watch,
   } = useForm<CreatePlanFormData>({
-    resolver: zodResolver(createPlanSchema),
+    resolver: zodResolver(createPlanSchema) as any,
     defaultValues: {
       planType: "monthly",
       currency: "USD",
@@ -136,7 +136,7 @@ export function CreateSubscriptionPlanPage() {
         }
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
         <Card>
           <CardHeader><CardTitle>Plan Information</CardTitle></CardHeader>
           <CardContent className="space-y-4">

@@ -13,36 +13,45 @@ import { Label } from '@/components/ui/label'
 import { CheckCircle2, XCircle, Undo2, AlertTriangle } from 'lucide-react'
 
 interface ApproveModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open?: boolean
+  isOpen?: boolean
+  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
   quoteNumber: string
-  dealName: string
-  requestedDiscount: number
-  marginPercent: number
-  onConfirm: (comment?: string) => Promise<void> | void
+  dealName?: string
+  requestedDiscount?: number
+  marginPercent?: number
+  onConfirm: (comment: string) => Promise<void> | void
   isSubmitting?: boolean
 }
 
 export function ApproveModal({
   open,
+  isOpen,
+  onClose,
   onOpenChange,
   quoteNumber,
-  dealName,
-  requestedDiscount,
-  marginPercent,
+  dealName = '',
+  requestedDiscount = 0,
+  marginPercent = 0,
   onConfirm,
   isSubmitting = false,
 }: ApproveModalProps) {
   const [comment, setComment] = useState('')
+  const isModalOpen = open ?? isOpen ?? false
+  const close = () => {
+    onOpenChange?.(false)
+    onClose?.()
+  }
 
   const handleApprove = async () => {
     await onConfirm(comment)
     setComment('')
-    onOpenChange(false)
+    close()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isModalOpen} onOpenChange={(v) => { if (!v) close(); else onOpenChange?.(v) }}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <div className="flex items-center gap-3">
@@ -95,24 +104,33 @@ export function ApproveModal({
 }
 
 interface RejectModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open?: boolean
+  isOpen?: boolean
+  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
   quoteNumber: string
-  dealName: string
-  onConfirm: (reason: string) => Promise<void> | void
+  dealName?: string
+  onConfirm: (reason: string, comment?: string) => Promise<void> | void
   isSubmitting?: boolean
 }
 
 export function RejectModal({
   open,
+  isOpen,
+  onClose,
   onOpenChange,
   quoteNumber,
-  dealName,
+  dealName = '',
   onConfirm,
   isSubmitting = false,
 }: RejectModalProps) {
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
+  const isModalOpen = open ?? isOpen ?? false
+  const close = () => {
+    onOpenChange?.(false)
+    onClose?.()
+  }
 
   const handleReject = async () => {
     if (!reason.trim()) {
@@ -122,11 +140,11 @@ export function RejectModal({
     setError('')
     await onConfirm(reason)
     setReason('')
-    onOpenChange(false)
+    close()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isModalOpen} onOpenChange={(v) => { if (!v) close(); else onOpenChange?.(v) }}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <div className="flex items-center gap-3">
@@ -168,7 +186,7 @@ export function RejectModal({
         </div>
 
         <DialogFooter className="gap-2">
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button variant="outline" size="sm" onClick={close} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button size="sm" variant="destructive" onClick={handleReject} disabled={isSubmitting}>
@@ -181,24 +199,33 @@ export function RejectModal({
 }
 
 interface ReturnModalProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+  open?: boolean
+  isOpen?: boolean
+  onClose?: () => void
+  onOpenChange?: (open: boolean) => void
   quoteNumber: string
-  dealName: string
+  dealName?: string
   onConfirm: (instructions: string) => Promise<void> | void
   isSubmitting?: boolean
 }
 
 export function ReturnModal({
   open,
+  isOpen,
+  onClose,
   onOpenChange,
   quoteNumber,
-  dealName,
+  dealName = '',
   onConfirm,
   isSubmitting = false,
 }: ReturnModalProps) {
   const [instructions, setInstructions] = useState('')
   const [error, setError] = useState('')
+  const isModalOpen = open ?? isOpen ?? false
+  const close = () => {
+    onOpenChange?.(false)
+    onClose?.()
+  }
 
   const handleReturn = async () => {
     if (!instructions.trim()) {
@@ -208,11 +235,11 @@ export function ReturnModal({
     setError('')
     await onConfirm(instructions)
     setInstructions('')
-    onOpenChange(false)
+    close()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isModalOpen} onOpenChange={(v) => { if (!v) close(); else onOpenChange?.(v) }}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <div className="flex items-center gap-3">

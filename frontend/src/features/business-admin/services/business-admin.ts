@@ -51,6 +51,7 @@ import type {
   PriceListDetail,
   PriceListCreateInput,
   CustomerPricingOverride,
+  CustomerPricingInspection,
   VolumePricingTier,
   VolumePricingRule,
   VolumePricingKpis,
@@ -61,6 +62,7 @@ import type {
   DiscountRuleDetail,
   DiscountRuleKpis,
   DiscountRuleFilters,
+  DiscountRuleCreateInput,
   CustomerTierConfig,
   CustomerTierKpis,
   DiscountSimulatorRequest,
@@ -88,6 +90,7 @@ import type {
   WarehouseDetail,
   WarehouseKpis,
   WarehouseFilters,
+  WarehouseCreateInput,
   WarehouseStockMovementFilters,
   ShippingRule,
   ShippingRuleKpis,
@@ -100,10 +103,13 @@ import type {
   BillingCycleFilters,
   BillingCycleCreateInput,
   ProrationRule,
+  ProrationRuleKpis,
   ProrationCalculationInput,
   ProrationCalculationResult,
   CancellationRule,
+  CancellationRuleKpis,
   RefundRule,
+  RefundRuleKpis,
   ReportKpis,
   ReportFilters,
   SalesReportData,
@@ -1411,7 +1417,7 @@ export async function createVolumePricingRule(data: { productId: string; tiers: 
   }
 }
 
-export async function updateVolumePricingRule(id: string, data: { tiers: Omit<VolumePricingTier, 'id'>[]; status?: string }): Promise<VolumePricingRule> {
+export async function updateVolumePricingRule(id: string, data: { tiers?: Omit<VolumePricingTier, 'id'>[]; status?: string }): Promise<VolumePricingRule> {
   try {
     const response = await fetch(`${API_BASE}/volume-pricing/${id}`, {
       method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),

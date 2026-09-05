@@ -23,7 +23,17 @@ export function RoleDetailsPage() {
 
   useEffect(() => {
     if (role?.permissions) {
-      setLocalPermissions(new Set(role.permissions))
+      if (Array.isArray(role.permissions)) {
+        setLocalPermissions(new Set(role.permissions))
+      } else if (typeof role.permissions === 'object') {
+        const flat: string[] = []
+        Object.entries(role.permissions).forEach(([mod, perms]) => {
+          if (Array.isArray(perms)) {
+            perms.forEach((p) => flat.push(`${mod}.${p}`))
+          }
+        })
+        setLocalPermissions(new Set(flat))
+      }
       setHasChanges(false)
     }
   }, [role?.permissions])

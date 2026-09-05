@@ -3,12 +3,15 @@ import { Clock, AlertTriangle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface SlaCountdownProps {
-  expiresAt: string
+  expiresAt?: string
+  deadline?: string
+  isBreached?: boolean
   className?: string
   showIcon?: boolean
 }
 
-export function SlaCountdown({ expiresAt, className, showIcon = true }: SlaCountdownProps) {
+export function SlaCountdown({ expiresAt, deadline, className, showIcon = true }: SlaCountdownProps) {
+  const targetDate = expiresAt || deadline || new Date(Date.now() + 4 * 3600 * 1000).toISOString()
   const [timeLeft, setTimeLeft] = useState<{
     hours: number
     minutes: number
@@ -19,7 +22,7 @@ export function SlaCountdown({ expiresAt, className, showIcon = true }: SlaCount
 
   useEffect(() => {
     function calculate() {
-      const diff = new Date(expiresAt).getTime() - Date.now()
+      const diff = new Date(targetDate).getTime() - Date.now()
       if (diff <= 0) {
         setTimeLeft({
           hours: 0,

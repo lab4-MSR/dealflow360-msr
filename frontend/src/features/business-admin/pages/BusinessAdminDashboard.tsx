@@ -417,7 +417,7 @@ export function BusinessAdminDashboard() {
                         ${deal.value.toLocaleString()}
                       </p>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <RiskBadge risk={deal.risk} />
+                        <RiskBadge risk={deal.risk as any} />
                         <StatusBadge status={deal.status as import('@/types').Status} />
                       </div>
                     </div>

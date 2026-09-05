@@ -37,7 +37,7 @@ export const DiscountAnomaliesPage: React.FC = () => {
   }, [])
 
   const handleDismiss = async (id: string) => {
-    await intelligenceService.dismissDiscountAnomaly(id)
+    await intelligenceService.dismissDiscountAnomaly(id, 'Dismissed by user')
     setAnomalies((prev) => prev.filter((a) => a.id !== id))
   }
 
@@ -48,7 +48,7 @@ export const DiscountAnomaliesPage: React.FC = () => {
       a.rep_name.toLowerCase().includes(search.toLowerCase())
   )
 
-  const totalErosion = anomalies.reduce((acc, a) => acc + a.margin_impact, 0)
+  const totalErosion = anomalies.reduce((acc, a) => acc + (Number(a.margin_impact) || 0), 0)
 
   return (
     <div className="space-y-8">

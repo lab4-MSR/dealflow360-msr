@@ -90,7 +90,7 @@ export function BusinessDealsPage() {
 
   const { data: dealsResponse, isLoading, error, refetch } = useBusinessDeals(id || '', filters)
   const { data: kpis, isLoading: kpisLoading } = useBusinessDealKpis(id || '')
-  const businessCurrency = dealsResponse?.currency || 'USD'
+  const businessCurrency = (dealsResponse as any)?.currency || 'USD'
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -386,7 +386,7 @@ export function BusinessDealsPage() {
         <>
           <div className="overflow-x-auto">
             <DataTable
-              columns={columns}
+              columns={columns as any}
               data={dealsResponse.deals as unknown as Record<string, unknown>[]}
               getRowId={(row) => row.id as string}
             />

@@ -18,7 +18,10 @@ export function TeamDealListPage() {
 
   useEffect(() => {
     getTeamDeals()
-      .then((res) => setDeals(res.deals))
+      .then((res: any) => {
+        const list = Array.isArray(res) ? res : (res?.deals || [])
+        setDeals(list)
+      })
       .catch((err) => toast.error('Failed to load team deals: ' + err.message))
       .finally(() => setLoading(false))
   }, [])
@@ -27,11 +30,10 @@ export function TeamDealListPage() {
     if (stageFilter !== 'all' && d.stage !== stageFilter) return false
     if (!search) return true
     const q = search.toLowerCase()
-    return (
-      d.name.toLowerCase().includes(q) ||
-      d.customer.name.toLowerCase().includes(q) ||
-      d.rep.name.toLowerCase().includes(q)
-    )
+    const dealName = (d.title || d.name || '').toLowerCase()
+    const custName = (d.customer_name || (typeof d.customer === 'object' ? (d.customer as any)?.name : d.customer) || '').toLowerCase()
+    const repName = (d.rep_name || (typeof d.rep === 'object' ? (d.rep as any)?.name : d.rep) || '').toLowerCase()
+    return dealName.includes(q) || custName.includes(q) || repName.includes(q)
   })
 
   return (
@@ -116,19 +118,23 @@ export function TeamDealListPage() {
                           to={`/sales-manager/deals/${deal.id}`}
                           className="text-foreground hover:text-primary transition-colors block"
                         >
-                          {deal.name}
+                          {deal.name || deal.title}
                         </Link>
                         <span className="text-caption text-muted-foreground font-mono">{deal.id}</span>
                       </td>
-                      <td className="py-3">{deal.customer.name}</td>
-                      <td className="py-3 text-muted-foreground">{deal.rep.name}</td>
+                      <td className="py-3">
+                        {deal.customer_name || (typeof deal.customer === 'object' ? (deal.customer as any)?.name : deal.customer)}
+                      </td>
+                      <td className="py-3 text-muted-foreground">
+                        {deal.rep_name || (typeof deal.rep === 'object' ? (deal.rep as any)?.name : deal.rep)}
+                      </td>
                       <td className="py-3">
                         <Badge variant="outline" className="capitalize">
                           {deal.stage.replace('_', ' ')}
                         </Badge>
                       </td>
                       <td className="py-3 text-right tabular-nums font-semibold">
-                        ₹{Number(deal.total_value).toLocaleString()}
+                        ₹{Number(deal.total_value ?? deal.deal_value ?? 0).toLocaleString()}
                       </td>
                       <td className="py-3 text-center">
                         <RiskBadge risk={deal.risk_level}>{deal.risk_level}</RiskBadge>
@@ -147,7 +153,7 @@ export function TeamDealListPage() {
                         </span>
                       </td>
                       <td className="py-3 text-right tabular-nums text-caption text-muted-foreground">
-                        {deal.expected_close}
+                        {deal.expected_close || deal.expected_close_date || '—'}
                       </td>
                       <td className="py-3 text-right">
                         <Button variant="ghost" size="sm" asChild>

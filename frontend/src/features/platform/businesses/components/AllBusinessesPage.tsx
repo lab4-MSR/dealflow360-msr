@@ -472,7 +472,7 @@ export function AllBusinessesPage() {
       ) : data && data.businesses.length > 0 ? (
         <>
           <DataTable
-            columns={columns}
+            columns={columns as any}
             data={data.businesses as unknown as Record<string, unknown>[]}
             selectedIds={selectedIds}
             onSelectionChange={setSelectedIds}

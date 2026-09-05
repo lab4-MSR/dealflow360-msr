@@ -88,7 +88,7 @@ export interface MovementRow {
   quantity?: number
   before?: number
   after?: number
-  actor?: { name?: string }
+  actor?: { id?: string; name?: string }
   reason?: string
   [key: string]: unknown
 }
@@ -127,7 +127,7 @@ export interface SuggestedSplit {
   order_id?: string
   allocations?: Array<{ warehouse_id: string; warehouse_name?: string; product_id: string; quantity: number }>
   estimated_shipment_count?: number
-  estimated_shipping_cost?: number
+  estimated_shipping_cost?: number | string
   backorder_risk?: string
   unfulfillable_quantity?: number
   [key: string]: unknown

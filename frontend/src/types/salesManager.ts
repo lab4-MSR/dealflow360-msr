@@ -50,6 +50,9 @@ export interface ApprovalLineItem {
   margin_percent: number
   line_risk_score: number
   violation_reasons: string[]
+  discount_percent?: number
+  max_allowed_discount?: number
+  net_total?: number
 }
 
 export interface ApprovalDiscountAnalysis {
@@ -89,6 +92,8 @@ export interface ApprovalAiRecommendation {
   text: string
   suggested_action: string
   expected_outcome: string
+  confidence?: number
+  recommendation?: string
 }
 
 export interface ApprovalStepItem {
@@ -96,11 +101,13 @@ export interface ApprovalStepItem {
   role: string
   role_display: string
   assignee_name: string
-  status: 'completed' | 'in_progress' | 'pending' | 'skipped'
+  status: 'completed' | 'in_progress' | 'pending' | 'skipped' | 'approved' | string
   decision: ApprovalDecision | null
   decided_at: string | null
   sla_hours: number
   comments: string | null
+  level?: number | string
+  role_name?: string
 }
 
 export interface VersionChangeItem {
@@ -143,6 +150,10 @@ export interface ApprovalQueueItem {
 }
 
 export interface ApprovalDetailData extends ApprovalQueueItem {
+  total_value?: number
+  sla_deadline?: string
+  sla_breached?: boolean
+  reasons?: string[]
   lines: ApprovalLineItem[]
   discount_analysis: ApprovalDiscountAnalysis
   risk_breakdown: ApprovalRiskBreakdown
@@ -167,6 +178,7 @@ export interface ApprovalHistoryItem {
   customer_tier: CustomerTier
   rep_name: string
   deal_value: number
+  total_value?: number
   currency: string
   discount_percent: number
   margin_percent: number
@@ -179,6 +191,7 @@ export interface ApprovalHistoryItem {
   sla_allocated_hours: number
   sla_status: 'met' | 'breached'
   reason_or_notes: string
+  comment?: string
   step_level: string
 }
 
@@ -193,6 +206,13 @@ export interface CoachingNote {
 export interface TeamDeal {
   id: string
   title: string
+  name?: string
+  customer?: string
+  rep?: string
+  total_value?: number
+  win_probability?: number
+  expected_close?: string
+  active_quotation_id?: string
   customer_id: string
   customer_name: string
   customer_tier: CustomerTier
@@ -223,6 +243,7 @@ export interface DealTimelineEvent {
   title: string
   description: string
   category: 'milestone' | 'approval' | 'quotation' | 'customer' | 'system'
+  event_type?: string
   timestamp: string
   actor: {
     name: string
@@ -234,17 +255,22 @@ export interface DealTimelineEvent {
 
 export interface TeamPerformanceRep {
   rep_id: string
+  id?: string
   name: string
   email: string
   avatar?: string
   team: string
   quota: number
   closed_revenue: number
+  closed_amount?: number
   attainment_percent: number
   active_pipeline: number
+  pipeline_amount?: number
   open_deals_count: number
   win_rate_percent: number
+  win_rate?: number
   avg_discount_percent: number
+  avg_discount?: number
   discount_violations_count: number
   stalled_deals_count: number
   health_index: number
@@ -258,6 +284,30 @@ export interface DealHealthFactors {
   discount_risk: number
   margin_health: number
   fulfillment_health: number
+}
+
+export interface FlaggedDealItem {
+  id: string
+  name: string
+  customer_name: string
+  rep_name: string
+  value: number
+  status: string
+  reasons: string[]
+}
+
+export interface DealHealthOverview {
+  healthy_count: number
+  at_risk_count: number
+  stalled_count: number
+  critical_count: number
+  counts?: { healthy: number; at_risk: number; stalled: number; critical: number }
+  avg_health_score?: number
+  factors?: DealHealthFactors
+  discount_anomalies?: DiscountAnomaly[]
+  stalled_deals?: StalledDeal[]
+  delivery_slippage?: DeliverySlippage[]
+  flagged_deals: FlaggedDealItem[]
 }
 
 export interface DiscountAnomaly {

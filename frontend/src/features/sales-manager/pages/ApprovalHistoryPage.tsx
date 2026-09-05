@@ -127,7 +127,7 @@ export function ApprovalHistoryPage() {
                       <td className="py-3">{item.customer_name}</td>
                       <td className="py-3 text-muted-foreground">{item.rep_name}</td>
                       <td className="py-3 text-right tabular-nums font-medium">
-                        ₹{Number(item.total_value).toLocaleString()}
+                        ₹{Number(item.total_value ?? item.deal_value ?? 0).toLocaleString()}
                       </td>
                       <td className="py-3 text-center">
                         <span
@@ -145,12 +145,14 @@ export function ApprovalHistoryPage() {
                           {item.decision}
                         </span>
                       </td>
-                      <td className="py-3 text-muted-foreground">{item.decided_by.name}</td>
+                      <td className="py-3 text-muted-foreground">
+                        {typeof item.decided_by === 'object' && item.decided_by !== null ? (item.decided_by as any).name : item.decided_by}
+                      </td>
                       <td className="py-3 text-muted-foreground text-caption">
                         {new Date(item.decided_at).toLocaleDateString()} {new Date(item.decided_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </td>
                       <td className="py-3 max-w-xs truncate text-muted-foreground text-caption">
-                        {item.comment || '—'}
+                        {item.comment || item.reason_or_notes || '—'}
                       </td>
                     </tr>
                   ))
