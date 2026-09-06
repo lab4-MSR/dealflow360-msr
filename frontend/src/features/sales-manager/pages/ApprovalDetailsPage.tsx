@@ -407,6 +407,8 @@ export function ApprovalDetailsPage() {
         onClose={() => setApproveOpen(false)}
         quoteNumber={data.quote_number}
         dealName={data.deal_name}
+        requestedDiscount={data.requested_discount_percent}
+        marginPercent={data.margin_percent}
         onConfirm={handleApprove}
         isSubmitting={isSubmitting}
       />
@@ -414,6 +416,7 @@ export function ApprovalDetailsPage() {
         isOpen={rejectOpen}
         onClose={() => setRejectOpen(false)}
         quoteNumber={data.quote_number}
+        dealName={data.deal_name}
         onConfirm={handleReject}
         isSubmitting={isSubmitting}
       />
@@ -421,6 +424,7 @@ export function ApprovalDetailsPage() {
         isOpen={returnOpen}
         onClose={() => setReturnOpen(false)}
         quoteNumber={data.quote_number}
+        dealName={data.deal_name}
         onConfirm={handleReturn}
         isSubmitting={isSubmitting}
       />

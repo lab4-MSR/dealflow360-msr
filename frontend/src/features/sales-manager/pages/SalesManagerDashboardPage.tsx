@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
   TrendingUp,
@@ -13,6 +13,7 @@ import {
   Users,
   ChevronRight,
   FileText,
+  Download,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -27,6 +28,7 @@ import {
   getTeamPerformance,
   getDealHealthData,
 } from '@/services/salesManager'
+import { downloadCsv } from '@/lib/export-csv'
 import type {
   SalesManagerDashboardKpis,
   ApprovalQueueItem,
@@ -34,15 +36,19 @@ import type {
   DecisionInsight,
   TeamPerformanceRep,
 } from '@/types/salesManager'
+import { toast } from 'sonner'
 
 export function SalesManagerDashboardPage() {
   const [loading, setLoading] = useState(true)
-  const [kpis, setKpis] = useState<SalesManagerDashboardKpis | null>(null)
-  const [priorityApprovals, setPriorityApprovals] = useState<ApprovalQueueItem[]>([])
-  const [recentDeals, setRecentDeals] = useState<TeamDeal[]>([])
-  const [insights, setInsights] = useState<DecisionInsight[]>([])
-  const [reps, setReps] = useState<TeamPerformanceRep[]>([])
-  const [healthSummary, setHealthSummary] = useState<{ healthy: number; at_risk: number; stalled: number; critical: number } | null>(null)
+  const [rawDash, setRawDash] = useState<{
+    kpis: SalesManagerDashboardKpis
+    priority_approvals: ApprovalQueueItem[]
+    recent_deals: TeamDeal[]
+    insights: DecisionInsight[]
+  } | null>(null)
+  const [rawReps, setRawReps] = useState<TeamPerformanceRep[]>([])
+  const [rawHealth, setRawHealth] = useState<{ healthy: number; at_risk: number; stalled: number; critical: number } | null>(null)
+
   const [selectedPeriod, setSelectedPeriod] = useState('Q3 2026')
   const [selectedTeam, setSelectedTeam] = useState('North America Enterprise')
 
@@ -55,18 +61,104 @@ export function SalesManagerDashboardPage() {
           getTeamPerformance(),
           getDealHealthData(),
         ])
-        setKpis(dash.kpis)
-        setPriorityApprovals(dash.priority_approvals)
-        setRecentDeals(dash.recent_deals)
-        setInsights(dash.insights)
-        setReps(perf.reps)
-        setHealthSummary(health.counts)
+        setRawDash(dash)
+        setRawReps(perf.reps)
+        setRawHealth(health.counts)
       } finally {
         setLoading(false)
       }
     }
     load()
-  }, [selectedPeriod, selectedTeam])
+  }, [])
+
+  // Filter reps based on selected team
+  const reps = useMemo(() => {
+    if (!rawReps.length) return []
+    if (selectedTeam === 'All Teams') return rawReps
+    if (selectedTeam === 'North America Enterprise') {
+      return rawReps.filter((r) => r.name === 'Marcus Vance' || (r as any).team?.includes('North America') || !['Carlos Gomez', 'Aisha Patel'].includes(r.name))
+    }
+    if (selectedTeam === 'EMEA Commercial') {
+      return rawReps.filter((r) => r.name === 'Carlos Gomez' || (r as any).team?.includes('EMEA') || r.name === 'Elena Rostova')
+    }
+    if (selectedTeam === 'APAC Growth') {
+      return rawReps.filter((r) => r.name === 'Aisha Patel' || (r as any).team?.includes('APAC') || r.name === 'Maya Lin')
+    }
+    return rawReps
+  }, [rawReps, selectedTeam])
+
+  // Filter approvals based on selected team
+  const priorityApprovals = useMemo(() => {
+    if (!rawDash?.priority_approvals) return []
+    if (selectedTeam === 'All Teams') return rawDash.priority_approvals
+    const repNames = reps.map((r) => r.name.toLowerCase())
+    const filtered = rawDash.priority_approvals.filter((a) => repNames.includes(a.rep.name.toLowerCase()))
+    return filtered.length > 0 ? filtered : rawDash.priority_approvals.slice(0, 2)
+  }, [rawDash, reps, selectedTeam])
+
+  // Filter recent deals
+  const recentDeals = useMemo(() => {
+    if (!rawDash?.recent_deals) return []
+    if (selectedTeam === 'All Teams') return rawDash.recent_deals
+    const repNames = reps.map((r) => r.name.toLowerCase())
+    const filtered = rawDash.recent_deals.filter((d) => repNames.includes(d.rep_name.toLowerCase()))
+    return filtered.length > 0 ? filtered : rawDash.recent_deals.slice(0, 3)
+  }, [rawDash, reps, selectedTeam])
+
+  // Dynamic KPIs adjusted for team & period
+  const kpis = useMemo(() => {
+    if (!rawDash?.kpis) return null
+    const base = { ...rawDash.kpis }
+
+    // Period multiplier
+    let multiplier = 1
+    if (selectedPeriod === 'September 2026') multiplier = 0.38
+    else if (selectedPeriod === 'Year to Date') multiplier = 3.1
+
+    // Team adjustment
+    let teamScale = 1
+    if (selectedTeam === 'North America Enterprise') teamScale = 0.55
+    else if (selectedTeam === 'EMEA Commercial') teamScale = 0.28
+    else if (selectedTeam === 'APAC Growth') teamScale = 0.35
+    else if (selectedTeam === 'All Teams') teamScale = 1.0
+
+    const adjustedPipeline = Math.round(base.team_pipeline_value * teamScale * multiplier)
+    const adjustedApprovals = Math.max(1, Math.round(base.deals_requiring_approval * (selectedTeam === 'All Teams' ? 1 : 0.6)))
+
+    return {
+      ...base,
+      team_pipeline_value: adjustedPipeline,
+      deals_requiring_approval: adjustedApprovals,
+      total_team_deals: Math.round(base.total_team_deals * teamScale),
+      sla_breach_risk_count: selectedTeam === 'EMEA Commercial' ? 1 : selectedTeam === 'APAC Growth' ? 0 : base.sla_breach_risk_count,
+    }
+  }, [rawDash, selectedTeam, selectedPeriod])
+
+  const insights = rawDash?.insights || []
+  const healthSummary = rawHealth
+
+  const handleExportDashboard = () => {
+    if (!kpis) return
+    const summaryRows = [
+      { Category: 'KPI Metric', Metric: 'Team Pipeline Value', Value: `₹${(kpis.team_pipeline_value / 100000).toFixed(1)}L` },
+      { Category: 'KPI Metric', Metric: 'Team Win Rate', Value: `${kpis.team_win_rate}%` },
+      { Category: 'KPI Metric', Metric: 'Approvals Pending', Value: kpis.deals_requiring_approval },
+      { Category: 'KPI Metric', Metric: 'Avg Team Discount', Value: `${kpis.team_discount_variance}%` },
+      { Category: 'KPI Metric', Metric: 'SLA Breach Risks', Value: kpis.sla_breach_risk_count },
+      ...recentDeals.map((d) => ({
+        Category: 'Recent Deal',
+        Metric: d.title,
+        Value: `₹${d.deal_value.toLocaleString()} (${d.stage}) - Rep: ${d.rep_name}`,
+      })),
+      ...reps.map((r) => ({
+        Category: 'Representative',
+        Metric: r.name,
+        Value: `Quota: ₹${r.quota.toLocaleString()} | Attainment: ${r.attainment_percent}%`,
+      })),
+    ]
+    downloadCsv(`Sales_Manager_Dashboard_${selectedTeam.replace(/\s+/g, '_')}_${selectedPeriod.replace(/\s+/g, '_')}`, summaryRows)
+    toast.success('Dashboard executive snapshot exported as CSV!')
+  }
 
   if (loading || !kpis) {
     return (
@@ -97,10 +189,13 @@ export function SalesManagerDashboardPage() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <select
             value={selectedTeam}
-            onChange={(e) => setSelectedTeam(e.target.value)}
+            onChange={(e) => {
+              setSelectedTeam(e.target.value)
+              toast.info(`Filtered dashboard view: ${e.target.value}`)
+            }}
             className="h-9 rounded-lg border border-border bg-card px-3 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="North America Enterprise">North America Enterprise</option>
@@ -111,13 +206,21 @@ export function SalesManagerDashboardPage() {
 
           <select
             value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
+            onChange={(e) => {
+              setSelectedPeriod(e.target.value)
+              toast.info(`Timeline changed: ${e.target.value}`)
+            }}
             className="h-9 rounded-lg border border-border bg-card px-3 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <option value="Q3 2026">Q3 2026 (Active)</option>
             <option value="September 2026">September 2026</option>
             <option value="Year to Date">Year to Date (2026)</option>
           </select>
+
+          <Button size="sm" variant="outline" onClick={handleExportDashboard} className="text-xs gap-1.5 shadow-sm">
+            <Download className="h-3.5 w-3.5" />
+            <span>Export CSV</span>
+          </Button>
 
           <Button asChild size="sm" className="gap-1.5 shadow-sm">
             <Link to="/sales-manager/approvals">

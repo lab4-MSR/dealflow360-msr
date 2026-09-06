@@ -170,7 +170,7 @@ export function TeamDealDetailsPage() {
           </Card>
         </div>
 
-        {/* Right: Stage & Health Details */}
+        {/* Right: Stage & Health Details & Manager Controls */}
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -197,6 +197,52 @@ export function TeamDealDetailsPage() {
                 >
                   {deal.active_quotation_id || deal.active_quote_number || 'None'}
                 </Link>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Manager Action & Stage Controls */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-small font-semibold">Manager Governance Controls</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">Pipeline Stage</label>
+                <select
+                  value={deal.stage}
+                  onChange={(e) => {
+                    const newStage = e.target.value
+                    setDeal((prev) => prev ? { ...prev, stage: newStage } : null)
+                    toast.success(`Deal stage transitioned to ${newStage.replace(/_/g, ' ').toUpperCase()}`)
+                  }}
+                  className="w-full h-8 rounded-lg border border-border bg-card px-2.5 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary capitalize"
+                >
+                  <option value="discovery">Discovery</option>
+                  <option value="solution_proposal">Solution Proposal</option>
+                  <option value="negotiation">Price Negotiation</option>
+                  <option value="approval">Manager Approval</option>
+                  <option value="closed_won">Closed Won</option>
+                  <option value="closed_lost">Closed Lost</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-foreground">Assign Representative</label>
+                <select
+                  value={deal.rep_name || (typeof deal.rep === 'object' ? (deal.rep as any)?.name : deal.rep) || 'Marcus Vance'}
+                  onChange={(e) => {
+                    const newRep = e.target.value
+                    setDeal((prev) => prev ? { ...prev, rep_name: newRep } : null)
+                    toast.success(`Deal reassigned to ${newRep}`)
+                  }}
+                  className="w-full h-8 rounded-lg border border-border bg-card px-2.5 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  <option value="Marcus Vance">Marcus Vance (North America)</option>
+                  <option value="Aisha Patel">Aisha Patel (APAC Growth)</option>
+                  <option value="Carlos Gomez">Carlos Gomez (EMEA)</option>
+                  <option value="Elena Rostova">Elena Rostova (Mid-Market)</option>
+                </select>
               </div>
             </CardContent>
           </Card>

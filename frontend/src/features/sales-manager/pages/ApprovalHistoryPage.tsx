@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { History, Search, ArrowLeft, CheckCircle2, XCircle, Undo2 } from 'lucide-react'
+import { History, Search, ArrowLeft, CheckCircle2, XCircle, Undo2, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { getApprovalHistory } from '@/services/salesManager'
+import { downloadCsv } from '@/lib/export-csv'
 import type { ApprovalHistoryItem } from '@/types/salesManager'
 import { toast } from 'sonner'
 
@@ -46,8 +47,36 @@ export function ApprovalHistoryPage() {
             </Link>
           </Button>
           <div className="h-4 w-px bg-border" />
-          <h1 className="text-h2 font-semibold text-foreground">Approval Decision Audit Log</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Approval Decision Audit Log</h1>
         </div>
+
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => {
+            if (!filtered.length) {
+              toast.error('No decision records to export.')
+              return
+            }
+            const rows = filtered.map((item) => ({
+              Quote_Number: item.quote_number,
+              Deal_Name: item.deal_name,
+              Customer_Name: item.customer_name,
+              Rep_Name: item.rep_name,
+              Total_Value_INR: Number(item.total_value ?? item.deal_value ?? 0),
+              Decision: item.decision.toUpperCase(),
+              Decided_By: typeof item.decided_by === 'object' && item.decided_by !== null ? (item.decided_by as any).name : item.decided_by,
+              Decided_At: item.decided_at,
+              Notes_or_Reason: item.comment || item.reason_or_notes || '',
+            }))
+            downloadCsv(`Approval_Decision_Log_${new Date().toISOString().split('T')[0]}`, rows)
+            toast.success('Approval decision history exported to CSV!')
+          }}
+          className="text-xs"
+        >
+          <Download className="mr-1.5 h-3.5 w-3.5" />
+          Export Log CSV
+        </Button>
       </div>
 
       {/* Filters Bar */}

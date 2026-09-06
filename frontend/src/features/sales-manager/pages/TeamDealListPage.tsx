@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Briefcase, Search, Filter, ArrowRight, TrendingUp, AlertCircle, Shield } from 'lucide-react'
+import { Briefcase, Search, Filter, ArrowRight, TrendingUp, AlertCircle, Shield, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { getTeamDeals } from '@/services/salesManager'
+import { downloadCsv } from '@/lib/export-csv'
 import type { TeamDeal } from '@/types/salesManager'
 import { toast } from 'sonner'
 
@@ -36,15 +37,40 @@ export function TeamDealListPage() {
     return dealName.includes(q) || custName.includes(q) || repName.includes(q)
   })
 
+  const handleExportCsv = () => {
+    if (!filtered.length) {
+      toast.error('No deals to export.')
+      return
+    }
+    const rows = filtered.map((d) => ({
+      Deal_ID: d.id,
+      Deal_Name: d.name || d.title,
+      Customer_Name: d.customer_name || (typeof d.customer === 'object' ? (d.customer as any)?.name : d.customer),
+      Representative: d.rep_name || (typeof d.rep === 'object' ? (d.rep as any)?.name : d.rep),
+      Stage: d.stage,
+      Total_Value_INR: Number(d.total_value ?? d.deal_value ?? 0),
+      Risk_Level: d.risk_level,
+      Health_Status: d.health_status,
+      Expected_Close: d.expected_close || d.expected_close_date || '',
+    }))
+    downloadCsv(`Team_Pipeline_${stageFilter}_${new Date().toISOString().split('T')[0]}`, rows)
+    toast.success('Team deals exported as CSV!')
+  }
+
   return (
     <div className="space-y-6 pb-12">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-h2 font-semibold text-foreground">Team Pipeline & Deals</h1>
-          <p className="text-body-small text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Team Pipeline & Deals</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Complete managerial oversight over active team opportunities, risks, and stage velocity.
           </p>
         </div>
+
+        <Button size="sm" variant="outline" onClick={handleExportCsv} className="text-xs self-start sm:self-auto">
+          <Download className="mr-1.5 h-3.5 w-3.5" />
+          Export Pipeline CSV
+        </Button>
       </div>
 
       {/* Filters Bar */}

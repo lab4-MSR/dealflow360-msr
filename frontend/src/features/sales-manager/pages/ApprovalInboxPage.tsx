@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Shield,
   Layers,
+  Download,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +21,7 @@ import { RiskBadge } from '@/components/ui/risk-badge'
 import { SlaCountdown } from '../components/SlaCountdown'
 import { CustomerTierBadge } from '../components/CustomerTierBadge'
 import { ApproveModal, RejectModal, ReturnModal } from '../components/ApprovalActionModals'
+import { downloadCsv } from '@/lib/export-csv'
 import {
   getApprovalInbox,
   approveApproval,
@@ -94,8 +96,11 @@ export function ApprovalInboxPage() {
     setIsSubmitting(true)
     try {
       await approveApproval(activeItem.id, comment)
+      toast.success(`Quotation ${activeItem.quote_number} approved successfully.`)
       await loadData()
       setSelectedIds(prev => prev.filter(id => id !== activeItem.id))
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to approve quotation.')
     } finally {
       setIsSubmitting(false)
     }
@@ -106,8 +111,11 @@ export function ApprovalInboxPage() {
     setIsSubmitting(true)
     try {
       await rejectApproval(activeItem.id, reason)
+      toast.success(`Quotation ${activeItem.quote_number} rejected.`)
       await loadData()
       setSelectedIds(prev => prev.filter(id => id !== activeItem.id))
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to reject quotation.')
     } finally {
       setIsSubmitting(false)
     }
@@ -118,8 +126,11 @@ export function ApprovalInboxPage() {
     setIsSubmitting(true)
     try {
       await returnApproval(activeItem.id, instructions)
+      toast.success(`Quotation ${activeItem.quote_number} returned for revision.`)
       await loadData()
       setSelectedIds(prev => prev.filter(id => id !== activeItem.id))
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to return quotation.')
     } finally {
       setIsSubmitting(false)
     }
@@ -185,6 +196,37 @@ export function ApprovalInboxPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              if (!approvals.length) {
+                toast.error('No pending approvals to export.')
+                return
+              }
+              const rows = approvals.map((a) => ({
+                Quote_Number: a.quote_number,
+                Deal_Name: a.deal_name,
+                Customer_Name: a.customer.name,
+                Customer_Tier: a.customer.tier,
+                Representative: a.rep.name,
+                Deal_Value_INR: a.deal_value,
+                Requested_Discount_Pct: `${a.requested_discount_percent}%`,
+                Allowed_Ceiling_Pct: `${a.allowed_discount_percent}%`,
+                Margin_Pct: `${a.margin_percent}%`,
+                Risk_Score: a.blended_risk_score,
+                Risk_Level: a.risk_level,
+                Approval_Level: a.approval_level,
+              }))
+              downloadCsv(`Pending_Approvals_Queue_${new Date().toISOString().split('T')[0]}`, rows)
+              toast.success('Pending approvals queue exported to CSV!')
+            }}
+            className="gap-1.5 text-xs"
+          >
+            <Download className="h-4 w-4" />
+            <span>Export Queue CSV</span>
+          </Button>
+
           <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
             <Link to="/sales-manager/approvals/history">
               <History className="h-4 w-4" />

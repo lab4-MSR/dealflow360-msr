@@ -608,28 +608,81 @@
   box-shadow: 0 2px 10px -2px rgba(2, 132, 199, 0.1);
 }
 
-/* ─── Recharts Global Transparent Background & Focus/Outline Reset ─── */
+/* ─── Recharts Global Transparent Background & Focus/Outline/Border Reset ─── */
 .recharts-responsive-container,
+.recharts-responsive-container:focus,
+.recharts-responsive-container:focus-visible,
+.recharts-responsive-container:active,
 .recharts-wrapper,
+.recharts-wrapper:focus,
+.recharts-wrapper:focus-visible,
+.recharts-wrapper:active,
 .recharts-surface,
+.recharts-surface:focus,
+.recharts-surface:focus-visible,
+.recharts-surface:active,
 svg.recharts-surface,
+svg.recharts-surface:focus,
+svg.recharts-surface:focus-visible,
+svg.recharts-surface:active,
 .recharts-wrapper *,
 .recharts-surface *,
 svg.recharts-surface *,
 [class*="recharts"],
+[class*="recharts"]:focus,
+[class*="recharts"]:focus-visible,
+[class*="recharts"]:active,
 path.recharts-rectangle,
+path.recharts-rectangle:focus,
+path.recharts-rectangle:focus-visible,
 path.recharts-curve,
+path.recharts-curve:focus,
+path.recharts-curve:focus-visible,
 path.recharts-sector,
-circle.recharts-dot {
+path.recharts-sector:focus,
+path.recharts-sector:focus-visible,
+circle.recharts-dot,
+circle.recharts-dot:focus,
+circle.recharts-dot:focus-visible,
+.recharts-active-dot,
+.recharts-active-dot:focus,
+.recharts-active-dot:focus-visible,
+.recharts-bar-rectangle,
+.recharts-bar-rectangle:focus,
+.recharts-bar-rectangle:focus-visible,
+.recharts-pie-sector,
+.recharts-pie-sector:focus,
+.recharts-pie-sector:focus-visible,
+.recharts-sector,
+.recharts-sector:focus,
+.recharts-sector:focus-visible,
+.recharts-layer,
+.recharts-layer:focus,
+.recharts-layer:focus-visible,
+.recharts-line-curve,
+.recharts-area-area,
+.recharts-area-curve {
   background: transparent !important;
   background-color: transparent !important;
   outline: none !important;
   outline-color: transparent !important;
   outline-style: none !important;
   outline-width: 0 !important;
+  border: none !important;
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent !important;
   user-select: none;
+}
+
+/* Eliminate browser SVG selection outline and focus ring */
+svg:focus,
+svg:focus-visible,
+svg:active,
+svg *:focus,
+svg *:focus-visible,
+svg *:active {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .recharts-plot-background,
@@ -642,10 +695,11 @@ circle.recharts-dot {
 /* Eliminate harsh white/gray hover cursor box behind bars & area slices */
 .recharts-tooltip-cursor,
 .recharts-rectangle.recharts-tooltip-cursor,
-path.recharts-tooltip-cursor {
+path.recharts-tooltip-cursor,
+rect.recharts-tooltip-cursor {
   fill: transparent !important;
-  stroke: var(--color-border) !important;
-  stroke-opacity: 0.4 !important;
+  stroke: transparent !important;
+  stroke-opacity: 0 !important;
 }
 
 /* Theme-adaptive tooltip container */

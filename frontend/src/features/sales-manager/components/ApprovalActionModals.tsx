@@ -91,7 +91,7 @@ export function ApproveModal({
         </div>
 
         <DialogFooter className="gap-2">
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button variant="outline" size="sm" onClick={close} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button size="sm" onClick={handleApprove} disabled={isSubmitting} className="bg-success hover:bg-success/90 text-white">
@@ -278,7 +278,7 @@ export function ReturnModal({
         </div>
 
         <DialogFooter className="gap-2">
-          <Button variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button variant="outline" size="sm" onClick={close} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button size="sm" onClick={handleReturn} disabled={isSubmitting} className="bg-warning hover:bg-warning/90 text-white">
