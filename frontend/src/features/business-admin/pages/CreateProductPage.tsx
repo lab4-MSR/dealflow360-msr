@@ -40,7 +40,9 @@ export function CreateProductPage() {
     const errs: Record<string, string> = {}
     if (!form.name.trim()) errs.name = 'Product name is required'
     if (!form.sku.trim()) errs.sku = 'SKU is required'
-    if (form.unitPrice <= 0) errs.unitPrice = 'Price must be greater than 0'
+    if (form.unitPrice != null && form.unitPrice <= 0) errs.unitPrice = 'Price must be greater than 0'
+    if (!form.category?.trim()) errs.category = 'Category is required'
+    if (!form.unit?.trim()) errs.unit = 'Unit is required'
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -49,7 +51,12 @@ export function CreateProductPage() {
     e.preventDefault()
     if (!validate()) return
     try {
-      await createProduct.mutateAsync(form)
+      const { taxCategory: _taxCategory, ...rest } = form
+      await createProduct.mutateAsync({
+        ...rest,
+        // Omit empty taxCategory instead of sending an empty string
+        ...(form.taxCategory?.trim() ? { taxCategory: form.taxCategory.trim() } : {}),
+      })
       toast.success('Product created')
       navigate('/business-admin/products')
     } catch {
@@ -89,7 +96,7 @@ export function CreateProductPage() {
                   value={form.name}
                   onChange={(e) => updateField('name', e.target.value)}
                   placeholder="e.g. Enterprise License"
-                  className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  error={!!errors.name}
                 />
                 {errors.name && <p className="text-[11px] text-danger">{errors.name}</p>}
               </div>
@@ -99,9 +106,10 @@ export function CreateProductPage() {
                   value={form.sku}
                   onChange={(e) => updateField('sku', e.target.value)}
                   placeholder="e.g. ENT-LIC-001"
-                  className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  error={!!errors.sku}
                 />
                 {errors.sku && <p className="text-[11px] text-danger">{errors.sku}</p>}
+                <p className="text-[11px] text-muted-foreground">SKU must be unique across the catalog.</p>
               </div>
               <div className="space-y-1.5 md:col-span-2">
                 <Label>Description</Label>
@@ -132,7 +140,7 @@ export function CreateProductPage() {
                   value={form.unitPrice}
                   onChange={(e) => updateField('unitPrice', parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
-                  className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  error={!!errors.unitPrice}
                 />
                 {errors.unitPrice && <p className="text-[11px] text-danger">{errors.unitPrice}</p>}
               </div>
@@ -142,14 +150,13 @@ export function CreateProductPage() {
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
+                    <SelectItem value="USD">USD - US Dollar ($)</SelectItem>
                     <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
-                    <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
-                    <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Unit</Label>
+                <Label>Unit *</Label>
                 <Select value={form.unit} onValueChange={(v) => updateField('unit', v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -160,6 +167,7 @@ export function CreateProductPage() {
                     <SelectItem value="each">Each</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.unit && <p className="text-[11px] text-danger">{errors.unit}</p>}
               </div>
             </div>
           </CardContent>
@@ -173,7 +181,7 @@ export function CreateProductPage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label>Category</Label>
+                <Label>Category *</Label>
                 <Select value={form.category} onValueChange={(v) => updateField('category', v)}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
@@ -183,6 +191,7 @@ export function CreateProductPage() {
                     <SelectItem value="Subscriptions">Subscriptions</SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.category && <p className="text-[11px] text-danger">{errors.category}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label>Tax Category</Label>
@@ -246,6 +255,7 @@ export function CreateProductPage() {
                 <SelectContent>
                   <SelectItem value="active">Active</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="discontinued">Discontinued</SelectItem>
                 </SelectContent>
               </Select>
             </div>

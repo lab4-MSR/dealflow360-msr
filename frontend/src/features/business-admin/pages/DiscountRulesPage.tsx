@@ -181,90 +181,190 @@ export function DiscountRulesPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Discount Rules"
-        description="Configure discount governance rules that protect margins and drive approval routing"
-        breadcrumbs={[
-          { label: 'Business Admin', path: '/business-admin/dashboard' },
-          { label: 'Discount Governance', path: '/business-admin/discount-governance' },
-          { label: 'Discount Rules' },
-        ]}
-        actions={
-          <Button onClick={() => navigate('/business-admin/discount-governance/rules/new')}>
-            <Plus className="h-4 w-4 mr-1.5" />
+    <div className="space-y-4 max-w-7xl mx-auto pb-6">
+      {/* Enterprise Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-1 border-b border-border/60">
+        <div>
+          <div className="flex items-center gap-2.5">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground font-display">
+              Discount Governance & Ceilings
+            </h1>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+              Policy Engine Active
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Configure discount caps, margin protection floors, and automated multi-tier approval triggers.
+          </p>
+        </div>
+        <div className="flex items-center gap-2.5 shrink-0">
+          <Button
+            size="sm"
+            className="h-9 px-4 text-xs font-semibold shadow-xs"
+            onClick={() => navigate('/business-admin/discount-governance/rules/new')}
+          >
+            <Plus className="h-3.5 w-3.5 mr-1.5" />
             Create Discount Rule
           </Button>
-        }
-      />
+        </div>
+      </div>
+
+      {/* Discount Sub-Navigation Tabs */}
+      <div className="flex items-center gap-2 border-b border-border/60 pb-2 overflow-x-auto">
+        <button
+          type="button"
+          className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary/10 text-primary border border-primary/20 transition-all cursor-pointer whitespace-nowrap"
+        >
+          All Rules ({kpis?.totalRules ?? 0})
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/business-admin/discounts/customer-tier')}
+          className="px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-lg transition-all cursor-pointer whitespace-nowrap"
+        >
+          Customer Tiers
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/business-admin/discounts/category')}
+          className="px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-lg transition-all cursor-pointer whitespace-nowrap"
+        >
+          Product Categories
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/business-admin/discounts/margin')}
+          className="px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-lg transition-all cursor-pointer whitespace-nowrap"
+        >
+          Margin Floors
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/business-admin/discounts/simulator')}
+          className="px-3.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 rounded-lg transition-all cursor-pointer whitespace-nowrap"
+        >
+          Rule Simulator
+        </button>
+      </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         {kpisLoading ? (
-          Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-28 rounded-xl" />)
+          Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-xl" />)
         ) : (
           <>
-            <KpiCard label="Total Rules" value={kpis?.totalRules ?? 0} icon={<Shield className="h-5 w-5" />} />
-            <KpiCard label="Active Rules" value={kpis?.activeRules ?? 0} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
-            <KpiCard label="Customer Rules" value={kpis?.customerRules ?? 0} variant="info" icon={<Users className="h-5 w-5" />} />
-            <KpiCard label="Category Rules" value={kpis?.categoryRules ?? 0} variant="intelligence" icon={<Tag className="h-5 w-5" />} />
-            <KpiCard label="Margin Rules" value={kpis?.marginRules ?? 0} variant="warning" icon={<AlertTriangle className="h-5 w-5" />} />
+            <div className="rounded-xl border border-border/70 bg-card p-4 shadow-xs hover:border-border transition-colors">
+              <div className="flex items-center justify-between text-muted-foreground mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider">Total Rules</span>
+                <div className="p-1.5 rounded-lg bg-muted/60"><Shield className="h-4 w-4 text-foreground/80" /></div>
+              </div>
+              <p className="text-2xl font-bold font-display tabular-nums text-foreground">{kpis?.totalRules ?? 0}</p>
+              <span className="text-[11px] text-muted-foreground">Governance guardrails</span>
+            </div>
+
+            <div className="rounded-xl border border-border/70 bg-card p-4 shadow-xs hover:border-border transition-colors">
+              <div className="flex items-center justify-between text-muted-foreground mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider">Enforced</span>
+                <div className="p-1.5 rounded-lg bg-emerald-500/10"><CheckCircle className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></div>
+              </div>
+              <p className="text-2xl font-bold font-display tabular-nums text-emerald-600 dark:text-emerald-400">{kpis?.activeRules ?? 0}</p>
+              <span className="text-[11px] text-muted-foreground">Active in validation pass</span>
+            </div>
+
+            <div className="rounded-xl border border-border/70 bg-card p-4 shadow-xs hover:border-border transition-colors">
+              <div className="flex items-center justify-between text-muted-foreground mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider">Tier Caps</span>
+                <div className="p-1.5 rounded-lg bg-blue-500/10"><Users className="h-4 w-4 text-blue-600 dark:text-blue-400" /></div>
+              </div>
+              <p className="text-2xl font-bold font-display tabular-nums text-blue-600 dark:text-blue-400">{kpis?.customerRules ?? 0}</p>
+              <span className="text-[11px] text-muted-foreground">Bronze/Silver/Gold/Plat</span>
+            </div>
+
+            <div className="rounded-xl border border-border/70 bg-card p-4 shadow-xs hover:border-border transition-colors">
+              <div className="flex items-center justify-between text-muted-foreground mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider">Category Caps</span>
+                <div className="p-1.5 rounded-lg bg-purple-500/10"><Tag className="h-4 w-4 text-purple-600 dark:text-purple-400" /></div>
+              </div>
+              <p className="text-2xl font-bold font-display tabular-nums text-purple-600 dark:text-purple-400">{kpis?.categoryRules ?? 0}</p>
+              <span className="text-[11px] text-muted-foreground">Software/Service/Hardware</span>
+            </div>
+
+            <div className="rounded-xl border border-border/70 bg-card p-4 shadow-xs hover:border-border transition-colors">
+              <div className="flex items-center justify-between text-muted-foreground mb-2">
+                <span className="text-xs font-semibold uppercase tracking-wider">Margin Floors</span>
+                <div className="p-1.5 rounded-lg bg-amber-500/10"><AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" /></div>
+              </div>
+              <p className="text-2xl font-bold font-display tabular-nums text-amber-600 dark:text-amber-400">{kpis?.marginRules ?? 0}</p>
+              <span className="text-[11px] text-muted-foreground">Profit protection thresholds</span>
+            </div>
           </>
         )}
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 flex-1 min-w-[200px] max-w-md">
-          <Input
-            placeholder="Search rules..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            className="flex h-10 w-full rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          />
-          <Button variant="outline" size="icon" onClick={handleSearch}>
-            <Search className="h-4 w-4" />
+      {/* Modern Filter Toolbar */}
+      <div className="p-3.5 rounded-xl border border-border/70 bg-card shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 flex-1 min-w-[280px]">
+          <div className="relative flex-1 min-w-[220px] max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+            <Input
+              className="pl-9 h-9 text-xs"
+              placeholder="Search rule title or scope..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+          </div>
+          <Button variant="secondary" size="sm" className="h-9 px-3 text-xs font-medium" onClick={handleSearch}>
+            Search
           </Button>
+
+          <Select value={typeFilter} onValueChange={(v) => { setTypeFilter(v === 'all' ? '' : v); setPage(1) }}>
+            <SelectTrigger className="w-[150px] h-9 text-xs"><SelectValue placeholder="All Types" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="customer_tier">Customer Tier</SelectItem>
+              <SelectItem value="category">Category</SelectItem>
+              <SelectItem value="product">Product</SelectItem>
+              <SelectItem value="margin">Margin</SelectItem>
+              <SelectItem value="global">Global</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === 'all' ? '' : v); setPage(1) }}>
+            <SelectTrigger className="w-[140px] h-9 text-xs"><SelectValue placeholder="All Statuses" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="inactive">Inactive</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={tierFilter} onValueChange={(v) => { setTierFilter(v === 'all' ? '' : v); setPage(1) }}>
+            <SelectTrigger className="w-[140px] h-9 text-xs"><SelectValue placeholder="All Tiers" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Tiers</SelectItem>
+              <SelectItem value="bronze">Bronze</SelectItem>
+              <SelectItem value="silver">Silver</SelectItem>
+              <SelectItem value="gold">Gold</SelectItem>
+              <SelectItem value="platinum">Platinum</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {(typeFilter || statusFilter || tierFilter || search) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 text-xs font-semibold text-rose-500 hover:text-rose-600 hover:bg-rose-500/10"
+              onClick={() => { setTypeFilter(''); setStatusFilter(''); setTierFilter(''); setSearch(''); setSearchInput(''); setPage(1) }}
+            >
+              Reset Filters
+            </Button>
+          )}
         </div>
-        <Select value={typeFilter} onValueChange={(v) => { setTypeFilter(v); setPage(1) }}>
-          <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Types" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="customer_tier">Customer Tier</SelectItem>
-            <SelectItem value="category">Category</SelectItem>
-            <SelectItem value="product">Product</SelectItem>
-            <SelectItem value="margin">Margin</SelectItem>
-            <SelectItem value="global">Global</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
-          <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Statuses" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={tierFilter} onValueChange={(v) => { setTierFilter(v); setPage(1) }}>
-          <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Tiers" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Tiers</SelectItem>
-            <SelectItem value="bronze">Bronze</SelectItem>
-            <SelectItem value="silver">Silver</SelectItem>
-            <SelectItem value="gold">Gold</SelectItem>
-            <SelectItem value="platinum">Platinum</SelectItem>
-          </SelectContent>
-        </Select>
-        {(typeFilter || statusFilter || tierFilter || search) && (
-          <Button variant="ghost" size="sm" onClick={() => { setTypeFilter(''); setStatusFilter(''); setTierFilter(''); setSearch(''); setSearchInput(''); setPage(1) }}>
-            Clear Filters
-          </Button>
-        )}
       </div>
 
-      {/* Table */}
+      {/* Data Table */}
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-16 rounded-xl" />)}
@@ -274,32 +374,34 @@ export function DiscountRulesPage() {
       ) : !data?.rules || data.rules.length === 0 ? (
         <EmptyState
           icon={<Shield className="h-8 w-8" />}
-          title="No discount rules found"
-          description="Create your first discount rule to start governing pricing."
+          title="No discount rules defined"
+          description="Create your first discount rule to govern quotation line pricing and protect deal margins."
           action={
-            <Button onClick={() => navigate('/business-admin/discount-governance/rules/new')}>
+            <Button size="sm" onClick={() => navigate('/business-admin/discount-governance/rules/new')}>
               <Plus className="h-4 w-4 mr-1.5" />
               Create Discount Rule
             </Button>
           }
         />
       ) : (
-        <>
+        <div className="rounded-xl border border-border/70 bg-card shadow-xs overflow-hidden">
           <DataTable
             columns={columns as unknown as Column<Record<string, unknown>>[]}
             data={data.rules as unknown as Record<string, unknown>[]}
             onRowClick={(row) => navigate(`/business-admin/discount-governance/rules/${(row as unknown as DiscountRule).id}`)}
           />
           {data.totalPages > 1 && (
-            <Pagination
-              page={data.page}
-              totalPages={data.totalPages}
-              total={data.total}
-              perPage={data.perPage}
-              onPageChange={setPage}
-            />
+            <div className="p-3 border-t border-border/60">
+              <Pagination
+                page={data.page}
+                totalPages={data.totalPages}
+                total={data.total}
+                perPage={data.perPage}
+                onPageChange={setPage}
+              />
+            </div>
           )}
-        </>
+        </div>
       )}
 
       {/* Rule Evaluation Section */}

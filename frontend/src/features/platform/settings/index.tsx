@@ -256,10 +256,7 @@ export function PlatformSettingsPage() {
                   <Select value={form?.defaults.defaultCurrency || 'INR'} onValueChange={(v) => updateField('defaults', 'defaultCurrency', v)} disabled={editingSection !== 'defaults'}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="USD">USD - US Dollar</SelectItem>
-                      <SelectItem value="EUR">EUR - Euro</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                      <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
+                      <SelectItem value="INR">INR — Indian Rupee (₹)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

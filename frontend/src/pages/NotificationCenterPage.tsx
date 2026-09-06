@@ -216,7 +216,7 @@ export function NotificationCenterPage() {
           <KpiCard
             label="Pending Approvals"
             value={approvalCount}
-            variant={approvalCount > 0 ? 'primary' : 'default'}
+            variant={approvalCount > 0 ? 'info' : 'default'}
             icon={<CheckCircle2 className="h-5 w-5" />}
             description="Commercial & risk reviews"
           />

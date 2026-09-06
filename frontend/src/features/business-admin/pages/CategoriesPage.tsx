@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,7 +39,7 @@ export function CategoriesPage() {
   const [showDialog, setShowDialog] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
   const [parentForNew, setParentForNew] = useState<string>('')
-  const [form, setForm] = useState({ name: '', description: '' })
+  const [form, setForm] = useState({ name: '', description: '', parentId: '_none', status: 'active', sortOrder: '0' })
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const { data: tree, isLoading: treeLoading, error: treeError, refetch: refetchTree } = useCategoryTree()
@@ -47,6 +47,39 @@ export function CategoriesPage() {
   const createCategory = useCreateCategory()
   const updateCategory = useUpdateCategory()
   const deleteCategory = useDeleteCategory()
+
+  const findNodeById = (nodes: CategoryTreeNode[] | undefined, id: string): CategoryTreeNode | null => {
+    if (!nodes) return null
+    for (const node of nodes) {
+      if (node.id === id) return node
+      const found = findNodeById(node.children, id)
+      if (found) return found
+    }
+    return null
+  }
+
+  // Keep selectedCategory fresh after refetch (update/create/delete re-fetch the tree)
+  useEffect(() => {
+    if (!selectedCategory || !tree) return
+    const fresh = findNodeById(tree, selectedCategory.id)
+    if (fresh && fresh !== selectedCategory) setSelectedCategory(fresh)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tree])
+
+  const collectAllIds = (nodes: CategoryTreeNode[]): string[] =>
+    nodes.flatMap((n) => [n.id, ...collectAllIds(n.children || [])])
+
+  const allExpanded = useMemo(
+    () => (tree ? collectAllIds(tree).every((id) => expandedIds.has(id)) : false),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [tree, expandedIds],
+  )
+
+  const handleToggleAll = () => {
+    if (!tree) return
+    if (allExpanded) setExpandedIds(new Set())
+    else setExpandedIds(new Set(collectAllIds(tree)))
+  }
 
   const toggleExpand = (id: string) => {
     setExpandedIds((prev) => {
@@ -60,7 +93,7 @@ export function CategoriesPage() {
   const handleOpenCreate = (parentId?: string) => {
     setEditingCategory(null)
     setParentForNew(parentId || '')
-    setForm({ name: '', description: '' })
+    setForm({ name: '', description: '', parentId: parentId || '_none', status: 'active', sortOrder: '0' })
     setShowDialog(true)
   }
 
@@ -68,7 +101,7 @@ export function CategoriesPage() {
     if (!selectedCategory) return
     setEditingCategory(selectedCategory)
     setParentForNew(selectedCategory.parentId || '')
-    setForm({ name: selectedCategory.name, description: selectedCategory.description || '' })
+    setForm({ name: selectedCategory.name, description: selectedCategory.description || '', parentId: selectedCategory.parentId || '_none', status: selectedCategory.status || 'active', sortOrder: String(selectedCategory.sortOrder ?? 0) })
     setShowDialog(true)
   }
 
@@ -86,7 +119,7 @@ export function CategoriesPage() {
         toast.success('Category created')
       }
       setShowDialog(false)
-      setForm({ name: '', description: '' })
+      setForm({ name: '', description: '', parentId: '_none', status: 'active', sortOrder: '0' })
       setEditingCategory(null)
       setParentForNew('')
     } catch {
@@ -172,7 +205,7 @@ export function CategoriesPage() {
   const canDelete = selectedCategory && selectedCategory.subcategoryCount === 0 && selectedCategory.productCount === 0
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Categories"
         description="Organize your products with categories and subcategories."

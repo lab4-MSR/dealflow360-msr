@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
-import { useInviteUser } from '../hooks/use-business-admin'
+import { useInviteUser, useTeams } from '../hooks/use-business-admin'
 import type { BusinessUserRole } from '../types'
 import { toast } from 'sonner'
 import { ArrowLeft, Send } from 'lucide-react'
@@ -14,6 +14,7 @@ import { ArrowLeft, Send } from 'lucide-react'
 export function InviteUserPage() {
   const navigate = useNavigate()
   const inviteUser = useInviteUser()
+  const { data: teamsData, isLoading: teamsLoading } = useTeams({ perPage: 100 })
   const [form, setForm] = useState({
     fullName: '',
     email: '',
@@ -35,6 +36,9 @@ export function InviteUserPage() {
     if (!form.fullName.trim()) errs.fullName = 'Full name is required'
     if (!form.email.trim()) errs.email = 'Email is required'
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Invalid email'
+    if (form.phone.trim() && !/^[+\d][\d\s\-()]{6,19}$/.test(form.phone.trim())) {
+      errs.phone = 'Enter a valid phone number'
+    }
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -44,9 +48,11 @@ export function InviteUserPage() {
     if (!validate()) return
     try {
       await inviteUser.mutateAsync({
-        ...form,
-        email: form.email.trim().toLowerCase(),
         fullName: form.fullName.trim(),
+        email: form.email.trim().toLowerCase(),
+        role: form.role,
+        ...(form.teamId ? { teamId: form.teamId } : {}),
+        ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
       })
       toast.success('Invitation sent successfully')
       navigate('/business-admin/users-access/users')
@@ -89,7 +95,7 @@ export function InviteUserPage() {
                   placeholder="John Doe"
                   error={!!errors.fullName}
                 />
-                {errors.fullName && <p className="text-[11px] text-danger">{errors.fullName}</p>}
+                {errors.fullName && <p className="text-[11px] text-destructive">{errors.fullName}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label>Email Address *</Label>
@@ -100,7 +106,7 @@ export function InviteUserPage() {
                   placeholder="john@company.com"
                   error={!!errors.email}
                 />
-                {errors.email && <p className="text-[11px] text-danger">{errors.email}</p>}
+                {errors.email && <p className="text-[11px] text-destructive">{errors.email}</p>}
               </div>
               <div className="space-y-1.5">
                 <Label>Phone</Label>
@@ -108,7 +114,9 @@ export function InviteUserPage() {
                   value={form.phone}
                   onChange={(e) => updateField('phone', e.target.value)}
                   placeholder="+91 98765 43210"
+                  error={!!errors.phone}
                 />
+                {errors.phone && <p className="text-[11px] text-destructive">{errors.phone}</p>}
               </div>
             </div>
           </CardContent>
@@ -141,10 +149,13 @@ export function InviteUserPage() {
                   <SelectTrigger><SelectValue placeholder="No team" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No team</SelectItem>
-                    <SelectItem value="t1">Enterprise Sales</SelectItem>
-                    <SelectItem value="t2">SMB Sales</SelectItem>
-                    <SelectItem value="t3">Finance</SelectItem>
-                    <SelectItem value="t4">Operations</SelectItem>
+                    {teamsLoading ? (
+                      <SelectItem value="__loading" disabled>Loading teams…</SelectItem>
+                    ) : (
+                      (teamsData?.teams || []).map((team) => (
+                        <SelectItem key={team.id} value={team.id}>{team.name}</SelectItem>
+                      ))
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -187,9 +198,9 @@ export function InviteUserPage() {
           <Button type="button" variant="outline" onClick={() => navigate('/business-admin/users-access/users')}>
             Cancel
           </Button>
-          <Button type="submit" loading={inviteUser.isPending}>
+          <Button type="submit" disabled={inviteUser.isPending}>
             <Send className="h-4 w-4 mr-1.5" />
-            Send Invitation
+            {inviteUser.isPending ? 'Sending...' : 'Send Invitation'}
           </Button>
         </div>
       </form>

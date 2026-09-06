@@ -20,7 +20,7 @@ export function getMockQuotationDetails(id: string = 'QT-2026-00482', activeVers
   const allowedDiscount = 10 // Category limit constraint
   const excessDiscount = Math.max(0, requestedDiscount - allowedDiscount)
 
-  const hardwareUnitPrice = 75000 // In business currency (INR/USD equivalent)
+  const hardwareUnitPrice = 75000 // In business currency (INR)
   const serviceUnitPrice = 25000
 
   // Net amounts based on version

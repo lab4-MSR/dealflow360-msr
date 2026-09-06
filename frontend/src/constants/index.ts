@@ -85,11 +85,11 @@ export const SIDEBAR_NAV: NavSection[] = [
     roles: ['business_admin'],
     items: [
       { label: 'Admin Dashboard', path: '/business-admin/dashboard', icon: 'LayoutDashboard' },
-      { label: 'Company Profile', path: '/business-admin/organization/profile', icon: 'Settings' },
+      { label: 'Company Profile', path: '/business-admin/organization/profile', icon: 'Building2' },
       { label: 'Users & Roles', path: '/business-admin/users', icon: 'Users' },
       { label: 'Customers', path: '/business-admin/customers', icon: 'Users' },
       { label: 'Products & Catalog', path: '/business-admin/products', icon: 'Package' },
-      { label: 'Pricing & Price Lists', path: '/business-admin/pricing/lists', icon: 'DollarSign' },
+      { label: 'Pricing & Price Lists', path: '/business-admin/pricing/lists', icon: 'IndianRupee' },
       { label: 'Discount Rules', path: '/business-admin/discounts', icon: 'Percent' },
       { label: 'Approval Chains', path: '/business-admin/approvals', icon: 'CheckCircle2' },
       { label: 'Warehouses & Shipping', path: '/business-admin/warehouses', icon: 'Warehouse' },
@@ -150,7 +150,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'INTELLIGENCE',
-    roles: ['sales_manager', 'business_admin'],
+    roles: ['sales_manager'],
     items: [
       { label: 'Intelligence Command', path: '/intelligence', icon: 'Sparkles' },
       { label: 'Risk Overview', path: '/intelligence/risks', icon: 'ShieldAlert' },
@@ -164,11 +164,11 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'ANALYTICS & BI',
-    roles: ['sales_manager', 'finance', 'operations', 'business_admin'],
+    roles: ['sales_manager', 'finance', 'operations'],
     items: [
       { label: 'Executive Dashboard', path: '/analytics/executive', icon: 'BarChart3' },
       { label: 'Sales Analytics', path: '/analytics/sales', icon: 'TrendingUp' },
-      { label: 'Revenue Analytics', path: '/analytics/revenue', icon: 'DollarSign' },
+      { label: 'Revenue Analytics', path: '/analytics/revenue', icon: 'IndianRupee' },
       { label: 'Discount Analytics', path: '/analytics/discount', icon: 'Percent' },
       { label: 'Margin Analytics', path: '/analytics/margin', icon: 'BarChart3' },
       { label: 'Approval Analytics', path: '/analytics/approval', icon: 'CheckCircle2' },

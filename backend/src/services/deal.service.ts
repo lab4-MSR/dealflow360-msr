@@ -106,7 +106,7 @@ export async function createQuotation(b: string, input: Record<string, unknown>)
   const { data, error } = await serviceClient.from('quotations').insert({
     business_id: tenant(b), customer_id: input.customer_id, deal_id: input.deal_id ?? null,
     quote_number: genQuoteNumber(b), version: 1, status: 'draft', reference: input.reference ?? null,
-    expected_close_date: input.expected_close_date ?? null, approval_status: 'not_required', negotiation_status: 'none', currency: 'USD',
+    expected_close_date: input.expected_close_date ?? null, approval_status: 'not_required', negotiation_status: 'none', currency: 'INR',
   }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   return data;
@@ -172,7 +172,7 @@ export async function addLine(b: string, qId: string, input: Record<string, unkn
   const qty = Number(input.quantity) || 1;
   const { data: line, error } = await serviceClient.from('quotation_lines').insert({
     business_id: b, quotation_id: qId, product_id: input.product_id, quantity: qty,
-    unit_price: unitPrice, discount_percent: disc, net_price: netPrice, tax_amount: 0, line_total: netPrice * qty, currency: product?.currency ?? 'USD',
+    unit_price: unitPrice, discount_percent: disc, net_price: netPrice, tax_amount: 0, line_total: netPrice * qty, currency: product?.currency ?? 'INR',
   }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   await invalidateApprovalOnEdit(b, qId);
@@ -248,7 +248,7 @@ export async function getFullQuotation(b: string, id: string) {
       shipping: 0,
       tax: 0,
       grand_total: Number(grandTotal.toFixed(2)),
-      currency: q.currency ?? 'USD',
+      currency: q.currency ?? 'INR',
     },
     discount_analysis: evaluation.discount_governance,
     discount_governance: evaluation.discount_governance,

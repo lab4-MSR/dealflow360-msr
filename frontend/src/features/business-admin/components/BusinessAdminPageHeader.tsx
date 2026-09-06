@@ -5,14 +5,15 @@ interface PageHeaderProps {
   description?: string
   actions?: React.ReactNode
   breadcrumbs?: { label: string; path?: string }[]
+  badge?: React.ReactNode
   className?: string
 }
 
-export function PageHeader({ title, description, actions, breadcrumbs, className }: PageHeaderProps) {
+export function PageHeader({ title, description, actions, breadcrumbs, badge, className }: PageHeaderProps) {
   return (
-    <div className={cn('mb-8', className)}>
+    <div className={cn('mb-3.5', className)}>
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-1.5 text-caption text-muted-foreground mb-3 overflow-x-auto whitespace-nowrap">
+        <nav className="flex items-center gap-1.5 text-caption text-muted-foreground mb-1.5 overflow-x-auto whitespace-nowrap">
           {breadcrumbs.map((crumb, i) => (
             <span key={i} className="flex items-center gap-1.5">
               {i > 0 && <span className="text-border">/</span>}
@@ -27,11 +28,14 @@ export function PageHeader({ title, description, actions, breadcrumbs, className
           ))}
         </nav>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <h1 className="text-h2 font-bold text-foreground tracking-tight">{title}</h1>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">{title}</h1>
+            {badge && <div className="shrink-0">{badge}</div>}
+          </div>
           {description && (
-            <p className="mt-1 text-body-small text-muted-foreground">{description}</p>
+            <p className="mt-0.5 text-xs text-muted-foreground leading-relaxed max-w-3xl">{description}</p>
           )}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
@@ -39,3 +43,4 @@ export function PageHeader({ title, description, actions, breadcrumbs, className
     </div>
   )
 }
+

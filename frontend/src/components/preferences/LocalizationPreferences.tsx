@@ -74,8 +74,13 @@ export function LocalizationPreferences({
       </CardHeader>
       <CardContent className="grid gap-5 sm:grid-cols-2">
         <SelectField id="lang" label="Language" value={language} options={LANGUAGE_OPTIONS} onValueChange={onLanguageChange} />
-        <SelectField id="tz" label="Timezone" value={timezone} options={TIMEZONE_OPTIONS} onValueChange={onTimezoneChange} />
-        <SelectField id="currency" label="Currency" value={currency} options={CURRENCY_OPTIONS} onValueChange={onCurrencyChange} />
+        <div className="space-y-2">
+          <Label htmlFor="currency">System Currency</Label>
+          <div className="flex h-10 w-full items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2 text-small font-medium text-foreground">
+            <span>INR — Indian Rupee (₹)</span>
+            <span className="text-[11px] font-semibold text-primary">Fixed (INR)</span>
+          </div>
+        </div>
         <SelectField id="datefmt" label="Date Format" value={dateFormat} options={DATE_FORMAT_OPTIONS} onValueChange={onDateFormatChange} />
       </CardContent>
     </Card>

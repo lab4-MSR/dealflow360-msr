@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import { Settings, Palette, Bell, Shield, Plug, Database, Save, RotateCcw, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Settings, Palette, Bell, Shield, Plug, Database, Save, CheckCircle, XCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,8 +11,17 @@ import { ErrorState } from '@/components/shared/ErrorState';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { PageHeader } from '../components/BusinessAdminPageHeader';
-import { useBusinessSettings, useUpdateBusinessSettings, useNotificationSettings, useUpdateNotificationSettings, useSecuritySettings, useUpdateSecuritySettings, useIntegrationSettings, useUpdateIntegrationSettings, useDataPrivacySettings, useUpdateDataPrivacySettings } from '../hooks/use-business-admin';
+import { useBusinessSettings, useUpdateBusinessSettings, useNotificationSettings, useUpdateNotificationSettings, useSecuritySettings, useUpdateSecuritySettings, useIntegrationSettings, useUpdateIntegrationSettings, useDataPrivacySettings, useUpdateDataPrivacySettings, useBranding, useUpdateBranding } from '../hooks/use-business-admin';
 import { toast } from 'sonner';
+
+const NOTIF_ITEMS = [
+  { key: 'emailNotifications', label: 'Email Notifications', desc: 'Receive notifications via email' },
+  { key: 'approvalNotifications', label: 'Approval Notifications', desc: 'Notify when approvals are required' },
+  { key: 'dealAlerts', label: 'Deal Alerts', desc: 'Notifications for deal stage changes' },
+  { key: 'inventoryAlerts', label: 'Inventory Alerts', desc: 'Low stock and backorder notifications' },
+  { key: 'billingAlerts', label: 'Billing Alerts', desc: 'Payment and subscription notifications' },
+  { key: 'systemAlerts', label: 'System Alerts', desc: 'Platform maintenance and updates' },
+] as const;
 
 export function BusinessSettingsFullPage() {
   const [activeTab, setActiveTab] = useState('general');
@@ -29,8 +37,94 @@ export function BusinessSettingsFullPage() {
   const updateIntegrations = useUpdateIntegrationSettings();
   const { data: privacy, isLoading: privLoading } = useDataPrivacySettings();
   const updatePrivacy = useUpdateDataPrivacySettings();
+  const { data: branding, isLoading: brandingLoading } = useBranding();
+  const updateBranding = useUpdateBranding();
 
-  const isLoading = settingsLoading || notifLoading || secLoading || intLoading || privLoading;
+  // ─── Local controlled form state (initialized from fetched settings) ───
+  const [generalForm, setGeneralForm] = useState({ businessName: '', legalName: '', industry: '', currency: 'INR', timezone: 'Asia/Kolkata', locale: 'en-IN' });
+  const [appearanceForm, setAppearanceForm] = useState({ theme: 'system', primaryColor: '#4F46E5', primaryHover: '#4338CA' });
+  const [notificationsForm, setNotificationsForm] = useState<Record<string, boolean>>({ emailNotifications: true, approvalNotifications: true, dealAlerts: true, inventoryAlerts: true, billingAlerts: true, systemAlerts: true });
+  const [securityForm, setSecurityForm] = useState({ passwordMinLength: 8, passwordExpiryDays: 0, requireUpper: true, requireLower: true, requireNumbers: true, requireSpecial: true, sessionDuration: 24, idleTimeout: 30, maxConcurrentSessions: 3, mfa: 'optional' });
+  const [integrationsForm, setIntegrationsForm] = useState({ emailProvider: '', paymentProvider: '', shippingProvider: '' });
+  const [privacyForm, setPrivacyForm] = useState({ dataRetentionDays: 365, autoDeleteInactive: 'disabled', exportEnabled: true, anonymizeData: false, gdprCompliant: true });
+
+  useEffect(() => {
+    if (settings?.general) {
+      const g = settings.general as unknown as Record<string, string>;
+      setGeneralForm({
+        businessName: g.businessName || '',
+        legalName: g.legalName || '',
+        industry: g.industry || '',
+        currency: g.currency || 'INR',
+        timezone: g.timezone || 'Asia/Kolkata',
+        locale: g.locale || 'en-IN',
+      });
+    }
+  }, [settings]);
+
+  useEffect(() => {
+    if (branding) {
+      setAppearanceForm((prev) => ({
+        theme: prev.theme,
+        primaryColor: (branding.primaryColor as string) || '#4F46E5',
+        primaryHover: (branding.primaryHover as string) || '#4338CA',
+      }));
+    }
+  }, [branding]);
+
+  useEffect(() => {
+    if (notifications) {
+      setNotificationsForm({
+        emailNotifications: notifications.emailNotifications ?? true,
+        approvalNotifications: notifications.approvalNotifications ?? true,
+        dealAlerts: notifications.dealAlerts ?? true,
+        inventoryAlerts: notifications.inventoryAlerts ?? true,
+        billingAlerts: notifications.billingAlerts ?? true,
+        systemAlerts: notifications.systemAlerts ?? true,
+      });
+    }
+  }, [notifications]);
+
+  useEffect(() => {
+    if (security) {
+      setSecurityForm({
+        passwordMinLength: security.passwordMinLength ?? 8,
+        passwordExpiryDays: security.passwordExpiryDays ?? 0,
+        requireUpper: security.passwordRequireUppercase ?? true,
+        requireLower: security.passwordRequireLowercase ?? true,
+        requireNumbers: security.passwordRequireNumbers ?? true,
+        requireSpecial: security.passwordRequireSpecialChars ?? true,
+        sessionDuration: security.sessionDuration ?? 24,
+        idleTimeout: security.idleTimeout ?? 30,
+        maxConcurrentSessions: security.maxConcurrentSessions ?? 3,
+        mfa: security.mfaRequired ? 'required' : 'optional',
+      });
+    }
+  }, [security]);
+
+  useEffect(() => {
+    if (integrations) {
+      setIntegrationsForm({
+        emailProvider: integrations.emailProvider || '',
+        paymentProvider: integrations.paymentProvider || '',
+        shippingProvider: integrations.shippingProvider || '',
+      });
+    }
+  }, [integrations]);
+
+  useEffect(() => {
+    if (privacy) {
+      setPrivacyForm({
+        dataRetentionDays: privacy.dataRetentionDays ?? 365,
+        autoDeleteInactive: privacy.autoDeleteInactive ? 'enabled' : 'disabled',
+        exportEnabled: privacy.exportEnabled ?? true,
+        anonymizeData: privacy.anonymizeData ?? false,
+        gdprCompliant: privacy.gdprCompliant ?? true,
+      });
+    }
+  }, [privacy]);
+
+  const isLoading = settingsLoading || notifLoading || secLoading || intLoading || privLoading || brandingLoading;
 
   if (isLoading) {
     return (
@@ -48,16 +142,25 @@ export function BusinessSettingsFullPage() {
 
   const handleSaveGeneral = async () => {
     try {
-      await updateSettings.mutateAsync(settings || {});
+      await updateSettings.mutateAsync({ general: generalForm } as unknown as Parameters<typeof updateSettings.mutateAsync>[0]);
       toast.success('General settings saved');
     } catch {
       toast.error('Failed to save general settings');
     }
   };
 
+  const handleSaveAppearance = async () => {
+    try {
+      await updateBranding.mutateAsync({ primaryColor: appearanceForm.primaryColor, primaryHover: appearanceForm.primaryHover });
+      toast.success('Appearance settings saved');
+    } catch {
+      toast.error('Failed to save appearance settings');
+    }
+  };
+
   const handleSaveNotifications = async () => {
     try {
-      await updateNotifications.mutateAsync(notifications || {});
+      await updateNotifications.mutateAsync({ ...notificationsForm });
       toast.success('Notification settings saved');
     } catch {
       toast.error('Failed to save notification settings');
@@ -66,7 +169,18 @@ export function BusinessSettingsFullPage() {
 
   const handleSaveSecurity = async () => {
     try {
-      await updateSecurity.mutateAsync(security || {});
+      await updateSecurity.mutateAsync({
+        passwordMinLength: securityForm.passwordMinLength,
+        passwordExpiryDays: securityForm.passwordExpiryDays,
+        passwordRequireUppercase: securityForm.requireUpper,
+        passwordRequireLowercase: securityForm.requireLower,
+        passwordRequireNumbers: securityForm.requireNumbers,
+        passwordRequireSpecialChars: securityForm.requireSpecial,
+        sessionDuration: securityForm.sessionDuration,
+        idleTimeout: securityForm.idleTimeout,
+        maxConcurrentSessions: securityForm.maxConcurrentSessions,
+        mfaRequired: securityForm.mfa === 'required',
+      });
       toast.success('Security settings saved');
     } catch {
       toast.error('Failed to save security settings');
@@ -75,7 +189,7 @@ export function BusinessSettingsFullPage() {
 
   const handleSaveIntegrations = async () => {
     try {
-      await updateIntegrations.mutateAsync(integrations || {});
+      await updateIntegrations.mutateAsync({ ...integrationsForm });
       toast.success('Integration settings saved');
     } catch {
       toast.error('Failed to save integration settings');
@@ -84,7 +198,13 @@ export function BusinessSettingsFullPage() {
 
   const handleSavePrivacy = async () => {
     try {
-      await updatePrivacy.mutateAsync(privacy || {});
+      await updatePrivacy.mutateAsync({
+        dataRetentionDays: privacyForm.dataRetentionDays,
+        autoDeleteInactive: privacyForm.autoDeleteInactive === 'enabled',
+        exportEnabled: privacyForm.exportEnabled,
+        anonymizeData: privacyForm.anonymizeData,
+        gdprCompliant: privacyForm.gdprCompliant,
+      });
       toast.success('Data privacy settings saved');
     } catch {
       toast.error('Failed to save data privacy settings');
@@ -100,6 +220,11 @@ export function BusinessSettingsFullPage() {
           { label: 'Business Admin', path: '/business-admin/dashboard' },
           { label: 'Settings' },
         ]}
+        actions={
+          <Button variant="outline" onClick={() => setShowResetDialog(true)}>
+            Reset All
+          </Button>
+        }
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -120,31 +245,28 @@ export function BusinessSettingsFullPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Business Name</Label>
-                  <Input defaultValue={settings?.general?.businessName || ''} placeholder="Your Company Name" />
+                  <Input value={generalForm.businessName} onChange={(e) => setGeneralForm((p) => ({ ...p, businessName: e.target.value }))} placeholder="Your Company Name" />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Legal Name</Label>
-                  <Input defaultValue={settings?.general?.legalName || ''} placeholder="Legal Entity Name" />
+                  <Input value={generalForm.legalName} onChange={(e) => setGeneralForm((p) => ({ ...p, legalName: e.target.value }))} placeholder="Legal Entity Name" />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Industry</Label>
-                  <Input defaultValue={settings?.general?.industry || ''} placeholder="e.g., Technology" />
+                  <Input value={generalForm.industry} onChange={(e) => setGeneralForm((p) => ({ ...p, industry: e.target.value }))} placeholder="e.g., Technology" />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Currency</Label>
-                  <Select defaultValue={settings?.general?.currency || 'INR'}>
+                  <Select value={generalForm.currency} onValueChange={(v) => setGeneralForm((p) => ({ ...p, currency: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
-                      <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
-                      <SelectItem value="GBP">GBP - British Pound (£)</SelectItem>
-                      <SelectItem value="AED">AED - UAE Dirham (د.إ)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Timezone</Label>
-                  <Select defaultValue={settings?.general?.timezone || 'Asia/Kolkata'}>
+                  <Select value={generalForm.timezone} onValueChange={(v) => setGeneralForm((p) => ({ ...p, timezone: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Asia/Kolkata">India Standard Time (IST)</SelectItem>
@@ -158,7 +280,7 @@ export function BusinessSettingsFullPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Locale</Label>
-                  <Select defaultValue={settings?.general?.locale || 'en-IN'}>
+                  <Select value={generalForm.locale} onValueChange={(v) => setGeneralForm((p) => ({ ...p, locale: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="en-IN">English (India)</SelectItem>
@@ -174,7 +296,7 @@ export function BusinessSettingsFullPage() {
             </CardContent>
           </Card>
           <div className="flex justify-end">
-            <Button onClick={handleSaveGeneral}><Save className="h-4 w-4 mr-1.5" />Save General Settings</Button>
+            <Button onClick={handleSaveGeneral} loading={updateSettings.isPending}><Save className="h-4 w-4 mr-1.5" />Save General Settings</Button>
           </div>
         </TabsContent>
 
@@ -185,7 +307,7 @@ export function BusinessSettingsFullPage() {
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
                 <Label>Theme</Label>
-                <Select defaultValue="system">
+                <Select value={appearanceForm.theme} onValueChange={(v) => setAppearanceForm((p) => ({ ...p, theme: v }))}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="light">Light</SelectItem>
@@ -198,15 +320,15 @@ export function BusinessSettingsFullPage() {
                 <div className="space-y-1.5">
                   <Label>Primary Color</Label>
                   <div className="flex items-center gap-2">
-                    <input type="color" defaultValue="#4F46E5" className="h-10 w-10 rounded-lg border border-border cursor-pointer" />
-                    <Input defaultValue="#4F46E5" />
+                    <input type="color" value={appearanceForm.primaryColor} onChange={(e) => setAppearanceForm((p) => ({ ...p, primaryColor: e.target.value }))} className="h-10 w-10 rounded-lg border border-border cursor-pointer" />
+                    <Input value={appearanceForm.primaryColor} onChange={(e) => setAppearanceForm((p) => ({ ...p, primaryColor: e.target.value }))} />
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Primary Hover</Label>
                   <div className="flex items-center gap-2">
-                    <input type="color" defaultValue="#4338CA" className="h-10 w-10 rounded-lg border border-border cursor-pointer" />
-                    <Input defaultValue="#4338CA" />
+                    <input type="color" value={appearanceForm.primaryHover} onChange={(e) => setAppearanceForm((p) => ({ ...p, primaryHover: e.target.value }))} className="h-10 w-10 rounded-lg border border-border cursor-pointer" />
+                    <Input value={appearanceForm.primaryHover} onChange={(e) => setAppearanceForm((p) => ({ ...p, primaryHover: e.target.value }))} />
                   </div>
                 </div>
               </div>
@@ -214,7 +336,7 @@ export function BusinessSettingsFullPage() {
             </CardContent>
           </Card>
           <div className="flex justify-end">
-            <Button onClick={() => toast.info('Appearance settings saved')}><Save className="h-4 w-4 mr-1.5" />Save Appearance</Button>
+            <Button onClick={handleSaveAppearance} loading={updateBranding.isPending}><Save className="h-4 w-4 mr-1.5" />Save Appearance</Button>
           </div>
         </TabsContent>
 
@@ -223,26 +345,19 @@ export function BusinessSettingsFullPage() {
           <Card>
             <CardHeader><CardTitle>Notification Preferences</CardTitle><CardDescription>Configure which notifications your team receives.</CardDescription></CardHeader>
             <CardContent className="space-y-4">
-              {[
-                { key: 'emailNotifications', label: 'Email Notifications', desc: 'Receive notifications via email' },
-                { key: 'approvalNotifications', label: 'Approval Notifications', desc: 'Notify when approvals are required' },
-                { key: 'dealAlerts', label: 'Deal Alerts', desc: 'Notifications for deal stage changes' },
-                { key: 'inventoryAlerts', label: 'Inventory Alerts', desc: 'Low stock and backorder notifications' },
-                { key: 'billingAlerts', label: 'Billing Alerts', desc: 'Payment and subscription notifications' },
-                { key: 'systemAlerts', label: 'System Alerts', desc: 'Platform maintenance and updates' },
-              ].map(item => (
+              {NOTIF_ITEMS.map(item => (
                 <div key={item.key} className="flex items-center justify-between rounded-lg border p-4">
                   <div>
                     <p className="text-[13px] font-medium">{item.label}</p>
                     <p className="text-[11px] text-muted-foreground">{item.desc}</p>
                   </div>
-                  <input type="checkbox" defaultChecked={true} className="h-4 w-4 rounded border-input" />
+                  <input type="checkbox" checked={notificationsForm[item.key] ?? true} onChange={(e) => setNotificationsForm((p) => ({ ...p, [item.key]: e.target.checked }))} className="h-4 w-4 rounded border-input" />
                 </div>
               ))}
             </CardContent>
           </Card>
           <div className="flex justify-end">
-            <Button onClick={handleSaveNotifications}><Save className="h-4 w-4 mr-1.5" />Save Notifications</Button>
+            <Button onClick={handleSaveNotifications} loading={updateNotifications.isPending}><Save className="h-4 w-4 mr-1.5" />Save Notifications</Button>
           </div>
         </TabsContent>
 
@@ -254,18 +369,23 @@ export function BusinessSettingsFullPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Minimum Length</Label>
-                  <Input type="number" defaultValue={security?.passwordMinLength || 8} />
+                  <Input type="number" value={securityForm.passwordMinLength} onChange={(e) => setSecurityForm((p) => ({ ...p, passwordMinLength: parseInt(e.target.value, 10) || 0 }))} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Expiry (days, 0 = never)</Label>
-                  <Input type="number" defaultValue={security?.passwordExpiryDays || 0} />
+                  <Input type="number" value={securityForm.passwordExpiryDays} onChange={(e) => setSecurityForm((p) => ({ ...p, passwordExpiryDays: parseInt(e.target.value, 10) || 0 }))} />
                 </div>
               </div>
               <div className="space-y-2">
-                {['Require uppercase', 'Require lowercase', 'Require numbers', 'Require special characters'].map(label => (
-                  <div key={label} className="flex items-center gap-2">
-                    <input type="checkbox" defaultChecked={true} className="h-4 w-4 rounded border-input" />
-                    <span className="text-[13px]">{label}</span>
+                {[
+                  { key: 'requireUpper', label: 'Require uppercase' },
+                  { key: 'requireLower', label: 'Require lowercase' },
+                  { key: 'requireNumbers', label: 'Require numbers' },
+                  { key: 'requireSpecial', label: 'Require special characters' },
+                ].map(item => (
+                  <div key={item.key} className="flex items-center gap-2">
+                    <input type="checkbox" checked={securityForm[item.key as keyof typeof securityForm] as boolean} onChange={(e) => setSecurityForm((p) => ({ ...p, [item.key]: e.target.checked }))} className="h-4 w-4 rounded border-input" />
+                    <span className="text-[13px]">{item.label}</span>
                   </div>
                 ))}
               </div>
@@ -277,19 +397,19 @@ export function BusinessSettingsFullPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Session Duration (hours)</Label>
-                  <Input type="number" defaultValue={security?.sessionDuration || 24} />
+                  <Input type="number" value={securityForm.sessionDuration} onChange={(e) => setSecurityForm((p) => ({ ...p, sessionDuration: parseInt(e.target.value, 10) || 0 }))} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Idle Timeout (minutes)</Label>
-                  <Input type="number" defaultValue={security?.idleTimeout || 30} />
+                  <Input type="number" value={securityForm.idleTimeout} onChange={(e) => setSecurityForm((p) => ({ ...p, idleTimeout: parseInt(e.target.value, 10) || 0 }))} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Max Concurrent Sessions</Label>
-                  <Input type="number" defaultValue={security?.maxConcurrentSessions || 3} />
+                  <Input type="number" value={securityForm.maxConcurrentSessions} onChange={(e) => setSecurityForm((p) => ({ ...p, maxConcurrentSessions: parseInt(e.target.value, 10) || 0 }))} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Multi-Factor Authentication</Label>
-                  <Select defaultValue={security?.mfaRequired ? 'required' : 'optional'}>
+                  <Select value={securityForm.mfa} onValueChange={(v) => setSecurityForm((p) => ({ ...p, mfa: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="required">Required</SelectItem>
@@ -302,7 +422,7 @@ export function BusinessSettingsFullPage() {
             </CardContent>
           </Card>
           <div className="flex justify-end">
-            <Button onClick={handleSaveSecurity}><Save className="h-4 w-4 mr-1.5" />Save Security Settings</Button>
+            <Button onClick={handleSaveSecurity} loading={updateSecurity.isPending}><Save className="h-4 w-4 mr-1.5" />Save Security Settings</Button>
           </div>
         </TabsContent>
 
@@ -312,24 +432,37 @@ export function BusinessSettingsFullPage() {
             <CardHeader><CardTitle>Connected Services</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               {[
-                { name: 'Email Provider', key: 'email', providers: ['SMTP', 'SendGrid', 'Amazon SES'] },
-                { name: 'Payment Provider', key: 'payment', providers: ['Stripe', 'PayPal', 'Razorpay'] },
-                { name: 'Shipping Provider', key: 'shipping', providers: ['Shippo', 'EasyPost', 'ShipStation'] },
-              ].map(service => (
-                <div key={service.key} className="flex items-center justify-between rounded-lg border p-4">
-                  <div>
-                    <p className="text-[13px] font-medium">{service.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{integrations ? (service.key === 'email' ? integrations.emailProvider : service.key === 'payment' ? integrations.paymentProvider : integrations.shippingProvider) : 'Not configured'}</p>
+                { name: 'Email Provider', key: 'emailProvider', providers: ['SMTP', 'SendGrid', 'Amazon SES'] },
+                { name: 'Payment Provider', key: 'paymentProvider', providers: ['Stripe', 'PayPal', 'Razorpay'] },
+                { name: 'Shipping Provider', key: 'shippingProvider', providers: ['Shippo', 'EasyPost', 'ShipStation'] },
+              ].map(service => {
+                const current = integrationsForm[service.key as keyof typeof integrationsForm];
+                return (
+                  <div key={service.key} className="flex items-center justify-between gap-4 rounded-lg border p-4">
+                    <div className="min-w-0">
+                      <p className="text-[13px] font-medium">{service.name}</p>
+                      <p className="text-[11px] text-muted-foreground">{current || 'Not configured'}</p>
+                      <div className="mt-2 w-48">
+                        <Select value={current || undefined} onValueChange={(v) => setIntegrationsForm((p) => ({ ...p, [service.key]: v }))}>
+                          <SelectTrigger><SelectValue placeholder="Select provider" /></SelectTrigger>
+                          <SelectContent>
+                            {service.providers.map((prov) => (
+                              <SelectItem key={prov} value={prov}>{prov}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <Badge variant={current ? 'success' : 'secondary'}>
+                      {current ? <><CheckCircle className="h-3 w-3 mr-1" />Connected</> : <><XCircle className="h-3 w-3 mr-1" />Not Configured</>}
+                    </Badge>
                   </div>
-                  <Badge variant={integrations ? 'success' : 'secondary'}>
-                    {integrations ? <><CheckCircle className="h-3 w-3 mr-1" />Connected</> : <><XCircle className="h-3 w-3 mr-1" />Not Configured</>}
-                  </Badge>
-                </div>
-              ))}
+                );
+              })}
             </CardContent>
           </Card>
           <div className="flex justify-end">
-            <Button onClick={handleSaveIntegrations}><Save className="h-4 w-4 mr-1.5" />Save Integration Settings</Button>
+            <Button onClick={handleSaveIntegrations} loading={updateIntegrations.isPending}><Save className="h-4 w-4 mr-1.5" />Save Integration Settings</Button>
           </div>
         </TabsContent>
 
@@ -341,11 +474,11 @@ export function BusinessSettingsFullPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Data Retention (days)</Label>
-                  <Input type="number" defaultValue={privacy?.dataRetentionDays || 365} />
+                  <Input type="number" value={privacyForm.dataRetentionDays} onChange={(e) => setPrivacyForm((p) => ({ ...p, dataRetentionDays: parseInt(e.target.value, 10) || 0 }))} />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Auto-delete Inactive Data</Label>
-                  <Select defaultValue={privacy?.autoDeleteInactive ? 'enabled' : 'disabled'}>
+                  <Select value={privacyForm.autoDeleteInactive} onValueChange={(v) => setPrivacyForm((p) => ({ ...p, autoDeleteInactive: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="enabled">Enabled</SelectItem>
@@ -356,22 +489,22 @@ export function BusinessSettingsFullPage() {
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" defaultChecked={privacy?.exportEnabled ?? true} className="h-4 w-4 rounded border-input" />
+                  <input type="checkbox" checked={privacyForm.exportEnabled} onChange={(e) => setPrivacyForm((p) => ({ ...p, exportEnabled: e.target.checked }))} className="h-4 w-4 rounded border-input" />
                   <span className="text-[13px]">Enable data export</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" defaultChecked={privacy?.anonymizeData ?? false} className="h-4 w-4 rounded border-input" />
+                  <input type="checkbox" checked={privacyForm.anonymizeData} onChange={(e) => setPrivacyForm((p) => ({ ...p, anonymizeData: e.target.checked }))} className="h-4 w-4 rounded border-input" />
                   <span className="text-[13px]">Anonymize data on export</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <input type="checkbox" defaultChecked={privacy?.gdprCompliant ?? true} className="h-4 w-4 rounded border-input" />
+                  <input type="checkbox" checked={privacyForm.gdprCompliant} onChange={(e) => setPrivacyForm((p) => ({ ...p, gdprCompliant: e.target.checked }))} className="h-4 w-4 rounded border-input" />
                   <span className="text-[13px]">GDPR Compliant mode</span>
                 </div>
               </div>
             </CardContent>
           </Card>
           <div className="flex justify-end">
-            <Button onClick={handleSavePrivacy}><Save className="h-4 w-4 mr-1.5" />Save Privacy Settings</Button>
+            <Button onClick={handleSavePrivacy} loading={updatePrivacy.isPending}><Save className="h-4 w-4 mr-1.5" />Save Privacy Settings</Button>
           </div>
         </TabsContent>
       </Tabs>

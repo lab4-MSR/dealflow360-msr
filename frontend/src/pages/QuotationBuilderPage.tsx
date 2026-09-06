@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
-import { AlertTriangle, Save, Send, Shield, TrendingUp, Package, Truck, CreditCard, Lightbulb, DollarSign, Search, Plus, Trash2, Info } from 'lucide-react'
+import { AlertTriangle, Save, Send, Shield, TrendingUp, Package, Truck, CreditCard, Lightbulb, IndianRupee, Search, Plus, Trash2, Info } from 'lucide-react'
 
 export function QuotationBuilderPage() {
   const { id } = useParams()
@@ -33,9 +33,9 @@ export function QuotationBuilderPage() {
     setLoading(true); setError(null)
     try {
       const [qRes, evalRes, recRes] = await Promise.allSettled([
-        apiClient.get(`/quotations/${id}`),
-        apiClient.get(`/quotations/${id}/evaluate`),
-        apiClient.get(`/quotations/${id}/recommendations`),
+        apiClient.get(`/quotations/₹{id}`),
+        apiClient.get(`/quotations/₹{id}/evaluate`),
+        apiClient.get(`/quotations/₹{id}/recommendations`),
       ])
       if (qRes.status==='fulfilled') {
         setQ(qRes.value.data.data)
@@ -62,9 +62,9 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaving(true); setSaveStatus('saving')
     try {
-      const res = await apiClient.post(`/quotations/${id}/lines`, { product_id: productId, quantity: 1, discount_percent: 0 })
+      const res = await apiClient.post(`/quotations/₹{id}/lines`, { product_id: productId, quantity: 1, discount_percent: 0 })
       setQ(res.data.data ?? res.data)
-      const evalR = await apiClient.get(`/quotations/${id}/evaluate`).then(r=>r.data.data).catch(()=>null)
+      const evalR = await apiClient.get(`/quotations/₹{id}/evaluate`).then(r=>r.data.data).catch(()=>null)
       if (evalR) setEvalData(evalR)
       setSaveStatus('saved'); toast.success('Line added — recomputed')
     } catch (e) { setSaveStatus('failed'); toast.error(getApiErrorMessage(e)) }
@@ -75,9 +75,9 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaveStatus('saving')
     try {
-      const res = await apiClient.patch(`/quotations/${id}/lines/${lineId}`, patch)
+      const res = await apiClient.patch(`/quotations/₹{id}/lines/₹{lineId}`, patch)
       setQ(res.data.data ?? res.data)
-      const evalR = await apiClient.get(`/quotations/${id}/evaluate`).then(r=>r.data.data).catch(()=>null)
+      const evalR = await apiClient.get(`/quotations/₹{id}/evaluate`).then(r=>r.data.data).catch(()=>null)
       if (evalR) setEvalData(evalR)
       setSaveStatus('saved')
     } catch (e) { setSaveStatus('failed'); toast.error(getApiErrorMessage(e)) }
@@ -87,9 +87,9 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaving(true)
     try {
-      const res = await apiClient.delete(`/quotations/${id}/lines/${lineId}`)
+      const res = await apiClient.delete(`/quotations/₹{id}/lines/₹{lineId}`)
       setQ(res.data.data ?? res.data)
-      const evalR = await apiClient.get(`/quotations/${id}/evaluate`).then(r=>r.data.data).catch(()=>null)
+      const evalR = await apiClient.get(`/quotations/₹{id}/evaluate`).then(r=>r.data.data).catch(()=>null)
       if (evalR) setEvalData(evalR)
       toast.success('Line removed')
     } catch (e) { toast.error(getApiErrorMessage(e)) }
@@ -100,10 +100,10 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaving(true)
     try {
-      if (action==='save') { await apiClient.patch(`/quotations/${id}`, { internal_notes: internalNotes, customer_notes: customerNotes }); toast.success('Saved'); setSaveStatus('saved') }
-      if (action==='validate') { const r=await apiClient.post(`/quotations/${id}/validate`); toast.success('Validated'); if(r.data.data) setEvalData(r.data.data) }
-      if (action==='submit') { await apiClient.post(`/quotations/${id}/submit-for-approval`); toast.success('Submitted for approval'); load() }
-      if (action==='send') { await apiClient.post(`/quotations/${id}/send`); toast.success('Sent to customer'); load() }
+      if (action==='save') { await apiClient.patch(`/quotations/₹{id}`, { internal_notes: internalNotes, customer_notes: customerNotes }); toast.success('Saved'); setSaveStatus('saved') }
+      if (action==='validate') { const r=await apiClient.post(`/quotations/₹{id}/validate`); toast.success('Validated'); if(r.data.data) setEvalData(r.data.data) }
+      if (action==='submit') { await apiClient.post(`/quotations/₹{id}/submit-for-approval`); toast.success('Submitted for approval'); load() }
+      if (action==='send') { await apiClient.post(`/quotations/₹{id}/send`); toast.success('Sent to customer'); load() }
     } catch (e) { toast.error(getApiErrorMessage(e)) }
     finally { setSaving(false) }
   }
@@ -125,7 +125,7 @@ export function QuotationBuilderPage() {
       <div className="rounded-xl border border-border bg-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div><h1 className="text-h2 font-semibold font-mono">{quoteNumber} <span className="text-caption font-sans text-muted-foreground">v{version}</span></h1><p className="text-body-small text-muted-foreground">{String((q as {customer?:{name?:string}}).customer?.name ?? '—')} · <StatusBadge status={status as never}>{status}</StatusBadge> · <span className={saveStatus==='saved'?'text-success':saveStatus==='failed'?'text-danger':'text-warning'}>{saveStatus==='saving'?'Saving…':saveStatus==='saved'?'Saved':saveStatus==='failed'?'Save failed':'Unsaved changes'}</span></p></div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" asChild><Link to={`/sales/quotations/${id}`}>Quotation Details</Link></Button>
+          <Button variant="outline" size="sm" asChild><Link to={`/sales/quotations/₹{id}`}>Quotation Details</Link></Button>
           <Button variant="outline" size="sm" onClick={()=>handleAction('save')} disabled={saving}><Save className="h-4 w-4" />Save Draft</Button>
           <Button variant="secondary" size="sm" onClick={()=>handleAction('validate')} disabled={saving}>Validate Quote</Button>
           <Button size="sm" onClick={()=>handleAction('submit')} disabled={saving || !canEdit} title={!canEdit? 'Only draft / under_negotiation can be submitted' : undefined}>Submit for Approval</Button>
@@ -193,7 +193,7 @@ export function QuotationBuilderPage() {
               <div key={String(l.id)} className="rounded-lg border p-3 space-y-2">
                 <div className="flex justify-between"><span className="font-medium text-small">{String((l as {product_name?:string}).product_name ?? String(l.product_id).slice(0,8))}</span><Button variant="ghost" size="sm" onClick={()=>removeLine(String(l.id))} disabled={!canEdit}><Trash2 className="h-4 w-4" /></Button></div>
                 <div className="grid grid-cols-2 gap-2 text-caption"><span>Qty <Input type="number" defaultValue={String((l as {quantity?:number}).quantity ?? 1)} onBlur={e=>updateLine(String(l.id), {quantity: Number(e.target.value)})} disabled={!canEdit} className="h-8" /></span><span>Discount % <Input type="number" defaultValue={String((l as {discount_percent?:number}).discount_percent ?? 0)} onBlur={e=>updateLine(String(l.id), {discount_percent: Number(e.target.value)})} disabled={!canEdit} className="h-8" /></span></div>
-                <div className="flex justify-between text-caption"><span>Net: ${Number((l as {net_price?:number}).net_price ?? 0).toLocaleString()}</span><span>Margin: {String((l as {margin_percent?:number}).margin_percent ?? '—')}%</span></div>
+                <div className="flex justify-between text-caption"><span>Net: ₹{Number((l as {net_price?:number}).net_price ?? 0).toLocaleString()}</span><span>Margin: {String((l as {margin_percent?:number}).margin_percent ?? '—')}%</span></div>
               </div>
             ))}
           </div>
@@ -201,7 +201,7 @@ export function QuotationBuilderPage() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <Card><CardHeader><CardTitle className="text-small flex items-center gap-2"><DollarSign className="h-4 w-4" />Order Pricing</CardTitle></CardHeader><CardContent className="space-y-1 text-small tabular-nums">
+        <Card><CardHeader><CardTitle className="text-small flex items-center gap-2"><IndianRupee className="h-4 w-4" />Order Pricing</CardTitle></CardHeader><CardContent className="space-y-1 text-small tabular-nums">
           <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span>₹{Number((q as {pricing?:{subtotal?:number}}).pricing?.subtotal ?? 0).toLocaleString()}</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Line Discount</span><span>-₹{Number((q as {pricing?:{line_discounts_total?:number}}).pricing?.line_discounts_total ?? 0).toLocaleString()}</span></div>
           <div className="flex justify-between"><span className="text-muted-foreground">Order Discount</span><span>-₹{Number((q as {pricing?:{order_discount?:number}}).pricing?.order_discount ?? 0).toLocaleString()}</span></div>
@@ -265,7 +265,7 @@ export function QuotationBuilderPage() {
             : recommendations.slice(0,3).map((r:Record<string,unknown>)=>(
               <div key={String(r.recommendation_id ?? r.product_id)} className="rounded-lg border p-2">
                 <p className="text-small font-medium">{String((r as {product_name?:string}).product_name)}</p><p className="text-caption text-muted-foreground">{String((r as {reason?:string}).reason)}</p>
-                <div className="flex gap-2 mt-1"><Badge variant="intelligence" className="text-caption">{String((r as {promotion_tag?:string}).promotion_tag ?? '')}</Badge><span className="text-caption tabular-nums">Δ ₹{String((r as {margin_delta?:number}).margin_delta ?? '')}</span><Button size="sm" variant="outline" className="ml-auto h-6 text-caption" onClick={async()=>{ if(!id) return; try { await apiClient.post(`/quotations/${id}/recommendations/${String(r.recommendation_id)}/add`); load(); toast.success('Recommendation added to quotation') } catch (err) { toast.error(getApiErrorMessage(err)) } }}>Add</Button></div>
+                <div className="flex gap-2 mt-1"><Badge variant="intelligence" className="text-caption">{String((r as {promotion_tag?:string}).promotion_tag ?? '')}</Badge><span className="text-caption tabular-nums">Δ ₹{String((r as {margin_delta?:number}).margin_delta ?? '')}</span><Button size="sm" variant="outline" className="ml-auto h-6 text-caption" onClick={async()=>{ if(!id) return; try { await apiClient.post(`/quotations/₹{id}/recommendations/₹{String(r.recommendation_id)}/add`); load(); toast.success('Recommendation added to quotation') } catch (err) { toast.error(getApiErrorMessage(err)) } }}>Add</Button></div>
               </div>
             ))}
           </CardContent>

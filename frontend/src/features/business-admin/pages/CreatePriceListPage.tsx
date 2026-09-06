@@ -6,11 +6,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
-import { useCreatePriceList, useProducts } from '../hooks/use-business-admin'
+import { useCreatePriceList, useProducts, useCustomers } from '../hooks/use-business-admin'
 import type { Product } from '../types'
 import { toast } from 'sonner'
 import { ArrowLeft, Save, Plus, Trash2, Search } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { parseISO, isValid } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { MoneyDisplay } from '@/components/shared'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -45,7 +45,7 @@ export function CreatePriceListPage() {
   const [customerSearch, setCustomerSearch] = useState('')
 
   const { data: productData } = useProducts({ search: productSearch, status: 'active', page: 1, perPage: 50 })
-  const { data: customerData } = useProducts({ page: 1, perPage: 100 })
+  const { data: customerData } = useCustomers({ page: 1, perPage: 100 })
 
   const [form, setForm] = useState<FormState>({
     name: '',
@@ -63,8 +63,15 @@ export function CreatePriceListPage() {
 
   const dateError = useMemo(() => {
     if (form.effectiveFrom && form.effectiveUntil) {
-      if (parseISO(form.effectiveUntil) <= parseISO(form.effectiveFrom)) {
-        return 'End date must be after start date'
+      try {
+        const from = parseISO(form.effectiveFrom)
+        const until = parseISO(form.effectiveUntil)
+        if (!isValid(from) || !isValid(until)) return null
+        if (until <= from) {
+          return 'End date must be after start date'
+        }
+      } catch {
+        return null
       }
     }
     return null
@@ -75,7 +82,12 @@ export function CreatePriceListPage() {
   }, [productData])
 
   const filteredCustomers = useMemo(() => {
-    const customers = [
+    const apiCustomers = ((customerData as unknown as { customers?: Array<{ id: string; name: string; tier?: string }> })?.customers || []).map((c) => ({
+      id: c.id,
+      name: c.name,
+      tier: c.tier || '—',
+    }))
+    const customers = apiCustomers.length > 0 ? apiCustomers : [
       { id: 'cust-1', name: 'Acme Corp', tier: 'Gold' },
       { id: 'cust-2', name: 'TechStart Inc', tier: 'Silver' },
       { id: 'cust-3', name: 'Global Enterprises', tier: 'Platinum' },
@@ -83,7 +95,7 @@ export function CreatePriceListPage() {
     ]
     if (!customerSearch) return customers
     return customers.filter((c) => c.name.toLowerCase().includes(customerSearch.toLowerCase()))
-  }, [customerSearch])
+  }, [customerSearch, customerData])
 
   const updateField = (field: keyof FormState, value: string | string[] | PricingRuleItem[]) => {
     setForm((prev) => ({ ...prev, [field]: value }))
@@ -136,6 +148,7 @@ export function CreatePriceListPage() {
   const validate = (): boolean => {
     const errs: Record<string, string> = {}
     if (!form.name.trim()) errs.name = 'Name is required'
+    if (!form.effectiveFrom) errs.effectiveFrom = 'Effective from date is required'
     if (dateError) errs.effectiveUntil = dateError
     if (form.customerSegment === 'tier' && !form.customerTier) errs.customerTier = 'Select a tier'
     if (form.customerSegment === 'customer' && form.selectedCustomerIds.length === 0) {
@@ -157,6 +170,16 @@ export function CreatePriceListPage() {
         tierScope: form.customerSegment === 'tier' ? form.customerTier : undefined,
         effectiveFrom: form.effectiveFrom || undefined,
         effectiveUntil: form.effectiveUntil || undefined,
+        pricingRules: form.pricingRules.map((r) => ({
+          productId: r.productId,
+          productName: r.productName,
+          productSku: r.productSku,
+          basePrice: r.basePrice,
+          sellingPrice: parseFloat(r.sellingPrice) || 0,
+          percentageAdjustment: r.percentageAdjustment,
+        })),
+        selectedCustomerIds: form.selectedCustomerIds,
+        customerIds: form.selectedCustomerIds,
       })
       toast.success('Price list created')
       navigate('/business-admin/pricing/price-lists')
@@ -215,9 +238,8 @@ export function CreatePriceListPage() {
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="INR">INR (₹)</SelectItem>
+                    <SelectItem value="USD">USD ($)</SelectItem>
                     <SelectItem value="EUR">EUR (€)</SelectItem>
-                    <SelectItem value="GBP">GBP (£)</SelectItem>
-                    <SelectItem value="AED">AED (د.إ)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -244,13 +266,16 @@ export function CreatePriceListPage() {
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label>Effective From</Label>
+                <Label>Effective From *</Label>
                 <Input
                   type="date"
                   value={form.effectiveFrom}
                   onChange={(e) => updateField('effectiveFrom', e.target.value)}
-                  className={cn(INPUT_CLASS, errors.effectiveUntil && 'border-danger')}
+                  className={cn(INPUT_CLASS, (errors.effectiveFrom || errors.effectiveUntil) && 'border-danger')}
                 />
+                {errors.effectiveFrom && (
+                  <p className="text-[11px] text-danger">{errors.effectiveFrom}</p>
+                )}
               </div>
               <div className="space-y-1.5">
                 <Label>Effective Until</Label>

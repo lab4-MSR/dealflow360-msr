@@ -56,7 +56,7 @@ const vectors360 = [
     bgBadge: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
     glowColor: 'rgba(59, 130, 246, 0.35)',
     metrics: [
-      { label: 'Active Pipeline', value: '$48.5M', delta: '+14% MoM' },
+      { label: 'Active Pipeline', value: '₹48.5 Cr', delta: '+14% MoM' },
       { label: 'Account Health', value: '98.4%', delta: 'Prime Tier' },
       { label: 'Committee Reach', value: '6.2 avg', delta: 'Multi-threaded' },
     ],
@@ -114,7 +114,7 @@ const vectors360 = [
     metrics: [
       { label: 'Median Turnaround', value: '4.2 min', delta: '-68% faster' },
       { label: 'SLA Adherence', value: '99.4%', delta: 'Real-time timer' },
-      { label: 'Unauthorized Bypass', value: '$0.00', delta: '100% Enforced' },
+      { label: 'Unauthorized Bypass', value: '₹0.00', delta: '100% Enforced' },
     ],
     handshake: {
       inbound: 'Simulated Discount & Quote Submission',
@@ -198,7 +198,7 @@ const vectors360 = [
     metrics: [
       { label: 'Reconciliation', value: '100%', delta: 'Automated' },
       { label: 'DSO Reduction', value: '-14 Days', delta: 'Faster collection' },
-      { label: 'Proration Delta', value: '$0.00', delta: 'Exact penny math' },
+      { label: 'Proration Delta', value: '₹0.00', delta: 'Exact penny math' },
     ],
     handshake: {
       inbound: 'Delivery Verification Event',
@@ -225,7 +225,7 @@ const vectors360 = [
     glowColor: 'rgba(236, 72, 153, 0.35)',
     metrics: [
       { label: 'Forecast Accuracy', value: '92.4%', delta: 'AI-Calibrated' },
-      { label: 'At-Risk Deal Saves', value: '$3.8M', delta: 'Proactive alerts' },
+      { label: 'At-Risk Deal Saves', value: '₹3.8 Cr', delta: 'Proactive alerts' },
       { label: 'Expansion Attached', value: '+22.4%', delta: 'Cross-sell AI' },
     ],
     handshake: {
@@ -331,7 +331,7 @@ export function LandingPage() {
               </div>
 
               {/* Main Headline */}
-              <h1 className="text-4xl font-black leading-[1.06] tracking-tight sm:text-6xl lg:text-[68px]">
+              <h1 className="text-3xl font-black leading-[1.1] tracking-tight sm:text-4xl lg:text-5xl">
                 Turn commercial decisions into{' '}
                 <span className="mt-1 block text-primary">
                   controlled execution.
@@ -339,16 +339,15 @@ export function LandingPage() {
               </h1>
 
               {/* Subheading */}
-              <p className="mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
+              <p className="mt-5 max-w-xl text-sm sm:text-base leading-relaxed text-muted-foreground">
                 Bring customers, deals, quotations, approvals, inventory, fulfillment, billing and analytics into one authoritative system of record.
               </p>
 
               {/* Primary Call to Actions */}
-              <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button
                   asChild
-                  size="lg"
-                  className="h-12 rounded-xl bg-primary px-7 font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] hover:bg-primary-hover hover:shadow-primary/40"
+                  className="h-10.5 rounded-xl bg-primary px-6 font-semibold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:scale-[1.02] hover:bg-primary-hover hover:shadow-primary/30"
                 >
                   <Link to={enter}>
                     {user ? 'Open your workspace' : 'Explore the platform'}
@@ -357,9 +356,8 @@ export function LandingPage() {
                 </Button>
                 <Button
                   asChild
-                  size="lg"
                   variant="outline"
-                  className="h-12 rounded-xl border-border bg-card/60 px-6 backdrop-blur-sm hover:bg-surface-muted"
+                  className="h-10.5 rounded-xl border-border bg-card/60 px-5 backdrop-blur-sm hover:bg-surface-muted"
                 >
                   <a href="#architecture">
                     See the product flow
@@ -598,17 +596,17 @@ export function LandingPage() {
                       <div className="rounded-lg border border-border/80 divide-y divide-border/60 text-xs">
                         <div className="flex items-center justify-between p-2.5">
                           <div>
-                            <p className="font-semibold text-foreground">Edge Compute Node Blade v4 (Ã—20)</p>
-                            <p className="text-[10px] text-muted-foreground">Category: Hardware â€¢ Floor Price â‚¹45,000</p>
+                            <p className="font-semibold text-foreground">Edge Compute Node Blade v4 (×20)</p>
+                            <p className="text-[10px] text-muted-foreground">Category: Hardware • Floor Price ₹45,000</p>
                           </div>
-                          <span className="font-mono font-medium tabular-nums text-foreground">â‚¹9,00,000</span>
+                          <span className="font-mono font-medium tabular-nums text-foreground">₹9,00,000</span>
                         </div>
                         <div className="flex items-center justify-between p-2.5">
                           <div>
-                            <p className="font-semibold text-foreground">High-Throughput NVMe SAN Array (Ã—10)</p>
-                            <p className="text-[10px] text-muted-foreground">Category: Storage â€¢ Floor Price â‚¹95,000</p>
+                            <p className="font-semibold text-foreground">High-Throughput NVMe SAN Array (×10)</p>
+                            <p className="text-[10px] text-muted-foreground">Category: Storage • Floor Price ₹95,000</p>
                           </div>
-                          <span className="font-mono font-medium tabular-nums text-foreground">â‚¹9,50,000</span>
+                          <span className="font-mono font-medium tabular-nums text-foreground">₹9,50,000</span>
                         </div>
                       </div>
                     </div>
@@ -719,7 +717,7 @@ export function LandingPage() {
                         <PackageCheck className="h-4 w-4 text-emerald-500" />
                         <span>Fulfillment Optimization Result:</span>
                       </div>
-                      <strong className="font-semibold text-emerald-500">â‚¹12,400 Freight Saved â€¢ 0 Backorders</strong>
+                      <strong className="font-semibold text-emerald-500">₹12,400 Freight Saved • 0 Backorders</strong>
                     </div>
                   </div>
                 )}
@@ -782,10 +780,10 @@ export function LandingPage() {
                 <span className="text-muted-foreground/50">â€¢</span>
                 <span className="text-foreground">Continuous Flywheel</span>
               </div>
-              <h2 className="text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl text-foreground">
-                A true 360Â° view across your enterprise deal lifecycle.
+              <h2 className="text-2xl font-black tracking-tight sm:text-4xl lg:text-5xl text-foreground">
+                A true 360° view across your enterprise deal lifecycle.
               </h2>
-              <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">
+              <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
                 Every department operates with targeted clarity, while every order, discount, stock reservation, and billing event remains locked to a single, server-authoritative source of truth.
               </p>
             </motion.div>
@@ -1106,8 +1104,8 @@ export function LandingPage() {
             <motion.div {...reveal()} className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
               <div className="max-w-3xl">
                 <p className="text-label uppercase tracking-[0.2em] text-primary">Complete product structure</p>
-                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">The workspaces behind every outcome.</h2>
-                <p className="mt-5 text-body leading-7 text-muted-foreground">Explore the full platform surface â€” from the first customer interaction to the last audit event.</p>
+                <h2 className="mt-2.5 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">The workspaces behind every outcome.</h2>
+                <p className="mt-3.5 text-body leading-7 text-muted-foreground">Explore the full platform surface â€” from the first customer interaction to the last audit event.</p>
               </div>
               <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 text-caption text-muted-foreground shadow-elevation-1">
                 <span className="flex h-2 w-2 rounded-full bg-success" />
@@ -1142,8 +1140,8 @@ export function LandingPage() {
         <section id="roles" className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
           <motion.div {...reveal()} className="max-w-3xl">
             <p className="text-label uppercase tracking-[0.2em] text-primary">Role-based workspaces</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">One platform. Different teams. Shared truth.</h2>
-            <p className="mt-5 text-body leading-7 text-muted-foreground">Each role gets the right queue, decision context and action surface without losing the connected record.</p>
+            <h2 className="mt-2.5 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">One platform. Different teams. Shared truth.</h2>
+            <p className="mt-3.5 text-body leading-7 text-muted-foreground">Each role gets the right queue, decision context and action surface without losing the connected record.</p>
           </motion.div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {roles.map(([title, text, flow, Icon], index) => (
@@ -1173,8 +1171,8 @@ export function LandingPage() {
             <div className="grid gap-12 lg:grid-cols-[.82fr_1.18fr] lg:items-center">
               <motion.div {...reveal()}>
                 <p className="text-label uppercase tracking-[0.2em] text-primary">Operations execution layer</p>
-                <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">From confirmed order to delivered promise.</h2>
-                <p className="mt-5 max-w-xl text-body leading-7 text-muted-foreground dark:text-slate-300">Inventory validation, warehouse allocation, partial fulfillment, backorders, shipment tracking and delivery status live in one operational chain.</p>
+                <h2 className="mt-2.5 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">From confirmed order to delivered promise.</h2>
+                <p className="mt-3.5 max-w-xl text-body leading-7 text-muted-foreground dark:text-slate-300">Inventory validation, warehouse allocation, partial fulfillment, backorders, shipment tracking and delivery status live in one operational chain.</p>
                 <Button asChild variant="secondary" className="mt-8"><Link to={user ? '/operations' : '/login'}>Explore Operations <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
                 <div className="mt-10 grid grid-cols-3 gap-2">
                   {['Inventory', 'Fulfillment', 'Delivery'].map((item, index) => <motion.div {...reveal(index * 0.08)} key={item} className="border-l border-border dark:border-slate-700 pl-3"><p className="font-mono text-caption text-primary">0{index + 1}</p><p className="mt-1 text-small font-semibold">{item}</p></motion.div>)}
@@ -1209,8 +1207,8 @@ export function LandingPage() {
         <section id="governance" className="mx-auto grid max-w-[1440px] gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-10 lg:py-28">
           <motion.div {...reveal()}>
             <p className="text-label uppercase tracking-[0.2em] text-primary">Control plane</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-5xl">Built to be trusted with the important parts.</h2>
-            <p className="mt-5 max-w-xl text-body leading-7 text-muted-foreground">DealFlow360 treats authorization, tenant context, calculated state and audit history as product foundations â€” not afterthoughts.</p>
+            <h2 className="mt-2.5 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">Built to be trusted with the important parts.</h2>
+            <p className="mt-3.5 max-w-xl text-body leading-7 text-muted-foreground">DealFlow360 treats authorization, tenant context, calculated state and audit history as product foundations â€” not afterthoughts.</p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2">
               {[
                 ['Tenant isolation', 'Every operational query is scoped to authenticated business context.', LockKeyhole],

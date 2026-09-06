@@ -23,7 +23,7 @@ export async function createProduct(b: string, input: Record<string, unknown>) {
     .from('products')
     .insert({
       business_id: biz, name: input.name, sku: input.sku ?? null, category_id: input.category_id ?? null,
-      price: input.price, currency: input.currency ?? 'USD', unit: input.unit ?? null,
+      price: input.price, currency: input.currency ?? 'INR', unit: input.unit ?? null,
       tax_percent: input.tax_percent ?? 0, description: input.description ?? null, image_url: input.image_url ?? null,
       status: input.status ?? 'active',
     })
@@ -81,7 +81,7 @@ export async function listPriceLists(b: string) {
 }
 
 export async function createPriceList(b: string, input: Record<string, unknown>) {
-  const { data, error } = await serviceClient.from('price_lists').insert({ business_id: tenant(b), name: input.name, currency: input.currency ?? 'USD', tier_scope: input.tier_scope ?? null }).select().single();
+  const { data, error } = await serviceClient.from('price_lists').insert({ business_id: tenant(b), name: input.name, currency: input.currency ?? 'INR', tier_scope: input.tier_scope ?? null }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   return data;
 }
@@ -98,14 +98,14 @@ export async function updatePriceList(b: string, id: string, input: Record<strin
 export async function setPriceListItems(b: string, id: string, items: Array<{ product_id: string; unit_price: number }>) {
   await serviceClient.from('price_list_items').delete().eq('business_id', b).eq('price_list_id', id);
   if (!items.length) return [];
-  const rows = items.map((i) => ({ business_id: b, price_list_id: id, product_id: i.product_id, unit_price: i.unit_price, currency: 'USD' }));
+  const rows = items.map((i) => ({ business_id: b, price_list_id: id, product_id: i.product_id, unit_price: i.unit_price, currency: 'INR' }));
   const { data, error } = await serviceClient.from('price_list_items').insert(rows).select();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   return data ?? [];
 }
 
 export async function createCustomerPricing(b: string, input: Record<string, unknown>) {
-  const { data, error } = await serviceClient.from('customer_pricing').insert({ business_id: tenant(b), customer_id: input.customer_id, product_id: input.product_id, unit_price: input.unit_price, currency: 'USD' }).select().single();
+  const { data, error } = await serviceClient.from('customer_pricing').insert({ business_id: tenant(b), customer_id: input.customer_id, product_id: input.product_id, unit_price: input.unit_price, currency: 'INR' }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   return data;
 }
@@ -119,7 +119,7 @@ export async function listCustomerPricing(b: string, customerId?: string) {
 }
 
 export async function createVolumePricing(b: string, input: Record<string, unknown>) {
-  const { data, error } = await serviceClient.from('volume_pricing').insert({ business_id: tenant(b), product_id: input.product_id, min_qty: input.min_qty, price: input.price, currency: 'USD' }).select().single();
+  const { data, error } = await serviceClient.from('volume_pricing').insert({ business_id: tenant(b), product_id: input.product_id, min_qty: input.min_qty, price: input.price, currency: 'INR' }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
   return data;
 }

@@ -17,12 +17,28 @@ import { useWarehouseDetail, useDeleteWarehouse, useUpdateWarehouse } from '../h
 import type { Warehouse, WarehouseDetail } from '../types'
 import { toast } from 'sonner'
 import { format, parseISO } from 'date-fns'
-import { Plus, MoreHorizontal, Eye, Edit, Power, Trash2, MapPin, Package, AlertTriangle, CheckCircle, XCircle, ArrowDown, ArrowUp, Minus, RefreshCw, Settings, Clock, Users, Mail, Phone, Truck } from 'lucide-react'
+import { MoreHorizontal, Edit, Power, Trash2, MapPin, Package, AlertTriangle, CheckCircle, RefreshCw, Users, Mail, Phone, Truck } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
-import { MoneyDisplay } from '@/components/shared'
+
+const safeFormatDateTime = (raw: unknown, fallback = '—') => {
+  if (typeof raw !== 'string' || !raw) return fallback
+  try {
+    const d = parseISO(raw)
+    if (Number.isNaN(d.getTime())) return fallback
+    return format(d, 'PPp')
+  } catch { return fallback }
+}
+
+const safeFormatDate = (raw: unknown, fallback = '—') => {
+  if (typeof raw !== 'string' || !raw) return fallback
+  try {
+    const d = parseISO(raw)
+    if (Number.isNaN(d.getTime())) return fallback
+    return format(d, 'PP')
+  } catch { return fallback }
+}
 
 const STATUS_VARIANT: Record<string, 'success' | 'secondary' | 'warning'> = {
   active: 'success',
@@ -77,8 +93,15 @@ function WarehouseDetailsPage() {
     catch { toast.error('Failed to delete warehouse') }
   }
 
-  const handleToggleStatus = (w: Warehouse) => {
-    toast.info(`Toggle status for ${w.name} coming soon`)
+  const handleToggleStatus = async (w: Warehouse) => {
+    const nextStatus = w.status === 'active' ? 'inactive' : 'active'
+    try {
+      await updateWarehouse.mutateAsync({ id: w.id, data: { status: nextStatus } })
+      toast.success(`Warehouse ${nextStatus === 'active' ? 'activated' : 'deactivated'}`)
+      refetch()
+    } catch {
+      toast.error('Failed to update warehouse status')
+    }
   }
 
   const handleEditSubmit = async (formData: Partial<Warehouse>) => {
@@ -94,24 +117,24 @@ function WarehouseDetailsPage() {
 
   const getEditDefaults = () => ({
     name: warehouse?.name || '',
-    code: warehouse?.code || '',
-    type: warehouse?.type || 'distribution',
+    code: (warehouse as unknown as { code?: string })?.code || '',
+    type: (warehouse as unknown as { type?: string })?.type || 'distribution',
     status: warehouse?.status || 'active',
-    addressLine1: warehouse?.address.line1 || '',
-    addressLine2: warehouse?.address.line2 || '',
-    city: warehouse?.address.city || '',
-    state: warehouse?.address.state || '',
-    country: warehouse?.address.country || '',
-    postalCode: warehouse?.address.postalCode || '',
-    managerName: warehouse?.managerName || '',
-    managerEmail: warehouse?.managerEmail || '',
-    managerPhone: warehouse?.managerPhone || '',
-    storageCapacity: warehouse?.storageCapacity || 0,
-    capacityThreshold: warehouse?.capacityThreshold || 0,
-    isDefault: warehouse?.isDefault || false,
-    allocationPriority: warehouse?.allocationPriority || 1,
-    shippingCost: warehouse?.shippingCost || 0,
-    shipmentPriority: warehouse?.shipmentPriority || 'normal',
+    addressLine1: warehouse?.address?.line1 || '',
+    addressLine2: warehouse?.address?.line2 || '',
+    country: warehouse?.address?.country || '',
+    city: warehouse?.address?.city || '',
+    state: warehouse?.address?.state || '',
+    postalCode: warehouse?.address?.postalCode || '',
+    managerName: (warehouse as unknown as { managerName?: string })?.managerName || '',
+    managerEmail: (warehouse as unknown as { managerEmail?: string })?.managerEmail || '',
+    managerPhone: (warehouse as unknown as { managerPhone?: string })?.managerPhone || '',
+    shippingCost: (warehouse as unknown as { shippingCost?: number })?.shippingCost ?? 0,
+    shipmentPriority: (warehouse as unknown as { shipmentPriority?: string })?.shipmentPriority || 'normal',
+    storageCapacity: (warehouse as unknown as { storageCapacity?: number })?.storageCapacity ?? 0,
+    capacityThreshold: (warehouse as unknown as { capacityThreshold?: number })?.capacityThreshold ?? 0,
+    isDefault: (warehouse as unknown as { isDefault?: boolean })?.isDefault || false,
+    allocationPriority: (warehouse as unknown as { allocationPriority?: number })?.allocationPriority || 1,
   })
 
   const handleOpenEdit = () => { setEditForm(getEditDefaults()); setIsEditOpen(true) }
@@ -134,8 +157,16 @@ function WarehouseDetailsPage() {
     )
   }
 
-  const capacityPct = warehouse.storageCapacity > 0 ? Math.round((warehouse.currentCapacity / warehouse.storageCapacity) * 100) : 0
-  const isOverThreshold = warehouse.currentCapacity >= warehouse.capacityThreshold
+  const inventory = warehouse.inventory ?? []
+  const stockMovements = (warehouse as unknown as { stockMovements?: unknown[] }).stockMovements ?? []
+  const shipments = (warehouse as unknown as { shipments?: unknown[] }).shipments ?? []
+  const sumField = (arr: { available?: number; reserved?: number }[], field: 'available' | 'reserved') =>
+    arr.reduce((s, i) => s + (typeof i[field] === 'number' ? i[field] : 0), 0)
+  const storageCapacity = (warehouse as unknown as { storageCapacity?: number }).storageCapacity ?? 0
+  const currentCapacity = (warehouse as unknown as { currentCapacity?: number }).currentCapacity ?? 0
+  const capacityThreshold = (warehouse as unknown as { capacityThreshold?: number }).capacityThreshold ?? 0
+  const capacityPct = storageCapacity > 0 ? Math.round((currentCapacity / storageCapacity) * 100) : 0
+  const isOverThreshold = currentCapacity >= capacityThreshold
 
   return (
     <div className="space-y-6">
@@ -162,9 +193,9 @@ function WarehouseDetailsPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <KpiCard label="Total Products" value={warehouse.totalProducts} icon={<Package className="h-5 w-5" />} />
-        <KpiCard label="Available Stock" value={warehouse.inventory.reduce((s, i) => s + i.available, 0)} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
-        <KpiCard label="Reserved Stock" value={warehouse.inventory.reduce((s, i) => s + i.reserved, 0)} variant="warning" icon={<AlertTriangle className="h-5 w-5" />} />
+        <KpiCard label="Total Products" value={(warehouse as unknown as { totalProducts?: number }).totalProducts ?? inventory.length} icon={<Package className="h-5 w-5" />} />
+        <KpiCard label="Available Stock" value={sumField(inventory, 'available')} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
+        <KpiCard label="Reserved Stock" value={sumField(inventory, 'reserved')} variant="warning" icon={<AlertTriangle className="h-5 w-5" />} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -172,13 +203,13 @@ function WarehouseDetailsPage() {
           <CardHeader><CardTitle>Capacity</CardTitle></CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{warehouse.currentCapacity.toLocaleString()} / {warehouse.storageCapacity.toLocaleString()}</span>
+              <span className="text-sm text-muted-foreground">{currentCapacity.toLocaleString('en-IN')} / {storageCapacity.toLocaleString('en-IN')}</span>
               <span className={`text-sm font-medium tabular-nums ${isOverThreshold ? 'text-warning' : 'text-muted-foreground'}`}>{capacityPct}%</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-surface-muted overflow-hidden">
+            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
               <div className={`h-full rounded-full transition-all ${isOverThreshold ? 'bg-warning' : 'bg-primary'}`} style={{ width: `${Math.min(capacityPct, 100)}%` }} />
             </div>
-            <p className="text-xs text-muted-foreground">Threshold: {warehouse.capacityThreshold.toLocaleString()} ({isOverThreshold ? 'EXCEEDED' : 'OK'})</p>
+            <p className="text-xs text-muted-foreground">Threshold: {capacityThreshold.toLocaleString('en-IN')} ({isOverThreshold ? 'EXCEEDED' : 'OK'})</p>
           </CardContent>
         </Card>
         <Card>
@@ -210,7 +241,7 @@ function WarehouseDetailsPage() {
             <Card>
               <CardHeader><CardTitle>Warehouse Details</CardTitle></CardHeader>
               <CardContent className="space-y-3 text-sm">
-                <div className="grid grid-cols-2 gap-2"><span className="text-muted-foreground">Code</span><span className="font-medium">{warehouse.code}</span><span className="text-muted-foreground">Type</span><span className="font-medium capitalize">{warehouse.type.replace('_', ' ')}</span><span className="text-muted-foreground">Status</span><span className="font-medium"><Badge variant={STATUS_VARIANT[warehouse.status]}>{warehouse.status}</Badge></span><span className="text-muted-foreground">Default</span><span className="font-medium">{warehouse.isDefault ? 'Yes' : 'No'}</span><span className="text-muted-foreground">Allocation Priority</span><span className="font-medium">{warehouse.allocationPriority}</span><span className="text-muted-foreground">Shipment Priority</span><span className="font-medium capitalize">{warehouse.shipmentPriority}</span></div>
+                <div className="grid grid-cols-2 gap-2"><span className="text-muted-foreground">Code</span><span className="font-medium">{warehouse.code}</span><span className="text-muted-foreground">Type</span><span className="font-medium capitalize">{warehouse.type.replace('_', ' ')}</span><span className="text-muted-foreground">Status</span><span className="font-medium"><Badge variant={STATUS_VARIANT[warehouse.status ?? ''] || 'secondary'}>{warehouse.status}</Badge></span><span className="text-muted-foreground">Default</span><span className="font-medium">{warehouse.isDefault ? 'Yes' : 'No'}</span><span className="text-muted-foreground">Allocation Priority</span><span className="font-medium">{warehouse.allocationPriority}</span><span className="text-muted-foreground">Shipment Priority</span><span className="font-medium capitalize">{warehouse.shipmentPriority}</span></div>
               </CardContent>
             </Card>
             <Card>
@@ -226,7 +257,7 @@ function WarehouseDetailsPage() {
         </TabsContent>
 
         <TabsContent value="inventory">
-          {warehouse.inventory.length === 0 ? (
+          {inventory.length === 0 ? (
             <EmptyState icon={<Package className="h-8 w-8" />} title="No inventory" description="This warehouse has no inventory items assigned." />
           ) : (
             <DataTable
@@ -237,13 +268,13 @@ function WarehouseDetailsPage() {
                 { id: 'reorderLevel', header: 'Reorder Level', accessorFn: (row: any) => <span className="tabular-nums">{row.reorderLevel}</span> },
                 { id: 'stockStatus', header: 'Status', accessorFn: (row: any) => <Badge variant={STOCK_STATUS_VARIANT[row.stockStatus] || 'secondary'}>{row.stockStatus.replace('_', ' ')}</Badge> },
               ] as Column<any>[]}
-              data={warehouse.inventory}
+              data={inventory}
             />
           )}
         </TabsContent>
 
         <TabsContent value="movements">
-          {warehouse.stockMovements.length === 0 ? (
+          {stockMovements.length === 0 ? (
             <EmptyState icon={<RefreshCw className="h-8 w-8" />} title="No stock movements" description="No stock movement history available for this warehouse." />
           ) : (
             <DataTable
@@ -254,15 +285,15 @@ function WarehouseDetailsPage() {
                 { id: 'reference', header: 'Reference', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{row.reference || '—'}</span> },
                 { id: 'reason', header: 'Reason', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{row.reason || '—'}</span> },
                 { id: 'actor', header: 'Actor', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{row.actor || 'System'}</span> },
-                { id: 'timestamp', header: 'Timestamp', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{format(parseISO(row.timestamp), 'PPp')}</span> },
+                { id: 'timestamp', header: 'Timestamp', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{safeFormatDateTime(row.timestamp)}</span> },
               ] as Column<any>[]}
-              data={warehouse.stockMovements}
+              data={stockMovements}
             />
           )}
         </TabsContent>
 
         <TabsContent value="shipments">
-          {warehouse.shipments.length === 0 ? (
+          {shipments.length === 0 ? (
             <EmptyState icon={<Truck className="h-8 w-8" />} title="No shipments" description="No shipments from this warehouse." />
           ) : (
             <DataTable
@@ -272,9 +303,9 @@ function WarehouseDetailsPage() {
                 { id: 'items', header: 'Items', accessorFn: (row: any) => <span className="tabular-nums">{row.itemCount}</span> },
                 { id: 'status', header: 'Status', accessorFn: (row: any) => <Badge variant={SHIPMENT_STATUS_VARIANT[row.status] || 'secondary'}>{row.status}</Badge> },
                 { id: 'tracking', header: 'Tracking', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{row.trackingNumber || '—'}</span> },
-                { id: 'delivery', header: 'Est. Delivery', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{row.estimatedDelivery ? format(parseISO(row.estimatedDelivery), 'PP') : '—'}</span> },
+                { id: 'delivery', header: 'Est. Delivery', accessorFn: (row: any) => <span className="text-sm text-muted-foreground">{safeFormatDate(row.estimatedDelivery)}</span> },
               ] as Column<any>[]}
-              data={warehouse.shipments}
+              data={shipments}
             />
           )}
         </TabsContent>
@@ -293,10 +324,31 @@ function WarehouseDetailsPage() {
               <div className="space-y-2"><Label>Status</Label><Select value={editForm.status} onValueChange={v => setEditForm(p => ({ ...p, status: v as any }))}><SelectTrigger className="w-full"><SelectValue placeholder="Select" /></SelectTrigger><SelectContent><SelectItem value="active">Active</SelectItem><SelectItem value="inactive">Inactive</SelectItem><SelectItem value="maintenance">Maintenance</SelectItem></SelectContent></Select></div>
             </div>
             <div className="space-y-2"><Label>Address Line 1</Label><Input value={editForm.addressLine1} onChange={e => setEditForm(p => ({ ...p, addressLine1: e.target.value }))} /></div>
+            <div className="space-y-2"><Label>Address Line 2</Label><Input value={(editForm as { addressLine2?: string }).addressLine2 ?? ''} onChange={e => setEditForm(p => ({ ...p, addressLine2: e.target.value }))} /></div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2"><Label>City</Label><Input value={editForm.city} onChange={e => setEditForm(p => ({ ...p, city: e.target.value }))} /></div>
               <div className="space-y-2"><Label>State</Label><Input value={editForm.state} onChange={e => setEditForm(p => ({ ...p, state: e.target.value }))} /></div>
+              <div className="space-y-2"><Label>Country</Label><Input value={(editForm as { country?: string }).country ?? ''} onChange={e => setEditForm(p => ({ ...p, country: e.target.value }))} /></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2"><Label>Postal Code</Label><Input value={editForm.postalCode} onChange={e => setEditForm(p => ({ ...p, postalCode: e.target.value }))} /></div>
+              <div className="space-y-2"><Label>Manager Name</Label><Input value={(editForm as { managerName?: string }).managerName ?? ''} onChange={e => setEditForm(p => ({ ...p, managerName: e.target.value }))} /></div>
+              <div className="space-y-2"><Label>Manager Email</Label><Input type="email" value={(editForm as { managerEmail?: string }).managerEmail ?? ''} onChange={e => setEditForm(p => ({ ...p, managerEmail: e.target.value }))} /></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2"><Label>Manager Phone</Label><Input value={(editForm as { managerPhone?: string }).managerPhone ?? ''} onChange={e => setEditForm(p => ({ ...p, managerPhone: e.target.value }))} /></div>
+              <div className="space-y-2"><Label>Shipping Cost</Label><Input type="number" min="0" step="0.01" value={(editForm as { shippingCost?: number }).shippingCost ?? 0} onChange={e => setEditForm(p => ({ ...p, shippingCost: parseFloat(e.target.value) || 0 }))} /></div>
+              <div className="space-y-2"><Label>Shipment Priority</Label><Select value={(editForm as { shipmentPriority?: string }).shipmentPriority ?? 'normal'} onValueChange={v => setEditForm(p => ({ ...p, shipmentPriority: v }))}><SelectTrigger className="w-full"><SelectValue placeholder="Select" /></SelectTrigger><SelectContent><SelectItem value="low">Low</SelectItem><SelectItem value="normal">Normal</SelectItem><SelectItem value="high">High</SelectItem></SelectContent></Select></div>
+            </div>
+            <div className="space-y-2">
+              <Label>Default Warehouse</Label>
+              <Select value={((editForm as { isDefault?: boolean }).isDefault ? 'true' : 'false')} onValueChange={v => {
+                if (v === 'true' && !window.confirm('Set this warehouse as the default? This will unset the current default.')) return
+                setEditForm(p => ({ ...p, isDefault: v === 'true' }))
+              }}>
+                <SelectTrigger className="w-full"><SelectValue placeholder="Select" /></SelectTrigger>
+                <SelectContent><SelectItem value="false">No</SelectItem><SelectItem value="true">Yes</SelectItem></SelectContent>
+              </Select>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2"><Label>Storage Capacity</Label><Input type="number" value={editForm.storageCapacity} onChange={e => setEditForm(p => ({ ...p, storageCapacity: parseInt(e.target.value) || 0 }))} /></div>

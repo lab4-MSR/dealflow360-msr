@@ -118,6 +118,7 @@ import {
   deletePriceList,
   fetchCustomerPricing,
   createCustomerPricingOverride,
+  deleteCustomerPricingOverride,
   fetchVolumePricingRules,
   fetchVolumePricingKpis,
   createVolumePricingRule,
@@ -184,10 +185,14 @@ deleteWarehouse,
   updateBillingCycle,
   deleteBillingCycle,
   fetchProrationRules,
+  createProrationRule,
   updateProrationRules,
+  deleteProrationRule,
   calculateProration,
   fetchCancellationRules,
+  createCancellationRule,
   updateCancellationRules,
+  deleteCancellationRule,
   fetchReportKpis,
   fetchSalesReport,
   fetchRevenueReport,
@@ -878,6 +883,17 @@ export function useCreateCustomerPricingOverride() {
   })
 }
 
+export function useDeleteCustomerPricingOverride() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ customerId, productId }: { customerId: string; productId: string }) =>
+      deleteCustomerPricingOverride(customerId, productId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ba-customer-pricing'] })
+    },
+  })
+}
+
 // ─── Volume Pricing Hooks ─────────────────────────────────
 
 export function useVolumePricingRules(filters: VolumePricingFilters) {
@@ -932,11 +948,12 @@ export function useDeleteVolumePricingRule() {
 
 // ─── Pricing History Hooks ────────────────────────────────
 
-export function usePricingHistory(filters: PricingHistoryFilters) {
+export function usePricingHistory(filters: PricingHistoryFilters, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['ba-pricing-history', filters],
     queryFn: () => fetchPricingHistory(filters),
     staleTime: 5 * 60 * 1000,
+    enabled: options?.enabled ?? true,
   })
 }
 
@@ -1542,10 +1559,30 @@ export function useProrationRules() {
   })
 }
 
+export function useCreateProrationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Omit<ProrationRule, 'id' | 'createdAt' | 'updatedAt'>) => createProrationRule(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ba-proration-rules"] })
+    },
+  })
+}
+
 export function useUpdateProrationRules() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<ProrationRule> }) => updateProrationRules(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ba-proration-rules"] })
+    },
+  })
+}
+
+export function useDeleteProrationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => deleteProrationRule(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ba-proration-rules"] })
     },
@@ -1566,10 +1603,30 @@ export function useCancellationRules() {
   })
 }
 
+export function useCreateCancellationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Omit<CancellationRule, 'id' | 'createdAt' | 'updatedAt'>) => createCancellationRule(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ba-cancellation-rules"] })
+    },
+  })
+}
+
 export function useUpdateCancellationRules() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<CancellationRule> }) => updateCancellationRules(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ba-cancellation-rules"] })
+    },
+  })
+}
+
+export function useDeleteCancellationRule() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => deleteCancellationRule(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ba-cancellation-rules"] })
     },

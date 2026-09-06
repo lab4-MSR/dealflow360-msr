@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -6,30 +6,50 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
+import { EmptyState } from '@/components/ui/empty-state'
 import { useCreateApprovalRule, useApprovalChains } from '../hooks/use-business-admin'
-import { useProducts } from '../hooks/use-business-admin'
 import { useCategories } from '../hooks/use-business-admin'
 import { useCustomerTiers } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
-import { Plus, ArrowLeft, Save, FileText, Zap, DollarSign, BarChart, Users, Layers, GitBranch, Clock, AlertTriangle, Shield } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Plus, ArrowLeft, FileText, Zap, Clock, Shield } from 'lucide-react'
 
 const TRIGGER_TYPES = [
-  { value: 'discount_threshold', label: 'Discount Threshold', icon: <Zap className="h-4 w-4" /> },
-  { value: 'deal_value', label: 'Deal Value', icon: <DollarSign className="h-4 w-4" /> },
-  { value: 'margin', label: 'Margin', icon: <BarChart className="h-4 w-4" /> },
-  { value: 'risk_score', label: 'Risk Score', icon: <AlertTriangle className="h-4 w-4" /> },
-  { value: 'customer_tier', label: 'Customer Tier', icon: <Users className="h-4 w-4" /> },
-  { value: 'product_category', label: 'Product Category', icon: <Layers className="h-4 w-4" /> },
-  { value: 'compound', label: 'Compound (Multiple)', icon: <GitBranch className="h-4 w-4" /> },
+  { value: 'discount_threshold', label: 'Discount Threshold' },
+  { value: 'deal_value', label: 'Deal Value' },
+  { value: 'margin', label: 'Margin' },
+  { value: 'risk_score', label: 'Risk Score' },
+  { value: 'customer_tier', label: 'Customer Tier' },
+  { value: 'product_category', label: 'Product Category' },
+  { value: 'compound', label: 'Compound (Multiple)' },
 ]
+
+interface ApprovalRuleFormData {
+  name: string
+  description: string
+  triggerType: string
+  priority: number
+  discountThreshold: string
+  dealValueMin: string
+  dealValueMax: string
+  marginMin: string
+  marginMax: string
+  riskScoreMin: string
+  riskScoreMax: string
+  customerTier: string
+  productCategoryId: string
+  approvalLevel: string
+  chainId: string
+  approvalTimeMinutes: number
+  escalationTimeMinutes: number
+}
 
 function CreateApprovalRulePage() {
   const navigate = useNavigate()
   const [triggerType, setTriggerType] = useState('discount_threshold')
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ApprovalRuleFormData>({
     name: '',
     description: '',
+    triggerType: 'discount_threshold',
     priority: 10,
     discountThreshold: '',
     dealValueMin: '',
@@ -51,8 +71,42 @@ function CreateApprovalRulePage() {
   const { data: categoriesData } = useCategories({ status: 'active' })
   const { data: tiersData } = useCustomerTiers()
 
-  const handleChange = (field: string, value: any) => setFormData(prev => ({ ...prev, [field]: value }))
+  const handleChange = (field: keyof ApprovalRuleFormData, value: string | number) => setFormData(prev => ({ ...prev, [field]: value }))
   const handleTriggerChange = (value: string) => { setTriggerType(value); setFormData(prev => ({ ...prev, triggerType: value })) }
+
+  const parseNum = (raw: string): number | undefined => {
+    if (raw === '' || raw === undefined) return undefined
+    const n = parseFloat(raw)
+    return Number.isNaN(n) ? undefined : n
+  }
+
+  const validateForm = (): string | null => {
+    if (!formData.name.trim()) return 'Rule name is required'
+    if (showDiscount) {
+      const v = parseNum(formData.discountThreshold)
+      if (v === undefined) return 'Discount threshold must be a valid number'
+    }
+    const checkRange = (minRaw: string, maxRaw: string, label: string): string | null => {
+      const min = parseNum(minRaw)
+      const max = parseNum(maxRaw)
+      if (minRaw !== '' && min === undefined) return `${label} min must be a valid number`
+      if (maxRaw !== '' && max === undefined) return `${label} max must be a valid number`
+      if (min !== undefined && max !== undefined && min > max) return `${label} min must be <= max`
+      return null
+    }
+    for (const [minRaw, maxRaw, label] of [
+      [formData.dealValueMin, formData.dealValueMax, 'Deal value'],
+      [formData.marginMin, formData.marginMax, 'Margin'],
+      [formData.riskScoreMin, formData.riskScoreMax, 'Risk score'],
+    ] as [string, string, string][]) {
+      const err = checkRange(minRaw, maxRaw, label)
+      if (err) return err
+    }
+    if (showTier && !formData.customerTier) return 'Please select a customer tier'
+    if (showCategory && !formData.productCategoryId) return 'Please select a product category'
+    if (showChain && !formData.chainId) return 'Please select an approval chain'
+    return null
+  }
 
   const showDiscount = ['discount_threshold', 'compound'].includes(triggerType)
   const showDealValue = ['deal_value', 'compound'].includes(triggerType)
@@ -64,6 +118,13 @@ function CreateApprovalRulePage() {
 
   const handleSubmit = async (e: React.FormEvent, saveDraft = false) => {
     e.preventDefault()
+    if (!saveDraft) {
+      const validationError = validateForm()
+      if (validationError) { toast.error(validationError); return }
+    } else if (!formData.name.trim()) {
+      toast.error('Rule name is required even for drafts')
+      return
+    }
     const triggerConfig: any = {}
     if (showDiscount) triggerConfig.discountThreshold = parseFloat(formData.discountThreshold)
     if (showDealValue) { if (formData.dealValueMin) triggerConfig.dealValueMin = parseFloat(formData.dealValueMin); if (formData.dealValueMax) triggerConfig.dealValueMax = parseFloat(formData.dealValueMax) }
@@ -87,7 +148,7 @@ function CreateApprovalRulePage() {
     try {
       await createApprovalRule.mutateAsync(payload)
       toast.success(saveDraft ? 'Draft saved' : 'Approval rule created')
-      navigate('/business-admin/approval-configuration/rules')
+      navigate('/business-admin/approvals')
     } catch { toast.error('Failed to create approval rule') }
   }
 
@@ -98,14 +159,14 @@ function CreateApprovalRulePage() {
         description="Configure a new approval routing rule with triggers, conditions, and escalation paths"
         breadcrumbs={[
           { label: 'Business Admin', path: '/business-admin/dashboard' },
-          { label: 'Approval Configuration', path: '/business-admin/approval-configuration/rules' },
+          { label: 'Approval Rules', path: '/business-admin/approvals' },
           { label: 'Create Rule' },
         ]}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate(-1)}><ArrowLeft className="h-4 w-4 mr-1.5" />Cancel</Button>
-            <Button onClick={e => handleSubmit(e, true)} disabled={createApprovalRule.isPending}><FileText className="h-4 w-4 mr-1.5" />Save Draft</Button>
-            <Button onClick={handleSubmit} disabled={createApprovalRule.isPending}><Plus className="h-4 w-4 mr-1.5" />Create Rule</Button>
+            <Button type="button" variant="outline" onClick={() => navigate(-1)}><ArrowLeft className="h-4 w-4 mr-1.5" />Cancel</Button>
+            <Button type="button" onClick={e => handleSubmit(e, true)} disabled={createApprovalRule.isPending}><FileText className="h-4 w-4 mr-1.5" />Save Draft</Button>
+            <Button type="button" onClick={handleSubmit} disabled={createApprovalRule.isPending}><Plus className="h-4 w-4 mr-1.5" />Create Rule</Button>
           </div>
         }
       />
@@ -163,24 +224,32 @@ function CreateApprovalRulePage() {
             {showTier && (
               <div className="space-y-2">
                 <Label>Customer Tier</Label>
+                {!tiersData || tiersData.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No customer tiers available. Create tiers before using this trigger.</p>
+                ) : (
                 <Select value={formData.customerTier} onValueChange={v => handleChange('customerTier', v)}>
                   <SelectTrigger className="w-full"><SelectValue placeholder="Select tier" /></SelectTrigger>
                   <SelectContent>
                     {tiersData?.map(t => <SelectItem key={t.id} value={t.tier}>{t.displayName}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                )}
               </div>
             )}
 
             {showCategory && (
               <div className="space-y-2">
                 <Label>Product Category</Label>
+                {!categoriesData?.categories || categoriesData.categories.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No product categories available. Create categories before using this trigger.</p>
+                ) : (
                 <Select value={formData.productCategoryId} onValueChange={v => handleChange('productCategoryId', v)}>
                   <SelectTrigger className="w-full"><SelectValue placeholder="Select category" /></SelectTrigger>
                   <SelectContent>
                     {categoriesData?.categories.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
+                )}
               </div>
             )}
           </CardContent>
@@ -202,7 +271,15 @@ function CreateApprovalRulePage() {
               </Select>
             </div>
 
-            {showChain && chainsData?.chains.length && (
+            {showChain && (
+              !chainsData?.chains || chainsData.chains.length === 0 ? (
+                <EmptyState
+                  icon={<Shield className="h-8 w-8" />}
+                  title="No approval chains available"
+                  description="Create an approval chain before assigning one to this rule."
+                  action={<Button type="button" size="sm" onClick={() => navigate('/business-admin/approvals/chains')}><Plus className="h-4 w-4 mr-1.5" />Create Chain</Button>}
+                />
+              ) : (
               <div className="space-y-2">
                 <Label>Approval Chain *</Label>
                 <Select value={formData.chainId} onValueChange={v => handleChange('chainId', v)}>
@@ -212,6 +289,7 @@ function CreateApprovalRulePage() {
                   </SelectContent>
                 </Select>
               </div>
+              )
             )}
           </CardContent>
         </Card>

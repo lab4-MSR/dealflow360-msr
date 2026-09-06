@@ -9,14 +9,17 @@ import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useRoleDetail, useUpdateRolePermissions } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
 import { ArrowLeft, Shield, Users, Save } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, isValid } from 'date-fns'
 import { cn } from '@/lib/utils'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function RoleDetailsPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: role, isLoading, error, refetch } = useRoleDetail(id || '')
   const updatePermissions = useUpdateRolePermissions()
+  const isSystem = !!role?.isSystem
 
   const [localPermissions, setLocalPermissions] = useState<Set<string>>(new Set())
   const [hasChanges, setHasChanges] = useState(false)
@@ -36,7 +39,8 @@ export function RoleDetailsPage() {
       }
       setHasChanges(false)
     }
-  }, [role?.permissions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role?.id])
 
   const togglePermission = (key: string) => {
     setLocalPermissions((prev) => {
@@ -67,14 +71,32 @@ export function RoleDetailsPage() {
   }
 
   const handleSave = async () => {
-    if (!role) return
+    if (!role || isSystem) return
     try {
       await updatePermissions.mutateAsync({ id: role.id, permissions: Array.from(localPermissions) })
+      queryClient.invalidateQueries({ queryKey: ['ba-role', role.id] })
       toast.success('Permissions updated')
       setHasChanges(false)
     } catch {
       toast.error('Failed to update permissions')
     }
+  }
+
+  const handleReset = () => {
+    if (!role?.permissions) {
+      setLocalPermissions(new Set())
+    } else if (Array.isArray(role.permissions)) {
+      setLocalPermissions(new Set(role.permissions))
+    } else if (typeof role.permissions === 'object') {
+      const flat: string[] = []
+      Object.entries(role.permissions).forEach(([mod, perms]) => {
+        if (Array.isArray(perms)) {
+          perms.forEach((p) => flat.push(`${mod}.${p}`))
+        }
+      })
+      setLocalPermissions(new Set(flat))
+    }
+    setHasChanges(false)
   }
 
   if (isLoading) {
@@ -107,13 +129,26 @@ export function RoleDetailsPage() {
               <ArrowLeft className="h-4 w-4 mr-1.5" />
               Back
             </Button>
-            <Button onClick={handleSave} disabled={!hasChanges || updatePermissions.isPending}>
+            <Button variant="outline" onClick={handleReset} disabled={!hasChanges || updatePermissions.isPending}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave} disabled={!hasChanges || updatePermissions.isPending || isSystem} title={isSystem ? 'System roles are read-only' : undefined}>
               <Save className="h-4 w-4 mr-1.5" />
               {updatePermissions.isPending ? 'Saving...' : 'Save Permissions'}
             </Button>
           </>
         }
       />
+
+      {isSystem && (
+        <Card className="border-warning/50 bg-warning/5">
+          <CardContent className="py-3 px-4">
+            <p className="text-[12px] text-warning font-medium">
+              This is a system role. Its permissions are managed by the platform and cannot be modified.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardContent className="p-6">
@@ -132,15 +167,15 @@ export function RoleDetailsPage() {
                   {role.status}
                 </Badge>
                 <span className="text-[12px] text-muted-foreground tabular-nums">
-                  {role.userCount} user{role.userCount !== 1 ? 's' : ''}
+                  {role.userCount ?? 0} user{(role.userCount ?? 0) !== 1 ? 's' : ''}
                 </span>
                 <span className="text-[12px] text-muted-foreground">·</span>
                 <span className="text-[12px] text-muted-foreground">
-                  {role.permissionCount} permission{role.permissionCount !== 1 ? 's' : ''}
+                  {localPermissions.size} permission{localPermissions.size !== 1 ? 's' : ''}
                 </span>
                 <span className="text-[12px] text-muted-foreground">·</span>
                 <span className="text-[12px] text-muted-foreground">
-                  Created {format(parseISO(role.createdAt), 'MMM d, yyyy')}
+                  Created {role.createdAt && isValid(parseISO(role.createdAt)) ? format(parseISO(role.createdAt), 'MMM d, yyyy') : '—'}
                 </span>
               </div>
             </div>
@@ -168,7 +203,9 @@ export function RoleDetailsPage() {
                   <CardTitle className="text-[14px] font-semibold">{group.name}</CardTitle>
                   <button
                     onClick={() => toggleGroup(groupKeys, !allEnabled)}
-                    className="flex items-center gap-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors"
+                    aria-pressed={allEnabled}
+                    disabled={isSystem}
+                    className="flex items-center gap-2 text-[12px] text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <div
                       className={cn(
@@ -202,7 +239,10 @@ export function RoleDetailsPage() {
                         </div>
                         <button
                           onClick={() => togglePermission(perm.key)}
-                          className="flex-shrink-0 ml-4"
+                          aria-pressed={enabled}
+                          aria-label={`${enabled ? 'Disable' : 'Enable'} ${perm.label}`}
+                          disabled={isSystem}
+                          className="flex-shrink-0 ml-4 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <div
                             className={cn(

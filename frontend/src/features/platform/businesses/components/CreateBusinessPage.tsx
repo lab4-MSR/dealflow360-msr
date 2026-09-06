@@ -27,8 +27,8 @@ export function CreateBusinessPage() {
       role: 'business_admin',
     },
     configuration: {
-      currency: 'USD',
-      timezone: 'America/New_York',
+      currency: 'INR',
+      timezone: 'Asia/Kolkata',
     },
   })
 
@@ -238,11 +238,7 @@ export function CreateBusinessPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="USD">USD - US Dollar</SelectItem>
-                    <SelectItem value="EUR">EUR - Euro</SelectItem>
-                    <SelectItem value="GBP">GBP - British Pound</SelectItem>
-                    <SelectItem value="CAD">CAD - Canadian Dollar</SelectItem>
-                    <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                    <SelectItem value="INR">INR - Indian Rupee (₹)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

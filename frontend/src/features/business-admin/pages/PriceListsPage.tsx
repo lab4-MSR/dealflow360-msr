@@ -23,8 +23,19 @@ import {
 import type { PriceList } from '../types'
 import { toast } from 'sonner'
 import { Plus, Search, List, CheckCircle, FileEdit, Package, MoreHorizontal, Eye, Trash2 } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, isValid } from 'date-fns'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+
+const safeFormatDate = (value: string | undefined | null, fmt = 'MMM d, yyyy'): string => {
+  if (!value) return '—'
+  try {
+    const d = parseISO(value)
+    if (!isValid(d)) return '—'
+    return format(d, fmt)
+  } catch {
+    return '—'
+  }
+}
 
 export function PriceListsPage() {
   const navigate = useNavigate()
@@ -38,14 +49,15 @@ export function PriceListsPage() {
   const [form, setForm] = useState({
     name: '',
     description: '',
-    currency: 'USD',
+    currency: 'INR',
     scope: 'all' as 'all' | 'tier' | 'customer',
     tierScope: '',
     effectiveFrom: '',
     effectiveUntil: '',
   })
 
-  const filters = { search, status: statusFilter, currency: currencyFilter, page, perPage: 10 }
+  const statusMapping = (v: string) => v === 'all' ? '' : v
+  const filters = { search, status: statusMapping(statusFilter), currency: currencyFilter || 'INR', page, perPage: 10 }
   const { data, isLoading, error, refetch } = usePriceLists(filters)
   const { data: kpis, isLoading: kpisLoading } = usePriceListKpis()
   const createPriceList = useCreatePriceList()
@@ -82,7 +94,7 @@ export function PriceListsPage() {
       })
       toast.success('Price list created')
       setShowCreateDialog(false)
-      setForm({ name: '', description: '', currency: 'USD', scope: 'all', tierScope: '', effectiveFrom: '', effectiveUntil: '' })
+      setForm({ name: '', description: '', currency: 'INR', scope: 'all', tierScope: '', effectiveFrom: '', effectiveUntil: '' })
     } catch {
       toast.error('Failed to create price list')
     }
@@ -112,6 +124,7 @@ export function PriceListsPage() {
   const statusVariant = (status: string): 'success' | 'warning' | 'secondary' => {
     if (status === 'active') return 'success'
     if (status === 'draft') return 'warning'
+    if (status === 'inactive') return 'secondary'
     return 'secondary'
   }
 
@@ -155,8 +168,8 @@ export function PriceListsPage() {
         if (!row.effectiveFrom && !row.effectiveUntil) {
           return <span className="text-[12px] text-muted-foreground">Always</span>
         }
-        const from = row.effectiveFrom ? format(parseISO(row.effectiveFrom), 'MMM d, yyyy') : '—'
-        const until = row.effectiveUntil ? format(parseISO(row.effectiveUntil), 'MMM d, yyyy') : '—'
+        const from = row.effectiveFrom ? safeFormatDate(row.effectiveFrom) : '—'
+        const until = row.effectiveUntil ? safeFormatDate(row.effectiveUntil) : '—'
         return (
           <span className="text-[12px] text-muted-foreground tabular-nums">
             {from} — {until}
@@ -169,7 +182,7 @@ export function PriceListsPage() {
       header: 'Updated',
       accessorFn: (row) => (
         <span className="text-[12px] text-muted-foreground tabular-nums">
-          {format(parseISO(row.updatedAt), 'MMM d, yyyy')}
+          {safeFormatDate(row.updatedAt)}
         </span>
       ),
     },
@@ -185,15 +198,15 @@ export function PriceListsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate(`/business-admin/pricing/price-lists/${row.id}`)}>
+              <DropdownMenuItem onClick={() => navigate(`/business-admin/pricing/lists/${row.id}`)}>
                 <Eye className="h-4 w-4 mr-2" />
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate(`/business-admin/pricing/price-lists/${row.id}`)}>
+              <DropdownMenuItem onClick={() => navigate(`/business-admin/pricing/lists/${row.id}?edit=1`)}>
                 <FileEdit className="h-4 w-4 mr-2" />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setDeleteId(row.id)} className="text-danger">
+              <DropdownMenuItem onClick={() => setDeleteId(row.id)} className="text-destructive">
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete
               </DropdownMenuItem>
@@ -205,7 +218,7 @@ export function PriceListsPage() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Price Lists"
         description="Manage pricing configurations for different customer segments."
@@ -249,7 +262,7 @@ export function PriceListsPage() {
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
+        <Select value={statusFilter || 'all'} onValueChange={(v) => { setStatusFilter(v === 'all' ? '' : v); setPage(1) }}>
           <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Statuses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
@@ -258,7 +271,7 @@ export function PriceListsPage() {
             <SelectItem value="draft">Draft</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={currencyFilter} onValueChange={(v) => { setCurrencyFilter(v); setPage(1) }}>
+        <Select value={currencyFilter || 'all'} onValueChange={(v) => { setCurrencyFilter(v === 'all' ? '' : v); setPage(1) }}>
           <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Currencies" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Currencies</SelectItem>
@@ -299,7 +312,7 @@ export function PriceListsPage() {
           <DataTable
             columns={columns as unknown as Column<Record<string, unknown>>[]}
             data={data.priceLists as unknown as Record<string, unknown>[]}
-            onRowClick={(row) => navigate(`/business-admin/pricing/price-lists/${(row as unknown as PriceList).id}`)}
+            onRowClick={(row) => navigate(`/business-admin/pricing/lists/${(row as unknown as PriceList).id}`)}
           />
           {data.totalPages > 1 && (
             <Pagination

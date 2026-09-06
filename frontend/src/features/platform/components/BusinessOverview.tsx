@@ -9,7 +9,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import type { BusinessOverview as BusinessOverviewType } from '../types'
@@ -21,7 +20,7 @@ interface BusinessOverviewProps {
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM d, yyyy')}
       </p>
@@ -39,7 +38,7 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
   const navigate = useNavigate()
 
   return (
-    <Card className="border-0 shadow-none">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -80,8 +79,8 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
 
         <div className="h-[220px]">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data.growthTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <CartesianGrid stroke="none" />
+            <AreaChart data={data.growthTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
               <XAxis
                 dataKey="date"
                 tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -105,9 +104,7 @@ export function BusinessOverview({ data }: BusinessOverviewProps) {
                 fillOpacity={0.08}
                 animationDuration={350}
                 animationEasing="ease-out"
-              >
-                <LabelList dataKey="total" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
-              </Area>
+              />
               <Area
                 type="monotone"
                 dataKey="active"

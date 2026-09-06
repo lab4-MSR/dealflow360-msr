@@ -12,10 +12,10 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorState } from '@/components/shared'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { useShippingRules, useShippingRuleKpis, useDeleteShippingRule } from '../hooks/use-business-admin'
+import { useShippingRules, useShippingRuleKpis, useDeleteShippingRule, useUpdateShippingRule } from '../hooks/use-business-admin'
 import type { ShippingRule } from '../types'
 import { toast } from 'sonner'
-import { Search, Warehouse as WarehouseIcon, CheckCircle, AlertTriangle, Plus, Eye, Edit, MoreHorizontal, Trash2, Power, Clock } from 'lucide-react'
+import { Search, Warehouse as WarehouseIcon, CheckCircle, AlertTriangle, Plus, Eye, Edit, MoreHorizontal, Trash2, Power } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 const STATUS_VARIANT: Record<string, 'success' | 'secondary' | 'warning'> = {
@@ -24,7 +24,7 @@ const STATUS_VARIANT: Record<string, 'success' | 'secondary' | 'warning'> = {
 }
 
 const formatNumber = (value: number) =>
-  new Intl.NumberFormat('en-US').format(value)
+  new Intl.NumberFormat('en-IN').format(value)
 
 export function ShippingRulesListPage() {
   const navigate = useNavigate()
@@ -39,6 +39,18 @@ export function ShippingRulesListPage() {
   const { data, isLoading, error, refetch } = useShippingRules(filters)
   const { data: kpis, isLoading: kpisLoading } = useShippingRuleKpis()
   const deleteShippingRule = useDeleteShippingRule()
+  const updateShippingRule = useUpdateShippingRule()
+  const inactiveCount = (kpis?.totalRules ?? 0) - (kpis?.activeRules ?? 0)
+
+  const handleToggleStatus = async (rule: ShippingRule) => {
+    const nextStatus = rule.status === 'active' ? 'inactive' : 'active'
+    try {
+      await updateShippingRule.mutateAsync({ id: rule.id, data: { status: nextStatus } })
+      toast.success(`Shipping rule ${nextStatus === 'active' ? 'activated' : 'deactivated'}`)
+    } catch {
+      toast.error('Failed to update shipping rule status')
+    }
+  }
 
   const handleSearch = () => {
     setSearch(searchInput)
@@ -161,13 +173,17 @@ export function ShippingRulesListPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate(`/business-admin/shipping-rules/${row.id}`)}>
+              <DropdownMenuItem onClick={() => navigate('/business-admin/warehouses/shipping-rules')}>
                 <Eye className="h-4 w-4 mr-2" />
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => toast.info('Edit coming soon')}>
+              <DropdownMenuItem onClick={() => navigate(`/business-admin/warehouses/shipping-rules/create?editId=${row.id}`)}>
                 <Edit className="h-4 w-4 mr-2" />
                 Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleToggleStatus(row)}>
+                <Power className="h-4 w-4 mr-2" />
+                {row.status === 'active' ? 'Deactivate' : 'Activate'}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setDeleteId(row.id)} className="text-danger">
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -181,7 +197,7 @@ export function ShippingRulesListPage() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Shipping Rules"
         description="Define shipping rules that control warehouse allocation, shipping methods, and fulfillment behavior based on destination, order value, weight, and product filters"
@@ -207,7 +223,7 @@ export function ShippingRulesListPage() {
             <KpiCard label="Total Rules" value={kpis?.totalRules ?? 0} icon={<WarehouseIcon className="h-5 w-5" />} />
             <KpiCard label="Active Rules" value={kpis?.activeRules ?? 0} variant="success" icon={<CheckCircle className="h-5 w-5" />} />
             <KpiCard label="Default Rule" value={kpis?.defaultRule !== undefined ? 'Yes' : 'No'} variant={kpis?.defaultRule !== undefined ? 'success' : 'default'} icon={<CheckCircle className="h-5 w-5" />} />
-            <KpiCard label="Inactive Rules" value={5 - (kpis?.activeRules ?? 0)} variant="default" icon={<AlertTriangle className="h-5 w-5" />} />
+            <KpiCard label="Inactive Rules" value={inactiveCount} variant="default" icon={<AlertTriangle className="h-5 w-5" />} />
           </>
         )}
       </div>
@@ -226,7 +242,7 @@ export function ShippingRulesListPage() {
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
+        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v === 'all' ? '' : v); setPage(1) }}>
           <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
@@ -234,7 +250,7 @@ export function ShippingRulesListPage() {
             <SelectItem value="inactive">Inactive</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={priorityFilter} onValueChange={(v) => { setPriorityFilter(v); setPage(1) }}>
+        <Select value={priorityFilter} onValueChange={(v) => { setPriorityFilter(v === 'all' ? '' : v); setPage(1) }}>
           <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Priorities" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Priorities</SelectItem>
@@ -265,11 +281,17 @@ export function ShippingRulesListPage() {
           action={<Button onClick={() => navigate('/business-admin/shipping-rules/create')}><Plus className="h-4 w-4 mr-1.5" />Create Rule</Button>}
         />
       ) : (
-        <DataTable
-          columns={columns as unknown as Column<Record<string, unknown>>[]}
-          data={data.rules as unknown as Record<string, unknown>[]}
-          onRowClick={(row) => navigate(`/business-admin/shipping-rules/${(row as unknown as ShippingRule).id}`)}
-        />
+        <div className="rounded-xl border border-border/70 bg-card shadow-xs overflow-hidden">
+          <DataTable
+            columns={columns as unknown as Column<Record<string, unknown>>[]}
+            data={data.rules as unknown as Record<string, unknown>[]}
+          />
+          {data.totalPages > 1 && (
+            <div className="p-3 border-t border-border/60">
+              <Pagination page={data.page} totalPages={data.totalPages} total={data.total} perPage={data.perPage} onPageChange={setPage} />
+            </div>
+          )}
+        </div>
       )}
 
       <ConfirmDialog

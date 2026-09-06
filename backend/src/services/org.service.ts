@@ -26,7 +26,7 @@ function toPublic(b: Record<string, unknown>): Record<string, unknown> {
     legal_name: b.legal_name ?? null,
     industry: b.industry ?? null,
     plan: b.plan ?? null,
-    currency: b.currency ?? 'USD',
+    currency: b.currency ?? 'INR',
     timezone: b.timezone ?? 'UTC',
     language: b.language ?? 'en',
     date_format: b.date_format ?? 'YYYY-MM-DD',
@@ -69,7 +69,7 @@ export async function getOrgLocalization(businessId: string) {
 export async function getOrgCurrencyTax(businessId: string) {
   const business = await getBusiness(businessId);
   return {
-    currency: business.currency ?? 'USD',
+    currency: business.currency ?? 'INR',
     tax_config: business.tax_config ?? {},
   };
 }

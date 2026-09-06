@@ -38,13 +38,7 @@ const SECTIONS = [
 type SectionId = (typeof SECTIONS)[number]['id']
 
 const CURRENCIES = [
-  { value: 'USD', label: 'USD - US Dollar' },
-  { value: 'EUR', label: 'EUR - Euro' },
-  { value: 'GBP', label: 'GBP - British Pound' },
-  { value: 'CAD', label: 'CAD - Canadian Dollar' },
-  { value: 'AUD', label: 'AUD - Australian Dollar' },
-  { value: 'INR', label: 'INR - Indian Rupee' },
-  { value: 'JPY', label: 'JPY - Japanese Yen' },
+  { value: 'INR', label: 'INR - Indian Rupee (₹)' },
 ]
 
 const TIMEZONES = [

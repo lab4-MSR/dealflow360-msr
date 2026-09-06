@@ -103,7 +103,7 @@ HTTP status still applies normally (400, 401, 403, 404, 409, 422, 500). `error.c
 
 ### 2.7 Common Field Conventions
 - All IDs are UUID strings.
-- All money fields are **minor-unit-free decimals** with an explicit `currency` field alongside (e.g. `"amount": 1499.00, "currency": "USD"`), never integers-as-cents, to keep FE math simple.
+- All money fields are **minor-unit-free decimals** with an explicit `currency` field alongside (e.g. `"amount": 1499.00, "currency": "INR"`), never integers-as-cents, to keep FE math simple.
 - All timestamps are ISO-8601 UTC (`2026-09-05T10:30:00Z`).
 - All percentage fields (`discount_percent`, `margin_percent`) are plain numbers, e.g. `12.5` means 12.5%.
 - Soft-delete pattern: resources support `?include_archived=true`; deletes are `DELETE` but set `deleted_at`, not physical removal, for audit integrity.
@@ -315,7 +315,7 @@ anomaly_type             : discount_anomaly | delivery_slippage | stalled_deal
   "product_id": "uuid",
   "base_price": 500.00,
   "resolved_price": 460.00,
-  "currency": "USD",
+  "currency": "INR",
   "source": "volume_pricing",
   "applied_rule_id": "uuid"
 }
@@ -541,7 +541,7 @@ See §13 (Fulfillment) and §14 (Billing) — triggered from the quotation once 
     "shipping": 150.00,
     "tax": 950.00,
     "grand_total": 11660.00,
-    "currency": "USD"
+    "currency": "INR"
   },
   "discount_analysis": { "...": "see §12.4 discount_governance" },
   "margin": { "...": "see §12.4 margin" },

@@ -44,10 +44,6 @@ type CompanyRegistrationFormData = z.infer<typeof companyRegistrationSchema>
 
 const CURRENCIES = [
   { code: 'INR', symbol: '₹', name: 'INR (₹) — Indian Rupee (India Standard)' },
-  { code: 'USD', symbol: '$', name: 'USD ($) — United States Dollar' },
-  { code: 'EUR', symbol: '€', name: 'EUR (€) — Euro' },
-  { code: 'GBP', symbol: '£', name: 'GBP (£) — British Pound' },
-  { code: 'AED', symbol: 'د.إ', name: 'AED (د.إ) — UAE Dirham' },
 ]
 
 export default function CompanyRegistrationPage() {
@@ -66,7 +62,7 @@ export default function CompanyRegistrationPage() {
       businessName: '',
       industry: 'Technology & SaaS',
       companySize: '11-50',
-      operatingCurrency: 'USD',
+      operatingCurrency: 'INR',
       fullName: '',
       email: '',
       password: '',
@@ -110,27 +106,27 @@ export default function CompanyRegistrationPage() {
   return (
     <AuthLayout wideContent>
       <AuthCard>
-        <div className="space-y-7">
+        <div className="space-y-6">
           {/* Header */}
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-              <Sparkles className="h-3.5 w-3.5" />
+          <div className="text-center space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+              <Building2 className="h-3.5 w-3.5" />
               <span>Enterprise Organization Onboarding</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
               Register Your Company
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-lg mx-auto">
+            <p className="text-sm text-muted-foreground max-w-lg mx-auto">
               Set up your organization tenant, configure pricing governance, and provision business admin access
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {submitError && <AuthAlert type="error" message={submitError} />}
 
             {/* ── Section 1: Company Profile ── */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-border/80">
+            <div className="space-y-3.5">
+              <div className="flex items-center gap-2 pb-1.5 border-b border-border/80">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   1. Company Profile
                 </span>
@@ -138,17 +134,17 @@ export default function CompanyRegistrationPage() {
 
               {/* Company Legal Name */}
               <div className="space-y-1.5">
-                <label htmlFor="businessName" className="text-sm font-semibold text-foreground block">
+                <label htmlFor="businessName" className="text-xs font-semibold text-foreground block">
                   Company Legal Name <span className="text-danger">*</span>
                 </label>
                 <div className="relative">
-                  <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+                  <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                   <input
                     id="businessName"
                     type="text"
                     placeholder="e.g. Acme Enterprise Solutions Pvt Ltd"
                     className={cn(
-                      'flex h-12 w-full rounded-2xl border bg-surface/90 pl-11 pr-4 text-sm text-foreground shadow-xs transition-all duration-200',
+                      'flex h-10 w-full rounded-xl border bg-surface/90 pl-10 pr-3.5 text-sm text-foreground shadow-xs transition-all duration-200',
                       'placeholder:text-muted-foreground/60',
                       'focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary',
                       errors.businessName ? 'border-danger' : 'border-input focus:ring-primary/20'
@@ -162,14 +158,14 @@ export default function CompanyRegistrationPage() {
               </div>
 
               {/* Industry & Size */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div className="space-y-1.5">
-                  <label htmlFor="industry" className="text-sm font-semibold text-foreground block">
+                  <label htmlFor="industry" className="text-xs font-semibold text-foreground block">
                     Industry <span className="text-danger">*</span>
                   </label>
                   <select
                     id="industry"
-                    className="flex h-12 w-full rounded-2xl border bg-surface/90 px-4 text-sm text-foreground border-input focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary cursor-pointer"
+                    className="flex h-10 w-full rounded-xl border bg-surface/90 px-3 text-sm text-foreground border-input focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary cursor-pointer"
                     {...register('industry')}
                   >
                     <option value="Technology & SaaS">Technology & SaaS</option>
@@ -183,12 +179,12 @@ export default function CompanyRegistrationPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="companySize" className="text-sm font-semibold text-foreground block">
+                  <label htmlFor="companySize" className="text-xs font-semibold text-foreground block">
                     Company Size <span className="text-danger">*</span>
                   </label>
                   <select
                     id="companySize"
-                    className="flex h-12 w-full rounded-2xl border bg-surface/90 px-4 text-sm text-foreground border-input focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary cursor-pointer"
+                    className="flex h-10 w-full rounded-xl border bg-surface/90 px-3 text-sm text-foreground border-input focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary cursor-pointer"
                     {...register('companySize')}
                   >
                     <option value="1-10">1 - 10 employees</option>
@@ -202,51 +198,49 @@ export default function CompanyRegistrationPage() {
 
               {/* Operating Currency */}
               <div className="space-y-1.5">
-                <label htmlFor="operatingCurrency" className="text-sm font-semibold text-foreground block">
-                  Primary Operating Currency <span className="text-danger">*</span>
+                <label htmlFor="operatingCurrency" className="text-xs font-semibold text-foreground block">
+                  Primary Operating Currency
                 </label>
                 <div className="relative">
-                  <Coins className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
-                  <select
-                    id="operatingCurrency"
-                    className="flex h-12 w-full rounded-2xl border bg-surface/90 pl-11 pr-4 text-sm text-foreground border-input focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary font-medium cursor-pointer"
+                  <Coins className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-primary pointer-events-none" />
+                  <input
+                    type="hidden"
+                    value="INR"
                     {...register('operatingCurrency')}
-                  >
-                    {CURRENCIES.map((curr) => (
-                      <option key={curr.code} value={curr.code}>
-                        {curr.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
+                  <div className="flex h-10 w-full items-center justify-between rounded-xl border bg-muted/40 pl-10 pr-3.5 text-sm text-foreground border-input font-medium">
+                    <span>INR (₹) — Indian Rupee</span>
+                    <span className="text-xs font-semibold text-primary">Standard</span>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  You can configure additional price books and multi-currency exchange rates in settings.
+                <p className="text-[11px] text-muted-foreground">
+                  DealFlow360 platform operating currency is locked to Indian Rupee (₹).
                 </p>
               </div>
             </div>
 
             {/* ── Section 2: Business Admin Account ── */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-border/80">
+            <div className="space-y-3.5">
+              <div className="flex items-center gap-2 pb-1.5 border-b border-border/80">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   2. Administrator Credentials
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 {/* Full Name */}
                 <div className="space-y-1.5">
-                  <label htmlFor="fullName" className="text-sm font-semibold text-foreground block">
+                  <label htmlFor="fullName" className="text-xs font-semibold text-foreground block">
                     Admin Full Name <span className="text-danger">*</span>
                   </label>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                     <input
                       id="fullName"
                       type="text"
                       placeholder="e.g. Ramesh Sharma"
                       className={cn(
-                        'flex h-12 w-full rounded-2xl border bg-surface/90 pl-11 pr-4 text-sm text-foreground shadow-xs',
+                        'flex h-10 w-full rounded-xl border bg-surface/90 pl-10 pr-3.5 text-sm text-foreground shadow-xs',
                         'placeholder:text-muted-foreground/60',
                         'focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary',
                         errors.fullName ? 'border-danger' : 'border-input'
@@ -261,17 +255,17 @@ export default function CompanyRegistrationPage() {
 
                 {/* Work Email */}
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="text-sm font-semibold text-foreground block">
+                  <label htmlFor="email" className="text-xs font-semibold text-foreground block">
                     Work Email <span className="text-danger">*</span>
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                     <input
                       id="email"
                       type="email"
                       placeholder="admin@company.com"
                       className={cn(
-                        'flex h-12 w-full rounded-2xl border bg-surface/90 pl-11 pr-4 text-sm text-foreground shadow-xs',
+                        'flex h-10 w-full rounded-xl border bg-surface/90 pl-10 pr-3.5 text-sm text-foreground shadow-xs',
                         'placeholder:text-muted-foreground/60',
                         'focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary',
                         errors.email ? 'border-danger' : 'border-input'
@@ -286,11 +280,11 @@ export default function CompanyRegistrationPage() {
               </div>
 
               {/* Password & Confirm Password */}
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <PasswordField
                   label="Admin Password *"
                   placeholder="Create strong password (min 8 characters)"
-                  className="h-12 rounded-2xl text-sm"
+                  className="h-10 rounded-xl text-sm"
                   error={errors.password?.message}
                   {...register('password')}
                 />
@@ -299,7 +293,7 @@ export default function CompanyRegistrationPage() {
                 <PasswordField
                   label="Confirm Admin Password *"
                   placeholder="Re-enter password"
-                  className="h-12 rounded-2xl text-sm"
+                  className="h-10 rounded-xl text-sm"
                   error={errors.confirmPassword?.message}
                   {...register('confirmPassword')}
                 />
@@ -311,7 +305,7 @@ export default function CompanyRegistrationPage() {
               <label className="flex items-start gap-2.5 cursor-pointer text-sm text-foreground">
                 <input
                   type="checkbox"
-                  className="h-4.5 w-4.5 rounded border-input bg-surface text-primary focus:ring-primary/20 mt-0.5 cursor-pointer"
+                  className="h-4 w-4 rounded border-input bg-surface text-primary focus:ring-primary/20 mt-0.5 cursor-pointer"
                   {...register('agreeTerms')}
                 />
                 <span className="text-xs text-muted-foreground leading-relaxed">
@@ -334,8 +328,7 @@ export default function CompanyRegistrationPage() {
             {/* Submit Button */}
             <Button
               type="submit"
-              size="lg"
-              className="w-full font-semibold shadow-xs"
+              className="w-full h-10.5 rounded-xl font-semibold shadow-xs"
               disabled={isSubmitting}
               loading={isSubmitting}
             >
@@ -344,7 +337,7 @@ export default function CompanyRegistrationPage() {
               ) : (
                 <span className="flex items-center justify-center gap-2">
                   <span>Register Company & Open Workspace</span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" />
                 </span>
               )}
             </Button>

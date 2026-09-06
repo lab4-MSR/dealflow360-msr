@@ -7,16 +7,16 @@ export interface CurrencyValueProps extends React.HTMLAttributes<HTMLSpanElement
   showSign?: boolean
 }
 
-export function CurrencyValue({ value, currency = '₹', showSign = false, className, ...props }: CurrencyValueProps) {
+export function CurrencyValue({ value, showSign = false, className, ...props }: CurrencyValueProps) {
   const formatted = new Intl.NumberFormat('en-IN', {
-    style: 'currency', currency: currency === '₹' ? 'INR' : currency,
+    style: 'currency', currency: 'INR',
     minimumFractionDigits: 2, maximumFractionDigits: 2,
   }).format(Math.abs(value))
 
   return (
     <span className={cn('tabular-nums font-mono', className)} {...props}>
       {showSign && value > 0 ? '+' : value < 0 ? '-' : ''}
-      {currency}{formatted.replace(/[₹$€£]/g, '')}
+      {formatted}
     </span>
   )
 }
@@ -50,7 +50,7 @@ export function TrendIndicator({ value, direction, positiveIsGood = true, classN
 
   return (
     <span className={cn('tabular-nums inline-flex items-center gap-0.5', colorClass, className)} {...props}>
-      {direction === 'up' && '↑'} {direction === 'down' && '↓'} {Math.abs(value).toFixed(1)}%
+      {direction === 'up' && 'Ã¢â€ â€˜'} {direction === 'down' && 'Ã¢â€ â€œ'} {Math.abs(value).toFixed(1)}%
     </span>
   )
 }
@@ -89,7 +89,7 @@ export function FinancialMetric({ label, value, previousValue, trend, variant = 
 export interface MoneyBreakdownRow { label: string; value: number; isTotal?: boolean; isNegative?: boolean }
 export interface MoneyBreakdownProps { rows: MoneyBreakdownRow[]; currency?: string }
 
-export function MoneyBreakdown({ rows, currency = '₹' }: MoneyBreakdownProps) {
+export function MoneyBreakdown({ rows }: MoneyBreakdownProps) {
   return (
     <div className="space-y-2">
       {rows.map((row, i) => (
@@ -98,7 +98,7 @@ export function MoneyBreakdown({ rows, currency = '₹' }: MoneyBreakdownProps) 
           <span className={cn('tabular-nums font-mono text-small', {
             'text-foreground': !row.isNegative, 'text-danger': row.isNegative, 'text-foreground font-semibold': row.isTotal,
           })}>
-            {row.isNegative ? '-' : ''}{currency}{(row.value < 0 ? Math.abs(row.value) : row.value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+            {row.isNegative ? '-' : ''}{String.fromCharCode(0x20B9)}{(row.value < 0 ? Math.abs(row.value) : row.value).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
           </span>
         </div>
       ))}
@@ -117,3 +117,7 @@ export const DATE_RANGE_OPTIONS: DateRangeOption[] = [
   { label: 'This Year', value: 'year', date_from: new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0], date_to: new Date().toISOString().split('T')[0] },
   { label: 'All Time', value: 'all', date_from: '', date_to: '' },
 ]
+
+
+
+

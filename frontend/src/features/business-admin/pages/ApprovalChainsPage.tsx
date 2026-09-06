@@ -15,11 +15,27 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { useApprovalChains, useApprovalChainKpis, useCreateApprovalChain, useUpdateApprovalChain, useDeleteApprovalChain } from '../hooks/use-business-admin'
 import type { ApprovalChain, ApprovalChainFilters } from '../types'
 import { toast } from 'sonner'
-import { Plus, Search, MoreHorizontal, Eye, Edit, Power, Trash2, ArrowDown, CheckCircle, AlertTriangle, Users, Settings, GitBranch } from 'lucide-react'
+import { Plus, Search, MoreHorizontal, Eye, Edit, Power, Trash2, ArrowDown, CheckCircle, Users, Settings, GitBranch } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
+
+interface ChainStepForm {
+  order: number
+  approverType: 'user' | 'role' | 'team'
+  approverId: string
+  approverName: string
+  approverRole: string
+  slaMinutes: number
+}
+
+interface ChainFormData {
+  name: string
+  description: string
+  triggerDescription: string
+  logic: 'sequential' | 'parallel' | 'conditional'
+  status: 'active' | 'inactive' | 'draft'
+}
 
 const LOGIC_VARIANT: Record<string, 'info' | 'intelligence' | 'warning'> = {
   sequential: 'info',
@@ -66,8 +82,14 @@ function ApprovalChainsPage() {
     catch { toast.error('Failed to delete approval chain') }
   }
 
-  const handleToggleStatus = (chain: ApprovalChain) => {
-    toast.info(`Toggle status for ${chain.name} coming soon`)
+  const handleToggleStatus = async (chain: ApprovalChain) => {
+    const nextStatus = chain.status === 'active' ? 'inactive' : 'active'
+    try {
+      await updateApprovalChain.mutateAsync({ id: chain.id, data: { status: nextStatus } })
+      toast.success(`Chain ${nextStatus === 'active' ? 'activated' : 'deactivated'}`)
+    } catch {
+      toast.error('Failed to update chain status')
+    }
   }
 
   const handleSubmit = async (formData: Partial<ApprovalChain>, isEdit = false) => {
@@ -85,26 +107,38 @@ function ApprovalChainsPage() {
     } catch { toast.error(isEdit ? 'Failed to update approval chain' : 'Failed to create approval chain') }
   }
 
-  const getFormDefaults = (chain?: ApprovalChain) => ({
+  const getFormDefaults = (chain?: ApprovalChain): ChainFormData => ({
     name: chain?.name || '',
     description: chain?.description || '',
     triggerDescription: chain?.triggerDescription || '',
-    logic: chain?.logic || 'sequential',
-    steps: chain?.steps || [{ order: 1, approverType: 'role' as const, approverId: '', approverName: '', approverRole: '', slaMinutes: 1440 }],
-    status: chain?.status || 'active',
+    logic: (chain?.logic as ChainFormData['logic']) || 'sequential',
+    status: (chain?.status as ChainFormData['status']) || 'active',
   })
 
-  const [formData, setFormData] = useState(getFormDefaults())
-  const [stepForms, setStepForms] = useState<any[]>([{ order: 1, approverType: 'role', approverId: '', approverName: '', approverRole: '', slaMinutes: 1440 }])
+  const defaultSteps = (chain?: ApprovalChain): ChainStepForm[] => {
+    if (chain?.steps && chain.steps.length > 0) {
+      return chain.steps.map((s, i) => ({
+        order: typeof s.order === 'number' ? s.order : i + 1,
+        approverType: (s.approverType as ChainStepForm['approverType']) || 'role',
+        approverId: s.approverId || '',
+        approverName: s.approverName || '',
+        approverRole: s.approverRole || '',
+        slaMinutes: typeof s.slaMinutes === 'number' ? s.slaMinutes : 1440,
+      }))
+    }
+    return [{ order: 1, approverType: 'role', approverId: '', approverName: '', approverRole: '', slaMinutes: 1440 }]
+  }
+
+  const [formData, setFormData] = useState<ChainFormData>(getFormDefaults())
+  const [stepForms, setStepForms] = useState<ChainStepForm[]>([{ order: 1, approverType: 'role', approverId: '', approverName: '', approverRole: '', slaMinutes: 1440 }])
 
   useEffect(() => {
     if (editingChain) setFormData(getFormDefaults(editingChain))
     else setFormData(getFormDefaults())
-    if (editingChain?.steps) setStepForms(editingChain.steps.map(s => ({ ...s })))
-    else setStepForms([{ order: 1, approverType: 'role', approverId: '', approverName: '', approverRole: '', slaMinutes: 1440 }])
+    setStepForms(defaultSteps(editingChain ?? undefined))
   }, [editingChain])
 
-  const handleStepChange = (index: number, field: string, value: any) => {
+  const handleStepChange = (index: number, field: keyof ChainStepForm, value: string | number) => {
     setStepForms(prev => prev.map((s, i) => i === index ? { ...s, [field]: value } : s))
   }
 
@@ -116,6 +150,14 @@ function ApprovalChainsPage() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    if (!formData.name.trim()) { toast.error('Chain name is required'); return }
+    const orders = stepForms.map(s => s.order)
+    if (new Set(orders).size !== orders.length) { toast.error('Step orders must be unique'); return }
+    for (const [i, s] of stepForms.entries()) {
+      if (!s.approverId.trim()) { toast.error(`Step ${i + 1}: approver ID is required`); return }
+      if (!s.approverName.trim()) { toast.error(`Step ${i + 1}: approver name is required`); return }
+      if (!Number.isFinite(s.slaMinutes) || s.slaMinutes <= 0) { toast.error(`Step ${i + 1}: SLA must be greater than 0`); return }
+    }
     handleSubmit({ ...formData, steps: stepForms }, !!editingChain)
   }
 
@@ -124,7 +166,7 @@ function ApprovalChainsPage() {
   const handleOpenView = (chain: ApprovalChain) => { setViewingChain(chain) }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Approval Chains"
         description="Configure sequential, parallel, or conditional approval chains that define who approves and in what order"
@@ -151,7 +193,7 @@ function ApprovalChainsPage() {
           <Input placeholder="Search approval chains..." value={searchInput} onChange={e => setSearchInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
           <Button variant="outline" size="icon" onClick={handleSearch}><Search className="h-4 w-4" /></Button>
         </div>
-        <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1) }}>
+        <Select value={statusFilter} onValueChange={v => { setStatusFilter(v === 'all' ? '' : v); setPage(1) }}>
           <SelectTrigger className="w-[140px]"><SelectValue placeholder="All Status" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
@@ -221,13 +263,13 @@ function ApprovalChainsPage() {
 
       <Dialog open={!!viewingChain} onOpenChange={() => setViewingChain(null)}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader><DialogTitle>{viewingChain?.name}</DialogTitle></DialogHeader>
-          <DialogContent className="p-4 pt-0">
+          <DialogHeader><DialogTitle>{viewingChain?.name}</DialogTitle><DialogDescription>Approval chain details and steps</DialogDescription></DialogHeader>
+          <div className="p-4 pt-0">
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4 text-sm"><div><p className="text-muted-foreground">Logic</p><p className="font-medium"><Badge variant={LOGIC_VARIANT[viewingChain?.logic || '']}>{viewingChain?.logic}</Badge></p></div><div><p className="text-muted-foreground">Steps</p><p className="font-medium">{viewingChain?.steps.length}</p></div><div><p className="text-muted-foreground">Status</p><p className="font-medium"><Badge variant={STATUS_VARIANT[viewingChain?.status || '']}>{viewingChain?.status}</Badge></p></div></div>
               <div className="pt-4 border-t"><p className="font-medium mb-2">Approval Steps</p><div className="space-y-2">{viewingChain?.steps.map((step, idx) => (<div key={step.id || idx} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50"><div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground text-sm font-bold">{step.order}</div><div className="flex-1"><p className="font-medium">{step.approverName}</p><p className="text-sm text-muted-foreground">{step.approverRole} • SLA: {step.slaMinutes} min</p></div><Badge variant={APPROVER_VARIANT[step.approverType]}>{step.approverType}</Badge>{idx < (viewingChain?.steps.length || 0) - 1 && <ArrowDown className="text-muted-foreground" />}</div>))}</div></div>
             </div>
-          </DialogContent>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -247,6 +289,7 @@ function ApprovalChainsPage() {
                   <div className="flex items-center justify-between"><span className="font-medium">Step {step.order}</span>{stepForms.length > 1 && <Button type="button" variant="ghost" size="icon" onClick={() => removeStep(index)} className="text-danger"><Trash2 className="h-4 w-4" /></Button>}</div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2"><Label>Approver Type</Label><Select value={step.approverType} onValueChange={v => handleStepChange(index, 'approverType', v)}><SelectTrigger className="w-full"><SelectValue placeholder="Select type" /></SelectTrigger><SelectContent><SelectItem value="user">User</SelectItem><SelectItem value="role">Role</SelectItem><SelectItem value="team">Team</SelectItem></SelectContent></Select></div>
+                    <div className="space-y-2"><Label>Approver ID *</Label><Input value={step.approverId} onChange={e => handleStepChange(index, 'approverId', e.target.value)} required placeholder="e.g., user-123 or role:finance" /></div>
                     <div className="space-y-2"><Label>Approver Name *</Label><Input value={step.approverName} onChange={e => handleStepChange(index, 'approverName', e.target.value)} required placeholder="e.g., Sarah Lee" /></div>
                     <div className="space-y-2"><Label>Approver Role</Label><Input value={step.approverRole} onChange={e => handleStepChange(index, 'approverRole', e.target.value)} placeholder="e.g., Finance" /></div>
                     <div className="space-y-2"><Label>SLA (minutes) *</Label><Input type="number" min="1" value={step.slaMinutes} onChange={e => handleStepChange(index, 'slaMinutes', parseInt(e.target.value) || 1440)} required placeholder="1440" /></div>

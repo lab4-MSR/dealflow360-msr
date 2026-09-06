@@ -71,7 +71,7 @@ const RISK_LABELS: Record<string, string> = {
 function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount)
@@ -90,7 +90,7 @@ export function BusinessDealsPage() {
 
   const { data: dealsResponse, isLoading, error, refetch } = useBusinessDeals(id || '', filters)
   const { data: kpis, isLoading: kpisLoading } = useBusinessDealKpis(id || '')
-  const businessCurrency = (dealsResponse as any)?.currency || 'USD'
+  const businessCurrency = (dealsResponse as any)?.currency || 'INR'
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -420,3 +420,5 @@ export function BusinessDealsPage() {
     </div>
   )
 }
+
+

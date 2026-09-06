@@ -18,6 +18,20 @@ const DATE_FORMATS = ['dd MMM yyyy', 'MM/dd/yyyy', 'dd/MM/yyyy', 'yyyy-MM-dd', '
 const TIME_FORMATS = ['HH:mm', 'hh:mm a', 'HH:mm:ss']
 const DECIMAL_SEPARATORS = ['.', ',']
 const THOUSANDS_SEPARATORS = [',', '.', ' ', '']
+const BCP47_RE = /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/
+const NONE_SENTINEL = '_none'
+
+function safeFormatDate(d: Date, fmt: string | undefined, fallback: string): string {
+  try {
+    return format(d, fmt || fallback)
+  } catch {
+    try {
+      return format(d, fallback)
+    } catch {
+      return d.toISOString()
+    }
+  }
+}
 
 export function LocalizationPage() {
   const { data: config, isLoading, error, refetch } = useLocalization()
@@ -34,8 +48,16 @@ export function LocalizationPage() {
   }
 
   const handleSave = async () => {
+    const locale = ((form.locale as string) || '').trim()
+    if (locale && !BCP47_RE.test(locale)) {
+      toast.error('Enter a valid locale (BCP47, e.g. en-IN, en-US, hi).')
+      return
+    }
     try {
-      await updateLocalization.mutateAsync(form)
+      const payload = { ...form }
+      if ((payload.thousandsSeparator as string) === NONE_SENTINEL) payload.thousandsSeparator = '' as unknown as string
+      if ((payload.decimalSeparator as string) === NONE_SENTINEL) payload.decimalSeparator = '' as unknown as string
+      await updateLocalization.mutateAsync(payload)
       toast.success('Localization settings saved')
       setIsEditing(false)
     } catch {
@@ -110,7 +132,8 @@ export function LocalizationPage() {
             </div>
             <div className="space-y-1.5">
               <Label>Locale</Label>
-              <Input value={form.locale || ''} onChange={(e) => updateField('locale', e.target.value)} disabled={!isEditing} />
+              <Input value={form.locale || ''} onChange={(e) => updateField('locale', e.target.value)} disabled={!isEditing} placeholder="en-IN" />
+              <p className="text-[10px] text-muted-foreground">BCP47 format (e.g. en-IN, en-US, hi)</p>
             </div>
           </div>
         </CardContent>
@@ -153,7 +176,7 @@ export function LocalizationPage() {
           </div>
           <div className="mt-3 rounded-lg bg-surface-muted p-3">
             <p className="text-[12px] text-muted-foreground">
-              Preview: <span className="font-medium text-foreground">{format(sampleDate, form.dateFormat || 'dd MMM yyyy')} {format(sampleDate, form.timeFormat || 'HH:mm')}</span>
+              Preview: <span className="font-medium text-foreground">{safeFormatDate(sampleDate, form.dateFormat as string, 'dd MMM yyyy')} {safeFormatDate(sampleDate, form.timeFormat as string, 'HH:mm')}</span>
             </p>
           </div>
         </CardContent>
@@ -168,19 +191,19 @@ export function LocalizationPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">
               <Label>Decimal Separator</Label>
-              <Select value={form.decimalSeparator || '.'} onValueChange={(v) => updateField('decimalSeparator', v)} disabled={!isEditing}>
+              <Select value={(form.decimalSeparator as string) === '' ? NONE_SENTINEL : ((form.decimalSeparator as string) || '.')} onValueChange={(v) => updateField('decimalSeparator', v === NONE_SENTINEL ? '' : v)} disabled={!isEditing}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {DECIMAL_SEPARATORS.map((s) => <SelectItem key={s} value={s || 'none'}>{s || '(space)'}</SelectItem>)}
+                  {DECIMAL_SEPARATORS.map((s) => <SelectItem key={s === '' ? NONE_SENTINEL : s} value={s === '' ? NONE_SENTINEL : s}>{s === '' ? '(none)' : s}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-1.5">
               <Label>Thousands Separator</Label>
-              <Select value={form.thousandsSeparator || ','} onValueChange={(v) => updateField('thousandsSeparator', v)} disabled={!isEditing}>
+              <Select value={(form.thousandsSeparator as string) === '' ? NONE_SENTINEL : ((form.thousandsSeparator as string) || ',')} onValueChange={(v) => updateField('thousandsSeparator', v === NONE_SENTINEL ? '' : v)} disabled={!isEditing}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {THOUSANDS_SEPARATORS.map((s) => <SelectItem key={s || 'none'} value={s || 'none'}>{s || '(none)'}</SelectItem>)}
+                  {THOUSANDS_SEPARATORS.map((s) => <SelectItem key={s === '' ? NONE_SENTINEL : s || NONE_SENTINEL} value={s === '' ? NONE_SENTINEL : s}>{s === '' ? '(none)' : (s === ' ' ? '(space)' : s)}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>

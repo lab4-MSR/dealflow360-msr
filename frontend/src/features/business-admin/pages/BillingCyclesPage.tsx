@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Plus, Search, Edit2, Trash2, RefreshCw, Calendar, CreditCard, Users, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '../components/BusinessAdminPageHeader';
@@ -23,7 +23,7 @@ import {
   useUpdateBillingCycle,
   useDeleteBillingCycle,
 } from '../hooks/use-business-admin';
-import type { BillingCycle, BillingCycleFilters } from '../types';
+import type { BillingCycle, BillingCycleFilters, BillingCycleCreateInput } from '../types';
 
 const DURATION_OPTIONS = [
   { value: 'monthly', label: 'Monthly' },
@@ -37,6 +37,17 @@ const STATUS_OPTIONS = [
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' },
   { value: 'draft', label: 'Draft' },
+];
+
+const RENEWAL_BEHAVIOR_OPTIONS = [
+  { value: 'automatic', label: 'Automatic' },
+  { value: 'manual', label: 'Manual' },
+];
+
+const FAILED_PAYMENT_OPTIONS = [
+  { value: 'retry', label: 'Retry Payment' },
+  { value: 'suspend', label: 'Suspend Subscription' },
+  { value: 'cancel', label: 'Cancel Subscription' },
 ];
 
 function getStatusVariant(status: string) {
@@ -84,15 +95,15 @@ export function BillingCyclesPage() {
     setDrawerOpen(true);
   };
 
-  const handleOpenEdit = (cycle: BillingCycle) => {
+  const handleOpenEdit = useCallback((cycle: BillingCycle) => {
     setEditingCycle(cycle);
     setDrawerOpen(true);
-  };
+  }, []);
 
-  const handleDeleteClick = (cycle: BillingCycle) => {
+  const handleDeleteClick = useCallback((cycle: BillingCycle) => {
     setCycleToDelete(cycle);
     setDeleteDialogOpen(true);
-  };
+  }, []);
 
   const handleDeleteConfirm = async () => {
     if (!cycleToDelete) return;
@@ -145,6 +156,7 @@ export function BillingCyclesPage() {
     {
       id: 'actions',
       header: '',
+      headerClassName: 'w-[100px]',
       className: 'w-[100px]',
       accessorFn: (row: BillingCycle) => (
         <div className="flex items-center gap-1 justify-end">
@@ -157,10 +169,10 @@ export function BillingCyclesPage() {
         </div>
       ),
     },
-  ], []);
+  ], [handleOpenEdit, handleDeleteClick]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Billing Cycles"
         description="Manage subscription billing cycles, renewal rules, and payment schedules"
@@ -289,6 +301,7 @@ export function BillingCyclesPage() {
       {/* Create/Edit Drawer */}
       <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title={editingCycle ? 'Edit Billing Cycle' : 'New Billing Cycle'} description={editingCycle ? 'Update billing cycle details' : 'Create a new billing cycle configuration'} side="right">
         <BillingCycleForm
+          key={editingCycle?.id ?? 'new'}
           cycle={editingCycle}
           onSubmit={async (values) => {
             if (editingCycle) {
@@ -319,13 +332,14 @@ export function BillingCyclesPage() {
   );
 }
 
-function BillingCycleForm({ cycle, onSubmit, loading }: { cycle: BillingCycle | null; onSubmit: (values: any) => Promise<void>; loading: boolean }) {
-  const [form, setForm] = useState({
+function BillingCycleForm({ cycle, onSubmit, loading }: { cycle: BillingCycle | null; onSubmit: (values: BillingCycleCreateInput) => Promise<void>; loading: boolean }) {
+  const [form, setForm] = useState<BillingCycleCreateInput>({
     name: cycle?.name ?? '',
     description: cycle?.description ?? '',
     duration: cycle?.duration ?? 'monthly',
     durationDays: cycle?.durationDays ?? 30,
     billingDate: cycle?.billingDate ?? '',
+    renewalBehavior: cycle?.renewalBehavior ?? 'automatic',
     automaticRenewal: cycle?.automaticRenewal ?? true,
     gracePeriod: cycle?.gracePeriod ?? 3,
     failedPaymentBehavior: cycle?.failedPaymentBehavior ?? 'retry',
@@ -334,6 +348,18 @@ function BillingCycleForm({ cycle, onSubmit, loading }: { cycle: BillingCycle | 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.name.trim()) {
+      toast.error('Cycle name is required');
+      return;
+    }
+    if (!(form.durationDays > 0)) {
+      toast.error('Duration (days) must be greater than 0');
+      return;
+    }
+    if (form.gracePeriod < 0) {
+      toast.error('Grace period cannot be negative');
+      return;
+    }
     onSubmit(form);
   };
 
@@ -374,6 +400,22 @@ function BillingCycleForm({ cycle, onSubmit, loading }: { cycle: BillingCycle | 
           <Select value={form.status} onValueChange={(v) => setForm(prev => ({ ...prev, status: v }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>{STATUS_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Renewal Behavior</Label>
+          <Select value={form.renewalBehavior} onValueChange={(v) => setForm(prev => ({ ...prev, renewalBehavior: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>{RENEWAL_BEHAVIOR_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}</SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Failed Payment Behavior</Label>
+          <Select value={form.failedPaymentBehavior} onValueChange={(v) => setForm(prev => ({ ...prev, failedPaymentBehavior: v }))}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>{FAILED_PAYMENT_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}</SelectContent>
           </Select>
         </div>
       </div>

@@ -30,7 +30,6 @@ import {
   Tooltip,
   Legend,
   Cell,
-  LabelList,
 } from 'recharts'
 import { getSubscriptionAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent, formatCount } from '@/lib/analytics-format'
@@ -180,8 +179,8 @@ export function SubscriptionAnalyticsPage() {
       )}
 
       {/* MRR Historical Trajectory Area Chart */}
-      <div className="rounded-xl border-0 bg-card p-5 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3">
+      <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
           <div>
             <h2 className="text-base font-semibold text-foreground">Monthly Recurring Revenue (MRR) Trajectory</h2>
             <p className="text-xs text-muted-foreground">Historical progression of contracted monthly recurring revenue in INR.</p>
@@ -193,11 +192,11 @@ export function SubscriptionAnalyticsPage() {
 
         <div className="h-[280px] w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={mrrTrend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid stroke="none" />
-              <XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+            <AreaChart data={mrrTrend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} style={{ background: 'transparent' }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+              <XAxis dataKey="period" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} />
               <YAxis
-                stroke="hsl(var(--muted-foreground))"
+                stroke="var(--color-muted-foreground)"
                 fontSize={11}
                 tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`}
                 tickLine={false}
@@ -205,11 +204,13 @@ export function SubscriptionAnalyticsPage() {
               />
               <Tooltip
                 formatter={(val: any) => [formatCurrency(val), 'MRR']}
+                cursor={{ stroke: 'var(--color-border)', strokeWidth: 1, strokeDasharray: '3 3' }}
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--popover))',
-                  border: 'none',
+                  backgroundColor: 'var(--color-card)',
+                  borderColor: 'var(--color-border)',
                   borderRadius: '8px',
                   fontSize: '12px',
+                  color: 'var(--color-foreground)',
                 }}
               />
               <Area
@@ -220,9 +221,7 @@ export function SubscriptionAnalyticsPage() {
                 fill="#10b981"
                 fillOpacity={0.08}
                 name="MRR"
-              >
-                <LabelList dataKey="mrr" position="top" formatter={(v: number) => `₹${(v / 100000).toFixed(1)}L`} fill="var(--color-muted-foreground)" fontSize={10} />
-              </Area>
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -231,8 +230,8 @@ export function SubscriptionAnalyticsPage() {
       {/* Subscription Movement Waterfall & Plan Tiers Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Waterfall Net Movement */}
-        <div className="rounded-xl border-0 bg-card p-5 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-border/60">
             <div>
               <h2 className="text-base font-semibold text-foreground">Monthly MRR Movement Waterfall</h2>
               <p className="text-xs text-muted-foreground">Additions from new subscriptions and expansions vs contractions.</p>
@@ -244,11 +243,11 @@ export function SubscriptionAnalyticsPage() {
 
           <div className="h-[250px] w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={movementData} margin={{ top: 16, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid stroke="none" />
-                <XAxis dataKey="type" stroke="hsl(var(--muted-foreground))" fontSize={10} tickLine={false} axisLine={false} />
+              <BarChart data={movementData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} style={{ background: 'transparent' }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <XAxis dataKey="type" stroke="var(--color-muted-foreground)" fontSize={10} tickLine={false} />
                 <YAxis
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--color-muted-foreground)"
                   fontSize={11}
                   tickFormatter={(v) => `₹${(v / 100000).toFixed(0)}L`}
                   tickLine={false}
@@ -256,15 +255,16 @@ export function SubscriptionAnalyticsPage() {
                 />
                 <Tooltip
                   formatter={(val: any) => [formatCurrency(val), 'Net Impact']}
+                  cursor={{ fill: 'transparent' }}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    border: 'none',
+                    backgroundColor: 'var(--color-card)',
+                    borderColor: 'var(--color-border)',
                     borderRadius: '8px',
                     fontSize: '12px',
+                    color: 'var(--color-foreground)',
                   }}
                 />
                 <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
-                  <LabelList dataKey="amount" position="top" formatter={(v: number) => `₹${(v / 100000).toFixed(1)}L`} fill="var(--color-muted-foreground)" fontSize={10} />
                   {movementData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

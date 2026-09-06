@@ -47,15 +47,33 @@ const createEmptyTier = (): TierDraft => ({
   discountPercent: '',
 })
 
-function formatTiers(tiers: VolumePricingTierItem[]): string {
+function formatTiers(tiers: VolumePricingTierItem[], currency = 'INR'): string {
   if (!tiers || tiers.length === 0) return '—'
-  return tiers
+  const fmt = (n: number) => {
+    try {
+      return new Intl.NumberFormat('en-IN', { style: 'currency', currency, minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n)
+    } catch {
+      return `${currency} ${n.toLocaleString()}`
+    }
+  }
+  return [...tiers]
     .sort((a, b) => a.minQuantity - b.minQuantity)
     .map((t) => {
       const range = t.maxQuantity ? `${t.minQuantity}-${t.maxQuantity}` : `${t.minQuantity}+`
-      return `${range}: ₹${t.unitPrice.toLocaleString()}`
+      return `${range}: ${fmt(t.unitPrice ?? t.price ?? 0)}`
     })
     .join(' | ')
+}
+
+const safeFormatDate = (value: string | undefined | null, fmt = 'MMM d, yyyy'): string => {
+  if (!value) return '—'
+  try {
+    const d = parseISO(String(value))
+    if (isNaN(d.getTime())) return '—'
+    return format(d, fmt)
+  } catch {
+    return '—'
+  }
 }
 
 export function VolumePricingPage() {
@@ -71,7 +89,7 @@ export function VolumePricingPage() {
   const [selectedProductId, setSelectedProductId] = useState('')
   const [tiers, setTiers] = useState<TierDraft[]>([createEmptyTier()])
 
-  const filters = { search, status: statusFilter, page, perPage: 10 }
+  const filters = { search, status: statusFilter === 'all' ? '' : statusFilter, page, perPage: 10 }
   const { data, isLoading, error, refetch } = useVolumePricingRules(filters)
   const { data: kpis, isLoading: kpisLoading } = useVolumePricingKpis()
   const { data: productData } = useProducts({ page: 1, perPage: 100 })
@@ -80,8 +98,12 @@ export function VolumePricingPage() {
   const deleteRule = useDeleteVolumePricingRule()
 
   const products = useMemo(() => {
-    return (productData?.products || []) as Array<{ id: string; name: string; sku: string }>
+    return (productData?.products || []) as Array<{ id: string; name: string; sku: string; currency?: string }>
   }, [productData])
+
+  const productNameOf = (id: string) => products.find((p) => p.id === id)?.name || ''
+  const productCurrencyOf = (id: string, fallback = 'INR') =>
+    products.find((p) => p.id === id)?.currency || fallback
 
   const handleSearch = () => {
     setSearch(searchInput)
@@ -118,7 +140,8 @@ export function VolumePricingPage() {
         const other = tiers[j]
         const otherMin = parseInt(other.minQuantity)
         const otherMax = other.maxQuantity ? parseInt(other.maxQuantity) : Infinity
-        if (min <= otherMax && max !== undefined && max >= otherMin) {
+        const curMax = max ?? Infinity
+        if (min <= otherMax && curMax >= otherMin) {
           toast.error(`Tier ${i + 1} overlaps with Tier ${j + 1}`)
           return false
         }
@@ -147,12 +170,11 @@ export function VolumePricingPage() {
         productId: selectedProductId,
         tiers: tiers.map((t) => ({
           productId: selectedProductId,
-          productName: '',
           minQuantity: parseInt(t.minQuantity),
           maxQuantity: t.maxQuantity ? parseInt(t.maxQuantity) : undefined,
           unitPrice: parseFloat(t.unitPrice),
           discountPercent: t.discountPercent ? parseFloat(t.discountPercent) : undefined,
-          currency: 'USD',
+          currency: productCurrencyOf(selectedProductId),
         })),
       })
       toast.success('Volume pricing rule created')
@@ -187,12 +209,12 @@ export function VolumePricingPage() {
         data: {
           tiers: tiers.map((t) => ({
             productId: editingRule.productId,
-            productName: '',
+            productName: productNameOf(editingRule.productId) || (editingRule as unknown as { productName?: string }).productName || '',
             minQuantity: parseInt(t.minQuantity),
             maxQuantity: t.maxQuantity ? parseInt(t.maxQuantity) : undefined,
             unitPrice: parseFloat(t.unitPrice),
             discountPercent: t.discountPercent ? parseFloat(t.discountPercent) : undefined,
-            currency: 'USD',
+            currency: productCurrencyOf(editingRule.productId, (editingRule as unknown as { currency?: string }).currency || editingRule.tiers?.[0]?.currency || 'INR'),
           })),
         },
       })
@@ -252,10 +274,21 @@ export function VolumePricingPage() {
       header: 'Tiers',
       accessorFn: (row) => {
         const tiersData = row.tiers as VolumePricingTierItem[] | undefined
+        const currency = String(row.currency || tiersData?.[0]?.currency || 'INR')
+        if (!tiersData || tiersData.length === 0) {
+          return <span className="text-[12px] text-muted-foreground">—</span>
+        }
         return (
-          <span className="text-[12px] text-muted-foreground">
-            {tiersData ? formatTiers(tiersData) : '—'}
-          </span>
+          <div className="flex flex-col gap-0.5">
+            {[...tiersData]
+              .sort((a, b) => a.minQuantity - b.minQuantity)
+              .map((t, i) => (
+                <span key={i} className="text-[12px] text-muted-foreground tabular-nums">
+                  {t.maxQuantity ? `${t.minQuantity}–${t.maxQuantity}` : `${t.minQuantity}+`}:{' '}
+                  <MoneyDisplay amount={t.unitPrice ?? t.price ?? 0} currency={t.currency || currency} size="sm" />
+                </span>
+              ))}
+          </div>
         )
       },
     },
@@ -273,7 +306,7 @@ export function VolumePricingPage() {
       header: 'Updated',
       accessorFn: (row) => (
         <span className="text-[12px] text-muted-foreground tabular-nums">
-          {format(parseISO(String(row.updatedAt)), 'MMM d, yyyy')}
+          {safeFormatDate(String(row.updatedAt))}
         </span>
       ),
     },
@@ -357,7 +390,7 @@ export function VolumePricingPage() {
             <Search className="h-4 w-4" />
           </Button>
         </div>
-        <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1) }}>
+        <Select value={statusFilter || 'all'} onValueChange={(v) => { setStatusFilter(v === 'all' ? '' : v); setPage(1) }}>
           <SelectTrigger className="w-[160px]"><SelectValue placeholder="All Statuses" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>

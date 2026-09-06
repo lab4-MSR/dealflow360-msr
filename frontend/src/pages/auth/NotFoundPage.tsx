@@ -62,50 +62,50 @@ export default function NotFoundPage() {
 
       {/* Center Content */}
       <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-2xl text-center space-y-8 animate-page-enter">
+        <div className="w-full max-w-xl text-center space-y-6 animate-page-enter">
           {/* Watermarked Visual Code & Icon */}
           <div className="relative flex flex-col items-center justify-center">
-            <span className="text-[120px] sm:text-[160px] font-extrabold tracking-tighter text-slate-200/50 dark:text-slate-800/40 select-none leading-none font-mono">
+            <span className="text-7xl sm:text-8xl font-extrabold tracking-tighter text-slate-200/50 dark:text-slate-800/40 select-none leading-none font-mono">
               404
             </span>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="h-20 w-20 rounded-3xl bg-card border border-border/80 shadow-elevation-3 flex items-center justify-center text-primary backdrop-blur-md">
-                <FileQuestion className="h-10 w-10 text-sky-500" />
+              <div className="h-14 w-14 rounded-2xl bg-card border border-border/80 shadow-elevation-2 flex items-center justify-center text-primary backdrop-blur-md">
+                <FileQuestion className="h-7 w-7 text-sky-500" />
               </div>
             </div>
           </div>
 
           {/* Heading & Information */}
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/10 text-sky-500 text-xs font-semibold">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-sky-500/10 text-sky-500 text-xs font-semibold">
               <Compass className="h-3.5 w-3.5" />
               <span>HTTP 404 · Destination Not Found</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
               Page or Deal Record Not Found
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
+            <p className="text-sm text-muted-foreground max-w-md mx-auto leading-relaxed">
               The quotation, deal record, or workspace screen you are seeking has been relocated, archived, or does not exist.
             </p>
           </div>
 
           {/* Suggested Destinations Grid */}
-          <div className="rounded-2xl border border-border/80 bg-card/90 backdrop-blur-md p-5 text-left shadow-elevation-2 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-border/60">
+          <div className="rounded-xl border border-border/80 bg-card/90 backdrop-blur-md p-4 text-left shadow-elevation-2 space-y-2.5">
+            <div className="flex items-center justify-between pb-1.5 border-b border-border/60">
               <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Recommended Destinations
               </span>
-              <span className="text-xs text-muted-foreground">Quick Jump</span>
+              <span className="text-[11px] text-muted-foreground">Quick Jump</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {SUGGESTIONS.map((item) => (
                 <Link
                   key={item.label}
                   to={item.path}
-                  className="flex items-start gap-3 rounded-xl border border-border/70 p-3 hover:border-primary/50 hover:bg-surface-muted/80 transition-all group cursor-pointer"
+                  className="flex items-start gap-2.5 rounded-lg border border-border/70 p-2.5 hover:border-primary/50 hover:bg-surface-muted/80 transition-all group cursor-pointer"
                 >
-                  <div className="p-2 rounded-lg bg-secondary/80 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                    <item.icon className="h-4 w-4" />
+                  <div className="p-1.5 rounded-md bg-secondary/80 text-muted-foreground group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                    <item.icon className="h-3.5 w-3.5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors truncate">
@@ -121,10 +121,9 @@ export default function NotFoundPage() {
           </div>
 
           {/* Action CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 pt-1">
             <Button
-              size="lg"
-              className="w-full sm:w-auto font-semibold shadow-xs cursor-pointer"
+              className="w-full sm:w-auto h-10.5 rounded-xl font-semibold shadow-xs cursor-pointer"
               onClick={() => navigate(getDashboardPath())}
             >
               <Home className="h-4 w-4 mr-2" />
@@ -132,8 +131,7 @@ export default function NotFoundPage() {
             </Button>
             <Button
               variant="secondary"
-              size="lg"
-              className="w-full sm:w-auto h-11 rounded-xl text-sm cursor-pointer"
+              className="w-full sm:w-auto h-10.5 rounded-xl text-sm font-semibold cursor-pointer"
               onClick={() => navigate(-1)}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />

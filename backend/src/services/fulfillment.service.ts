@@ -100,7 +100,7 @@ export async function createShippingRule(businessId: string, input: Record<strin
     strategy: input.strategy ?? 'stock_availability',
     shipping_method: input.shipping_method ?? null,
     shipping_cost: input.shipping_cost ?? 0,
-    currency: input.currency ?? 'USD',
+    currency: input.currency ?? 'INR',
     priority: input.priority ?? 100,
   }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
@@ -216,7 +216,7 @@ export async function acceptQuotationSplit(
   const { data: warehouses } = await serviceClient.from('warehouses').select('id,fulfillment_settings').eq('business_id', id).in('id', warehouseIds);
   const { data: shipments, error: shipmentError } = await serviceClient.from('shipments').insert(warehouseIds.map((warehouseId) => {
     const warehouse = (warehouses ?? []).find((row) => row.id === warehouseId);
-    return { business_id: id, fulfillment_order_id: order.id, shipment_number: `S-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`, status: 'pending', shipping_cost: Number(warehouse?.fulfillment_settings?.shipping_cost ?? 0), currency: quotation.currency ?? 'USD' };
+    return { business_id: id, fulfillment_order_id: order.id, shipment_number: `S-${new Date().getFullYear()}-${randomUUID().slice(0, 8).toUpperCase()}`, status: 'pending', shipping_cost: Number(warehouse?.fulfillment_settings?.shipping_cost ?? 0), currency: quotation.currency ?? 'INR' };
   })).select();
   if (shipmentError) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: shipmentError.message });
 

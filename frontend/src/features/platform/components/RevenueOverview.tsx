@@ -7,7 +7,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import type { RevenueOverview as RevenueOverviewType } from '../types'
@@ -16,10 +15,10 @@ interface RevenueOverviewProps {
   data: RevenueOverviewType
 }
 
-function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en-US', {
+function formatCurrency(amount: number, _currency?: string): string {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency,
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount)
@@ -28,7 +27,7 @@ function formatCurrency(amount: number, currency: string): string {
 function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM yyyy')}
       </p>
@@ -36,7 +35,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
         <p key={entry.name} className="text-small tabular-nums">
           <span className="text-muted-foreground">{entry.name}: </span>
           <span className="font-medium text-foreground">
-            {formatCurrency(entry.value, 'USD')}
+            {formatCurrency(entry.value, 'INR')}
           </span>
         </p>
       ))}
@@ -46,7 +45,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 
 export function RevenueOverview({ data }: RevenueOverviewProps) {
   return (
-    <Card className="border-0 shadow-none">
+    <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -65,8 +64,8 @@ export function RevenueOverview({ data }: RevenueOverviewProps) {
 
         <div className="h-[220px] mb-6">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data.trend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-              <CartesianGrid stroke="none" />
+            <LineChart data={data.trend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
               <XAxis
                 dataKey="date"
                 tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -91,9 +90,7 @@ export function RevenueOverview({ data }: RevenueOverviewProps) {
                 activeDot={{ r: 5 }}
                 animationDuration={350}
                 animationEasing="ease-out"
-              >
-                <LabelList dataKey="revenue" position="top" formatter={(val: number) => `₹${(val / 1000).toFixed(0)}k`} fill="var(--color-muted-foreground)" fontSize={10} />
-              </Line>
+              />
             </LineChart>
           </ResponsiveContainer>
         </div>

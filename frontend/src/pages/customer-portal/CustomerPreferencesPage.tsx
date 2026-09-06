@@ -257,24 +257,10 @@ export function CustomerPreferencesPage() {
 
               <div className="space-y-1.5">
                 <Label htmlFor="currency">Display Currency</Label>
-                <Select
-                  value={prefs.localization.currency}
-                  onValueChange={(val) =>
-                    setPrefs({
-                      ...prefs,
-                      localization: { ...prefs.localization, currency: val },
-                    })
-                  }
-                >
-                  <SelectTrigger id="currency">
-                    <SelectValue placeholder="Select Currency" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="INR (₹)">INR (₹)</SelectItem>
-                    <SelectItem value="EUR (€)">EUR (€)</SelectItem>
-                    <SelectItem value="GBP (£)">GBP (£)</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex h-10 w-full items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2 text-sm font-medium text-foreground">
+                  <span>INR (₹) — Indian Rupee</span>
+                  <span className="text-xs font-semibold text-primary">Standard</span>
+                </div>
               </div>
 
               <div className="space-y-1.5">

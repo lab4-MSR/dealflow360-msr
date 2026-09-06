@@ -27,7 +27,7 @@ export const shippingRuleSchema = z.object({
   strategy: z.enum(['stock_availability', 'shipping_cost', 'shipment_count', 'warehouse_priority']).optional(),
   shipping_method: z.string().max(80).optional().nullable(),
   shipping_cost: z.number().min(0).optional(),
-  currency: z.string().length(3).optional(),
+  currency: z.literal('INR').optional(),
   priority: z.number().int().min(0).optional(),
 }).strict();
 

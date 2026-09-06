@@ -6,7 +6,7 @@ export const subscriptionPlanSchema = z.object({
   name: z.string().min(1).max(160),
   type: z.string().max(40).optional().nullable(),
   price: z.number().min(0).optional(),
-  currency: z.string().length(3).optional(),
+  currency: z.literal('INR').optional(),
   billing_cycle: z.enum(['monthly', 'quarterly', 'semi_annual', 'annual']).optional(),
   features: z.array(z.unknown()).optional(),
   usage_limits: jsonObject.optional(),

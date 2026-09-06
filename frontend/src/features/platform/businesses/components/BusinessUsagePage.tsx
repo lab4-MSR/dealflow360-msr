@@ -20,7 +20,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { Users, FileText, ShoppingCart, Code, Activity } from 'lucide-react'
@@ -49,7 +48,7 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM d, yyyy')}
       </p>
@@ -276,7 +275,7 @@ export function BusinessUsagePage() {
 
       {/* Usage Trend */}
       {usageTrend && usageTrend.length > 0 ? (
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Usage Trend</CardTitle>
@@ -301,8 +300,8 @@ export function BusinessUsagePage() {
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={usageTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="none" />
+                <AreaChart data={usageTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis
                     dataKey="date"
                     tickFormatter={(val: string) => format(parseISO(val), 'MMM d')}
@@ -324,9 +323,7 @@ export function BusinessUsagePage() {
                     strokeWidth={2}
                     fill="var(--color-primary)"
                     fillOpacity={0.08}
-                  >
-                    <LabelList dataKey="events" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
-                  </Area>
+                  />
                   <Area
                     type="monotone"
                     dataKey="users"

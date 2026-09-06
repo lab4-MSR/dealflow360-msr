@@ -161,7 +161,7 @@ export function QuoteHeader({ quote, onVersionChange, onAction, actionLoading }:
               {quote.total_value.toLocaleString()}
             </span>
             <span className="text-[11px] text-muted-foreground block">
-              Authoritative Grand Total ({quote.currency})
+              Authoritative Grand Total (INR)
             </span>
           </div>
 

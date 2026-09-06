@@ -9,9 +9,10 @@ import { ErrorState } from '@/components/shared'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { EmptyState } from '@/components/ui/empty-state'
 import { useProductDetail, useDeleteProduct } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
-import { ArrowLeft, Edit, Trash2, Package, DollarSign, Warehouse, ShoppingCart, Calendar, Tag, Hash, Activity } from 'lucide-react'
+import { ArrowLeft, Edit, Trash2, Package, DollarSign, Warehouse, Calendar, Tag, Hash, Activity, Info } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 
 const STATUS_VARIANT: Record<string, 'success' | 'secondary' | 'warning'> = {
@@ -26,8 +27,22 @@ const MOVEMENT_VARIANT: Record<string, 'success' | 'danger' | 'info'> = {
   adjustment: 'info',
 }
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
+const formatCurrency = (value: number, currency = 'INR') => {
+  try {
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency, maximumFractionDigits: 0 }).format(value)
+  } catch {
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value)
+  }
+}
+
+const safeFormatDate = (value: string | undefined | null, fmt = 'MMM d, yyyy') => {
+  if (!value) return '—'
+  try {
+    return format(parseISO(value), fmt)
+  } catch {
+    return '—'
+  }
+}
 
 export function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>()
@@ -68,7 +83,7 @@ export function ProductDetailsPage() {
       id: 'date',
       header: 'Date',
       accessorFn: (row) => (
-        <span className="text-[13px] text-muted-foreground">{format(parseISO(row.date), 'MMM d, yyyy')}</span>
+        <span className="text-[13px] text-muted-foreground">{safeFormatDate(row.date)}</span>
       ),
     },
     {
@@ -120,7 +135,7 @@ export function ProductDetailsPage() {
       id: 'date',
       header: 'Date',
       accessorFn: (row) => (
-        <span className="text-[13px] text-muted-foreground">{format(parseISO(row.date), 'MMM d, yyyy')}</span>
+        <span className="text-[13px] text-muted-foreground">{safeFormatDate(row.date)}</span>
       ),
     },
   ]
@@ -139,6 +154,8 @@ export function ProductDetailsPage() {
     return <ErrorState title="Failed to load product" onRetry={refetch} />
   }
 
+  const currency = product.currency || 'INR'
+
   return (
     <div className="space-y-6">
       <PageHeader
@@ -155,7 +172,7 @@ export function ProductDetailsPage() {
               <ArrowLeft className="h-4 w-4 mr-1.5" />
               Back
             </Button>
-            <Button variant="outline" onClick={() => toast.info('Edit coming soon')}>
+            <Button variant="outline" onClick={() => navigate(`/business-admin/products/${product.id}/edit`)}>
               <Edit className="h-4 w-4 mr-1.5" />
               Edit
             </Button>
@@ -181,7 +198,7 @@ export function ProductDetailsPage() {
                 <Badge variant={STATUS_VARIANT[product.status] || 'secondary'}>{product.status}</Badge>
                 <Badge variant="outline">{product.category}</Badge>
                 <span className="text-[12px] text-muted-foreground">
-                  Created {format(parseISO(product.createdAt), 'MMM d, yyyy')}
+                  Created {safeFormatDate(product.createdAt)}
                 </span>
               </div>
             </div>
@@ -232,7 +249,7 @@ export function ProductDetailsPage() {
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-[11px] text-muted-foreground">Unit Price</p>
-                      <p className="text-[13px] text-foreground">{formatCurrency(product.unitPrice)}</p>
+                      <p className="text-[13px] text-foreground">{formatCurrency(product.unitPrice ?? product.price ?? 0, currency)}</p>
                     </div>
                   </div>
                 </div>
@@ -241,7 +258,7 @@ export function ProductDetailsPage() {
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-[11px] text-muted-foreground">Currency</p>
-                      <p className="text-[13px] text-foreground">{product.currency}</p>
+                      <p className="text-[13px] text-foreground">{currency}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -252,7 +269,7 @@ export function ProductDetailsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Badge className="h-4 w-4 text-muted-foreground" />
+                    <Info className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-[11px] text-muted-foreground">Status</p>
                       <Badge variant={STATUS_VARIANT[product.status] || 'secondary'}>{product.status}</Badge>
@@ -262,7 +279,7 @@ export function ProductDetailsPage() {
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-[11px] text-muted-foreground">Created</p>
-                      <p className="text-[13px] text-foreground">{format(parseISO(product.createdAt), 'MMM d, yyyy')}</p>
+                      <p className="text-[13px] text-foreground">{safeFormatDate(product.createdAt)}</p>
                     </div>
                   </div>
                 </div>
@@ -277,7 +294,7 @@ export function ProductDetailsPage() {
               <CardTitle>Price Lists</CardTitle>
             </CardHeader>
             <CardContent>
-              {product.priceLists.length === 0 ? (
+              {(product.priceLists?.length ?? 0) === 0 ? (
                 <div className="py-8 text-center">
                   <DollarSign className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                   <p className="text-[13px] text-muted-foreground">No price lists include this product.</p>
@@ -289,10 +306,10 @@ export function ProductDetailsPage() {
                       <span className="text-[13px] font-medium text-foreground">{row.priceListName}</span>
                     )},
                     { id: 'price', header: 'Price', accessorFn: (row: { price: number; currency: string }) => (
-                      <span className="text-[13px] text-foreground tabular-nums">{formatCurrency(row.price)}</span>
+                      <span className="text-[13px] text-foreground tabular-nums">{formatCurrency(row.price ?? 0, row.currency || currency)}</span>
                     )},
                     { id: 'currency', header: 'Currency', accessorFn: (row: { currency: string }) => (
-                      <span className="text-[13px] text-muted-foreground">{row.currency}</span>
+                      <span className="text-[13px] text-muted-foreground">{row.currency || currency}</span>
                     )},
                   ] as unknown as Column<Record<string, unknown>>[]}
                   data={product.priceLists as unknown as Record<string, unknown>[]}
@@ -308,7 +325,7 @@ export function ProductDetailsPage() {
               <CardTitle>Inventory History</CardTitle>
             </CardHeader>
             <CardContent>
-              {product.inventoryHistory.length === 0 ? (
+              {(product.inventoryHistory?.length ?? 0) === 0 ? (
                 <div className="py-8 text-center">
                   <Warehouse className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                   <p className="text-[13px] text-muted-foreground">No inventory movements recorded.</p>
@@ -329,11 +346,12 @@ export function ProductDetailsPage() {
               <CardTitle>Recent Sales</CardTitle>
             </CardHeader>
             <CardContent>
-              {product.recentSales.length === 0 ? (
-                <div className="py-8 text-center">
-                  <ShoppingCart className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-                  <p className="text-[13px] text-muted-foreground">No sales recorded for this product.</p>
-                </div>
+              {(product.recentSales?.length ?? 0) === 0 ? (
+                <EmptyState
+                  icon={<Package className="h-8 w-8" />}
+                  title="No sales recorded"
+                  description="No sales recorded for this product yet."
+                />
               ) : (
                 <DataTable
                   columns={salesColumns as unknown as Column<Record<string, unknown>>[]}
@@ -350,54 +368,11 @@ export function ProductDetailsPage() {
               <CardTitle>Product Activity & Audit Trail</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {[
-                  {
-                    id: 'act-1',
-                    action: 'Base Price Updated',
-                    details: `Unit price adjusted to ${formatCurrency(product.unitPrice)} by Pricing Admin`,
-                    date: '2026-09-02T10:30:00Z',
-                    actor: 'System Admin',
-                  },
-                  {
-                    id: 'act-2',
-                    action: 'Stock Allocation Recorded',
-                    details: 'Stock movement executed for regional fulfillment centers',
-                    date: '2026-08-28T14:15:00Z',
-                    actor: 'Operations Manager',
-                  },
-                  {
-                    id: 'act-3',
-                    action: 'Price List Assignment',
-                    details: 'Assigned to Enterprise Standard & Partner Gold price lists',
-                    date: '2026-08-15T09:00:00Z',
-                    actor: 'Commercial Lead',
-                  },
-                  {
-                    id: 'act-4',
-                    action: 'Product Catalog Ingestion',
-                    details: `Initial creation with SKU ${product.sku} under ${product.category}`,
-                    date: product.createdAt || '2026-08-01T08:00:00Z',
-                    actor: 'Product Manager',
-                  },
-                ].map((item) => (
-                  <div key={item.id} className="flex items-start gap-3 p-3.5 rounded-lg border border-border bg-muted/10">
-                    <div className="p-2 rounded-md bg-primary/10 text-primary mt-0.5">
-                      <Activity className="h-4 w-4" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <p className="text-[13px] font-semibold text-foreground">{item.action}</p>
-                        <span className="text-[11px] text-muted-foreground">
-                          {format(parseISO(item.date), 'MMM d, yyyy · h:mm a')}
-                        </span>
-                      </div>
-                      <p className="text-[12px] text-muted-foreground mt-0.5">{item.details}</p>
-                      <p className="text-[11px] text-primary/80 font-medium mt-1">By {item.actor}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <EmptyState
+                icon={<Activity className="h-8 w-8" />}
+                title="No activity recorded"
+                description="Product audit events will appear here once changes are tracked for this product."
+              />
             </CardContent>
           </Card>
         </TabsContent>

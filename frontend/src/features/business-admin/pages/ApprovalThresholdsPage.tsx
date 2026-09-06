@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -42,7 +42,7 @@ function ThresholdRangeCard({ label, min, max, currency, unit, onMinChange, onMa
       </div>
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1">
-          <label className="text-xs text-muted-foreground">Min {isNaN(index as any) ? '' : ''}</label>
+          <label className="text-xs text-muted-foreground">Min</label>
           <Input type="number" step={category === 'dealValue' ? '0.01' : '0.1'} value={min} onChange={e => onMinChange(e.target.value)} placeholder="0" />
         </div>
         <div className="space-y-1">
@@ -77,15 +77,47 @@ function ApprovalThresholdsPage() {
     }
   }
 
+  useEffect(() => {
+    initFromData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [thresholds])
+
   const handleSave = async () => {
+    const toNum = (v: string, fallback: number) => {
+      const n = parseFloat(v)
+      return Number.isFinite(n) ? n : fallback
+    }
+    // Basic gap/overlap validation
+    const hasOverlap = (arr: { min: string; max: string }[]) => {
+      const ranges = arr.map(d => ({ min: toNum(d.min, 0), max: d.max === '' ? Infinity : toNum(d.max, Infinity) }))
+      for (let i = 0; i < ranges.length; i++) {
+        if (ranges[i].max !== Infinity && ranges[i].min > ranges[i].max) return true
+        for (let j = i + 1; j < ranges.length; j++) {
+          if (ranges[i].min < ranges[j].max && ranges[j].min < ranges[i].max && !(ranges[i].max === ranges[j].min || ranges[j].max === ranges[i].min)) {
+            // allow touching edges, flag real overlaps
+            if (ranges[i].min < ranges[j].max && ranges[j].min < ranges[i].max && ranges[i].min !== ranges[j].max && ranges[j].min !== ranges[i].max) {
+              // check strict overlap beyond touching
+              const overlapStart = Math.max(ranges[i].min, ranges[j].min)
+              const overlapEnd = Math.min(ranges[i].max, ranges[j].max)
+              if (overlapEnd > overlapStart) return true
+            }
+          }
+        }
+      }
+      return false
+    }
+    if (hasOverlap(dealValue) || hasOverlap(discount) || hasOverlap(risk) || hasOverlap(margin)) {
+      toast.error('Overlapping or invalid ranges detected. Min must be <= Max.')
+      return
+    }
     setSaving(true)
     try {
       const payload = {
-        dealValue: dealValue.map((d, i) => ({ ...thresholds?.dealValue[i], min: parseFloat(d.min), max: d.max === '' ? null : parseFloat(d.max) })),
-        discount: discount.map((d, i) => ({ ...thresholds?.discount[i], min: parseFloat(d.min), max: d.max === '' ? null : parseFloat(d.max) })),
-        risk: risk.map((d, i) => ({ ...thresholds?.risk[i], min: parseFloat(d.min), max: d.max === '' ? null : parseFloat(d.max) })),
-        margin: margin.map((d, i) => ({ ...thresholds?.margin[i], min: parseFloat(d.min), max: d.max === '' ? null : parseFloat(d.max) })),
-        mappings: mappings.map((m, i) => ({ ...thresholds?.mappings[i], approverRole: m.approverRole, chainId: m.chainId })),
+        dealValue: dealValue.map((d, i) => ({ ...thresholds?.dealValue[i], min: toNum(d.min, 0), max: d.max === '' ? null : toNum(d.max, 0) })),
+        discount: discount.map((d, i) => ({ ...thresholds?.discount[i], min: toNum(d.min, 0), max: d.max === '' ? null : toNum(d.max, 0) })),
+        risk: risk.map((d, i) => ({ ...thresholds?.risk[i], min: toNum(d.min, 0), max: d.max === '' ? null : toNum(d.max, 0) })),
+        margin: margin.map((d, i) => ({ ...thresholds?.margin[i], min: toNum(d.min, 0), max: d.max === '' ? null : toNum(d.max, 0) })),
+        mappings: mappings.map((m, i) => ({ ...thresholds?.mappings[i], approverRole: m.approverRole, chainId: m.chainId === '_none' ? undefined : m.chainId })),
       }
       await updateApprovalThresholds.mutateAsync(payload)
       toast.success('Thresholds saved')
@@ -95,7 +127,7 @@ function ApprovalThresholdsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Approval Thresholds"
         description="Configure threshold boundaries for deal value, discount, risk, and margin that drive approval routing decisions"
@@ -224,10 +256,10 @@ function ApprovalThresholdsPage() {
                               </Select>
                             </td>
                             <td className="p-3">
-                              <Select value={m.chainId || ''} onValueChange={v => setMappings(prev => prev.map((x, j) => j === i ? { ...x, chainId: v || undefined } : x))}>
+                              <Select value={m.chainId || '_none'} onValueChange={v => setMappings(prev => prev.map((x, j) => j === i ? { ...x, chainId: v === '_none' ? undefined : v } : x))}>
                                 <SelectTrigger className="w-full"><SelectValue placeholder="Select chain" /></SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="">None (Auto)</SelectItem>
+                                  <SelectItem value="_none">None (Auto)</SelectItem>
                                   {chainsData?.chains.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                                 </SelectContent>
                               </Select>

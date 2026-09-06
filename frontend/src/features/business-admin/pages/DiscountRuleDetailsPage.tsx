@@ -212,10 +212,10 @@ export function DiscountRuleDetailsPage() {
                     <p className="text-[11px] text-muted-foreground mb-1">Conditions</p>
                     <div className="flex flex-wrap gap-2">
                       {rule.conditions.minDealValue != null && (
-                        <Badge variant="outline">Min Deal: ${rule.conditions.minDealValue.toLocaleString()}</Badge>
+                        <Badge variant="outline">Min Deal: ₹{rule.conditions.minDealValue.toLocaleString()}</Badge>
                       )}
                       {rule.conditions.maxDealValue != null && (
-                        <Badge variant="outline">Max Deal: ${rule.conditions.maxDealValue.toLocaleString()}</Badge>
+                        <Badge variant="outline">Max Deal: ₹{rule.conditions.maxDealValue.toLocaleString()}</Badge>
                       )}
                       {rule.conditions.minQuantity != null && (
                         <Badge variant="outline">Min Qty: {rule.conditions.minQuantity}</Badge>

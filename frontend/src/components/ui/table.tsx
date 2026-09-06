@@ -10,7 +10,7 @@ function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) 
 }
 
 function TableHeader({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn('[&_tr]:border-b', className)} {...props} />
+  return <thead className={cn('[&_tr]:border-b border-border/80 bg-surface-muted/40', className)} {...props} />
 }
 
 function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
@@ -20,7 +20,7 @@ function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTableSectio
 function TableFooter({ className, ...props }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tfoot
-      className={cn('border-t bg-surface-muted font-medium', className)}
+      className={cn('border-t border-border/80 bg-surface-muted font-medium', className)}
       {...props}
     />
   )
@@ -30,7 +30,7 @@ function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElem
   return (
     <tr
       className={cn(
-        'border-b border-border transition-colors duration-150 ease-out hover:bg-muted/40 data-[state=selected]:bg-primary-subtle/70',
+        'border-b border-border/80 transition-colors duration-150 ease-out hover:bg-muted/40 data-[state=selected]:bg-primary-subtle/70',
         className
       )}
       {...props}
@@ -42,7 +42,7 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        'h-12 px-4 text-left text-label font-medium text-muted-foreground align-middle whitespace-nowrap',
+        'h-10 px-3.5 text-left text-[11px] font-semibold uppercase tracking-wider text-muted-foreground align-middle whitespace-nowrap',
         '[&:has([role=checkbox])]:pr-0',
         className
       )}
@@ -54,7 +54,7 @@ function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
 function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn('h-14 px-4 align-middle [&:has([role=checkbox])]:pr-0', className)}
+      className={cn('h-11 px-3.5 align-middle text-sm text-foreground [&:has([role=checkbox])]:pr-0', className)}
       {...props}
     />
   )

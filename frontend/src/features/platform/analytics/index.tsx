@@ -4,14 +4,14 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ErrorState } from '@/components/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Building2, Users, FileText, DollarSign, TrendingUp } from 'lucide-react'
-import { AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts'
+import { AreaChart, Area, BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 const COLORS = ['var(--color-primary)', 'var(--color-success)', 'var(--color-warning)', 'var(--color-info)', 'var(--color-intelligence)']
 
 function ChartTooltipContent({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">{label}</p>
       {payload.map((entry, i) => (
         <p key={i} className="text-small tabular-nums">
@@ -116,19 +116,17 @@ export function PlatformAnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader><CardTitle>Business Growth</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={data.businessGrowth} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="none" />
+                <AreaChart data={data.businessGrowth} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Area type="monotone" dataKey="total" name="Total" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} strokeWidth={2} animationDuration={350} animationEasing="ease-out">
-                    <LabelList dataKey="total" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
-                  </Area>
+                  <Area type="monotone" dataKey="total" name="Total" stroke="var(--color-primary)" fill="var(--color-primary)" fillOpacity={0.1} strokeWidth={2} animationDuration={350} animationEasing="ease-out" />
                   <Area type="monotone" dataKey="active" name="Active" stroke="var(--color-success)" fill="var(--color-success)" fillOpacity={0.1} strokeWidth={2} animationDuration={350} animationEasing="ease-out" />
                 </AreaChart>
               </ResponsiveContainer>
@@ -136,54 +134,48 @@ export function PlatformAnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader><CardTitle>Deal Volume</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.dealVolume} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="none" />
+                <BarChart data={data.dealVolume} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
-                  <Tooltip content={<ChartTooltipContent />} />
-                  <Bar dataKey="created" name="Created" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out">
-                    <LabelList dataKey="created" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
-                  </Bar>
-                  <Bar dataKey="completed" name="Completed" fill="var(--color-success)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out">
-                    <LabelList dataKey="completed" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
-                  </Bar>
+                  <Tooltip content={<ChartTooltipContent />} cursor={{ fill: 'transparent' }} />
+                  <Bar dataKey="created" name="Created" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out" />
+                  <Bar dataKey="completed" name="Completed" fill="var(--color-success)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader><CardTitle>Revenue Trend</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data.revenueTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="none" />
+                <LineChart data={data.revenueTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tickFormatter={(v: number) => `₹${(v / 1000).toFixed(0)}K`} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} />
-                  <Line type="monotone" dataKey="revenue" name="Revenue" stroke="var(--color-primary)" strokeWidth={2} dot={{ fill: 'var(--color-primary)', r: 3 }} animationDuration={350} animationEasing="ease-out">
-                    <LabelList dataKey="revenue" position="top" formatter={(v: number) => `₹${(v / 1000).toFixed(0)}k`} fill="var(--color-muted-foreground)" fontSize={10} />
-                  </Line>
+                  <Line type="monotone" dataKey="revenue" name="Revenue" stroke="var(--color-primary)" strokeWidth={2} dot={{ fill: 'var(--color-primary)', r: 3 }} animationDuration={350} animationEasing="ease-out" />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader><CardTitle>Risk Distribution</CardTitle></CardHeader>
           <CardContent>
             <div className="h-[280px] flex items-center">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={data.riskDistribution} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={4} dataKey="value" nameKey="name" label={({ percent }) => `${(percent * 100).toFixed(0)}%`} labelLine={false} animationDuration={350} animationEasing="ease-out">
+                <PieChart style={{ background: 'transparent' }}>
+                  <Pie data={data.riskDistribution} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={4} dataKey="value" nameKey="name" animationDuration={350} animationEasing="ease-out">
                     {data.riskDistribution.map((_, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
                   </Pie>
                   <Tooltip content={<ChartTooltipContent />} />

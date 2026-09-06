@@ -16,11 +16,20 @@ import {
   useDeletePriceList,
   usePricingHistory,
 } from '../hooks/use-business-admin'
-import type { PriceListDetail } from '../types'
 import { toast } from 'sonner'
 import { ArrowLeft, MoreHorizontal, Edit, Trash2, ToggleLeft, ToggleRight, Calendar, Package, Users, History, List } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
-import { cn } from '@/lib/utils'
+import { format, parseISO, isValid } from 'date-fns'
+
+const safeFormatDate = (value: string | undefined | null, fmt = 'MMM d, yyyy'): string => {
+  if (!value) return '—'
+  try {
+    const d = parseISO(value)
+    if (!isValid(d)) return '—'
+    return format(d, fmt)
+  } catch {
+    return '—'
+  }
+}
 
 const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'secondary'> = {
   active: 'success',
@@ -49,7 +58,7 @@ export function PriceListDetailsPage() {
     entityType: 'price_list',
     page: 1,
     perPage: 100,
-  })
+  }, { enabled: !!id })
 
   const handleToggleStatus = async () => {
     if (!priceList) return
@@ -94,9 +103,12 @@ export function PriceListDetailsPage() {
     {
       id: 'sellingPrice',
       header: 'Selling Price',
-      accessorFn: (row) => (
-        <MoneyDisplay amount={Number(row.unitPrice)} currency={String(row.currency)} size="sm" />
-      ),
+      accessorFn: (row) => {
+        const selling = Number(row.sellingPrice ?? (row as Record<string, unknown>).price ?? row.unitPrice)
+        return (
+          <MoneyDisplay amount={selling} currency={String(row.currency)} size="sm" />
+        )
+      },
     },
     {
       id: 'discount',
@@ -158,7 +170,7 @@ export function PriceListDetailsPage() {
       header: 'Date',
       accessorFn: (row) => (
         <span className="text-[12px] text-muted-foreground tabular-nums">
-          {format(parseISO(String(row.timestamp)), 'MMM d, yyyy · h:mm a')}
+          {safeFormatDate(String(row.timestamp), 'MMM d, yyyy · h:mm a')}
         </span>
       ),
     },
@@ -185,7 +197,7 @@ export function PriceListDetailsPage() {
     return <ErrorState title="Failed to load price list" onRetry={refetch} />
   }
 
-  const pl = priceList as unknown as PriceListDetail
+  const pl = priceList
 
   return (
     <div className="space-y-6">
@@ -212,7 +224,7 @@ export function PriceListDetailsPage() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => toast.info('Edit coming soon')}>
+                <DropdownMenuItem onClick={() => navigate(`/business-admin/pricing/lists/${pl.id}?edit=1`)}>
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
                 </DropdownMenuItem>
@@ -292,7 +304,7 @@ export function PriceListDetailsPage() {
                     <div>
                       <p className="text-[11px] text-muted-foreground">Effective From</p>
                       <p className="text-[13px] text-foreground">
-                        {pl.effectiveFrom ? format(parseISO(pl.effectiveFrom), 'MMM d, yyyy') : '—'}
+                        {pl.effectiveFrom ? safeFormatDate(pl.effectiveFrom) : '—'}
                       </p>
                     </div>
                   </div>
@@ -301,7 +313,7 @@ export function PriceListDetailsPage() {
                     <div>
                       <p className="text-[11px] text-muted-foreground">Effective Until</p>
                       <p className="text-[13px] text-foreground">
-                        {pl.effectiveUntil ? format(parseISO(pl.effectiveUntil), 'MMM d, yyyy') : '—'}
+                        {pl.effectiveUntil ? safeFormatDate(pl.effectiveUntil) : '—'}
                       </p>
                     </div>
                   </div>
@@ -309,14 +321,14 @@ export function PriceListDetailsPage() {
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-[11px] text-muted-foreground">Created</p>
-                      <p className="text-[13px] text-foreground">{format(parseISO(pl.createdAt), 'MMM d, yyyy')}</p>
+                      <p className="text-[13px] text-foreground">{safeFormatDate(pl.createdAt)}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Calendar className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-[11px] text-muted-foreground">Updated</p>
-                      <p className="text-[13px] text-foreground">{format(parseISO(pl.updatedAt), 'MMM d, yyyy')}</p>
+                      <p className="text-[13px] text-foreground">{safeFormatDate(pl.updatedAt)}</p>
                     </div>
                   </div>
                 </div>

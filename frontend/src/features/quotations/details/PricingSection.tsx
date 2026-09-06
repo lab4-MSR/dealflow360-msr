@@ -23,7 +23,7 @@ export function PricingSection({ pricing }: PricingSectionProps) {
           Pricing
         </h2>
         <span className="text-caption text-muted-foreground font-mono">
-          Authoritative Financial Summary ({pricing.currency})
+          Authoritative Financial Summary (INR)
         </span>
       </div>
 
@@ -99,7 +99,7 @@ export function PricingSection({ pricing }: PricingSectionProps) {
               <div>
                 <span className="font-sans font-bold text-base text-foreground block">Grand Total</span>
                 <span className="text-[11px] font-sans text-muted-foreground">
-                  Final net payable in {pricing.currency}
+                  Final net payable in INR
                 </span>
               </div>
               <span className="text-2xl font-bold tracking-tight text-primary tabular-nums">

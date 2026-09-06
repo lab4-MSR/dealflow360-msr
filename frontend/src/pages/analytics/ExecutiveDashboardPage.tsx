@@ -37,7 +37,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  LabelList,
 } from 'recharts'
 import { getExecutiveAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent, formatCount, kpiChange } from '@/lib/analytics-format'
@@ -192,8 +191,8 @@ export function ExecutiveDashboardPage() {
       {/* Main Trajectory Charts & Revenue Mix */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Trajectory Area Chart */}
-        <div className="lg:col-span-2 rounded-xl border-0 bg-card p-5 shadow-sm">
-          <div className="flex items-center justify-between pb-4">
+        <div className="lg:col-span-2 rounded-xl border border-border bg-card p-5 shadow-sm">
+          <div className="flex items-center justify-between pb-4 border-b border-border/60">
             <div>
               <h2 className="text-base font-semibold text-foreground">Revenue Trajectory vs Pipeline</h2>
               <p className="text-xs text-muted-foreground">Comparative trajectory of realized revenue and qualified pipeline velocity.</p>
@@ -209,11 +208,11 @@ export function ExecutiveDashboardPage() {
           </div>
           <div className="h-[280px] w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid stroke="none" />
-                <XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+              <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <XAxis dataKey="period" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} />
                 <YAxis
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--color-muted-foreground)"
                   fontSize={11}
                   tickFormatter={(v) => `₹${(v / 1000000).toFixed(1)}M`}
                   tickLine={false}
@@ -221,11 +220,13 @@ export function ExecutiveDashboardPage() {
                 />
                 <Tooltip
                   formatter={(value: any) => [formatCurrency(value), '']}
+                  cursor={{ stroke: 'var(--color-border)', strokeWidth: 1, strokeDasharray: '3 3' }}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    border: 'none',
+                    backgroundColor: 'var(--color-card)',
+                    borderColor: 'var(--color-border)',
                     borderRadius: '8px',
                     fontSize: '12px',
+                    color: 'var(--color-foreground)',
                   }}
                 />
                 <Area
@@ -240,23 +241,21 @@ export function ExecutiveDashboardPage() {
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="hsl(var(--primary))"
+                  stroke="var(--color-primary)"
                   strokeWidth={2.5}
-                  fill="hsl(var(--primary))"
+                  fill="var(--color-primary)"
                   fillOpacity={0.08}
                   name="Revenue"
-                >
-                  <LabelList dataKey="revenue" position="top" formatter={(v: number) => `₹${(v / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={10} />
-                </Area>
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Revenue Mix Donut */}
-        <div className="rounded-xl border-0 bg-card p-5 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-border/60">
               <div>
                 <h2 className="text-base font-semibold text-foreground">Revenue Mix</h2>
                 <p className="text-xs text-muted-foreground">Streams breakdown by product & retainers.</p>
@@ -265,7 +264,7 @@ export function ExecutiveDashboardPage() {
             </div>
             <div className="h-[200px] w-full pt-2">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart style={{ background: 'transparent' }}>
                   <Pie
                     data={revenueMix}
                     dataKey="value"
@@ -275,22 +274,17 @@ export function ExecutiveDashboardPage() {
                     innerRadius={55}
                     outerRadius={80}
                     paddingAngle={3}
-                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                    labelLine={false}
                   >
                     {revenueMix.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    formatter={(val: any) => [formatCurrencyCompact(val), 'Revenue']}
-                    contentStyle={{ border: 'none', backgroundColor: 'hsl(var(--popover))', borderRadius: '8px' }}
-                  />
+                  <Tooltip formatter={(val: any) => [formatCurrencyCompact(val), 'Revenue']} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="space-y-2 pt-2">
+          <div className="space-y-2 pt-2 border-t border-border/60">
             {revenueMix.map((item) => (
               <div key={item.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">

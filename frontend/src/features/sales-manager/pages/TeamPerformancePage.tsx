@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Award, TrendingUp, Users, DollarSign, Target, Percent } from 'lucide-react'
+import { Award, TrendingUp, Users, IndianRupee, Target, Percent } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getTeamPerformance } from '@/services/salesManager'

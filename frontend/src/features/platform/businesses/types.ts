@@ -21,6 +21,10 @@ export interface Business {
     avatar?: string
   }
   usersCount: number
+  domain?: string
+  slug?: string
+  mrr?: number
+  userCount?: number
   dealsCount: number
   revenue: number
   createdAt: string

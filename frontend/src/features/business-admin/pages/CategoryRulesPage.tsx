@@ -6,7 +6,6 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
-import { DataTable, type Column } from '@/components/ui/datatable/data-table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { KpiCard } from '@/components/ui/kpi-card'
@@ -63,11 +62,13 @@ export function CategoryRulesPage() {
 
   const handleAdd = () => {
     setForm(emptyRule)
+    setSelectedRule(null)
     setIsEditing(false)
     setShowDialog(true)
   }
 
   const handleEdit = (rule: CategoryDiscountRule) => {
+    setSelectedRule(rule)
     setForm({
       categoryId: rule.categoryId,
       categoryName: rule.categoryName,
@@ -93,12 +94,28 @@ export function CategoryRulesPage() {
       toast.error('Please select a category')
       return
     }
+    if (form.maxDiscountPercent < 0 || form.maxDiscountPercent > 100) {
+      toast.error('Max discount must be between 0 and 100')
+      return
+    }
+    const CATEGORY_META: Record<string, { name: string; path: string }> = {
+      software: { name: 'Software', path: 'Catalog / Software' },
+      hardware: { name: 'Hardware', path: 'Catalog / Hardware' },
+      services: { name: 'Services', path: 'Catalog / Services' },
+      subscriptions: { name: 'Subscriptions', path: 'Catalog / Subscriptions' },
+    }
+    const meta = CATEGORY_META[form.categoryId]
+    const payload = {
+      ...form,
+      categoryName: form.categoryName || meta?.name || form.categoryId,
+      categoryPath: form.categoryPath || meta?.path || form.categoryId,
+    }
     try {
-      if (isEditing && selectedRule) {
-        await updateRule.mutateAsync({ id: selectedRule.id, data: form })
+      if (isEditing && selectedRule?.id) {
+        await updateRule.mutateAsync({ id: selectedRule.id, data: payload })
         toast.success('Rule updated')
       } else {
-        await createRule.mutateAsync(form)
+        await createRule.mutateAsync(payload)
         toast.success('Rule created')
       }
       setShowDialog(false)
@@ -153,6 +170,8 @@ export function CategoryRulesPage() {
           </>
         )}
       </div>
+
+      {error && <ErrorState title="Failed to load category rules" onRetry={refetch} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Category List Panel */}

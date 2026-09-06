@@ -8,8 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useCreateWarehouse } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
-import { Plus, ArrowLeft, MapPin, Mail, Phone, HardDrive, Truck, Settings, Package, Users } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Plus, ArrowLeft, MapPin, HardDrive, Truck, Package, Users } from 'lucide-react'
 
 const TYPE_OPTIONS = [
   { value: 'distribution', label: 'Distribution Center' },
@@ -49,12 +48,41 @@ function CreateWarehousePage() {
   })
   const createWarehouse = useCreateWarehouse()
 
-  const handleChange = (field: string, value: any) => setFormData(prev => ({ ...prev, [field]: value }))
+  const handleChange = (field: string, value: string | number | boolean) => setFormData(prev => ({ ...prev, [field]: value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!formData.name.trim()) { toast.error('Warehouse name is required'); return }
+    if (!formData.code.trim()) { toast.error('Warehouse code is required'); return }
+    if (!Number.isFinite(formData.storageCapacity) || formData.storageCapacity < 1) { toast.error('Storage capacity must be at least 1'); return }
+    if (!Number.isFinite(formData.capacityThreshold) || formData.capacityThreshold < 0) { toast.error('Capacity threshold must be 0 or greater'); return }
+    if (formData.capacityThreshold > formData.storageCapacity) { toast.error('Capacity threshold cannot exceed storage capacity'); return }
+    if (formData.isDefault && !window.confirm('Set this warehouse as the default? This will unset the current default warehouse.')) return
+    const payload = {
+      name: formData.name.trim(),
+      code: formData.code.trim(),
+      type: formData.type,
+      status: formData.status,
+      address: {
+        line1: formData.addressLine1,
+        line2: formData.addressLine2 || undefined,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        postalCode: formData.postalCode,
+      },
+      managerName: formData.managerName || undefined,
+      managerEmail: formData.managerEmail || undefined,
+      managerPhone: formData.managerPhone || undefined,
+      storageCapacity: formData.storageCapacity,
+      capacityThreshold: formData.capacityThreshold,
+      isDefault: formData.isDefault,
+      allocationPriority: formData.allocationPriority,
+      shippingCost: formData.shippingCost,
+      shipmentPriority: formData.shipmentPriority,
+    }
     try {
-      await createWarehouse.mutateAsync(formData as any)
+      await createWarehouse.mutateAsync(payload as never)
       toast.success('Warehouse created')
       navigate('/business-admin/warehouses')
     } catch { toast.error('Failed to create warehouse') }
@@ -72,8 +100,8 @@ function CreateWarehousePage() {
         ]}
         actions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => navigate(-1)}><ArrowLeft className="h-4 w-4 mr-1.5" />Cancel</Button>
-            <Button onClick={handleSubmit} disabled={createWarehouse.isPending}><Plus className="h-4 w-4 mr-1.5" />Create Warehouse</Button>
+            <Button type="button" variant="outline" onClick={() => navigate(-1)}><ArrowLeft className="h-4 w-4 mr-1.5" />Cancel</Button>
+            <Button type="button" onClick={handleSubmit} disabled={createWarehouse.isPending}><Plus className="h-4 w-4 mr-1.5" />Create Warehouse</Button>
           </div>
         }
       />
@@ -123,8 +151,8 @@ function CreateWarehousePage() {
             <CardHeader><CardTitle className="flex items-center gap-2"><HardDrive className="h-5 w-5" />Capacity</CardTitle></CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2"><Label>Storage Capacity *</Label><Input type="number" min="1" value={formData.storageCapacity} onChange={e => handleChange('storageCapacity', parseInt(e.target.value) || 0)} required placeholder="50000" /></div>
-                <div className="space-y-2"><Label>Capacity Threshold (Alert Level)</Label><Input type="number" min="0" value={formData.capacityThreshold} onChange={e => handleChange('capacityThreshold', parseInt(e.target.value) || 0)} placeholder="45000" /></div>
+                <div className="space-y-2"><Label>Storage Capacity *</Label><Input type="number" min={1} value={formData.storageCapacity} onChange={e => handleChange('storageCapacity', parseInt(e.target.value) || 0)} required placeholder="50000" /></div>
+                <div className="space-y-2"><Label>Capacity Threshold (Alert Level)</Label><Input type="number" min={0} value={formData.capacityThreshold} onChange={e => handleChange('capacityThreshold', parseInt(e.target.value) || 0)} placeholder="45000" /><p className="text-xs text-muted-foreground">Must be ≤ storage capacity. Defaults to 0 (no alert) if left empty.</p></div>
               </div>
               <div className="space-y-2">
                 <Label>Current Capacity</Label>

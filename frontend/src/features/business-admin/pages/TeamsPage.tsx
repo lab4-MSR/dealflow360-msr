@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -13,10 +14,10 @@ import { ErrorState } from '@/components/shared'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Drawer } from '@/components/ui/drawer'
-import { useTeams, useTeamKpis, useCreateTeam, useDeleteTeam, useTeamDetail } from '../hooks/use-business-admin'
+import { useTeams, useTeamKpis, useCreateTeam, useUpdateTeam, useDeleteTeam, useTeamDetail, useUsers } from '../hooks/use-business-admin'
 import type { Team } from '../types'
 import { toast } from 'sonner'
-import { Plus, Search, UsersRound, UserCheck, Activity, MoreHorizontal, Eye, Trash2 } from 'lucide-react'
+import { Plus, Search, UsersRound, UserCheck, Activity, MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -32,13 +33,16 @@ export function TeamsPage() {
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [newTeam, setNewTeam] = useState({ name: '', description: '' })
+  const [newTeam, setNewTeam] = useState({ name: '', description: '', leadId: '' })
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [editingTeam, setEditingTeam] = useState<{ id: string; name: string; description: string; status: string; leadId: string } | null>(null)
 
-  const filters = { search, status: statusFilter, page, perPage: 10 }
+  const filters = { search, status: statusFilter === 'all' ? '' : statusFilter, page, perPage: 10 }
   const { data, isLoading, error, refetch } = useTeams(filters)
   const { data: kpis, isLoading: kpisLoading } = useTeamKpis()
+  const { data: usersData } = useUsers({ perPage: 100 })
   const createTeam = useCreateTeam()
+  const updateTeam = useUpdateTeam()
   const deleteTeam = useDeleteTeam()
 
   const handleSearch = () => {
@@ -52,12 +56,39 @@ export function TeamsPage() {
       return
     }
     try {
-      await createTeam.mutateAsync(newTeam)
+      await createTeam.mutateAsync({
+        name: newTeam.name.trim(),
+        description: newTeam.description.trim() || undefined,
+        ...(newTeam.leadId ? { leadId: newTeam.leadId } : {}),
+      })
       toast.success('Team created')
       setShowCreateDialog(false)
-      setNewTeam({ name: '', description: '' })
+      setNewTeam({ name: '', description: '', leadId: '' })
     } catch {
       toast.error('Failed to create team')
+    }
+  }
+
+  const handleUpdate = async () => {
+    if (!editingTeam) return
+    if (!editingTeam.name.trim()) {
+      toast.error('Team name is required')
+      return
+    }
+    try {
+      await updateTeam.mutateAsync({
+        id: editingTeam.id,
+        data: {
+          name: editingTeam.name.trim(),
+          description: editingTeam.description.trim(),
+          status: editingTeam.status,
+          ...(editingTeam.leadId ? { lead: { id: editingTeam.leadId } as Team['lead'] } : {}),
+        },
+      })
+      toast.success('Team updated')
+      setEditingTeam(null)
+    } catch {
+      toast.error('Failed to update team')
     }
   }
 
@@ -84,16 +115,22 @@ export function TeamsPage() {
     },
     {
       id: 'lead', header: 'Lead',
-      accessorFn: (row) => row.lead ? (
-        <div className="flex items-center gap-2">
-          <Avatar className="h-6 w-6">
-            <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-bold">
-              {row.lead.fullName.split(' ').map((n) => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-[13px] text-foreground">{row.lead.fullName}</span>
-        </div>
-      ) : <span className="text-[12px] text-muted-foreground">—</span>,
+      accessorFn: (row) => {
+        const leadName = row.lead?.fullName || ''
+        const initials = leadName
+          ? leadName.split(' ').map((n) => n[0]).filter(Boolean).join('').toUpperCase() || '—'
+          : '—'
+        return row.lead ? (
+          <div className="flex items-center gap-2">
+            <Avatar className="h-6 w-6">
+              <AvatarFallback className="bg-primary text-primary-foreground text-[10px] font-bold">
+                {initials}
+              </AvatarFallback>
+            </Avatar>
+            <span className="text-[13px] text-foreground">{leadName || 'Unnamed Lead'}</span>
+          </div>
+        ) : <span className="text-[12px] text-muted-foreground">—</span>
+      },
     },
     { id: 'members', header: 'Members', accessorFn: (row) => <span className="tabular-nums">{row.memberCount}</span> },
     { id: 'deals', header: 'Deals', accessorFn: (row) => <span className="tabular-nums">{row.dealsCount}</span> },
@@ -111,9 +148,21 @@ export function TeamsPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate(`/business-admin/users-access/teams/${row.id}`)}>
+              <DropdownMenuItem onClick={() => setSelectedTeamId(row.id)}>
                 <Eye className="h-4 w-4 mr-2" />
                 View Details
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setEditingTeam({
+                  id: row.id,
+                  name: row.name || '',
+                  description: row.description || '',
+                  status: row.status || 'active',
+                  leadId: row.lead?.id || '',
+                })}
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setDeleteId(row.id)} className="text-danger">
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -170,6 +219,17 @@ export function TeamsPage() {
             <Search className="h-4 w-4" />
           </Button>
         </div>
+        <Select value={statusFilter || 'all'} onValueChange={(val) => { setStatusFilter(val === 'all' ? '' : val); setPage(1) }}>
+          <SelectTrigger className="w-full sm:w-36">
+            <SelectValue placeholder="All Statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="inactive">Inactive</SelectItem>
+            <SelectItem value="archived">Archived</SelectItem>
+          </SelectContent>
+        </Select>
         {(statusFilter || search) && (
           <Button variant="ghost" size="sm" onClick={() => { setStatusFilter(''); setSearch(''); setSearchInput(''); setPage(1) }}>
             Clear Filters
@@ -196,7 +256,7 @@ export function TeamsPage() {
           <DataTable
             columns={columns as unknown as Column<Record<string, unknown>>[]}
             data={data.teams as unknown as Record<string, unknown>[]}
-            onRowClick={(row) => navigate(`/business-admin/users-access/teams/${(row as unknown as Team).id}`)}
+            onRowClick={(row) => setSelectedTeamId((row as unknown as Team).id)}
           />
           {data.totalPages > 1 && (
             <Pagination
@@ -234,6 +294,18 @@ export function TeamsPage() {
                 placeholder="Brief description of the team's purpose"
               />
             </div>
+            <div className="space-y-1.5">
+              <Label>Team Lead</Label>
+              <Select value={newTeam.leadId || 'none'} onValueChange={(v) => setNewTeam((p) => ({ ...p, leadId: v === 'none' ? '' : v }))}>
+                <SelectTrigger><SelectValue placeholder="No lead assigned" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No lead assigned</SelectItem>
+                  {(usersData?.users || []).map((u) => (
+                    <SelectItem key={u.id} value={u.id}>{u.fullName || u.email}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="flex justify-end gap-3">
               <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
               <Button onClick={handleCreate} loading={createTeam.isPending}>Create Team</Button>
@@ -253,11 +325,70 @@ export function TeamsPage() {
         loading={deleteTeam.isPending}
       />
 
+      {/* Edit Team Dialog */}
+      <Dialog open={!!editingTeam} onOpenChange={(open) => { if (!open) setEditingTeam(null) }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Team</DialogTitle>
+          </DialogHeader>
+          {editingTeam && (
+            <div className="space-y-4 mt-4">
+              <div className="space-y-1.5">
+                <Label>Team Name *</Label>
+                <Input
+                  value={editingTeam.name}
+                  onChange={(e) => setEditingTeam((p) => (p ? { ...p, name: e.target.value } : p))}
+                  placeholder="e.g. Enterprise Sales"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Description</Label>
+                <textarea
+                  value={editingTeam.description}
+                  onChange={(e) => setEditingTeam((p) => (p ? { ...p, description: e.target.value } : p))}
+                  className="flex min-h-[80px] w-full rounded-lg border border-border bg-background px-3 py-2 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  placeholder="Brief description of the team's purpose"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Team Lead</Label>
+                <Select value={editingTeam.leadId || 'none'} onValueChange={(v) => setEditingTeam((p) => (p ? { ...p, leadId: v === 'none' ? '' : v } : p))}>
+                  <SelectTrigger><SelectValue placeholder="No lead assigned" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No lead assigned</SelectItem>
+                    {(usersData?.users || []).map((u) => (
+                      <SelectItem key={u.id} value={u.id}>{u.fullName || u.email}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label>Status</Label>
+                <Select value={editingTeam.status} onValueChange={(v) => setEditingTeam((p) => (p ? { ...p, status: v } : p))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex justify-end gap-3">
+                <Button variant="outline" onClick={() => setEditingTeam(null)}>Cancel</Button>
+                <Button onClick={handleUpdate} disabled={updateTeam.isPending}>
+                  {updateTeam.isPending ? 'Saving...' : 'Save Changes'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Drawer
         open={Boolean(activeTeamId)}
         onClose={() => {
           setSelectedTeamId(null)
-          if (teamId) navigate('/business-admin/teams')
+          navigate('/business-admin/teams')
         }}
         title={teamDetail?.name || 'Team Details'}
         description={teamDetail?.description || 'Team overview and members'}
@@ -291,7 +422,9 @@ export function TeamsPage() {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
                     <AvatarFallback className="bg-primary text-primary-foreground text-caption font-bold">
-                      {teamDetail.lead.fullName?.split(' ').map((n: string) => n[0]).join('') || 'TL'}
+                      {teamDetail.lead.fullName
+                        ? teamDetail.lead.fullName.split(' ').map((n: string) => n[0]).filter(Boolean).join('').toUpperCase() || 'TL'
+                        : 'TL'}
                     </AvatarFallback>
                   </Avatar>
                   <div>

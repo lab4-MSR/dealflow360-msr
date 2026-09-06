@@ -33,7 +33,7 @@ import {
   RefreshCw,
   Warehouse,
   Truck,
-  DollarSign,
+  IndianRupee,
   HeartPulse,
   Scale,
 } from 'lucide-react'
@@ -583,13 +583,13 @@ export function ProductStructureSection() {
             <span className="text-foreground font-medium">11 UNIFIED PILLARS</span>
           </div>
 
-          <h2 className="text-3xl font-black tracking-tight sm:text-5xl lg:text-6xl text-foreground">
+          <h2 className="text-2xl font-black tracking-tight sm:text-4xl lg:text-5xl text-foreground">
             The complete product structure,{' '}
             <span className="text-primary">
               visualized in detail.
             </span>
           </h2>
-          <p className="mt-5 text-base sm:text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-muted-foreground">
             11 authoritative functional domains, 100+ production-grade workflows, and zero data drift.
             Explore every module, sub-feature, and authorized persona across the entire quote-to-cash lifecycle.
           </p>

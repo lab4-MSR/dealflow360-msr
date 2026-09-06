@@ -27,7 +27,7 @@ export const localizationSchema = z
 
 export const currencyTaxSchema = z
   .object({
-    currency: z.string().length(3).optional(),
+    currency: z.literal('INR').optional(),
     tax_config: z.record(z.string(), z.unknown()).optional(),
   })
   .strict();

@@ -8,7 +8,7 @@ const MOCK_DASHBOARD_DATA: PlatformDashboardData = {
     totalDeals: 12654,
     totalRevenue: 2847593.42,
     platformHealth: 'healthy',
-    currency: 'USD',
+    currency: 'INR',
   },
   businessOverview: {
     total: 247,
@@ -51,7 +51,7 @@ const MOCK_DASHBOARD_DATA: PlatformDashboardData = {
   },
   revenueOverview: {
     total: 2847593.42,
-    currency: 'USD',
+    currency: 'INR',
     trend: [
       { date: '2026-04-01', revenue: 189420.0 },
       { date: '2026-05-01', revenue: 215680.0 },

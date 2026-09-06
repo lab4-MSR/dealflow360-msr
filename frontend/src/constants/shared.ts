@@ -6,7 +6,7 @@ import type {
   UserRole,
 } from '@/types/shared'
 
-/* ────────────────── Notification Center (10.3) ────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Notification Center (10.3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const NOTIFICATION_FILTERS: Array<{
   value: NotificationFilter
@@ -46,7 +46,7 @@ export const NOTIFICATION_PRIORITY_VARIANT: Record<NotificationPriority, 'second
   high: 'danger',
 }
 
-/* ─────────────────────────────── Profile (10.4) ─────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Profile (10.4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const ROLE_LABELS: Record<UserRole, string> = {
   super_admin: 'Super Admin',
@@ -64,7 +64,7 @@ export const ACCOUNT_STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
 }
 
-/* ────────────────────────────── Preferences (10.5) ────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Preferences (10.5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const THEME_OPTIONS: Array<{ value: 'light' | 'dark' | 'system'; label: string }> = [
   { value: 'light', label: 'Light' },
@@ -96,10 +96,7 @@ export const TIMEZONE_OPTIONS: Array<{ value: string; label: string }> = [
 ]
 
 export const CURRENCY_OPTIONS: Array<{ value: string; label: string; symbol: string }> = [
-  { value: 'INR', label: 'INR — Indian Rupee', symbol: '₹' },
-  { value: 'EUR', label: 'EUR — Euro', symbol: '€' },
-  { value: 'GBP', label: 'GBP — British Pound', symbol: '£' },
-  { value: 'AED', label: 'AED — UAE Dirham', symbol: 'د.إ' },
+  { value: 'INR', label: 'INR - Indian Rupee (\u20B9)', symbol: '\u20B9' },
 ]
 
 export const DATE_FORMAT_OPTIONS: Array<{ value: string; label: string }> = [
@@ -108,7 +105,7 @@ export const DATE_FORMAT_OPTIONS: Array<{ value: string; label: string }> = [
   { value: 'yyyy-MM-dd', label: 'YYYY-MM-DD' },
 ]
 
-/* ─────────────────────────────── Help Center (10.6) ─────────────────────────────── */
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Help Center (10.6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 export const HELP_CATEGORIES: Array<{
   value: HelpCategory
@@ -144,5 +141,5 @@ export const RESOURCE_LINKS: Array<{
 }> = [
   { id: 'documentation', label: 'Documentation', description: 'Full API and product reference', url: '/help/documentation' },
   { id: 'business-rules', label: 'Business Rules', description: 'Discount, risk and approval rule guides', url: '/help/business-rules' },
-  { id: 'release-notes', label: 'Release Notes', description: 'What’s new in DealFlow360', url: '/help/release-notes' },
+  { id: 'release-notes', label: 'Release Notes', description: 'Whatâ€™s new in DealFlow360', url: '/help/release-notes' },
 ]

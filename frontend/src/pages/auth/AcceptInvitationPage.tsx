@@ -122,9 +122,9 @@ export default function AcceptInvitationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="flex flex-col items-center justify-center py-16 space-y-4">
-            <div className="animate-spin h-12 w-12 border-3 border-primary border-t-transparent rounded-full" />
-            <p className="text-sm font-semibold text-muted-foreground">Verifying invitation credentials...</p>
+          <div className="flex flex-col items-center justify-center py-10 space-y-3">
+            <div className="animate-spin h-9 w-9 border-2 border-primary border-t-transparent rounded-full" />
+            <p className="text-xs font-semibold text-muted-foreground">Verifying invitation credentials...</p>
           </div>
         </AuthCard>
       </AuthLayout>
@@ -135,19 +135,19 @@ export default function AcceptInvitationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-danger-subtle border border-danger/20 text-danger shadow-xl shadow-danger/10">
-              <XCircle className="h-10 w-10" />
+          <div className="text-center space-y-5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-danger-subtle border border-danger/20 text-danger shadow-lg shadow-danger/10">
+              <XCircle className="h-7 w-7" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Invalid invitation link
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 This invitation link is invalid or has expired.
               </p>
             </div>
-            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
+            <Button asChild className="w-full h-10.5 rounded-xl font-semibold shadow-xs">
               <Link to="/login">
                 Go to sign in
               </Link>
@@ -162,19 +162,19 @@ export default function AcceptInvitationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-warning-subtle border border-warning/20 text-warning shadow-xl shadow-warning/10">
-              <Clock className="h-10 w-10" />
+          <div className="text-center space-y-5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-subtle border border-warning/20 text-warning shadow-lg shadow-warning/10">
+              <Clock className="h-7 w-7" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Invitation expired
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 This invitation has expired. Please contact your organization administrator for a new invite.
               </p>
             </div>
-            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
+            <Button asChild className="w-full h-10.5 rounded-xl font-semibold shadow-xs">
               <Link to="/login">
                 Go to sign in
               </Link>
@@ -189,19 +189,19 @@ export default function AcceptInvitationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-info-subtle border border-info/20 text-info shadow-xl shadow-info/10">
-              <AlertTriangle className="h-10 w-10 text-info" />
+          <div className="text-center space-y-5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-info-subtle border border-info/20 text-info shadow-lg shadow-info/10">
+              <AlertTriangle className="h-7 w-7 text-info" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Already accepted
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 This invitation has already been accepted. You can directly sign in to your workspace.
               </p>
             </div>
-            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
+            <Button asChild className="w-full h-10.5 rounded-xl font-semibold shadow-xs">
               <Link to="/login">
                 Continue to sign in
               </Link>
@@ -215,24 +215,24 @@ export default function AcceptInvitationPage() {
   return (
     <AuthLayout>
       <AuthCard>
-        <div className="space-y-7">
+        <div className="space-y-6">
           {/* Header */}
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+          <div className="text-center space-y-1.5">
+            <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Team Invitation</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
               Join your workspace
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
               You&apos;ve been invited to join{' '}
               <span className="font-bold text-foreground">{invitation?.business_name}</span>
             </p>
           </div>
 
           {/* Clean Integrated Info Pill */}
-          <div className="rounded-2xl border border-border/70 bg-surface-muted/60 p-4 space-y-2 text-xs">
+          <div className="rounded-xl border border-border/70 bg-surface-muted/60 p-3 space-y-1.5 text-xs">
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground font-medium">Invited Email</span>
               <span className="font-semibold text-foreground font-mono">{invitation?.email}</span>
@@ -250,23 +250,23 @@ export default function AcceptInvitationPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5" noValidate>
             {submitError && <AuthAlert type="error" message={submitError} />}
 
             {/* Full Name */}
             <div className="space-y-1.5">
-              <label htmlFor="fullName" className="text-sm font-semibold text-foreground block">
+              <label htmlFor="fullName" className="text-xs font-semibold text-foreground block">
                 Full Name <span className="text-danger">*</span>
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 <input
                   id="fullName"
                   type="text"
                   autoComplete="name"
                   placeholder="Enter your full name"
                   className={cn(
-                    'flex h-12 w-full rounded-2xl border bg-surface/90 pl-11 pr-4 text-sm text-foreground shadow-xs transition-all duration-200',
+                    'flex h-10 w-full rounded-xl border bg-surface/90 pl-10 pr-3.5 text-sm text-foreground shadow-xs transition-all duration-200',
                     'placeholder:text-muted-foreground/60',
                     'focus:outline-none focus:ring-2 focus:ring-primary/25 focus:border-primary',
                     errors.fullName ? 'border-danger' : 'border-input focus:ring-primary/20'
@@ -289,7 +289,7 @@ export default function AcceptInvitationPage() {
                 label="Create Workspace Password *"
                 placeholder="Create strong password"
                 autoComplete="new-password"
-                className="h-12 rounded-2xl text-sm"
+                className="h-10 rounded-xl text-sm"
                 error={errors.password?.message}
                 {...register('password')}
               />
@@ -302,7 +302,7 @@ export default function AcceptInvitationPage() {
                 label="Confirm Workspace Password *"
                 placeholder="Confirm your password"
                 autoComplete="new-password"
-                className="h-12 rounded-2xl text-sm"
+                className="h-10 rounded-xl text-sm"
                 error={errors.confirmPassword?.message}
                 {...register('confirmPassword')}
               />
@@ -310,8 +310,7 @@ export default function AcceptInvitationPage() {
 
             <Button
               type="submit"
-              className="w-full mt-2 font-semibold shadow-xs"
-              size="lg"
+              className="w-full mt-2 h-10.5 rounded-xl font-semibold shadow-xs"
               disabled={isSubmitting}
               loading={isSubmitting}
             >
@@ -320,7 +319,7 @@ export default function AcceptInvitationPage() {
               ) : (
                 <span className="flex items-center justify-center gap-2">
                   <span>Accept Invitation & Enter Workspace</span>
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-4 w-4" />
                 </span>
               )}
             </Button>

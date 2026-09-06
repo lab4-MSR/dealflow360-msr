@@ -29,6 +29,7 @@ import {
   Inbox,
   CheckCircle2,
   DollarSign,
+  IndianRupee,
   Percent,
   TrendingUp,
   Receipt,
@@ -60,6 +61,7 @@ const iconMap: Record<string, React.ElementType> = {
   Inbox,
   CheckCircle2,
   DollarSign,
+  IndianRupee,
   Percent,
   TrendingUp,
   Receipt,
@@ -121,9 +123,6 @@ export function Sidebar({
   const role = user?.role
 
   const visibleSections = SIDEBAR_NAV.map((section) => {
-    if (role === 'business_admin' && (section.section === 'SALES' || section.section === 'INTELLIGENCE' || section.section === 'ANALYTICS & BI')) {
-      return section
-    }
     if (section.roles && role && !section.roles.includes(role)) {
       return null
     }
@@ -181,23 +180,6 @@ export function Sidebar({
             <X className="h-4 w-4" />
           </button>
         </div>
-
-        {/* Workspace Switcher */}
-        {!collapsed && (
-          <div className="px-3 py-3 border-b border-sidebar-border">
-            <div className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-small text-sidebar-foreground bg-sidebar-accent/50">
-              <Building2 className="h-4 w-4 text-primary shrink-0" />
-              <div className="flex-1 truncate">
-                <p className="truncate font-medium text-xs leading-none">
-                  {user?.business_name || (user as any)?.businessName || 'DealFlow360'}
-                </p>
-                <p className="text-[10px] text-muted-foreground capitalize mt-0.5">
-                  {user?.role?.replace('_', ' ') || 'Workspace'}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto py-3 px-2">

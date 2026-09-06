@@ -29,7 +29,6 @@ import {
   Tooltip,
   Legend,
   Cell,
-  LabelList,
 } from 'recharts'
 import { getMarginAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent } from '@/lib/analytics-format'
@@ -171,8 +170,8 @@ export function MarginAnalyticsPage() {
       )}
 
       {/* Revenue vs COGS vs Gross Profit Trend Chart */}
-      <div className="rounded-xl border-0 bg-card p-5 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3">
+      <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-border/60">
           <div>
             <h2 className="text-base font-semibold text-foreground">Revenue vs COGS vs Gross Profit Trajectory</h2>
             <p className="text-xs text-muted-foreground">Historical progression of contract top-line, direct fulfillment costs, and gross yield.</p>
@@ -192,11 +191,11 @@ export function MarginAnalyticsPage() {
 
         <div className="h-[280px] w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={trendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid stroke="none" />
-              <XAxis dataKey="period" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+            <LineChart data={trendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} style={{ background: 'transparent' }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+              <XAxis dataKey="period" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} />
               <YAxis
-                stroke="hsl(var(--muted-foreground))"
+                stroke="var(--color-muted-foreground)"
                 fontSize={11}
                 tickFormatter={(v) => `₹${(v / 1000000).toFixed(0)}M`}
                 tickLine={false}
@@ -204,16 +203,16 @@ export function MarginAnalyticsPage() {
               />
               <Tooltip
                 formatter={(val: any) => [formatCurrency(val), '']}
+                cursor={{ stroke: 'var(--color-border)', strokeWidth: 1, strokeDasharray: '3 3' }}
                 contentStyle={{
-                  backgroundColor: 'hsl(var(--popover))',
-                  border: 'none',
+                  backgroundColor: 'var(--color-card)',
+                  borderColor: 'var(--color-border)',
                   borderRadius: '8px',
                   fontSize: '12px',
+                  color: 'var(--color-foreground)',
                 }}
               />
-              <Line type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2.5} name="Revenue" dot={{ r: 3 }}>
-                <LabelList dataKey="revenue" position="top" formatter={(val: number) => `₹${(val / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={10} />
-              </Line>
+              <Line type="monotone" dataKey="revenue" stroke="var(--color-primary)" strokeWidth={2.5} name="Revenue" dot={{ r: 3 }} />
               <Line type="monotone" dataKey="cost" stroke="#ef4444" strokeWidth={2} name="COGS" dot={{ r: 3 }} />
               <Line type="monotone" dataKey="grossProfit" stroke="#10b981" strokeWidth={2.5} name="Gross Profit" dot={{ r: 3 }} />
             </LineChart>

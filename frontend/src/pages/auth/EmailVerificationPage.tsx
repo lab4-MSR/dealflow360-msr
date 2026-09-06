@@ -64,16 +64,16 @@ export default function EmailVerificationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6 py-6">
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-sky-500/10 border border-sky-500/20 text-sky-500 shadow-xl shadow-sky-500/10 relative">
-              <span className="absolute inset-0 rounded-3xl animate-ping bg-sky-500/10 opacity-75" />
-              <RefreshCw className="h-12 w-12 text-sky-500 animate-spin" />
+          <div className="text-center space-y-5 py-2">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-500 shadow-lg shadow-sky-500/10 relative">
+              <span className="absolute inset-0 rounded-2xl animate-ping bg-sky-500/10 opacity-75" />
+              <RefreshCw className="h-7 w-7 text-sky-500 animate-spin" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Verifying your email
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 Please wait a moment while we validate your security token and authorize workspace access...
               </p>
             </div>
@@ -87,20 +87,20 @@ export default function EmailVerificationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-success-subtle border border-success/20 text-success shadow-xl shadow-success/10">
-              <CheckCircle2 className="h-10 w-10" />
+          <div className="text-center space-y-5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-success-subtle border border-success/20 text-success shadow-lg shadow-success/10">
+              <CheckCircle2 className="h-7 w-7" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Email verified successfully
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 Your email has been verified. You can now access your workspace and manage deals.
               </p>
             </div>
 
-            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
+            <Button asChild className="w-full h-10.5 rounded-xl font-semibold shadow-xs">
               <Link to="/login">
                 Continue to sign in
               </Link>
@@ -115,20 +115,20 @@ export default function EmailVerificationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-danger-subtle border border-danger/20 text-danger shadow-xl shadow-danger/10">
-              <XCircle className="h-10 w-10" />
+          <div className="text-center space-y-5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-danger-subtle border border-danger/20 text-danger shadow-lg shadow-danger/10">
+              <XCircle className="h-7 w-7" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Invalid verification link
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 This verification link is invalid, corrupted, or has already been used.
               </p>
             </div>
 
-            <Button asChild className="w-full font-semibold shadow-xs" size="lg">
+            <Button asChild className="w-full h-10.5 rounded-xl font-semibold shadow-xs">
               <Link to="/login">
                 Go to sign in
               </Link>
@@ -143,24 +143,23 @@ export default function EmailVerificationPage() {
     return (
       <AuthLayout>
         <AuthCard>
-          <div className="text-center space-y-6">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-warning-subtle border border-warning/20 text-warning shadow-xl shadow-warning/10">
-              <Clock className="h-10 w-10" />
+          <div className="text-center space-y-5">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-warning-subtle border border-warning/20 text-warning shadow-lg shadow-warning/10">
+              <Clock className="h-7 w-7" />
             </div>
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+            <div className="space-y-1.5">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
                 Verification link expired
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+              <p className="text-sm text-muted-foreground max-w-sm mx-auto">
                 This verification link has expired. You can easily request a new link below.
               </p>
             </div>
 
-            <div className="space-y-3 pt-2">
+            <div className="space-y-2.5 pt-1">
               {error && <AuthAlert type="error" message={error} />}
               <Button
-                className="w-full font-semibold shadow-xs"
-                size="lg"
+                className="w-full h-10.5 rounded-xl font-semibold shadow-xs"
                 onClick={handleResend}
                 disabled={resendCooldown > 0}
               >
@@ -168,7 +167,7 @@ export default function EmailVerificationPage() {
                   ? `Resend available in ${resendCooldown}s`
                   : 'Resend verification email'}
               </Button>
-              <Button asChild variant="secondary" className="w-full font-semibold" size="lg">
+              <Button asChild variant="secondary" className="w-full h-10 rounded-xl font-semibold">
                 <Link to="/login" className="flex items-center justify-center gap-2">
                   <ArrowLeft className="h-4 w-4" />
                   <span>Return to sign in</span>
@@ -185,24 +184,23 @@ export default function EmailVerificationPage() {
   return (
     <AuthLayout>
       <AuthCard>
-        <div className="text-center space-y-6">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary/10 border border-primary/20 text-primary shadow-xl shadow-primary/10">
-            <Mail className="h-10 w-10" />
+        <div className="text-center space-y-5">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 border border-primary/20 text-primary shadow-lg shadow-primary/10">
+            <Mail className="h-7 w-7" />
           </div>
-          <div className="space-y-2">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
+          <div className="space-y-1.5">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
               Check your work email
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground max-w-sm mx-auto">
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
               We&apos;ve sent a verification link to your email address. Click the link to verify your workspace.
             </p>
           </div>
 
-          <div className="space-y-3 pt-2">
+          <div className="space-y-2.5 pt-1">
             {error && <AuthAlert type="error" message={error} />}
             <Button
-              className="w-full font-semibold shadow-xs"
-              size="lg"
+              className="w-full h-10.5 rounded-xl font-semibold shadow-xs"
               onClick={handleResend}
               disabled={resendCooldown > 0}
             >
@@ -210,7 +208,7 @@ export default function EmailVerificationPage() {
                 ? `Resend available in ${resendCooldown}s`
                 : 'Resend verification email'}
             </Button>
-            <Button asChild variant="secondary" className="w-full font-semibold" size="lg">
+            <Button asChild variant="secondary" className="w-full h-10 rounded-xl font-semibold">
               <Link to="/login" className="flex items-center justify-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 <span>Return to sign in</span>

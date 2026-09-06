@@ -20,7 +20,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import {
@@ -41,7 +40,7 @@ import { cn } from '@/lib/utils'
 function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount)
@@ -78,7 +77,7 @@ const activityTypeIcon: Record<string, React.ElementType> = {
 function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; name: string }>; label?: string }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM d, yyyy')}
       </p>
@@ -170,7 +169,7 @@ export function BusinessDetailsOverviewPage() {
             </div>
             <div>
               <p className="text-caption text-muted-foreground">Currency</p>
-              <p className="text-small font-medium text-foreground mt-0.5">{business.currency}</p>
+              <p className="text-small font-medium text-foreground mt-0.5">INR</p>
             </div>
           </div>
           {(business.email || business.phone || business.website) && (
@@ -234,7 +233,7 @@ export function BusinessDetailsOverviewPage() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Deal Trend */}
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader>
             <CardTitle>Deal Trend</CardTitle>
           </CardHeader>
@@ -242,8 +241,8 @@ export function BusinessDetailsOverviewPage() {
             {dealTrend && dealTrend.length > 0 ? (
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={dealTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid stroke="none" />
+                  <BarChart data={dealTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                     <XAxis
                       dataKey="date"
                       tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -256,10 +255,8 @@ export function BusinessDetailsOverviewPage() {
                       axisLine={false}
                       tickLine={false}
                     />
-                    <Tooltip content={<ChartTooltip />} />
-                    <Bar dataKey="count" name="Deals" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={24} animationDuration={350} animationEasing="ease-out">
-                      <LabelList dataKey="count" position="top" fill="var(--color-muted-foreground)" fontSize={10} />
-                    </Bar>
+                    <Tooltip content={<ChartTooltip />} cursor={{ fill: 'transparent' }} />
+                    <Bar dataKey="count" name="Deals" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={24} animationDuration={350} animationEasing="ease-out" />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -270,7 +267,7 @@ export function BusinessDetailsOverviewPage() {
         </Card>
 
         {/* Revenue Trend */}
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader>
             <CardTitle>Revenue Trend</CardTitle>
           </CardHeader>
@@ -278,8 +275,8 @@ export function BusinessDetailsOverviewPage() {
             {revenueTrend && revenueTrend.length > 0 ? (
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={revenueTrend} margin={{ top: 16, right: 5, left: -20, bottom: 0 }}>
-                    <CartesianGrid stroke="none" />
+                  <LineChart data={revenueTrend} margin={{ top: 5, right: 5, left: -20, bottom: 0 }} style={{ background: 'transparent' }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                     <XAxis
                       dataKey="date"
                       tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -288,7 +285,7 @@ export function BusinessDetailsOverviewPage() {
                       tickLine={false}
                     />
                     <YAxis
-                      tickFormatter={(val: number) => `₹${(val / 1000).toFixed(0)}K`}
+                      tickFormatter={(val: number) => `â‚¹${(val / 1000).toFixed(0)}K`}
                       tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
                       axisLine={false}
                       tickLine={false}
@@ -304,9 +301,7 @@ export function BusinessDetailsOverviewPage() {
                       activeDot={{ r: 5 }}
                       animationDuration={350}
                       animationEasing="ease-out"
-                    >
-                      <LabelList dataKey="revenue" position="top" formatter={(val: number) => `₹${(val / 1000).toFixed(0)}K`} fill="var(--color-muted-foreground)" fontSize={10} />
-                    </Line>
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -400,3 +395,4 @@ export function BusinessDetailsOverviewPage() {
     </div>
   )
 }
+

@@ -15,13 +15,25 @@ import {
   useCustomers,
   useCustomerPricing,
   useCreateCustomerPricingOverride,
+  useDeleteCustomerPricingOverride,
   useProducts,
 } from '../hooks/use-business-admin'
-import type { CustomerPricingProduct, CustomerPricingOverride } from '../types'
+import type { CustomerPricingProduct } from '../types'
 import { toast } from 'sonner'
-import { Search, IndianRupee, DollarSign, Tag, Shield, Plus, Trash2, Eye, Package } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { Search, IndianRupee, Tag, Shield, Plus, Trash2, Eye, Package } from 'lucide-react'
+import { format, parseISO, isValid } from 'date-fns'
 import { cn } from '@/lib/utils'
+
+const safeFormatDate = (value: string | undefined | null, fmt = 'MMM d, yyyy'): string => {
+  if (!value) return '—'
+  try {
+    const d = parseISO(String(value))
+    if (!isValid(d)) return '—'
+    return format(d, fmt)
+  } catch {
+    return '—'
+  }
+}
 
 const PRICE_SOURCE_CONFIG: Record<string, { label: string; variant: 'secondary' | 'info' | 'success' | 'default' }> = {
   standard: { label: 'Standard', variant: 'secondary' },
@@ -60,6 +72,7 @@ export function CustomerPricingPage() {
   const { data: pricingData, isLoading: pricingLoading, error: pricingError, refetch } = useCustomerPricing(selectedCustomerId)
   const { data: productData } = useProducts({ page: 1, perPage: 100 })
   const createOverride = useCreateCustomerPricingOverride()
+  const deleteOverride = useDeleteCustomerPricingOverride()
 
   const customers = useMemo(() => {
     return (customerData?.customers || []) as Array<{ id: string; name: string; tier: string; defaultPriceListName?: string }>
@@ -175,8 +188,8 @@ export function CustomerPricingPage() {
       id: 'validity',
       header: 'Validity',
       accessorFn: (row) => {
-        const from = row.validFrom ? format(parseISO(String(row.validFrom)), 'MMM d, yyyy') : '—'
-        const until = row.validUntil ? format(parseISO(String(row.validUntil)), 'MMM d, yyyy') : '—'
+        const from = safeFormatDate(row.validFrom as string | undefined)
+        const until = safeFormatDate(row.validUntil as string | undefined)
         return <span className="text-[12px] text-muted-foreground tabular-nums">{from} — {until}</span>
       },
     },
@@ -187,11 +200,23 @@ export function CustomerPricingPage() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 text-danger"
-          onClick={() => {
-            toast.success(`Override for ${String((row as { productName?: string }).productName || 'product')} removed`)
-            refetch()
+          className="h-7 w-7 text-destructive"
+          onClick={async () => {
+            const productId = String(row.productId || '')
+            const productName = String((row as { productName?: string }).productName || 'product')
+            if (!selectedCustomerId || !productId) {
+              toast.warning('Cannot delete override: missing customer or product')
+              return
+            }
+            try {
+              await deleteOverride.mutateAsync({ customerId: selectedCustomerId, productId })
+              toast.success(`Override for ${productName} removed`)
+              refetch()
+            } catch {
+              toast.error('Failed to delete override')
+            }
           }}
+          disabled={deleteOverride.isPending}
           aria-label="Remove override"
         >
           <Trash2 className="h-3.5 w-3.5" />
@@ -228,22 +253,41 @@ export function CustomerPricingPage() {
   }
 
   const handleDiscountChange = (value: string) => {
-    setOverrideForm((prev) => ({ ...prev, discountPercent: value }))
     const discount = parseFloat(value)
-    if (!isNaN(discount) && overrideForm.overridePrice) {
-      // Auto-calculate based on existing override price if needed
+    const product = products.find((p) => p.id === overrideForm.productId)
+    if (!product) {
+      setOverrideForm((prev) => ({ ...prev, discountPercent: value }))
+      return
+    }
+    if (!isNaN(discount) && discount >= 0 && discount <= 100) {
+      const computed = Number((product.unitPrice * (1 - discount / 100)).toFixed(2))
+      setOverrideForm((prev) => ({ ...prev, discountPercent: value, overridePrice: String(computed) }))
+    } else {
+      setOverrideForm((prev) => ({ ...prev, discountPercent: value }))
+    }
+  }
+
+  const handleOverridePriceChange = (value: string) => {
+    const product = products.find((p) => p.id === overrideForm.productId)
+    const selling = parseFloat(value)
+    if (product && !isNaN(selling) && product.unitPrice > 0) {
+      const discount = Number((((product.unitPrice - selling) / product.unitPrice) * 100).toFixed(1))
+      setOverrideForm((prev) => ({ ...prev, overridePrice: value, discountPercent: String(discount) }))
+    } else {
+      setOverrideForm((prev) => ({ ...prev, overridePrice: value }))
     }
   }
 
   const overrides = useMemo(() => {
     if (!inspection?.products) return []
+    const currency = inspection?.priceList?.currency || 'INR'
     return inspection.products.filter((p) => p.hasOverride).map((p) => ({
       productId: p.productId,
       productName: p.productName,
       overridePrice: p.customerOverride || 0,
-      currency: p.currency,
-      validFrom: undefined as string | undefined,
-      validUntil: undefined as string | undefined,
+      currency,
+      validFrom: (p as unknown as { validFrom?: string }).validFrom,
+      validUntil: (p as unknown as { validUntil?: string }).validUntil,
     }))
   }, [inspection])
 
@@ -254,7 +298,6 @@ export function CustomerPricingPage() {
         description="Inspect effective pricing for any customer, including overrides and price sources."
         breadcrumbs={[
           { label: 'Business Admin', path: '/business-admin/dashboard' },
-          { label: 'Pricing' },
           { label: 'Customer Pricing' },
         ]}
       />
@@ -336,7 +379,11 @@ export function CustomerPricingPage() {
                       <MoneyDisplay amount={summary.totalStandard} currency={inspection?.priceList?.currency || 'INR'} size="lg" />
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted">
-                      <IndianRupee className="h-5 w-5 text-muted-foreground" />
+                      {(inspection?.priceList?.currency || 'INR') === 'INR' ? (
+                        <IndianRupee className="h-5 w-5 text-muted-foreground" />
+                      ) : (
+                        <Tag className="h-5 w-5 text-muted-foreground" />
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -373,11 +420,15 @@ export function CustomerPricingPage() {
                 <CardContent className="p-5">
                   <div className="flex items-start justify-between">
                     <div className="space-y-1.5">
-                      <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Margin</p>
-                      <p className="text-[26px] font-bold tracking-tight text-foreground tabular-nums">—</p>
+                      <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Total Savings</p>
+                      {summary.productCount > 0 ? (
+                        <MoneyDisplay amount={summary.totalStandard - summary.totalEffective} currency={inspection?.priceList?.currency || 'INR'} size="lg" />
+                      ) : (
+                        <p className="text-[13px] text-muted-foreground">No products to evaluate</p>
+                      )}
                     </div>
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-muted">
-                      <DollarSign className="h-5 w-5 text-muted-foreground" />
+                      <Shield className="h-5 w-5 text-muted-foreground" />
                     </div>
                   </div>
                 </CardContent>
@@ -460,7 +511,7 @@ export function CustomerPricingPage() {
                   min="0"
                   step="0.01"
                   value={overrideForm.overridePrice}
-                  onChange={(e) => setOverrideForm((p) => ({ ...p, overridePrice: e.target.value }))}
+                  onChange={(e) => handleOverridePriceChange(e.target.value)}
                   placeholder="0.00"
                   className={INPUT_CLASS}
                 />

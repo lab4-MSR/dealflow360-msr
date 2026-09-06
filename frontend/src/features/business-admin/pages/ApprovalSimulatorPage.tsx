@@ -90,7 +90,7 @@ function ApprovalSimulatorPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Approval Simulator"
         description="Simulate approval outcomes to understand which rules trigger, what chain activates, and who needs to approve before quotation submission"

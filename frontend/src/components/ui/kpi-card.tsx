@@ -34,6 +34,7 @@ export interface KpiCardProps extends React.HTMLAttributes<HTMLDivElement>, Vari
     label: string
   }
   icon?: React.ReactNode
+  description?: string
 }
 
 function KpiCard({ className, variant, label, title, value, trend, change, icon, children, ...props }: KpiCardProps) {

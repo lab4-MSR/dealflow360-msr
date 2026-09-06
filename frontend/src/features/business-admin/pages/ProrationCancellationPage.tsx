@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import {
   Plus, Search, Edit, Trash2, RefreshCw, Calendar,
-  Percent, Clock, Shield, FileText, AlertTriangle, Settings,
+  Percent, Clock, Shield, FileText,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
@@ -20,8 +20,8 @@ import { ErrorState } from '@/components/shared/ErrorState'
 import { LoadingState } from '@/components/shared/LoadingState'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import {
-  useProrationRules, useUpdateProrationRules,
-  useCancellationRules, useUpdateCancellationRules,
+  useProrationRules, useCreateProrationRule, useUpdateProrationRules, useDeleteProrationRule,
+  useCancellationRules, useCreateCancellationRule, useUpdateCancellationRules, useDeleteCancellationRule,
 } from '../hooks/use-business-admin'
 import type { ProrationRule, CancellationRule } from '../types'
 
@@ -36,6 +36,10 @@ const CANCELLATION_POLICY_LABELS: Record<string, string> = {
 
 const REFUND_POLICY_LABELS: Record<string, string> = {
   prorated: 'Prorated Refund', full: 'Full Refund', none: 'No Refund', partial: 'Partial Refund',
+}
+
+const REMAINING_PERIOD_LABELS: Record<string, string> = {
+  full: 'Full Period', remaining: 'Remaining Days', none: 'None',
 }
 
 function getStatusVariant(status: string) {
@@ -97,9 +101,13 @@ export function ProrationCancellationPage() {
   const [cancellationDeleteId, setCancellationDeleteId] = useState<string | null>(null)
 
   const { data: prorationRules, isLoading: prorationLoading, error: prorationError, refetch: refetchProration } = useProrationRules()
+  const createProration = useCreateProrationRule()
   const updateProration = useUpdateProrationRules()
+  const deleteProration = useDeleteProrationRule()
   const { data: cancellationRules, isLoading: cancellationLoading, error: cancellationError, refetch: refetchCancellation } = useCancellationRules()
+  const createCancellation = useCreateCancellationRule()
   const updateCancellation = useUpdateCancellationRules()
+  const deleteCancellation = useDeleteCancellationRule()
 
   const filteredProrationRules = useMemo(() => {
     if (!prorationRules) return []
@@ -123,6 +131,9 @@ export function ProrationCancellationPage() {
     return filtered
   }, [cancellationRules, cancellationSearch, cancellationStatusFilter])
 
+  // NOTE: KPIs are computed client-side over the fetched rule list. If the
+  // backend paginates this endpoint, switch to server-side aggregates
+  // (fetchProrationRuleKpis / fetchCancellationRuleKpis).
   const prorationKpis = useMemo(() => {
     const total = prorationRules?.length ?? 0
     const active = prorationRules?.filter((r) => r.status === 'active').length ?? 0
@@ -156,7 +167,18 @@ export function ProrationCancellationPage() {
         await updateProration.mutateAsync({ id: editingProration.id, data: prorationForm })
         toast.success('Proration rule updated successfully')
       } else {
-        await updateProration.mutateAsync({ id: 'new', data: prorationForm })
+        const { ...rest } = prorationForm
+        await createProration.mutateAsync({
+          ...rest,
+          name: prorationForm.name.trim(),
+          description: prorationForm.description ?? '',
+          upgradeRule: prorationForm.upgradeRule ?? 'daily',
+          downgradeRule: prorationForm.downgradeRule ?? 'none',
+          midCycleChange: prorationForm.midCycleChange ?? 'daily',
+          remainingPeriod: prorationForm.remainingPeriod ?? 'full',
+          billingAdjustment: prorationForm.billingAdjustment ?? 'credit',
+          status: prorationForm.status ?? 'active',
+        })
         toast.success('Proration rule created successfully')
       }
       setProrationDialogOpen(false)
@@ -166,10 +188,10 @@ export function ProrationCancellationPage() {
   const handleProrationDelete = async () => {
     if (!prorationDeleteId) return
     try {
-      await updateProration.mutateAsync({ id: prorationDeleteId, data: { status: 'archived' } })
-      toast.success('Proration rule archived successfully')
+      await deleteProration.mutateAsync(prorationDeleteId)
+      toast.success('Proration rule deleted successfully')
       setProrationDeleteId(null)
-    } catch { toast.error('Failed to archive proration rule') }
+    } catch { toast.error('Failed to delete proration rule') }
   }
   const handleCancellationAdd = () => {
     setEditingCancellation(null)
@@ -188,7 +210,19 @@ export function ProrationCancellationPage() {
         await updateCancellation.mutateAsync({ id: editingCancellation.id, data: cancellationForm })
         toast.success('Cancellation rule updated successfully')
       } else {
-        await updateCancellation.mutateAsync({ id: 'new', data: cancellationForm })
+        const { ...rest } = cancellationForm
+        await createCancellation.mutateAsync({
+          ...rest,
+          name: cancellationForm.name.trim(),
+          description: cancellationForm.description ?? '',
+          cancellationPolicy: cancellationForm.cancellationPolicy ?? 'end_of_cycle',
+          refundPolicy: cancellationForm.refundPolicy ?? 'prorated',
+          effectiveDate: cancellationForm.effectiveDate ?? '',
+          noticePeriod: cancellationForm.noticePeriod ?? 30,
+          eligibility: cancellationForm.eligibility ?? 'all',
+          status: cancellationForm.status ?? 'active',
+          ...rest,
+        })
         toast.success('Cancellation rule created successfully')
       }
       setCancellationDialogOpen(false)
@@ -198,10 +232,10 @@ export function ProrationCancellationPage() {
   const handleCancellationDelete = async () => {
     if (!cancellationDeleteId) return
     try {
-      await updateCancellation.mutateAsync({ id: cancellationDeleteId, data: { status: 'archived' } })
-      toast.success('Cancellation rule archived successfully')
+      await deleteCancellation.mutateAsync(cancellationDeleteId)
+      toast.success('Cancellation rule deleted successfully')
       setCancellationDeleteId(null)
-    } catch { toast.error('Failed to archive cancellation rule') }
+    } catch { toast.error('Failed to delete cancellation rule') }
   }
   const prorationColumns: Column<ProrationRule>[] = [
     { id: 'name', header: 'Rule Name', accessorKey: 'name', className: 'font-medium' },
@@ -231,7 +265,7 @@ export function ProrationCancellationPage() {
     ) },
   ]
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Proration & Cancellation Rules"
         description="Configure how subscription plan changes and cancellations are handled."

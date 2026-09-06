@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DataTable, type Column } from '@/components/ui/datatable/data-table'
@@ -13,11 +14,10 @@ import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { useRoles, useRoleKpis, useCreateRole, useDeleteRole } from '../hooks/use-business-admin'
+import { useRoles, useRoleKpis, useCreateRole, useUpdateRole, useDuplicateRole, useDeleteRole } from '../hooks/use-business-admin'
 import type { Role } from '../types'
 import { toast } from 'sonner'
-import { Shield, Search, Users, Plus, MoreHorizontal, Eye, Copy, Trash2 } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { Shield, Search, Plus, MoreHorizontal, Eye, Copy, Pencil, Trash2 } from 'lucide-react'
 
 export function RolesPage() {
   const navigate = useNavigate()
@@ -27,12 +27,18 @@ export function RolesPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [newRole, setNewRole] = useState({ name: '', displayName: '', description: '' })
+  const [editingRole, setEditingRole] = useState<{ id: string; displayName: string; description: string; status: string } | null>(null)
 
   const filters = { search, page, perPage: 10 }
   const { data, isLoading, error, refetch } = useRoles(filters)
   const { data: kpis, isLoading: kpisLoading } = useRoleKpis()
   const createRole = useCreateRole()
+  const updateRole = useUpdateRole()
+  const duplicateRole = useDuplicateRole()
   const deleteRole = useDeleteRole()
+
+  const toSlug = (value: string) =>
+    value.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
 
   const handleSearch = () => {
     setSearch(searchInput)
@@ -40,17 +46,63 @@ export function RolesPage() {
   }
 
   const handleCreate = async () => {
-    if (!newRole.name || !newRole.displayName) {
-      toast.error('Name and display name are required')
+    if (!newRole.displayName.trim()) {
+      toast.error('Display name is required')
+      return
+    }
+    const slug = newRole.name.trim() ? toSlug(newRole.name) : toSlug(newRole.displayName)
+    if (!slug) {
+      toast.error('Could not derive a valid role slug — use letters, numbers or underscores')
       return
     }
     try {
-      await createRole.mutateAsync(newRole)
+      await createRole.mutateAsync({
+        name: slug,
+        displayName: newRole.displayName.trim(),
+        description: newRole.description.trim() || undefined,
+      })
       toast.success('Role created')
       setShowCreateDialog(false)
       setNewRole({ name: '', displayName: '', description: '' })
     } catch {
       toast.error('Failed to create role')
+    }
+  }
+
+  const handleUpdate = async () => {
+    if (!editingRole) return
+    if (!editingRole.displayName.trim()) {
+      toast.error('Display name is required')
+      return
+    }
+    try {
+      await updateRole.mutateAsync({
+        id: editingRole.id,
+        data: {
+          displayName: editingRole.displayName.trim(),
+          description: editingRole.description.trim(),
+          status: editingRole.status,
+        },
+      })
+      toast.success('Role updated')
+      setEditingRole(null)
+    } catch {
+      toast.error('Failed to update role')
+    }
+  }
+
+  const handleDuplicate = async (role: Role) => {
+    try {
+      await duplicateRole.mutateAsync({
+        id: role.id,
+        data: {
+          name: toSlug(`${role.name}_copy`),
+          displayName: `${role.displayName || role.name} (Copy)`,
+        },
+      })
+      toast.success('Role duplicated')
+    } catch {
+      toast.error('Failed to duplicate role')
     }
   }
 
@@ -80,14 +132,14 @@ export function RolesPage() {
       id: 'users',
       header: 'Users',
       accessorFn: (row) => (
-        <span className="text-[13px] text-muted-foreground tabular-nums">{row.userCount}</span>
+        <span className="text-[13px] text-muted-foreground tabular-nums">{row.userCount ?? 0}</span>
       ),
     },
     {
       id: 'permissions',
       header: 'Permissions',
       accessorFn: (row) => (
-        <span className="text-[13px] text-muted-foreground tabular-nums">{row.permissionCount}</span>
+        <span className="text-[13px] text-muted-foreground tabular-nums">{row.permissionCount ?? 0}</span>
       ),
     },
     {
@@ -124,10 +176,23 @@ export function RolesPage() {
                 <Eye className="h-4 w-4 mr-2" />
                 View Details
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => toast.info('Duplicate coming soon')}>
+              <DropdownMenuItem onClick={() => handleDuplicate(row)}>
                 <Copy className="h-4 w-4 mr-2" />
                 Duplicate
               </DropdownMenuItem>
+              {!row.isSystem && (
+                <DropdownMenuItem
+                  onClick={() => setEditingRole({
+                    id: row.id,
+                    displayName: row.displayName || '',
+                    description: row.description || '',
+                    status: row.status || 'active',
+                  })}
+                >
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit
+                </DropdownMenuItem>
+              )}
               {!row.isSystem && (
                 <DropdownMenuItem onClick={() => setDeleteId(row.id)} className="text-danger">
                   <Trash2 className="h-4 w-4 mr-2" />
@@ -226,7 +291,7 @@ export function RolesPage() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title="Delete role?"
-        description="This action cannot be undone. Users assigned to this role will lose its permissions."
+        description="This action cannot be undone. Before deleting, check which users are assigned to this role and reassign them to another role — users left on a deleted role will lose its permissions."
         confirmLabel="Delete"
         variant="danger"
         onConfirm={handleDelete}
@@ -268,6 +333,50 @@ export function RolesPage() {
             <Button variant="outline" onClick={() => setShowCreateDialog(false)}>Cancel</Button>
             <Button onClick={handleCreate} disabled={createRole.isPending}>
               {createRole.isPending ? 'Creating...' : 'Create Role'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!editingRole} onOpenChange={(open) => { if (!open) setEditingRole(null) }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Role</DialogTitle>
+          </DialogHeader>
+          {editingRole && (
+            <div className="space-y-4 py-2">
+              <div className="space-y-1.5">
+                <label className="text-[13px] font-medium text-foreground">Display Name</label>
+                <Input
+                  placeholder="e.g. Marketing Manager"
+                  value={editingRole.displayName}
+                  onChange={(e) => setEditingRole((p) => (p ? { ...p, displayName: e.target.value } : p))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[13px] font-medium text-foreground">Description</label>
+                <Input
+                  placeholder="Optional description"
+                  value={editingRole.description}
+                  onChange={(e) => setEditingRole((p) => (p ? { ...p, description: e.target.value } : p))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-[13px] font-medium text-foreground">Status</label>
+                <Select value={editingRole.status} onValueChange={(v) => setEditingRole((p) => (p ? { ...p, status: v } : p))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
+          <div className="flex justify-end gap-3">
+            <Button variant="outline" onClick={() => setEditingRole(null)}>Cancel</Button>
+            <Button onClick={handleUpdate} disabled={updateRole.isPending}>
+              {updateRole.isPending ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </DialogContent>

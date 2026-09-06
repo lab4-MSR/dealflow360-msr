@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
-import { useCreateCustomer } from '../hooks/use-business-admin'
+import { useCreateCustomer, useUsers, usePriceLists } from '../hooks/use-business-admin'
 import type { CustomerCreateInput } from '../types'
 import { toast } from 'sonner'
 import { ArrowLeft, Save } from 'lucide-react'
@@ -14,6 +14,8 @@ import { ArrowLeft, Save } from 'lucide-react'
 export function CreateCustomerPage() {
   const navigate = useNavigate()
   const createCustomer = useCreateCustomer()
+  const { data: usersData } = useUsers({})
+  const { data: priceListsData } = usePriceLists({ perPage: 100 })
 
   const [form, setForm] = useState({
     name: '',
@@ -57,6 +59,7 @@ export function CreateCustomerPage() {
 
     const payload: CustomerCreateInput = {
       name: form.name.trim(),
+      company: form.name.trim(),
       tier: form.tier,
       status: form.status,
       ownerId: form.ownerId || undefined,
@@ -65,21 +68,23 @@ export function CreateCustomerPage() {
       defaultPriceListName: form.defaultPriceListName || undefined,
       contacts: [
         {
-          name: form.contactName.trim(),
+          name: form.contactName.trim() || form.name.trim(),
           email: form.contactEmail.trim().toLowerCase(),
           phone: form.contactPhone || undefined,
           title: form.contactTitle || undefined,
           isPrimary: true,
         },
       ],
-      billingAddress: {
-        line1: form.addressLine1,
-        line2: form.addressLine2 || undefined,
-        city: form.addressCity,
-        state: form.addressState,
-        country: form.addressCountry,
-        postalCode: form.addressPostalCode,
-      },
+      billingAddress: [form.addressLine1, form.addressCity, form.addressState, form.addressCountry, form.addressPostalCode].some((v) => v.trim())
+        ? {
+            line1: form.addressLine1,
+            line2: form.addressLine2 || undefined,
+            city: form.addressCity,
+            state: form.addressState,
+            country: form.addressCountry,
+            postalCode: form.addressPostalCode,
+          }
+        : undefined,
     }
 
     try {
@@ -146,23 +151,23 @@ export function CreateCustomerPage() {
                   <SelectContent>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="inactive">Inactive</SelectItem>
+                    <SelectItem value="suspended">Suspended</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
                 <Label>Sales Owner</Label>
                 <Select value={form.ownerId || 'none'} onValueChange={(v) => {
-                  const labels: Record<string, string> = { r1: 'Sarah Chen', r2: 'James Wilson', r3: 'Priya Sharma', r4: 'Alex Rivera' }
+                  const selected = usersData?.users?.find((u) => u.id === v)
                   updateField('ownerId', v === 'none' ? '' : v)
-                  updateField('ownerName', v === 'none' ? '' : (labels[v] || ''))
+                  updateField('ownerName', v === 'none' ? '' : (selected?.name || ''))
                 }}>
                   <SelectTrigger><SelectValue placeholder="No owner" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No owner</SelectItem>
-                    <SelectItem value="r1">Sarah Chen</SelectItem>
-                    <SelectItem value="r2">James Wilson</SelectItem>
-                    <SelectItem value="r3">Priya Sharma</SelectItem>
-                    <SelectItem value="r4">Alex Rivera</SelectItem>
+                    {(usersData?.users || []).map((u) => (
+                      <SelectItem key={u.id} value={u.id}>{u.name}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -285,16 +290,16 @@ export function CreateCustomerPage() {
               <div className="space-y-1.5">
                 <Label>Default Price List</Label>
                 <Select value={form.defaultPriceListId || 'none'} onValueChange={(v) => {
-                  const names: Record<string, string> = { pl1: 'Standard Pricing', pl2: 'Enterprise Pricing', pl3: 'Partner Pricing' }
+                  const selected = priceListsData?.priceLists?.find((p) => p.id === v)
                   updateField('defaultPriceListId', v === 'none' ? '' : v)
-                  updateField('defaultPriceListName', v === 'none' ? '' : (names[v] || ''))
+                  updateField('defaultPriceListName', v === 'none' ? '' : (selected?.name || ''))
                 }}>
                   <SelectTrigger><SelectValue placeholder="No price list" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">No price list</SelectItem>
-                    <SelectItem value="pl1">Standard Pricing</SelectItem>
-                    <SelectItem value="pl2">Enterprise Pricing</SelectItem>
-                    <SelectItem value="pl3">Partner Pricing</SelectItem>
+                    {(priceListsData?.priceLists || []).map((p) => (
+                      <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

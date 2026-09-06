@@ -42,12 +42,27 @@ export function CurrencyTaxPage() {
   }
 
   const handleAddTaxRate = async () => {
-    if (!newTaxRate.name.trim()) {
+    const name = newTaxRate.name.trim()
+    if (!name) {
       toast.error('Tax rate name is required')
       return
     }
+    const rate = Number(newTaxRate.rate)
+    if (Number.isNaN(rate)) {
+      toast.error('Tax rate must be a valid number')
+      return
+    }
+    if (rate < 0 || rate > 100) {
+      toast.error('Tax rate must be between 0 and 100')
+      return
+    }
+    const existing = form.taxRates ?? config?.taxRates ?? []
+    if (existing.some((r) => r.name.trim().toLowerCase() === name.toLowerCase())) {
+      toast.error('A tax rate with this name already exists')
+      return
+    }
     try {
-      await addTaxRate.mutateAsync({ ...newTaxRate, status: 'active' })
+      await addTaxRate.mutateAsync({ ...newTaxRate, name, rate, status: 'active' })
       toast.success('Tax rate added')
       setShowAddTax(false)
       setNewTaxRate({ name: '', rate: 0, category: 'Standard', effectiveDate: new Date().toISOString().split('T')[0] })
@@ -55,6 +70,8 @@ export function CurrencyTaxPage() {
       toast.error('Failed to add tax rate')
     }
   }
+
+  const taxRates: TaxRate[] = form.taxRates ?? config?.taxRates ?? []
 
   if (isLoading) {
     return (
@@ -111,9 +128,6 @@ export function CurrencyTaxPage() {
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="INR">INR — Indian Rupee (₹)</SelectItem>
-                  <SelectItem value="EUR">EUR — Euro (€)</SelectItem>
-                  <SelectItem value="GBP">GBP — British Pound (£)</SelectItem>
-                  <SelectItem value="AED">AED — UAE Dirham (د.إ)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -160,7 +174,7 @@ export function CurrencyTaxPage() {
               <Select value={form.defaultTax || 'GST 18%'} onValueChange={(v) => updateField('defaultTax', v)} disabled={!isEditing}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {config?.taxRates.map((tr) => (
+                  {taxRates.map((tr) => (
                     <SelectItem key={tr.id} value={tr.name}>{tr.name} ({tr.rate}%)</SelectItem>
                   ))}
                 </SelectContent>
@@ -204,7 +218,7 @@ export function CurrencyTaxPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {config?.taxRates.map((rate: TaxRate) => (
+                  {taxRates.map((rate: TaxRate) => (
                     <tr key={rate.id} className="border-b border-border last:border-0 hover:bg-accent/50 transition-colors">
                       <td className="px-4 py-3 text-[13px] font-medium text-foreground">{rate.name}</td>
                       <td className="px-4 py-3 text-[13px] text-foreground tabular-nums">{rate.rate}%</td>
@@ -215,7 +229,7 @@ export function CurrencyTaxPage() {
                       <td className="px-4 py-3 text-[12px] text-muted-foreground tabular-nums">{rate.effectiveDate}</td>
                     </tr>
                   ))}
-                  {(!config?.taxRates || config.taxRates.length === 0) && (
+                  {(taxRates.length === 0) && (
                     <tr>
                       <td colSpan={5} className="px-4 py-8 text-center text-[13px] text-muted-foreground">No tax rates configured</td>
                     </tr>
@@ -241,7 +255,7 @@ export function CurrencyTaxPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label>Rate (%)</Label>
-                <Input type="number" value={newTaxRate.rate} onChange={(e) => setNewTaxRate((p) => ({ ...p, rate: parseFloat(e.target.value) || 0 }))} />
+                <Input type="number" min={0} max={100} value={Number.isNaN(newTaxRate.rate) ? '' : newTaxRate.rate} onChange={(e) => setNewTaxRate((p) => ({ ...p, rate: e.target.value === '' ? Number.NaN : parseFloat(e.target.value) }))} />
               </div>
               <div className="space-y-1.5">
                 <Label>Category</Label>

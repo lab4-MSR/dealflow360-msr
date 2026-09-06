@@ -20,7 +20,7 @@ const healthConfig: Record<string, { label: string; variant: 'success' | 'warnin
 function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount)
@@ -85,3 +85,5 @@ export function PlatformKpiGrid({ kpis }: PlatformKpiGridProps) {
     </div>
   )
 }
+
+

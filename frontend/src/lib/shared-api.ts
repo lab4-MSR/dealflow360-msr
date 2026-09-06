@@ -14,6 +14,7 @@ import type {
   OrgLocalization,
   OrgGeneralSettings,
 } from '@/types/shared'
+import type { AuthRole as UserRole } from '@/types/auth'
 
 function unwrap<T>(response: any, fallback: T): T {
   if (!response) return fallback

@@ -74,7 +74,7 @@ export function OverviewSection({ overview, currency, onJumpToVersions }: Overvi
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/60">
               <span className="text-muted-foreground">Currency</span>
-              <span className="font-semibold font-mono">{overview.currency}</span>
+              <span className="font-semibold font-mono">INR</span>
             </div>
             <div className="flex justify-between items-center py-1 border-b border-border/60">
               <span className="text-muted-foreground">Type</span>

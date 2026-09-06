@@ -28,7 +28,6 @@ import {
   Tooltip,
   Legend,
   Cell,
-  LabelList,
 } from 'recharts'
 import { getSalesAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCurrencyCompact, formatCurrency, formatPercent, formatCount } from '@/lib/analytics-format'
@@ -214,9 +213,9 @@ export function SalesAnalyticsPage() {
         </div>
 
         {/* Pipeline Value by Stage Chart */}
-        <div className="rounded-xl border-0 bg-card p-5 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-border/60">
               <div>
                 <h2 className="text-base font-semibold text-foreground">Pipeline Value by Stage</h2>
                 <p className="text-xs text-muted-foreground">Stage-wise capital distribution in INR.</p>
@@ -225,11 +224,11 @@ export function SalesAnalyticsPage() {
             </div>
             <div className="h-[250px] w-full pt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={stageDistribution} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid stroke="none" />
-                  <XAxis dataKey="stage" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+                <BarChart data={stageDistribution} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} style={{ background: 'transparent' }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <XAxis dataKey="stage" stroke="var(--color-muted-foreground)" fontSize={12} tickLine={false} />
                   <YAxis
-                    stroke="hsl(var(--muted-foreground))"
+                    stroke="var(--color-muted-foreground)"
                     fontSize={11}
                     tickFormatter={(v) => `₹${(v / 1000000).toFixed(0)}M`}
                     tickLine={false}
@@ -237,15 +236,16 @@ export function SalesAnalyticsPage() {
                   />
                   <Tooltip
                     formatter={(val: any) => [formatCurrency(val), 'Pipeline Value']}
+                    cursor={{ fill: 'transparent' }}
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--popover))',
-                      border: 'none',
+                      backgroundColor: 'var(--color-card)',
+                      borderColor: 'var(--color-border)',
                       borderRadius: '8px',
                       fontSize: '12px',
+                      color: 'var(--color-foreground)',
                     }}
                   />
                   <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                    <LabelList dataKey="value" position="top" formatter={(v: number) => `₹${(v / 1000000).toFixed(1)}M`} fill="var(--color-muted-foreground)" fontSize={11} />
                     {stageDistribution.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color || '#3b82f6'} />
                     ))}
@@ -254,7 +254,7 @@ export function SalesAnalyticsPage() {
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="pt-3 flex items-center justify-between text-xs text-muted-foreground">
+          <div className="pt-3 border-t border-border/60 flex items-center justify-between text-xs text-muted-foreground">
             <span>Average deal duration: <strong>24.2 days</strong></span>
             <span className="text-emerald-500 font-medium">Fastest Velocity: Proposal → Won</span>
           </div>

@@ -95,14 +95,10 @@ export function GeneralSettings({ values, onChange }: GeneralSettingsProps) {
             </Select>
           </Field>
           <Field id="org-currency" label="Currency">
-            <Select value={values.currency} onValueChange={(v) => set({ currency: v })}>
-              <SelectTrigger id="org-currency" className="w-full"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                {CURRENCY_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex h-10 w-full items-center justify-between rounded-lg border border-border bg-muted/40 px-3 py-2 text-small font-medium text-foreground">
+              <span>INR — Indian Rupee (₹)</span>
+              <span className="text-[11px] font-semibold text-primary">Standard</span>
+            </div>
           </Field>
         </CardContent>
       </Card>

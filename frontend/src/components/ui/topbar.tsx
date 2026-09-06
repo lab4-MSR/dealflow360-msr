@@ -165,7 +165,7 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
   const isSuperAdminPage = location.pathname.startsWith('/platform') || user?.role === 'super_admin'
   const effectiveRole = isSuperAdminPage ? 'Super Admin' : displayRole
   const activeFeature = getActiveSidebarFeature(location.pathname)
-  const defaultFeature = isSuperAdminPage
+  const defaultFeature: ActiveNavFeature = isSuperAdminPage
     ? { feature: 'Platform Dashboard', featurePath: '/platform/dashboard' }
     : { feature: 'Sales Dashboard', featurePath: '/dashboard' }
   const resolvedFeature = activeFeature || defaultFeature

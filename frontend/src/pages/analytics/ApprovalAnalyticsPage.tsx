@@ -28,7 +28,6 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  LabelList,
 } from 'recharts'
 import { getApprovalAnalytics, type AnalyticsFilters } from '@/lib/analytics-api'
 import { formatCount, formatPercent } from '@/lib/analytics-format'
@@ -169,8 +168,8 @@ export function ApprovalAnalyticsPage() {
       {/* Approver Role Distribution & Decision Breakdown Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Approver Role Turnaround */}
-        <div className="rounded-xl border-0 bg-card p-5 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-border/60">
             <div>
               <h2 className="text-base font-semibold text-foreground">Turnaround Time by Approver Level</h2>
               <p className="text-xs text-muted-foreground">Average wait duration in hours across governance tiers.</p>
@@ -180,11 +179,11 @@ export function ApprovalAnalyticsPage() {
 
           <div className="h-[250px] w-full pt-2">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={hierarchyData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid stroke="none" />
-                <XAxis dataKey="role" stroke="hsl(var(--muted-foreground))" fontSize={11} tickLine={false} axisLine={false} />
+              <BarChart data={hierarchyData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }} style={{ background: 'transparent' }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                <XAxis dataKey="role" stroke="var(--color-muted-foreground)" fontSize={11} tickLine={false} />
                 <YAxis
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--color-muted-foreground)"
                   fontSize={11}
                   tickFormatter={(v) => `${v}h`}
                   tickLine={false}
@@ -192,15 +191,16 @@ export function ApprovalAnalyticsPage() {
                 />
                 <Tooltip
                   formatter={(val: any) => [`${val} Hours`, 'Avg Duration']}
+                  cursor={{ fill: 'transparent' }}
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    border: 'none',
+                    backgroundColor: 'var(--color-card)',
+                    borderColor: 'var(--color-border)',
                     borderRadius: '8px',
                     fontSize: '12px',
+                    color: 'var(--color-foreground)',
                   }}
                 />
                 <Bar dataKey="avg_hours" radius={[6, 6, 0, 0]}>
-                  <LabelList dataKey="avg_hours" position="top" formatter={(v: number) => `${v}h`} fill="var(--color-muted-foreground)" fontSize={11} />
                   {hierarchyData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
@@ -211,9 +211,9 @@ export function ApprovalAnalyticsPage() {
         </div>
 
         {/* Decision Breakdown Donut */}
-        <div className="rounded-xl border-0 bg-card p-5 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-border/60">
               <div>
                 <h2 className="text-base font-semibold text-foreground">Approval Decision Distribution</h2>
                 <p className="text-xs text-muted-foreground">Ratio of clean approvals vs revisions and policy denials.</p>
@@ -232,22 +232,17 @@ export function ApprovalAnalyticsPage() {
                     innerRadius={50}
                     outerRadius={75}
                     paddingAngle={3}
-                    label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-                    labelLine={false}
                   >
                     {decisionMix.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    formatter={(val: any) => [`${val} Requests`, 'Count']}
-                    contentStyle={{ border: 'none', backgroundColor: 'hsl(var(--popover))', borderRadius: '8px' }}
-                  />
+                  <Tooltip formatter={(val: any) => [`${val} Requests`, 'Count']} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
           </div>
-          <div className="space-y-1.5 pt-2">
+          <div className="space-y-1.5 pt-2 border-t border-border/60">
             {decisionMix.map((item) => (
               <div key={item.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">

@@ -32,7 +32,6 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
-  LabelList,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import {
@@ -60,7 +59,7 @@ const PERIOD_LABELS: Record<RevenuePeriod, string> = {
 function formatCurrency(amount: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount)
@@ -70,7 +69,7 @@ function formatCompactCurrency(amount: number, currency: string): string {
   if (Math.abs(amount) >= 1_000_000) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency,
+      currency: 'INR',
       notation: 'compact',
       maximumFractionDigits: 1,
     }).format(amount)
@@ -143,7 +142,7 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length || !label) return null
   return (
-    <div className="rounded-lg border-0 bg-card p-3 shadow-elevation-2">
+    <div className="rounded-lg border border-border bg-card p-3 shadow-elevation-2">
       <p className="text-caption font-medium text-muted-foreground mb-1.5">
         {format(parseISO(label), 'MMM d, yyyy')}
       </p>
@@ -176,7 +175,7 @@ export function BusinessRevenuePage() {
   const [transactionPage, setTransactionPage] = useState(1)
   const perPage = 10
 
-  const currency = 'USD'
+  const currency = 'INR'
 
   const { data: kpis, isLoading: isLoadingKpis, error: errorKpis, refetch: refetchKpis } =
     useBusinessRevenueKpis(id || '')
@@ -318,7 +317,7 @@ export function BusinessRevenuePage() {
       </div>
 
       {/* Revenue Trend */}
-      <Card className="border-0 shadow-none">
+      <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Revenue Trend</CardTitle>
           <div className="flex rounded-lg border border-border overflow-hidden">
@@ -350,8 +349,8 @@ export function BusinessRevenuePage() {
           ) : trendChartData.length > 0 ? (
             <div className="h-[280px]">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={trendChartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-                  <CartesianGrid stroke="none" />
+                <LineChart data={trendChartData} margin={{ top: 5, right: 10, left: -10, bottom: 0 }} style={{ background: 'transparent' }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                   <XAxis
                     dataKey="date"
                     tickFormatter={(val: string) => format(parseISO(val), 'MMM')}
@@ -377,9 +376,7 @@ export function BusinessRevenuePage() {
                     strokeWidth={2}
                     dot={{ fill: 'var(--color-primary)', r: 3 }}
                     activeDot={{ r: 5 }}
-                  >
-                    <LabelList dataKey="revenue" position="top" formatter={(val: number) => formatCompactCurrency(val, currency)} fill="var(--color-muted-foreground)" fontSize={10} />
-                  </Line>
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -395,7 +392,7 @@ export function BusinessRevenuePage() {
       {/* Revenue Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* One-Time vs Subscription */}
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader>
             <CardTitle>Revenue Breakdown</CardTitle>
           </CardHeader>
@@ -409,7 +406,7 @@ export function BusinessRevenuePage() {
             ) : pieChartData.length > 0 ? (
               <div className="h-[220px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
+                  <PieChart style={{ background: 'transparent' }}>
                     <Pie
                       data={pieChartData}
                       cx="50%"
@@ -418,8 +415,6 @@ export function BusinessRevenuePage() {
                       outerRadius={85}
                       paddingAngle={4}
                       dataKey="value"
-                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      labelLine={false}
                     >
                       {pieChartData.map((_, index) => (
                         <Cell
@@ -432,7 +427,7 @@ export function BusinessRevenuePage() {
                       formatter={(value: number) => formatCurrency(value, currency)}
                       contentStyle={{
                         backgroundColor: 'var(--color-card)',
-                        border: 'none',
+                        border: '1px solid var(--color-border)',
                         borderRadius: 8,
                         fontSize: 12,
                       }}
@@ -453,7 +448,7 @@ export function BusinessRevenuePage() {
         </Card>
 
         {/* By Product Category */}
-        <Card className="border-0 shadow-none">
+        <Card>
           <CardHeader>
             <CardTitle>By Product Category</CardTitle>
           </CardHeader>
@@ -471,8 +466,9 @@ export function BusinessRevenuePage() {
                     data={productCategoryData}
                     layout="vertical"
                     margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
+                    style={{ background: 'transparent' }}
                   >
-                    <CartesianGrid stroke="none" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" horizontal={false} />
                     <XAxis
                       type="number"
                       tickFormatter={(val: number) => formatCompactCurrency(val, currency)}
@@ -489,10 +485,11 @@ export function BusinessRevenuePage() {
                       width={100}
                     />
                     <Tooltip
+                      cursor={{ fill: 'transparent' }}
                       formatter={(value: number) => formatCurrency(value, currency)}
                       contentStyle={{
                         backgroundColor: 'var(--color-card)',
-                        border: 'none',
+                        border: '1px solid var(--color-border)',
                         borderRadius: 8,
                         fontSize: 12,
                       }}
@@ -503,9 +500,7 @@ export function BusinessRevenuePage() {
                       fill="var(--color-info)"
                       radius={[0, 3, 3, 0]}
                       barSize={20}
-                    >
-                      <LabelList dataKey="revenue" position="right" formatter={(val: number) => formatCompactCurrency(val, currency)} fill="var(--color-muted-foreground)" fontSize={10} />
-                    </Bar>
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -707,3 +702,5 @@ export function BusinessRevenuePage() {
     </div>
   )
 }
+
+

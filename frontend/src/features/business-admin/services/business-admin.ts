@@ -150,8 +150,8 @@ export async function fetchDashboardKpis(): Promise<BusinessDashboardKpis> {
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch dashboard KPIs')
     return json.data.kpis
-  } catch {
-    return { totalCustomers: 156, totalProducts: 89, activeDeals: 47, pendingApprovals: 12, revenue: 284500, activeSubscriptions: 34 }
+  } catch (error) {
+    throw error
   }
 }
 
@@ -162,15 +162,8 @@ export async function fetchSalesOverview(): Promise<SalesOverview> {
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch sales overview')
     return json.data
-  } catch {
-    return {
-      totalDeals: 247, wonDeals: 89, lostDeals: 31, dealConversion: 36,
-      dealTrend: [
-        { date: '2026-04', count: 18, value: 42000 }, { date: '2026-05', count: 22, value: 51000 },
-        { date: '2026-06', count: 19, value: 44000 }, { date: '2026-07', count: 25, value: 58000 },
-        { date: '2026-08', count: 28, value: 65000 }, { date: '2026-09', count: 24, value: 56000 },
-      ],
-    }
+  } catch (error) {
+    throw error
   }
 }
 
@@ -181,15 +174,8 @@ export async function fetchRevenueOverview(): Promise<RevenueOverview> {
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch revenue overview')
     return json.data
-  } catch {
-    return {
-      totalRevenue: 284500, oneTimeRevenue: 198200, recurringRevenue: 86300, revenueGrowth: 12.5,
-      revenueTrend: [
-        { date: '2026-04', amount: 38000 }, { date: '2026-05', amount: 42000 },
-        { date: '2026-06', amount: 45000 }, { date: '2026-07', amount: 51000 },
-        { date: '2026-08', amount: 55000 }, { date: '2026-09', amount: 53500 },
-      ],
-    }
+  } catch (error) {
+    throw error
   }
 }
 
@@ -200,39 +186,38 @@ export async function fetchApprovalOverview(): Promise<ApprovalOverview> {
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch approval overview')
     return json.data
-  } catch {
-    return {
-      pendingApprovals: 12, highRiskDeals: 3, averageApprovalTime: '2.4 hours',
-      approvalTrend: [
-        { date: '2026-04', count: 8 }, { date: '2026-05', count: 11 },
-        { date: '2026-06', count: 9 }, { date: '2026-07', count: 14 },
-        { date: '2026-08', count: 12 }, { date: '2026-09', count: 10 },
-      ],
-    }
+  } catch (error) {
+    throw error
   }
 }
 
 export async function fetchInventoryOverview(): Promise<InventoryOverview> {
   try {
-    const response = await fetch(`${API_BASE}/warehouses`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/analytics/executive`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch inventory overview')
-    return json.data
-  } catch {
-    return { totalStock: 12480, lowStock: 23, outOfStock: 5, backorders: 8, warehouseStatus: 'warning' }
+    return json.data.inventory
+  } catch (error) {
+    throw error
   }
 }
 
 export async function fetchDealHealth(): Promise<DealHealthOverview> {
   try {
-    const response = await fetch(`${API_BASE}/deal-health/overview`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/deal-health/kpis`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch deal health')
-    return json.data
-  } catch {
-    return { healthyDeals: 34, atRisk: 8, stalled: 5, discountAnomalies: 3, deliverySlippage: 2 }
+    return {
+      healthyDeals: json.data.healthyDeals ?? 0,
+      atRisk: json.data.atRiskDeals ?? 0,
+      stalled: json.data.stalledDeals ?? 0,
+      discountAnomalies: json.data.discountAnomalies ?? 0,
+      deliverySlippage: json.data.deliverySlippage ?? 0,
+    }
+  } catch (error) {
+    throw error
   }
 }
 
@@ -242,15 +227,18 @@ export async function fetchRecentDeals(): Promise<RecentDeal[]> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch recent deals')
-    return json.data
-  } catch {
-    return [
-      { id: '1', name: 'Enterprise License', customer: 'Acme Corp', salesRep: 'John Doe', value: 240000, risk: 'low', status: 'approved', updatedAt: '2026-09-05T10:00:00Z' },
-      { id: '2', name: 'SaaS Migration', customer: 'TechStart', salesRep: 'Jane Smith', value: 180000, risk: 'medium', status: 'pending', updatedAt: '2026-09-04T15:30:00Z' },
-      { id: '3', name: 'Cloud Services', customer: 'GlobalNet', salesRep: 'John Doe', value: 120000, risk: 'high', status: 'negotiation', updatedAt: '2026-09-03T09:15:00Z' },
-      { id: '4', name: 'Data Platform', customer: 'InnovateCo', salesRep: 'Sarah Lee', value: 95000, risk: 'low', status: 'confirmed', updatedAt: '2026-09-02T14:00:00Z' },
-      { id: '5', name: 'Analytics Suite', customer: 'DataFlow', salesRep: 'Mike Chen', value: 67000, risk: 'critical', status: 'draft', updatedAt: '2026-09-01T11:45:00Z' },
-    ]
+    return (json.data ?? []).map((deal: Record<string, unknown>) => ({
+      id: String(deal.id),
+      name: String(deal.name ?? deal.title ?? 'Untitled deal'),
+      customer: typeof deal.customer === 'object' && deal.customer !== null ? String((deal.customer as Record<string, unknown>).name ?? '—') : String(deal.customer ?? '—'),
+      salesRep: String(deal.sales_rep_name ?? deal.owner_name ?? '—'),
+      value: Number(deal.value ?? deal.amount ?? 0),
+      risk: String(deal.risk ?? '—'),
+      status: String(deal.status ?? deal.stage ?? '—'),
+      updatedAt: String(deal.updated_at ?? deal.updatedAt ?? ''),
+    }))
+  } catch (error) {
+    throw error
   }
 }
 
@@ -260,15 +248,18 @@ export async function fetchRecentActivity(): Promise<ActivityItem[]> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch activity')
-    return json.data
-  } catch {
-    return [
-      { id: '1', actor: 'John Doe', action: 'approved', resource: 'Quotation #Q-2024-089', resourceType: 'quotation', timestamp: '2026-09-05T10:30:00Z', category: 'approval', severity: 'info' },
-      { id: '2', actor: 'Jane Smith', action: 'created', resource: 'Deal: SaaS Migration', resourceType: 'deal', timestamp: '2026-09-05T09:15:00Z', category: 'deal', severity: 'info' },
-      { id: '3', actor: 'System', action: 'flagged', resource: 'Discount anomaly on Q-2024-087', resourceType: 'quotation', timestamp: '2026-09-04T16:00:00Z', category: 'system', severity: 'warning' },
-      { id: '4', actor: 'Sarah Lee', action: 'updated', resource: 'Customer: DataFlow', resourceType: 'customer', timestamp: '2026-09-04T14:20:00Z', category: 'user', severity: 'info' },
-      { id: '5', actor: 'Mike Chen', action: 'submitted', resource: 'Quotation #Q-2024-091', resourceType: 'quotation', timestamp: '2026-09-04T11:00:00Z', category: 'deal', severity: 'info' },
-    ]
+    return (json.data ?? []).map((item: Record<string, unknown>) => ({
+      id: String(item.id),
+      actor: String(item.actor_name ?? item.actor ?? 'System'),
+      action: String(item.action ?? 'updated'),
+      resource: String(item.entity_name ?? item.entity_id ?? 'Record'),
+      resourceType: String(item.entity_type ?? 'system'),
+      timestamp: String(item.timestamp ?? item.created_at ?? ''),
+      category: String(item.category ?? item.entity_type ?? 'system'),
+      severity: String(item.severity ?? 'info'),
+    }))
+  } catch (error) {
+    throw error
   }
 }
 
@@ -278,13 +269,17 @@ export async function fetchDashboardAlerts(): Promise<DashboardAlert[]> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch alerts')
-    return json.data
-  } catch {
-    return [
-      { id: '1', title: 'High-risk deal requires attention', description: 'Cloud Services deal with GlobalNet has exceeded risk threshold.', severity: 'critical', timestamp: '2026-09-05T08:00:00Z', actionLabel: 'Review Deal', actionPath: '/dashboard/deals' },
-      { id: '2', title: 'Pending approvals blocking pipeline', description: '12 quotations are awaiting approval, affecting ₹340K in pipeline value.', severity: 'warning', timestamp: '2026-09-05T07:30:00Z', actionLabel: 'Review Approvals', actionPath: '/dashboard/approvals' },
-      { id: '3', title: 'Low stock alert', description: '5 products are out of stock and 23 are below reorder level.', severity: 'attention', timestamp: '2026-09-04T18:00:00Z', actionLabel: 'View Inventory', actionPath: '/dashboard/inventory' },
-    ]
+    return (json.data ?? []).map((item: Record<string, unknown>) => ({
+      id: String(item.id),
+      title: String(item.title ?? 'Operational insight'),
+      description: String(item.description ?? item.message ?? ''),
+      severity: String(item.severity ?? item.priority ?? 'attention'),
+      timestamp: String(item.created_at ?? item.timestamp ?? ''),
+      actionLabel: item.actionLabel ? String(item.actionLabel) : '',
+      actionPath: item.actionPath ? String(item.actionPath) : '',
+    }))
+  } catch (error) {
+    throw error
   }
 }
 
@@ -414,7 +409,7 @@ export async function fetchCurrencyTax(): Promise<CurrencyTaxConfig> {
     return json.data
   } catch {
     return {
-      id: 'ct-1', defaultCurrency: 'INR', supportedCurrencies: ['INR', 'USD', 'EUR', 'GBP'],
+      id: 'ct-1', defaultCurrency: 'INR', supportedCurrencies: ['INR'],
       currencySymbol: '₹', decimalPrecision: 2, taxEnabled: true, defaultTax: 'GST 18%',
       taxRates: [
         { id: 'tr-1', name: 'GST 18%', rate: 18, category: 'Standard', status: 'active', effectiveDate: '2024-01-01' },
@@ -1341,6 +1336,19 @@ export async function createCustomerPricingOverride(data: Omit<CustomerPricingOv
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to create override')
     return json.data
+  } catch (err) {
+    throw err
+  }
+}
+
+export async function deleteCustomerPricingOverride(customerId: string, productId: string): Promise<void> {
+  try {
+    const response = await fetch(`${API_BASE}/customer-pricing/${customerId}/overrides/${productId}`, {
+      method: 'DELETE', headers: getAuthHeaders(),
+    })
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    const json = await response.json()
+    if (json && json.success === false) throw new Error(json.error?.message || 'Failed to delete override')
   } catch (err) {
     throw err
   }
@@ -2513,7 +2521,10 @@ export async function createProrationRule(data: Omit<ProrationRule, 'id' | 'crea
   }
 }
 
-export async function updateProrationRule(id: string, data: Partial<Pick<ProrationRule, 'name' | 'description' | 'upgradeProration' | 'downgradeProration' | 'midCycleChange' | 'remainingPeriod' | 'billingAdjustment'>>): Promise<ProrationRule> {
+// NOTE: fetchProrationRulesPage (paginated) and fetchProrationRules (legacy list) hit the
+// same endpoint. Field names below are aligned with the ProrationRule type
+// (upgradeRule/downgradeRule) — not upgradeProration/downgradeProration.
+export async function updateProrationRule(id: string, data: Partial<Pick<ProrationRule, 'name' | 'description' | 'upgradeRule' | 'downgradeRule' | 'midCycleChange' | 'remainingPeriod' | 'billingAdjustment' | 'status'>>): Promise<ProrationRule> {
   try {
     const response = await fetch(`${API_BASE}/proration-rules/${id}`, {
       method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),
@@ -2587,7 +2598,10 @@ export async function createCancellationRule(data: Omit<CancellationRule, 'id' |
   }
 }
 
-export async function updateCancellationRule(id: string, data: Partial<Pick<CancellationRule, 'name' | 'description' | 'cancellationType' | 'effectiveDate' | 'refundEligible' | 'refundPolicy' | 'eligibilityCriteria'>>): Promise<CancellationRule> {
+// NOTE: fetchCancellationRulesPage (paginated) and fetchCancellationRules (legacy list) hit
+// the same endpoint. Field names below are aligned with the CancellationRule type
+// (cancellationPolicy/refundPolicy/noticePeriod/eligibility).
+export async function updateCancellationRule(id: string, data: Partial<Pick<CancellationRule, 'name' | 'description' | 'cancellationPolicy' | 'refundPolicy' | 'effectiveDate' | 'noticePeriod' | 'eligibility' | 'status'>>): Promise<CancellationRule> {
   try {
     const response = await fetch(`${API_BASE}/cancellation-rules/${id}`, {
       method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),

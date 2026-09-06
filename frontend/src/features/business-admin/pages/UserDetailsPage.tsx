@@ -11,12 +11,14 @@ import { ROLE_LABELS } from '@/types/auth'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { toast } from 'sonner'
 import { ArrowLeft, UserCheck, UserX, Trash2, Shield, Mail, Phone, Calendar, Clock } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, isValid } from 'date-fns'
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function UserDetailsPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: user, isLoading, error, refetch } = useUserDetail(id || '')
   const updateUser = useUpdateUser()
   const deleteUser = useDeleteUser()
@@ -25,9 +27,10 @@ export function UserDetailsPage() {
 
   const handleToggleStatus = async () => {
     if (!user) return
-    const newStatus = user.status === 'active' ? 'inactive' : 'active'
+    const newStatus = user.status === 'active' ? 'inactive' : user.status === 'inactive' ? 'active' : 'active'
     try {
       await updateUser.mutateAsync({ id: user.id, data: { status: newStatus } })
+      queryClient.invalidateQueries({ queryKey: ['ba-user', user.id] })
       toast.success(`User ${newStatus === 'active' ? 'activated' : 'deactivated'}`)
       setShowStatusDialog(false)
     } catch {
@@ -39,8 +42,9 @@ export function UserDetailsPage() {
     if (!user) return
     try {
       await deleteUser.mutateAsync(user.id)
+      queryClient.invalidateQueries({ queryKey: ['ba-user', user.id] })
       toast.success('User deactivated')
-      navigate('/business-admin/users-access/users')
+      navigate('/business-admin/users')
     } catch {
       toast.error('Failed to deactivate user')
     }
@@ -72,7 +76,7 @@ export function UserDetailsPage() {
         ]}
         actions={
           <>
-            <Button variant="outline" onClick={() => navigate('/business-admin/users-access/users')}>
+            <Button variant="outline" onClick={() => navigate('/business-admin/users')}>
               <ArrowLeft className="h-4 w-4 mr-1.5" />
               Back
             </Button>
@@ -94,7 +98,13 @@ export function UserDetailsPage() {
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
               <AvatarFallback className="bg-primary text-primary-foreground text-[18px] font-bold">
-                {user.fullName.split(' ').map((n) => n[0]).join('')}
+                {(user.fullName || user.email || '?')
+                  .split(' ')
+                  .map((n) => n[0])
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .join('')
+                  .toUpperCase() || '?'}
               </AvatarFallback>
             </Avatar>
             <div>
@@ -138,14 +148,24 @@ export function UserDetailsPage() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-[11px] text-muted-foreground">Joined</p>
-                  <p className="text-[13px] text-foreground">{format(parseISO(user.joinedAt), 'MMM d, yyyy')}</p>
+                  <p className="text-[13px] text-foreground">
+                    {(() => {
+                      const parsed = user.joinedAt ? parseISO(user.joinedAt) : null
+                      return parsed && isValid(parsed) ? format(parsed, 'MMM d, yyyy') : '—'
+                    })()}
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <div>
                   <p className="text-[11px] text-muted-foreground">Last Active</p>
-                  <p className="text-[13px] text-foreground">{user.lastActive ? format(parseISO(user.lastActive), 'MMM d, yyyy · h:mm a') : '—'}</p>
+                  <p className="text-[13px] text-foreground">
+                    {(() => {
+                      const parsed = user.lastActive ? parseISO(user.lastActive) : null
+                      return parsed && isValid(parsed) ? format(parsed, 'MMM d, yyyy · h:mm a') : '—'
+                    })()}
+                  </p>
                 </div>
               </div>
             </div>

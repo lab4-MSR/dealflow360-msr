@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
+import type { Resolver } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,10 +21,10 @@ const createPlanSchema = z.object({
   description: z.string().optional(),
   planType: z.enum(["monthly", "quarterly", "semi_annual", "annual", "trial"]),
   price: z.number().min(0.01, "Price must be greater than 0"),
-  currency: z.string().min(1, "Currency is required"),
+  currency: z.literal("INR"),
   billingCycle: z.string().min(1, "Billing cycle is required"),
   billingFrequency: z.number().min(1, "Frequency must be at least 1"),
-  trialEnabled: z.boolean().default(false),
+  trialEnabled: z.boolean(),
   trialDuration: z.number().min(0).optional(),
   prorationUpgradeRule: z.enum(["prorate", "charge_full", "no_charge"]).default("prorate"),
   prorationDowngradeRule: z.enum(["prorate", "credit_full", "no_credit"]).default("prorate"),
@@ -31,6 +32,14 @@ const createPlanSchema = z.object({
   cancellationPolicy: z.enum(["immediate", "end_of_period"]).default("end_of_period"),
   refundPolicy: z.enum(["full_refund", "partial_refund", "no_refund"]).default("no_refund"),
   effectiveDate: z.string().optional(),
+}).superRefine((val, ctx) => {
+  if (val.trialEnabled && (val.trialDuration === undefined || val.trialDuration < 1)) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["trialDuration"],
+      message: "Trial duration must be at least 1 day when trial is enabled",
+    })
+  }
 })
 
 type CreatePlanFormData = z.infer<typeof createPlanSchema>
@@ -39,7 +48,7 @@ export function CreateSubscriptionPlanPage() {
   const navigate = useNavigate()
   const createPlan = useCreateSubscriptionPlan()
   const [features, setFeatures] = useState<Array<{ name: string; enabled: boolean; description: string }>>([])
-  const [usageLimits, setUsageLimits] = useState<Array<{ name: string; value: number; unit: string }>>([])
+  const [usageLimits, setUsageLimits] = useState<Array<{ name: string; limit: number; unit: string }>>([])
   const [newFeature, setNewFeature] = useState("")
   const [newLimitName, setNewLimitName] = useState("")
   const [newLimitValue, setNewLimitValue] = useState("")
@@ -52,7 +61,7 @@ export function CreateSubscriptionPlanPage() {
     setValue,
     watch,
   } = useForm<CreatePlanFormData>({
-    resolver: zodResolver(createPlanSchema) as any,
+    resolver: zodResolver(createPlanSchema) as unknown as Resolver<CreatePlanFormData>,
     defaultValues: {
       planType: "monthly",
       currency: "INR",
@@ -68,6 +77,14 @@ export function CreateSubscriptionPlanPage() {
   })
 
   const trialEnabled = watch("trialEnabled")
+  const planType = watch("planType")
+  const currency = watch("currency")
+  const billingCycle = watch("billingCycle")
+  const prorationUpgradeRule = watch("prorationUpgradeRule")
+  const prorationDowngradeRule = watch("prorationDowngradeRule")
+  const prorationBehavior = watch("prorationBehavior")
+  const cancellationPolicy = watch("cancellationPolicy")
+  const refundPolicy = watch("refundPolicy")
 
   const addFeature = () => {
     if (!newFeature.trim()) return
@@ -81,7 +98,7 @@ export function CreateSubscriptionPlanPage() {
 
   const addUsageLimit = () => {
     if (!newLimitName.trim() || !newLimitValue) return
-    setUsageLimits([...usageLimits, { name: newLimitName.trim(), value: Number(newLimitValue), unit: newLimitUnit || "units" }])
+    setUsageLimits([...usageLimits, { name: newLimitName.trim(), limit: Number(newLimitValue), unit: newLimitUnit || "units" }])
     setNewLimitName("")
     setNewLimitValue("")
     setNewLimitUnit("")
@@ -100,7 +117,7 @@ export function CreateSubscriptionPlanPage() {
         price: data.price,
         currency: data.currency,
         billingCycle: data.billingCycle,
-        billingFrequency: data.billingFrequency,
+        billingFrequency: String(data.billingFrequency),
         trialEnabled: data.trialEnabled,
         trialDuration: data.trialDuration,
         prorationUpgradeRule: data.prorationUpgradeRule,
@@ -136,7 +153,7 @@ export function CreateSubscriptionPlanPage() {
         }
       />
 
-      <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Card>
           <CardHeader><CardTitle>Plan Information</CardTitle></CardHeader>
           <CardContent className="space-y-4">
@@ -148,7 +165,7 @@ export function CreateSubscriptionPlanPage() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="planType">Plan Type <span className="text-danger">*</span></Label>
-                <Select onValueChange={(v) => setValue("planType", v as CreatePlanFormData["planType"])}>
+                <Select value={planType} onValueChange={(v) => setValue("planType", v as CreatePlanFormData["planType"])}>
                   <SelectTrigger><SelectValue placeholder="Select plan type" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="monthly">Monthly</SelectItem>
@@ -178,19 +195,16 @@ export function CreateSubscriptionPlanPage() {
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="currency">Currency <span className="text-danger">*</span></Label>
-                <Select onValueChange={(v) => setValue("currency", v)} defaultValue="INR">
+                <Select value={currency} onValueChange={() => setValue("currency", "INR")} defaultValue="INR">
                   <SelectTrigger><SelectValue placeholder="Select currency" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="INR">INR (₹)</SelectItem>
-                    <SelectItem value="EUR">EUR (€)</SelectItem>
-                    <SelectItem value="GBP">GBP (£)</SelectItem>
-                    <SelectItem value="AED">AED (د.إ)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="billingCycle">Billing Cycle <span className="text-danger">*</span></Label>
-                <Select onValueChange={(v) => setValue("billingCycle", v)} defaultValue="monthly">
+                <Select value={billingCycle} onValueChange={(v) => setValue("billingCycle", v)} defaultValue="monthly">
                   <SelectTrigger><SelectValue placeholder="Select cycle" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="monthly">Monthly</SelectItem>
@@ -201,6 +215,41 @@ export function CreateSubscriptionPlanPage() {
                 </Select>
               </div>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="billingFrequency">Billing Frequency</Label>
+                <Input id="billingFrequency" type="number" min="1" {...register("billingFrequency", { valueAsNumber: true })} placeholder="1" />
+                {errors.billingFrequency && <p className="text-[11px] text-danger">{errors.billingFrequency.message}</p>}
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="effectiveDate">Effective Date</Label>
+                <Input id="effectiveDate" type="date" {...register("effectiveDate")} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader><CardTitle>Usage Limits</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_140px_140px_auto] gap-2">
+              <Input value={newLimitName} onChange={(e) => setNewLimitName(e.target.value)} placeholder="Limit name (e.g. API calls)" />
+              <Input type="number" min="1" value={newLimitValue} onChange={(e) => setNewLimitValue(e.target.value)} placeholder="Limit" />
+              <Input value={newLimitUnit} onChange={(e) => setNewLimitUnit(e.target.value)} placeholder="Unit (e.g. calls)" />
+              <Button type="button" variant="outline" onClick={addUsageLimit}><Plus className="h-4 w-4" />Add</Button>
+            </div>
+            {usageLimits.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {usageLimits.map((l, i) => (
+                  <Badge key={i} variant="secondary" className="gap-1.5">
+                    {l.name}: {l.limit} {l.unit}
+                    <button type="button" onClick={() => removeUsageLimit(i)} className="hover:text-danger"><X className="h-3 w-3" /></button>
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[12px] text-muted-foreground">No usage limits added yet.</p>
+            )}
           </CardContent>
         </Card>
 
@@ -237,6 +286,7 @@ export function CreateSubscriptionPlanPage() {
               <div className="space-y-1.5">
                 <Label htmlFor="trialDuration">Trial Duration (days)</Label>
                 <Input id="trialDuration" type="number" {...register("trialDuration", { valueAsNumber: true })} placeholder="14" />
+                {errors.trialDuration && <p className="text-[11px] text-danger">{errors.trialDuration.message}</p>}
               </div>
             )}
           </CardContent>
@@ -251,7 +301,7 @@ export function CreateSubscriptionPlanPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Upgrade Rule</Label>
-                <Select onValueChange={(v) => setValue("prorationUpgradeRule", v as CreatePlanFormData["prorationUpgradeRule"])} defaultValue="prorate">
+                <Select value={prorationUpgradeRule} onValueChange={(v) => setValue("prorationUpgradeRule", v as CreatePlanFormData["prorationUpgradeRule"])} defaultValue="prorate">
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="prorate">Prorate (charge difference)</SelectItem>
@@ -262,7 +312,7 @@ export function CreateSubscriptionPlanPage() {
               </div>
               <div className="space-y-1.5">
                 <Label>Downgrade Rule</Label>
-                <Select onValueChange={(v) => setValue("prorationDowngradeRule", v as CreatePlanFormData["prorationDowngradeRule"])} defaultValue="prorate">
+                <Select value={prorationDowngradeRule} onValueChange={(v) => setValue("prorationDowngradeRule", v as CreatePlanFormData["prorationDowngradeRule"])} defaultValue="prorate">
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="prorate">Prorate (credit difference)</SelectItem>
@@ -271,6 +321,16 @@ export function CreateSubscriptionPlanPage() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Proration Behavior</Label>
+              <Select value={prorationBehavior} onValueChange={(v) => setValue("prorationBehavior", v as CreatePlanFormData["prorationBehavior"])} defaultValue="create_proration">
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="create_proration">Create proration invoice</SelectItem>
+                  <SelectItem value="no_proration">No proration</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
@@ -281,7 +341,7 @@ export function CreateSubscriptionPlanPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Cancellation Policy</Label>
-                <Select onValueChange={(v) => setValue("cancellationPolicy", v as CreatePlanFormData["cancellationPolicy"])} defaultValue="end_of_period">
+                <Select value={cancellationPolicy} onValueChange={(v) => setValue("cancellationPolicy", v as CreatePlanFormData["cancellationPolicy"])} defaultValue="end_of_period">
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="immediate">Immediate</SelectItem>
@@ -291,7 +351,7 @@ export function CreateSubscriptionPlanPage() {
               </div>
               <div className="space-y-1.5">
                 <Label>Refund Policy</Label>
-                <Select onValueChange={(v) => setValue("refundPolicy", v as CreatePlanFormData["refundPolicy"])} defaultValue="no_refund">
+                <Select value={refundPolicy} onValueChange={(v) => setValue("refundPolicy", v as CreatePlanFormData["refundPolicy"])} defaultValue="no_refund">
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="full_refund">Full refund</SelectItem>
