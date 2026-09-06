@@ -523,20 +523,25 @@ export const MOCK_CUSTOMER_QUOTATIONS: CustomerQuotation[] = [
 
 export async function getCustomerDashboard(): Promise<CustomerDashboard> {
   try {
-    const res = await portalGet('/dashboard', MOCK_CUSTOMER_DASHBOARD)
-    return res?.account_summary ? res : MOCK_CUSTOMER_DASHBOARD
-  } catch {
-    return MOCK_CUSTOMER_DASHBOARD
+    const res = await portalGet<CustomerDashboard>('/dashboard', {} as CustomerDashboard)
+    if (res?.account_summary) return res
+  } catch {}
+  return {
+    account_summary: { open_quotations: 0, active_orders: 0, shipments: 0, outstanding_invoices: 0, active_subscriptions: 0 },
+    quotation_summary: { awaiting_review: 0, negotiation: 0, accepted: 0, expiring_soon: 0 },
+    order_summary: { processing: 0, shipped: 0, delivered: 0, backordered: 0 },
+    billing_summary: { outstanding: 0, paid: 0, overdue: 0 },
+    recent_activity: [],
+    alerts: [],
   }
 }
 
 export async function getCustomerQuotations(): Promise<CustomerQuotation[]> {
   try {
-    const res = await portalGet('/quotations', MOCK_CUSTOMER_QUOTATIONS)
-    return Array.isArray(res) && res.length > 0 ? res : MOCK_CUSTOMER_QUOTATIONS
-  } catch {
-    return MOCK_CUSTOMER_QUOTATIONS
-  }
+    const res = await portalGet<CustomerQuotation[]>('/quotations', [])
+    if (Array.isArray(res)) return res
+  } catch {}
+  return []
 }
 
 export async function getCustomerQuotationDetail(id: string): Promise<CustomerQuotationDetail> {
