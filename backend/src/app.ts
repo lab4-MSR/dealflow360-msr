@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import { env, assertEnv } from './config/env';
+import { rateLimit, bulkRateLimit } from './middleware/rateLimit';
 import { notFound, errorHandler } from './middleware/errorHandler';
 import { authRouter } from './routes/auth';
 import { orgRouter, usersRouter, teamsRouter, rolesRouter } from './routes/org';
@@ -37,6 +38,10 @@ export function createApp(): Application {
   app.use(express.json({ limit: '1mb' }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());
+
+  // Rate limiter (120 requests/min per user by default)
+  app.use(rateLimit());
+  app.use(bulkRateLimit());
 
   // Health check
   app.get('/health', (_req, res) => {
