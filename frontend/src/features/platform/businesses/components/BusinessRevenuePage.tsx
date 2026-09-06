@@ -500,6 +500,7 @@ export function BusinessRevenuePage() {
                       fill="var(--color-info)"
                       radius={[0, 3, 3, 0]}
                       barSize={20}
+                      label={{ position: 'right', fill: 'var(--color-foreground)', fontSize: 10 }}
                     />
                   </BarChart>
                 </ResponsiveContainer>

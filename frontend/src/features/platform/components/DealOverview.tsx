@@ -103,6 +103,7 @@ export function DealOverview({ data }: DealOverviewProps) {
                 fill="var(--color-primary)"
                 radius={[3, 3, 0, 0]}
                 barSize={16}
+                label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }}
                 animationDuration={350}
                 animationEasing="ease-out"
               />
@@ -112,6 +113,7 @@ export function DealOverview({ data }: DealOverviewProps) {
                 fill="var(--color-success)"
                 radius={[3, 3, 0, 0]}
                 barSize={16}
+                label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }}
                 animationDuration={350}
                 animationEasing="ease-out"
               />

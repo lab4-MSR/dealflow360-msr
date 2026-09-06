@@ -309,7 +309,7 @@ export function BusinessAdminDashboard() {
                     contentStyle={{ backgroundColor: 'transparent', border: '0', borderRadius: '0', fontSize: '12px', color: 'var(--color-foreground)', boxShadow: 'none' }}
                     wrapperStyle={{ outline: 'none' }}
                   />
-                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} animationDuration={350} animationEasing="ease-out" />
+                  <Bar dataKey="count" fill="var(--color-primary)" radius={[4, 4, 0, 0]} label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }} animationDuration={350} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             ) : (

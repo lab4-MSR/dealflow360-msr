@@ -414,11 +414,14 @@ export function App() {
             <Route path="/sales/customers" element={<MyCustomersPage />} />
             <Route path="/sales/customers/:id" element={<CustomerDetailsPage />} />
             <Route path="/sales/deals" element={<MyDealsPage />} />
+            <Route path="/sales/deals/create" element={<Navigate to="/sales/quotations/create" replace />} />
+            <Route path="/sales/pipeline" element={<Navigate to="/sales/deals" replace />} />
             <Route path="/sales/deals/:id" element={<DealDetailsPage />} />
             <Route path="/sales/deals/:id/timeline" element={<DealTimelinePage />} />
             <Route path="/sales/deals/:id/health" element={<DealHealthPage />} />
             <Route path="/sales/quotations" element={<AllQuotationsPage />} />
             <Route path="/sales/quotations/create" element={<CreateQuotationPage />} />
+            <Route path="/sales/quotations/new" element={<Navigate to="/sales/quotations/create" replace />} />
             <Route path="/sales/quotations/:id" element={<QuotationDetailsPage />} />
             <Route path="/sales/quotations/:id/builder" element={<QuotationBuilderPage />} />
           </Route>

@@ -248,7 +248,7 @@ export function DashboardPage() {
             </Link>
           </Button>
           <Button asChild size="sm" className="gap-1.5 text-xs font-semibold shadow-xs">
-            <Link to="/sales/quotations/new">
+            <Link to="/sales/quotations/create">
               <Plus className="h-3.5 w-3.5" />
               <span>Create Quotation</span>
             </Link>

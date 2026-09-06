@@ -132,7 +132,7 @@ export function MyDealsPage() {
         <div><h1 className="text-h1 font-semibold">My Deals</h1><p className="text-body-small text-muted-foreground">Your deal workspace — single source of truth, one state machine</p></div>
         <div className="flex gap-2">
           <div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><Input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search deals..." className="pl-9 w-64" /></div>
-          <Button asChild><Link to="/sales/quotations/create"><Plus className="h-4 w-4" />Create Deal</Link></Button>
+          <Button asChild><Link to="/sales/quotations/create"><Plus className="h-4 w-4" />Create Quotation</Link></Button>
         </div>
       </div>
 

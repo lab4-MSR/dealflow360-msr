@@ -144,8 +144,8 @@ export function PlatformAnalyticsPage() {
                   <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} axisLine={false} tickLine={false} />
                   <Tooltip content={<ChartTooltipContent />} cursor={{ fill: 'transparent' }} />
-                  <Bar dataKey="created" name="Created" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out" />
-                  <Bar dataKey="completed" name="Completed" fill="var(--color-success)" radius={[3, 3, 0, 0]} barSize={20} animationDuration={350} animationEasing="ease-out" />
+                  <Bar dataKey="created" name="Created" fill="var(--color-primary)" radius={[3, 3, 0, 0]} barSize={20} label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }} animationDuration={350} animationEasing="ease-out" />
+                  <Bar dataKey="completed" name="Completed" fill="var(--color-success)" radius={[3, 3, 0, 0]} barSize={20} label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }} animationDuration={350} animationEasing="ease-out" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

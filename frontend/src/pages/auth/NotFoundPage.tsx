@@ -24,7 +24,7 @@ const SUGGESTIONS = [
   { label: 'Workspace Dashboard', path: '/dashboard', icon: LayoutDashboard, desc: 'Central KPI metrics & alerts' },
   { label: 'Quotations & CPQ', path: '/sales/quotations', icon: FileText, desc: 'Active quotes & approval status' },
   { label: 'Enterprise Customers', path: '/sales/customers', icon: Users, desc: 'Client profiles & discount rules' },
-  { label: 'Deal Health & Pipeline', path: '/sales/pipeline', icon: TrendingUp, desc: 'Margin health & stalled deals' },
+  { label: 'Deal Health & Pipeline', path: '/sales/deals', icon: TrendingUp, desc: 'Margin health & stalled deals' },
   { label: 'Help & Knowledge Base', path: '/help', icon: HelpCircle, desc: 'Guides, API docs & tutorials' },
 ]
 

@@ -33,9 +33,9 @@ export function QuotationBuilderPage() {
     setLoading(true); setError(null)
     try {
       const [qRes, evalRes, recRes] = await Promise.allSettled([
-        apiClient.get(`/quotations/₹{id}`),
-        apiClient.get(`/quotations/₹{id}/evaluate`),
-        apiClient.get(`/quotations/₹{id}/recommendations`),
+        apiClient.get(`/quotations/${id}`),
+        apiClient.get(`/quotations/${id}/evaluate`),
+        apiClient.get(`/quotations/${id}/recommendations`),
       ])
       if (qRes.status==='fulfilled') {
         setQ(qRes.value.data.data)
@@ -62,9 +62,9 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaving(true); setSaveStatus('saving')
     try {
-      const res = await apiClient.post(`/quotations/₹{id}/lines`, { product_id: productId, quantity: 1, discount_percent: 0 })
+      const res = await apiClient.post(`/quotations/${id}/lines`, { product_id: productId, quantity: 1, discount_percent: 0 })
       setQ(res.data.data ?? res.data)
-      const evalR = await apiClient.get(`/quotations/₹{id}/evaluate`).then(r=>r.data.data).catch(()=>null)
+      const evalR = await apiClient.get(`/quotations/${id}/evaluate`).then(r=>r.data.data).catch(()=>null)
       if (evalR) setEvalData(evalR)
       setSaveStatus('saved'); toast.success('Line added — recomputed')
     } catch (e) { setSaveStatus('failed'); toast.error(getApiErrorMessage(e)) }
@@ -75,9 +75,9 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaveStatus('saving')
     try {
-      const res = await apiClient.patch(`/quotations/₹{id}/lines/₹{lineId}`, patch)
+      const res = await apiClient.patch(`/quotations/${id}/lines/${lineId}`, patch)
       setQ(res.data.data ?? res.data)
-      const evalR = await apiClient.get(`/quotations/₹{id}/evaluate`).then(r=>r.data.data).catch(()=>null)
+      const evalR = await apiClient.get(`/quotations/${id}/evaluate`).then(r=>r.data.data).catch(()=>null)
       if (evalR) setEvalData(evalR)
       setSaveStatus('saved')
     } catch (e) { setSaveStatus('failed'); toast.error(getApiErrorMessage(e)) }
@@ -87,9 +87,9 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaving(true)
     try {
-      const res = await apiClient.delete(`/quotations/₹{id}/lines/₹{lineId}`)
+      const res = await apiClient.delete(`/quotations/${id}/lines/${lineId}`)
       setQ(res.data.data ?? res.data)
-      const evalR = await apiClient.get(`/quotations/₹{id}/evaluate`).then(r=>r.data.data).catch(()=>null)
+      const evalR = await apiClient.get(`/quotations/${id}/evaluate`).then(r=>r.data.data).catch(()=>null)
       if (evalR) setEvalData(evalR)
       toast.success('Line removed')
     } catch (e) { toast.error(getApiErrorMessage(e)) }
@@ -100,10 +100,10 @@ export function QuotationBuilderPage() {
     if (!id) return
     setSaving(true)
     try {
-      if (action==='save') { await apiClient.patch(`/quotations/₹{id}`, { internal_notes: internalNotes, customer_notes: customerNotes }); toast.success('Saved'); setSaveStatus('saved') }
-      if (action==='validate') { const r=await apiClient.post(`/quotations/₹{id}/validate`); toast.success('Validated'); if(r.data.data) setEvalData(r.data.data) }
-      if (action==='submit') { await apiClient.post(`/quotations/₹{id}/submit-for-approval`); toast.success('Submitted for approval'); load() }
-      if (action==='send') { await apiClient.post(`/quotations/₹{id}/send`); toast.success('Sent to customer'); load() }
+      if (action==='save') { await apiClient.patch(`/quotations/${id}`, { internal_notes: internalNotes, customer_notes: customerNotes }); toast.success('Saved'); setSaveStatus('saved') }
+      if (action==='validate') { const r=await apiClient.post(`/quotations/${id}/validate`); toast.success('Validated'); if(r.data.data) setEvalData(r.data.data) }
+      if (action==='submit') { await apiClient.post(`/quotations/${id}/submit-for-approval`); toast.success('Submitted for approval'); load() }
+      if (action==='send') { await apiClient.post(`/quotations/${id}/send`); toast.success('Sent to customer'); load() }
     } catch (e) { toast.error(getApiErrorMessage(e)) }
     finally { setSaving(false) }
   }
@@ -125,7 +125,7 @@ export function QuotationBuilderPage() {
       <div className="rounded-xl border border-border bg-card p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div><h1 className="text-h2 font-semibold font-mono">{quoteNumber} <span className="text-caption font-sans text-muted-foreground">v{version}</span></h1><p className="text-body-small text-muted-foreground">{String((q as {customer?:{name?:string}}).customer?.name ?? '—')} · <StatusBadge status={status as never}>{status}</StatusBadge> · <span className={saveStatus==='saved'?'text-success':saveStatus==='failed'?'text-danger':'text-warning'}>{saveStatus==='saving'?'Saving…':saveStatus==='saved'?'Saved':saveStatus==='failed'?'Save failed':'Unsaved changes'}</span></p></div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" asChild><Link to={`/sales/quotations/₹{id}`}>Quotation Details</Link></Button>
+          <Button variant="outline" size="sm" asChild><Link to={`/sales/quotations/${id}`}>Quotation Details</Link></Button>
           <Button variant="outline" size="sm" onClick={()=>handleAction('save')} disabled={saving}><Save className="h-4 w-4" />Save Draft</Button>
           <Button variant="secondary" size="sm" onClick={()=>handleAction('validate')} disabled={saving}>Validate Quote</Button>
           <Button size="sm" onClick={()=>handleAction('submit')} disabled={saving || !canEdit} title={!canEdit? 'Only draft / under_negotiation can be submitted' : undefined}>Submit for Approval</Button>

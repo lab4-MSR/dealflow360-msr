@@ -200,7 +200,7 @@ export function ApprovalAnalyticsPage() {
                     color: 'var(--color-foreground)',
                   }}
                 />
-                <Bar dataKey="avg_hours" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="avg_hours" radius={[6, 6, 0, 0]} label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }}>
                   {hierarchyData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

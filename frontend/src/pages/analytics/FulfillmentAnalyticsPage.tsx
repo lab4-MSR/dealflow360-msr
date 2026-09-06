@@ -191,7 +191,7 @@ export function FulfillmentAnalyticsPage() {
                     color: 'var(--color-foreground)',
                   }}
                 />
-                <Bar dataKey="rate" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="rate" radius={[6, 6, 0, 0]} label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }}>
                   {warehouseHubs.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}

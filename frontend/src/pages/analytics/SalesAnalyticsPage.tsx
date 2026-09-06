@@ -245,7 +245,7 @@ export function SalesAnalyticsPage() {
                       color: 'var(--color-foreground)',
                     }}
                   />
-                  <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="value" radius={[6, 6, 0, 0]} label={{ position: 'top', fill: 'var(--color-foreground)', fontSize: 10 }}>
                     {stageDistribution.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.color || '#3b82f6'} />
                     ))}
