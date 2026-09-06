@@ -243,12 +243,13 @@ export function CustomersPage() {
       id: 'customer',
       header: 'Commercial Account',
       accessorFn: (row) => {
-        const initials = row.name
+        const initials = (row.name || 'Account')
           .split(' ')
+          .filter(Boolean)
           .map((w) => w[0])
           .slice(0, 2)
           .join('')
-          .toUpperCase()
+          .toUpperCase() || 'AC'
         const contactEmail = row.contacts?.[0]?.email || row.email || 'No email registered'
         return (
           <div className="flex items-center gap-3 py-1">

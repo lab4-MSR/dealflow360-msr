@@ -108,10 +108,10 @@ export function UserDetailsPage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <h2 className="text-h3 font-semibold text-foreground">{user.fullName}</h2>
+              <h2 className="text-h3 font-semibold text-foreground">{user.fullName || user.email || 'User'}</h2>
               <p className="text-[13px] text-muted-foreground">{user.email}</p>
               <div className="flex items-center gap-2 mt-1">
-                <Badge variant="secondary">{ROLE_LABELS[user.role] || user.role}</Badge>
+                <Badge variant="secondary">{ROLE_LABELS[user.role as keyof typeof ROLE_LABELS] || user.role}</Badge>
                 <Badge variant={user.status === 'active' ? 'success' : user.status === 'pending' ? 'warning' : 'danger'}>
                   {user.status}
                 </Badge>
@@ -182,7 +182,7 @@ export function UserDetailsPage() {
               <Shield className="h-4 w-4 text-muted-foreground" />
               <div>
                 <p className="text-[11px] text-muted-foreground">Role</p>
-                <p className="text-[13px] font-medium text-foreground">{ROLE_LABELS[user.role] || user.role}</p>
+                <p className="text-[13px] font-medium text-foreground">{ROLE_LABELS[user.role as keyof typeof ROLE_LABELS] || user.role}</p>
               </div>
             </div>
             {user.permissions && user.permissions.length > 0 && (

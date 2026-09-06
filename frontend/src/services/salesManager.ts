@@ -1305,39 +1305,42 @@ export async function getSalesManagerDashboard(): Promise<{
       win_rate_trend_percent: 3.8,
     }
 
-    const priority_approvals = inboxRes.status === 'fulfilled' && inboxRes.value?.data?.data?.length
+    const priority_approvals = inboxRes.status === 'fulfilled' && Array.isArray(inboxRes.value?.data?.data)
       ? inboxRes.value.data.data
-      : MOCK_APPROVAL_QUEUE
+      : []
 
-    const recent_deals = MOCK_TEAM_DEALS.slice(0, 5)
+    const recent_deals = _salesRes.status === 'fulfilled' && Array.isArray((_salesRes.value?.data?.data as any)?.deals)
+      ? (_salesRes.value.data.data as any).deals
+      : []
 
     return {
       kpis,
       priority_approvals,
       recent_deals,
-      insights: MOCK_DECISION_INSIGHTS,
+      insights: [],
     }
-  } catch {
+  } catch (err) {
+    console.error('Failed to get sales manager dashboard:', err)
     return {
       kpis: {
-        total_team_deals: 24,
-        team_pipeline_value: 1845000,
-        team_win_rate: 61.4,
-        deals_requiring_approval: 4,
-        team_discount_variance: 13.8,
-        team_margin_health: 26.2,
-        stalled_deals_count: 3,
-        sla_breach_risk_count: 2,
-        avg_approval_time_hours: 3.4,
-        approval_rate_percent: 84.5,
-        rejection_rate_percent: 6.2,
-        return_rate_percent: 9.3,
-        pipeline_trend_percent: 12.4,
-        win_rate_trend_percent: 3.8,
+        total_team_deals: 0,
+        team_pipeline_value: 0,
+        team_win_rate: 0,
+        deals_requiring_approval: 0,
+        team_discount_variance: 0,
+        team_margin_health: 0,
+        stalled_deals_count: 0,
+        sla_breach_risk_count: 0,
+        avg_approval_time_hours: 0,
+        approval_rate_percent: 0,
+        rejection_rate_percent: 0,
+        return_rate_percent: 0,
+        pipeline_trend_percent: 0,
+        win_rate_trend_percent: 0,
       },
-      priority_approvals: MOCK_APPROVAL_QUEUE,
-      recent_deals: MOCK_TEAM_DEALS.slice(0, 5),
-      insights: MOCK_DECISION_INSIGHTS,
+      priority_approvals: [],
+      recent_deals: [],
+      insights: [],
     }
   }
 }
@@ -1357,12 +1360,13 @@ export async function getApprovalInbox(filters?: {
     if (filters?.search) params.append('search', filters.search)
 
     const res = await apiClient.get(`/approvals/inbox?${params.toString()}`)
-    if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
+    if (res.data?.data && Array.isArray(res.data.data)) {
       return res.data.data
     }
-    return filterMockApprovals(filters)
-  } catch {
-    return filterMockApprovals(filters)
+    return []
+  } catch (err) {
+    console.error('Failed to get approval inbox:', err)
+    return []
   }
 }
 

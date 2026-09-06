@@ -233,12 +233,14 @@ export function UsersPage() {
       id: 'user',
       header: 'Member Profile',
       accessorFn: (row) => {
-        const initials = (row.fullName || row.email)
+        const nameOrEmail = (row.fullName || row.email || 'User').trim()
+        const initials = nameOrEmail
           .split(' ')
+          .filter(Boolean)
           .map((n) => n[0])
           .slice(0, 2)
           .join('')
-          .toUpperCase()
+          .toUpperCase() || 'U'
         return (
           <div className="flex items-center gap-3 py-1">
             <div className="relative">
@@ -259,8 +261,8 @@ export function UsersPage() {
             </div>
             <div>
               <p className="text-xs font-bold text-foreground hover:text-primary transition-colors cursor-pointer"
-                onClick={() => navigate(`/business-admin/users-access/users/${row.id}`)}>
-                {row.fullName || 'Unnamed User'}
+                onClick={() => navigate(`/business-admin/users/${row.id}`)}>
+                {row.fullName || row.email || 'Unnamed User'}
               </p>
               <p className="text-[11px] text-muted-foreground font-mono">{row.email}</p>
             </div>
@@ -272,7 +274,7 @@ export function UsersPage() {
       id: 'role',
       header: 'Assigned Role',
       accessorFn: (row) => {
-        const role = row.role || 'sales_rep'
+        const role = String(row.role || 'sales_rep')
         const badgeColor =
           role.includes('admin')
             ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20'
@@ -285,7 +287,7 @@ export function UsersPage() {
             : 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20'
         return (
           <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold border ${badgeColor}`}>
-            {ROLE_LABELS[role] || role}
+            {ROLE_LABELS[role as keyof typeof ROLE_LABELS] || role}
           </span>
         )
       },
@@ -346,7 +348,7 @@ export function UsersPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuItem onClick={() => navigate(`/business-admin/users-access/users/${row.id}`)}>
+              <DropdownMenuItem onClick={() => navigate(`/business-admin/users/${row.id}`)}>
                 <Eye className="h-3.5 w-3.5 mr-2" />
                 Inspect Profile
               </DropdownMenuItem>

@@ -57,12 +57,13 @@ function toQuery(filters: AnalyticsFilters): string {
 /* Response helpers (mirrors shared-api.ts; its unwrap is not exported) */
 /* ------------------------------------------------------------------ */
 
-function unwrap<T>(response: ApiResponse<T>, fallback: T): T {
-  // Some backends return the payload directly; the contract wraps it in ApiResponse.
-  if (response && typeof response === 'object' && 'data' in response && 'success' in response) {
-    return (response as ApiResponse<T>).data ?? fallback
+function unwrap<T>(response: any, fallback: T): T {
+  if (!response) return fallback
+  const payload = response?.data !== undefined && response?.status !== undefined ? response.data : response
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return payload.data ?? fallback
   }
-  return (response as unknown as T) ?? fallback
+  return (payload as unknown as T) ?? fallback
 }
 
 /** Unwrap the ApiResponse envelope and return fallback on network/API failure. */

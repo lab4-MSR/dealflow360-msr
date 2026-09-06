@@ -422,14 +422,18 @@ export function TeamsPage() {
                 <div className="flex items-center gap-3">
                   <Avatar className="h-9 w-9">
                     <AvatarFallback className="bg-primary text-primary-foreground text-caption font-bold">
-                      {teamDetail.lead.fullName
-                        ? teamDetail.lead.fullName.split(' ').map((n: string) => n[0]).filter(Boolean).join('').toUpperCase() || 'TL'
-                        : 'TL'}
+                      {((teamDetail.lead.fullName || teamDetail.lead.email || 'TL'))
+                        .split(' ')
+                        .map((n: string) => n[0])
+                        .filter(Boolean)
+                        .join('')
+                        .toUpperCase()
+                        .slice(0, 2) || 'TL'}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-body-small font-semibold text-foreground">{teamDetail.lead.fullName}</p>
-                    <p className="text-caption text-muted-foreground">{teamDetail.lead.email || 'Lead'}</p>
+                    <p className="text-body-small font-semibold text-foreground">{teamDetail.lead.fullName || teamDetail.lead.email || 'Team Lead'}</p>
+                    <p className="text-caption text-muted-foreground">{teamDetail.lead.email || ''}</p>
                   </div>
                 </div>
               </div>

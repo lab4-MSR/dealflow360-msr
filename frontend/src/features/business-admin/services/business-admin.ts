@@ -135,9 +135,110 @@ import type {
 const API_BASE = '/api/v1'
 
 function getAuthHeaders(): Record<string, string> {
+  const token =
+    (typeof localStorage !== 'undefined' &&
+      (localStorage.getItem('dealflow360-access-token') ||
+        localStorage.getItem('access_token'))) ||
+    ''
   return {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('dealflow360-access-token') || ''}`,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  }
+}
+
+// ─── Data Normalizers ─────────────────────────────────────
+
+export function normalizeBusinessUser(raw: any): BusinessUser {
+  if (!raw) return {} as BusinessUser
+  return {
+    id: String(raw.id ?? ''),
+    fullName: String(raw.fullName ?? raw.full_name ?? raw.name ?? raw.email?.split('@')[0] ?? 'User'),
+    email: String(raw.email ?? ''),
+    role: String(raw.role ?? 'sales_rep'),
+    teamId: raw.teamId ?? raw.team_id ?? undefined,
+    teamName: raw.teamName ?? raw.team_name ?? (raw.teams?.name ? String(raw.teams.name) : undefined),
+    status: (raw.status ?? 'active') as any,
+    lastActive: raw.lastActive ?? raw.last_active ?? raw.updated_at ?? raw.created_at,
+    joinedAt: raw.joinedAt ?? raw.joined_at ?? raw.created_at ?? '',
+    avatarUrl: raw.avatarUrl ?? raw.avatar_url ?? undefined,
+    phone: raw.phone ?? undefined,
+    permissions: Array.isArray(raw.permissions) ? raw.permissions : ['deals.view'],
+  }
+}
+
+export function normalizeTeam(raw: any): Team {
+  if (!raw) return {} as Team
+  const users = Array.isArray(raw.users) ? raw.users : []
+  const leadUser = users.find((u: any) => u.role === 'sales_manager' || u.role === 'business_admin') ?? users[0]
+  return {
+    id: String(raw.id ?? ''),
+    name: String(raw.name ?? ''),
+    description: String(raw.description ?? ''),
+    memberCount: Number(raw.memberCount ?? users.length),
+    status: String(raw.status ?? 'active'),
+    lead: leadUser
+      ? {
+          id: String(leadUser.id),
+          fullName: String(leadUser.fullName ?? leadUser.full_name ?? leadUser.name ?? leadUser.email?.split('@')[0] ?? 'Team Lead'),
+          email: String(leadUser.email ?? ''),
+          role: String(leadUser.role ?? 'sales_manager'),
+          status: String(leadUser.status ?? 'active'),
+        }
+      : undefined,
+    createdAt: String(raw.created_at ?? raw.createdAt ?? ''),
+  }
+}
+
+export function normalizeRole(raw: any): Role {
+  if (!raw) return {} as Role
+  return {
+    id: String(raw.id ?? ''),
+    name: String(raw.name ?? ''),
+    displayName: String(raw.displayName ?? raw.display_name ?? raw.name ?? ''),
+    description: String(raw.description ?? ''),
+    permissionCount: Number(raw.permissionCount ?? raw.permissions_count ?? 0),
+    userCount: Number(raw.userCount ?? raw.user_count ?? 0),
+    status: String(raw.status ?? 'active'),
+    createdAt: String(raw.created_at ?? raw.createdAt ?? ''),
+  }
+}
+
+export function normalizeCustomer(raw: any): Customer {
+  if (!raw) return {} as Customer
+  return {
+    id: String(raw.id ?? ''),
+    name: String(raw.name ?? 'Unnamed Customer'),
+    email: raw.email ?? raw.contacts?.[0]?.email ?? '',
+    tier: raw.tier ?? 'bronze',
+    status: raw.status ?? 'active',
+    ownerId: raw.ownerId ?? raw.owner_id ?? undefined,
+    ownerName: raw.ownerName ?? raw.owner_name ?? raw.owner?.name ?? undefined,
+    contacts: Array.isArray(raw.contacts) ? raw.contacts : Array.isArray(raw.customer_contacts) ? raw.customer_contacts : [],
+    billingAddress: raw.billingAddress ?? raw.billing_address ?? raw.address ?? undefined,
+    totalDeals: Number(raw.totalDeals ?? raw.total_deals ?? 0),
+    totalRevenue: Number(raw.totalRevenue ?? raw.total_revenue ?? 0),
+    lastActivity: raw.lastActivity ?? raw.last_activity ?? raw.updated_at ?? raw.created_at ?? '',
+    createdAt: raw.createdAt ?? raw.created_at ?? '',
+  }
+}
+
+export function normalizeProduct(raw: any): Product {
+  if (!raw) return {} as Product
+  return {
+    id: String(raw.id ?? ''),
+    name: String(raw.name ?? 'Unnamed Product'),
+    sku: String(raw.sku ?? raw.id ?? ''),
+    category: String(raw.category ?? raw.category_name ?? 'General'),
+    unitPrice: Number(raw.unitPrice ?? raw.unit_price ?? raw.price ?? 0),
+    currency: String(raw.currency ?? 'INR'),
+    unit: String(raw.unit ?? 'item'),
+    status: String(raw.status ?? 'active'),
+    stock: Number(raw.stock ?? raw.stock_quantity ?? 0),
+    lowStockThreshold: Number(raw.lowStockThreshold ?? raw.low_stock_threshold ?? 10),
+    hasVariants: Boolean(raw.hasVariants ?? raw.has_variants ?? false),
+    variantCount: Number(raw.variantCount ?? raw.variant_count ?? 0),
+    salesCount: Number(raw.salesCount ?? raw.sales_count ?? 0),
+    createdAt: String(raw.createdAt ?? raw.created_at ?? ''),
   }
 }
 
@@ -149,9 +250,18 @@ export async function fetchDashboardKpis(): Promise<BusinessDashboardKpis> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch dashboard KPIs')
-    return json.data.kpis
-  } catch {
-    return { totalCustomers: 156, totalProducts: 89, activeDeals: 47, pendingApprovals: 12, revenue: 284500, activeSubscriptions: 34 }
+    const k = json.data?.kpis || {}
+    return {
+      totalCustomers: k.customers ?? k.totalCustomers ?? 0,
+      totalProducts: k.products ?? k.totalProducts ?? 0,
+      activeDeals: k.deals ?? k.activeDeals ?? 0,
+      pendingApprovals: k.quotations ?? k.pendingApprovals ?? 0,
+      revenue: k.revenue ?? 0,
+      activeSubscriptions: k.active_subscriptions ?? k.activeSubscriptions ?? 0,
+    }
+  } catch (err) {
+    console.error('Failed to fetch dashboard KPIs:', err)
+    return { totalCustomers: 0, totalProducts: 0, activeDeals: 0, pendingApprovals: 0, revenue: 0, activeSubscriptions: 0 }
   }
 }
 
@@ -161,16 +271,17 @@ export async function fetchSalesOverview(): Promise<SalesOverview> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch sales overview')
-    return json.data
-  } catch {
+    const d = json.data || {}
     return {
-      totalDeals: 247, wonDeals: 89, lostDeals: 31, dealConversion: 36,
-      dealTrend: [
-        { date: '2026-04', count: 18, value: 42000 }, { date: '2026-05', count: 22, value: 51000 },
-        { date: '2026-06', count: 19, value: 44000 }, { date: '2026-07', count: 25, value: 58000 },
-        { date: '2026-08', count: 28, value: 65000 }, { date: '2026-09', count: 24, value: 56000 },
-      ],
+      totalDeals: d.deals?.total ?? d.totalDeals ?? 0,
+      wonDeals: d.deals?.won ?? d.wonDeals ?? 0,
+      lostDeals: d.deals?.lost ?? d.lostDeals ?? 0,
+      dealConversion: Math.round(d.win_rate ?? d.dealConversion ?? 0),
+      dealTrend: Array.isArray(d.dealTrend) ? d.dealTrend : [],
     }
+  } catch (err) {
+    console.error('Failed to fetch sales overview:', err)
+    return { totalDeals: 0, wonDeals: 0, lostDeals: 0, dealConversion: 0, dealTrend: [] }
   }
 }
 
@@ -180,16 +291,18 @@ export async function fetchRevenueOverview(): Promise<RevenueOverview> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch revenue overview')
-    return json.data
-  } catch {
+    const d = json.data || {}
+    const r = d.revenue || {}
     return {
-      totalRevenue: 284500, oneTimeRevenue: 198200, recurringRevenue: 86300, revenueGrowth: 12.5,
-      revenueTrend: [
-        { date: '2026-04', amount: 38000 }, { date: '2026-05', amount: 42000 },
-        { date: '2026-06', amount: 45000 }, { date: '2026-07', amount: 51000 },
-        { date: '2026-08', amount: 55000 }, { date: '2026-09', amount: 53500 },
-      ],
+      totalRevenue: r.total ?? d.totalRevenue ?? 0,
+      oneTimeRevenue: r.one_time ?? d.oneTimeRevenue ?? 0,
+      recurringRevenue: r.recurring ?? d.recurringRevenue ?? 0,
+      revenueGrowth: d.revenueGrowth ?? 0,
+      revenueTrend: Array.isArray(d.revenueTrend) ? d.revenueTrend : [],
     }
+  } catch (err) {
+    console.error('Failed to fetch revenue overview:', err)
+    return { totalRevenue: 0, oneTimeRevenue: 0, recurringRevenue: 0, revenueGrowth: 0, revenueTrend: [] }
   }
 }
 
@@ -199,16 +312,16 @@ export async function fetchApprovalOverview(): Promise<ApprovalOverview> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch approval overview')
-    return json.data
-  } catch {
+    const d = json.data || {}
     return {
-      pendingApprovals: 12, highRiskDeals: 3, averageApprovalTime: '2.4 hours',
-      approvalTrend: [
-        { date: '2026-04', count: 8 }, { date: '2026-05', count: 11 },
-        { date: '2026-06', count: 9 }, { date: '2026-07', count: 14 },
-        { date: '2026-08', count: 12 }, { date: '2026-09', count: 10 },
-      ],
+      pendingApprovals: d.pendingApprovals ?? d.pending ?? 0,
+      highRiskDeals: d.highRiskDeals ?? 0,
+      averageApprovalTime: d.averageApprovalTime ?? '—',
+      approvalTrend: Array.isArray(d.approvalTrend) ? d.approvalTrend : [],
     }
+  } catch (err) {
+    console.error('Failed to fetch approval overview:', err)
+    return { pendingApprovals: 0, highRiskDeals: 0, averageApprovalTime: '—', approvalTrend: [] }
   }
 }
 
@@ -218,9 +331,17 @@ export async function fetchInventoryOverview(): Promise<InventoryOverview> {
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch inventory overview')
-    return json.data.inventory
-  } catch {
-    return { totalStock: 12480, lowStock: 23, outOfStock: 5, backorders: 8, warehouseStatus: 'warning' }
+    const d = json.data?.inventory ?? json.data ?? {}
+    return {
+      totalStock: d.totalStock ?? d.total_stock ?? 0,
+      lowStock: d.lowStock ?? d.low_stock ?? 0,
+      outOfStock: d.outOfStock ?? d.out_of_stock ?? 0,
+      backorders: d.backorders ?? 0,
+      warehouseStatus: d.warehouseStatus ?? 'healthy',
+    }
+  } catch (err) {
+    console.error('Failed to fetch inventory overview:', err)
+    return { totalStock: 0, lowStock: 0, outOfStock: 0, backorders: 0, warehouseStatus: 'healthy' }
   }
 }
 
@@ -231,14 +352,15 @@ export async function fetchDealHealth(): Promise<DealHealthOverview> {
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch deal health')
     return {
-      healthyDeals: json.data.healthyDeals ?? 0,
-      atRisk: json.data.atRiskDeals ?? 0,
-      stalled: json.data.stalledDeals ?? 0,
-      discountAnomalies: json.data.discountAnomalies ?? 0,
-      deliverySlippage: json.data.deliverySlippage ?? 0,
+      healthyDeals: json.data?.healthyDeals ?? 0,
+      atRisk: json.data?.atRiskDeals ?? 0,
+      stalled: json.data?.stalledDeals ?? 0,
+      discountAnomalies: json.data?.discountAnomalies ?? 0,
+      deliverySlippage: json.data?.deliverySlippage ?? 0,
     }
-  } catch {
-    return { healthyDeals: 34, atRisk: 8, stalled: 5, discountAnomalies: 3, deliverySlippage: 2 }
+  } catch (err) {
+    console.error('Failed to fetch deal health:', err)
+    return { healthyDeals: 0, atRisk: 0, stalled: 0, discountAnomalies: 0, deliverySlippage: 0 }
   }
 }
 
@@ -254,18 +376,13 @@ export async function fetchRecentDeals(): Promise<RecentDeal[]> {
       customer: typeof deal.customer === 'object' && deal.customer !== null ? String((deal.customer as Record<string, unknown>).name ?? '—') : String(deal.customer ?? '—'),
       salesRep: String(deal.sales_rep_name ?? deal.owner_name ?? '—'),
       value: Number(deal.value ?? deal.amount ?? 0),
-      risk: String(deal.risk ?? '—'),
-      status: String(deal.status ?? deal.stage ?? '—'),
+      risk: String(deal.risk ?? 'low'),
+      status: String(deal.status ?? deal.stage ?? 'draft'),
       updatedAt: String(deal.updated_at ?? deal.updatedAt ?? ''),
     }))
-  } catch {
-    return [
-      { id: '1', name: 'Global Retail Cloud ERP Expansion', customer: 'Nexus Retail Group', salesRep: 'Sarah Lee', value: 124000, risk: 'low', status: 'won', updatedAt: '2026-09-05T09:40:00Z' },
-      { id: '2', name: 'Logistics WMS Integration Suite', customer: 'Apex Freight Ltd', salesRep: 'Alex Rivera', value: 86500, risk: 'medium', status: 'proposal', updatedAt: '2026-09-04T16:15:00Z' },
-      { id: '3', name: 'Enterprise Core License Renewal', customer: 'Vanguard Systems', salesRep: 'Maria Chen', value: 240000, risk: 'high', status: 'negotiation', updatedAt: '2026-09-03T11:20:00Z' },
-      { id: '4', name: 'Point-of-Sale Hardware Bundle', customer: 'Urban Mart India', salesRep: 'Rajesh Kumar', value: 45000, risk: 'low', status: 'approved', updatedAt: '2026-09-02T14:30:00Z' },
-      { id: '5', name: 'Multi-Tenant Analytics Addon', customer: 'DataFlow Systems', salesRep: 'Mike Chen', value: 67000, risk: 'critical', status: 'draft', updatedAt: '2026-09-01T11:45:00Z' },
-    ]
+  } catch (err) {
+    console.error('Failed to fetch recent deals:', err)
+    return []
   }
 }
 
@@ -285,14 +402,9 @@ export async function fetchRecentActivity(): Promise<ActivityItem[]> {
       category: String(item.category ?? item.entity_type ?? 'system'),
       severity: String(item.severity ?? 'info'),
     }))
-  } catch {
-    return [
-      { id: '1', actor: 'John Doe', action: 'approved', resource: 'Quotation #Q-2024-089', resourceType: 'quotation', timestamp: '2026-09-05T10:30:00Z', category: 'approval', severity: 'info' },
-      { id: '2', actor: 'Jane Smith', action: 'created', resource: 'Deal: SaaS Migration', resourceType: 'deal', timestamp: '2026-09-05T09:15:00Z', category: 'deal', severity: 'info' },
-      { id: '3', actor: 'System', action: 'flagged', resource: 'Discount anomaly on Q-2024-087', resourceType: 'quotation', timestamp: '2026-09-04T16:00:00Z', category: 'system', severity: 'warning' },
-      { id: '4', actor: 'Sarah Lee', action: 'updated', resource: 'Customer: DataFlow', resourceType: 'customer', timestamp: '2026-09-04T14:20:00Z', category: 'user', severity: 'info' },
-      { id: '5', actor: 'Mike Chen', action: 'submitted', resource: 'Quotation #Q-2024-091', resourceType: 'quotation', timestamp: '2026-09-04T11:00:00Z', category: 'deal', severity: 'info' },
-    ]
+  } catch (err) {
+    console.error('Failed to fetch activity:', err)
+    return []
   }
 }
 
@@ -311,12 +423,9 @@ export async function fetchDashboardAlerts(): Promise<DashboardAlert[]> {
       actionLabel: item.actionLabel ? String(item.actionLabel) : '',
       actionPath: item.actionPath ? String(item.actionPath) : '',
     }))
-  } catch {
-    return [
-      { id: '1', title: 'High-risk deal requires attention', description: 'Cloud Services deal with GlobalNet has exceeded risk threshold.', severity: 'critical', timestamp: '2026-09-05T08:00:00Z', actionLabel: 'Review Deal', actionPath: '/dashboard/deals' },
-      { id: '2', title: 'Pending approvals blocking pipeline', description: '12 quotations are awaiting approval, affecting ₹340K in pipeline value.', severity: 'warning', timestamp: '2026-09-05T07:30:00Z', actionLabel: 'Review Approvals', actionPath: '/dashboard/approvals' },
-      { id: '3', title: 'Low stock alert', description: '5 products are out of stock and 23 are below reorder level.', severity: 'attention', timestamp: '2026-09-04T18:00:00Z', actionLabel: 'View Inventory', actionPath: '/dashboard/inventory' },
-    ]
+  } catch (err) {
+    console.error('Failed to fetch alerts:', err)
+    return []
   }
 }
 
@@ -625,101 +734,79 @@ export async function fetchUsers(filters: BusinessUserFilters = {}): Promise<{ u
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch users')
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const users = rawList.map(normalizeBusinessUser)
     return {
-      users: json.data,
-      total: json.meta?.total || 0,
+      users,
+      total: json.meta?.total ?? users.length,
       page: json.meta?.page || 1,
       perPage: json.meta?.per_page || 25,
       totalPages: json.meta?.total_pages || 1,
     }
-  } catch {
-    return {
-      users: [
-        { id: 'u1', fullName: 'John Doe', email: 'john@acmecorp.com', role: 'business_admin', teamName: 'Leadership', status: 'active', lastActive: '2026-09-05T10:00:00Z', joinedAt: '2024-01-15', permissions: ['*'] },
-        { id: 'u2', fullName: 'Jane Smith', email: 'jane@acmecorp.com', role: 'sales_manager', teamName: 'Enterprise Sales', status: 'active', lastActive: '2026-09-05T09:30:00Z', joinedAt: '2024-03-20', permissions: ['deals.view', 'deals.create', 'quotations.create'] },
-        { id: 'u3', fullName: 'Mike Chen', email: 'mike@acmecorp.com', role: 'sales_rep', teamName: 'SMB Sales', status: 'active', lastActive: '2026-09-04T16:00:00Z', joinedAt: '2024-06-10', permissions: ['deals.view', 'deals.create'] },
-        { id: 'u4', fullName: 'Sarah Lee', email: 'sarah@acmecorp.com', role: 'finance', teamName: 'Finance', status: 'active', lastActive: '2026-09-05T08:45:00Z', joinedAt: '2024-02-28', permissions: ['billing.view', 'billing.manage', 'approvals.view'] },
-        { id: 'u5', fullName: 'Tom Wilson', email: 'tom@acmecorp.com', role: 'operations', teamName: 'Operations', status: 'inactive', joinedAt: '2024-08-15', permissions: ['fulfillment.view', 'warehouse.manage'] },
-        { id: 'u6', fullName: 'Lisa Park', email: 'lisa@acmecorp.com', role: 'sales_rep', teamName: 'Enterprise Sales', status: 'pending', joinedAt: '2026-09-01', permissions: ['deals.view'] },
-      ],
-      total: 6, page: 1, perPage: 25, totalPages: 1,
-    }
+  } catch (err) {
+    console.error('Failed to fetch users:', err)
+    return { users: [], total: 0, page: 1, perPage: 25, totalPages: 1 }
   }
 }
 
 export async function fetchUserKpis(): Promise<BusinessUserKpis> {
   try {
-    const response = await fetch(`${API_BASE}/users?per_page=1`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/users`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch user KPIs')
-    return json.data.kpis
-  } catch {
-    return { totalUsers: 6, activeUsers: 4, pendingInvitations: 1, inactiveUsers: 1 }
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const users = rawList.map(normalizeBusinessUser)
+    return {
+      totalUsers: users.length,
+      activeUsers: users.filter((u) => u.status === 'active').length,
+      pendingInvitations: users.filter((u) => u.status === 'pending' || (u.status as any) === 'invited').length,
+      inactiveUsers: users.filter((u) => u.status !== 'active' && u.status !== 'pending' && (u.status as any) !== 'invited').length,
+    }
+  } catch (err) {
+    console.error('Failed to fetch user KPIs:', err)
+    return { totalUsers: 0, activeUsers: 0, pendingInvitations: 0, inactiveUsers: 0 }
   }
 }
 
 export async function fetchUserById(id: string): Promise<BusinessUser> {
-  try {
-    const response = await fetch(`${API_BASE}/users/${id}`, { headers: getAuthHeaders() })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to fetch user')
-    return json.data
-  } catch {
-    return {
-      id, fullName: 'John Doe', email: 'john@acmecorp.com', phone: '+91 98765 43210',
-      role: 'business_admin', teamName: 'Leadership', status: 'active',
-      lastActive: '2026-09-05T10:00:00Z', joinedAt: '2024-01-15', permissions: ['*'],
-    }
-  }
+  const response = await fetch(`${API_BASE}/users/${id}`, { headers: getAuthHeaders() })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to fetch user')
+  return normalizeBusinessUser(json.data)
 }
 
 export async function inviteUser(input: InviteUserInput): Promise<BusinessUser> {
-  try {
-    const response = await fetch(`${API_BASE}/users/invite`, {
-      method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(input),
-    })
-    if (response.ok) {
-      const json = await response.json()
-      if (json.success) return json.data
-    }
-  } catch {}
-  return {
-    id: `u-${Date.now()}`,
-    fullName: input.email.split('@')[0],
-    email: input.email,
-    role: input.role,
-    teamName: 'General',
-    status: 'pending',
-    joinedAt: new Date().toISOString().split('T')[0],
-    permissions: ['deals.view'],
-  }
+  const response = await fetch(`${API_BASE}/users/invite`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(input),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to invite user')
+  return normalizeBusinessUser(json.data)
 }
 
 export async function updateUser(id: string, data: Partial<Pick<BusinessUser, 'role' | 'status' | 'teamId'>>): Promise<BusinessUser> {
-  try {
-    const response = await fetch(`${API_BASE}/users/${id}`, {
-      method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (response.ok) {
-      const json = await response.json()
-      if (json.success) return json.data
-    }
-  } catch {}
-  return {
-    id, fullName: 'Updated User', email: 'user@acmecorp.com',
-    role: data.role || 'sales_rep', status: data.status || 'active',
-    teamName: 'General', joinedAt: '2024-01-15', permissions: ['deals.view'],
-  }
+  const response = await fetch(`${API_BASE}/users/${id}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to update user')
+  return normalizeBusinessUser(json.data)
 }
 
 export async function deleteUser(id: string): Promise<void> {
-  try {
-    await fetch(`${API_BASE}/users/${id}`, {
-      method: 'DELETE', headers: getAuthHeaders(),
-    })
-  } catch {}
+  const response = await fetch(`${API_BASE}/users/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
 }
 
 // ─── Teams ────────────────────────────────────────────────
@@ -736,101 +823,82 @@ export async function fetchTeams(filters: TeamFilters = {}): Promise<{ teams: Te
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch teams')
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const teams = rawList.map(normalizeTeam)
     return {
-      teams: json.data,
-      total: json.meta?.total || 0,
+      teams,
+      total: json.meta?.total ?? teams.length,
       page: json.meta?.page || 1,
       perPage: json.meta?.per_page || 25,
       totalPages: json.meta?.total_pages || 1,
     }
-  } catch {
-    return {
-      teams: [
-        { id: 't1', name: 'Enterprise Sales', description: 'Large enterprise accounts', lead: { id: 'u2', fullName: 'Jane Smith', email: 'jane@acmecorp.com', role: 'sales_manager', status: 'active' }, memberCount: 8, dealsCount: 23, status: 'active', createdAt: '2024-01-20' },
-        { id: 't2', name: 'SMB Sales', description: 'Small and medium business accounts', lead: { id: 'u3', fullName: 'Mike Chen', email: 'mike@acmecorp.com', role: 'sales_rep', status: 'active' }, memberCount: 5, dealsCount: 18, status: 'active', createdAt: '2024-02-10' },
-        { id: 't3', name: 'Finance', description: 'Billing and financial operations', lead: { id: 'u4', fullName: 'Sarah Lee', email: 'sarah@acmecorp.com', role: 'finance', status: 'active' }, memberCount: 3, dealsCount: 0, status: 'active', createdAt: '2024-01-20' },
-        { id: 't4', name: 'Operations', description: 'Fulfillment and warehouse operations', lead: { id: 'u5', fullName: 'Tom Wilson', email: 'tom@acmecorp.com', role: 'operations', status: 'inactive' }, memberCount: 4, dealsCount: 0, status: 'active', createdAt: '2024-03-01' },
-      ],
-      total: 4, page: 1, perPage: 25, totalPages: 1,
-    }
+  } catch (err) {
+    console.error('Failed to fetch teams:', err)
+    return { teams: [], total: 0, page: 1, perPage: 25, totalPages: 1 }
   }
 }
 
 export async function fetchTeamKpis(): Promise<TeamKpis> {
   try {
-    const response = await fetch(`${API_BASE}/teams?per_page=1`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/teams`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch team KPIs')
-    return json.data.kpis
-  } catch {
-    return { totalTeams: 4, totalMembers: 20, activeTeams: 4 }
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const teams = rawList.map(normalizeTeam)
+    return {
+      totalTeams: teams.length,
+      activeTeams: teams.filter((t) => t.status === 'active').length,
+      totalMembers: teams.reduce((sum, t) => sum + (t.memberCount ?? 0), 0),
+    }
+  } catch (err) {
+    console.error('Failed to fetch team KPIs:', err)
+    return { totalTeams: 0, totalMembers: 0, activeTeams: 0 }
   }
 }
 
 export async function fetchTeamById(id: string): Promise<TeamDetail> {
-  try {
-    const response = await fetch(`${API_BASE}/teams/${id}`, { headers: getAuthHeaders() })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to fetch team')
-    return json.data
-  } catch {
-    return {
-      id, name: 'Enterprise Sales', description: 'Large enterprise accounts', memberCount: 8, dealsCount: 23,
-      status: 'active', createdAt: '2024-01-20',
-      lead: { id: 'u2', fullName: 'Jane Smith', email: 'jane@acmecorp.com', role: 'sales_manager', status: 'active' },
-      members: [
-        { id: 'u2', fullName: 'Jane Smith', email: 'jane@acmecorp.com', role: 'sales_manager', status: 'active' },
-        { id: 'u3', fullName: 'Mike Chen', email: 'mike@acmecorp.com', role: 'sales_rep', status: 'active' },
-        { id: 'u6', fullName: 'Lisa Park', email: 'lisa@acmecorp.com', role: 'sales_rep', status: 'pending' },
-      ],
-      deals: [
-        { id: 'd1', name: 'Enterprise License', value: 240000, status: 'approved', risk: 'low', ownerId: 'u2', ownerName: 'Jane Smith' },
-        { id: 'd2', name: 'SaaS Migration', value: 180000, status: 'pending', risk: 'medium', ownerId: 'u3', ownerName: 'Mike Chen' },
-      ],
-      performance: { dealsCreated: 23, wonDeals: 8, lostDeals: 3, conversion: 35, revenue: 198000 },
-    }
+  const response = await fetch(`${API_BASE}/teams/${id}`, { headers: getAuthHeaders() })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to fetch team')
+  const team = normalizeTeam(json.data)
+  return {
+    ...team,
+    members: Array.isArray(json.data?.users) ? json.data.users.map(normalizeBusinessUser) : [],
   }
 }
 
 export async function createTeam(data: { name: string; description?: string; leadId?: string }): Promise<Team> {
-  try {
-    const response = await fetch(`${API_BASE}/teams`, {
-      method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to create team')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/teams`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to create team')
+  return normalizeTeam(json.data)
 }
 
 export async function updateTeam(id: string, data: Partial<Pick<Team, 'name' | 'description' | 'lead' | 'status'>>): Promise<Team> {
-  try {
-    const response = await fetch(`${API_BASE}/teams/${id}`, {
-      method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to update team')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/teams/${id}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to update team')
+  return normalizeTeam(json.data)
 }
 
 export async function deleteTeam(id: string): Promise<void> {
-  try {
-    const response = await fetch(`${API_BASE}/teams/${id}`, {
-      method: 'DELETE', headers: getAuthHeaders(),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/teams/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
 }
 
 // ─── Roles ────────────────────────────────────────────────
@@ -847,138 +915,107 @@ export async function fetchRoles(filters: RoleFilters = {}): Promise<{ roles: Ro
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch roles')
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const roles = rawList.map(normalizeRole)
     return {
-      roles: json.data,
-      total: json.meta?.total || 0,
+      roles,
+      total: json.meta?.total ?? roles.length,
       page: json.meta?.page || 1,
       perPage: json.meta?.per_page || 25,
       totalPages: json.meta?.total_pages || 1,
     }
-  } catch {
-    return {
-      roles: [
-        { id: 'r1', name: 'business_admin', displayName: 'Business Admin', description: 'Full access to all business settings and operations', isSystem: true, userCount: 2, permissionCount: 48, status: 'active', createdAt: '2024-01-15' },
-        { id: 'r2', name: 'sales_manager', displayName: 'Sales Manager', description: 'Manage sales team and approve deals', isSystem: true, userCount: 3, permissionCount: 32, status: 'active', createdAt: '2024-01-15' },
-        { id: 'r3', name: 'sales_rep', displayName: 'Sales Representative', description: 'Create and manage deals and quotations', isSystem: true, userCount: 8, permissionCount: 18, status: 'active', createdAt: '2024-01-15' },
-        { id: 'r4', name: 'finance', displayName: 'Finance', description: 'Manage billing, invoicing, and financial operations', isSystem: true, userCount: 2, permissionCount: 24, status: 'active', createdAt: '2024-01-15' },
-        { id: 'r5', name: 'operations', displayName: 'Operations', description: 'Manage fulfillment, inventory, and warehouse', isSystem: true, userCount: 4, permissionCount: 20, status: 'active', createdAt: '2024-01-15' },
-        { id: 'r6', name: 'custom_analyst', displayName: 'Data Analyst', description: 'Read-only access to analytics and reports', isSystem: false, userCount: 1, permissionCount: 8, status: 'active', createdAt: '2024-06-01' },
-      ],
-      total: 6, page: 1, perPage: 25, totalPages: 1,
-    }
+  } catch (err) {
+    console.error('Failed to fetch roles:', err)
+    return { roles: [], total: 0, page: 1, perPage: 25, totalPages: 1 }
   }
 }
 
 export async function fetchRoleKpis(): Promise<RoleKpis> {
   try {
-    const response = await fetch(`${API_BASE}/roles?per_page=1`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/roles`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch role KPIs')
-    return json.data.kpis
-  } catch {
-    return { totalRoles: 6, customRoles: 1, systemRoles: 5 }
+    const rawList = Array.isArray(json.data) ? json.data : []
+    return {
+      totalRoles: rawList.length,
+      customRoles: rawList.filter((r: any) => r.is_custom).length,
+      systemRoles: rawList.filter((r: any) => !r.is_custom).length,
+    }
+  } catch (err) {
+    console.error('Failed to fetch role KPIs:', err)
+    return { totalRoles: 0, customRoles: 0, systemRoles: 0 }
   }
 }
 
 export async function fetchRoleById(id: string): Promise<RoleDetail> {
-  try {
-    const response = await fetch(`${API_BASE}/roles/${id}`, { headers: getAuthHeaders() })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to fetch role')
-    return json.data
-  } catch {
-    return {
-      id, name: 'sales_rep', displayName: 'Sales Representative', description: 'Create and manage deals and quotations',
-      isSystem: true, userCount: 8, permissionCount: 18, status: 'active', createdAt: '2024-01-15',
-      permissions: ['deals.view', 'deals.create', 'deals.edit', 'quotations.view', 'quotations.create', 'customers.view'],
-      permissionGroups: [
-        { id: 'pg1', name: 'Deals', permissions: [
-          { id: 'p1', key: 'deals.view', label: 'View Deals', description: 'View deal list and details', category: 'deals' },
-          { id: 'p2', key: 'deals.create', label: 'Create Deals', description: 'Create new deals', category: 'deals' },
-          { id: 'p3', key: 'deals.edit', label: 'Edit Deals', description: 'Edit deal details', category: 'deals' },
-          { id: 'p4', key: 'deals.delete', label: 'Delete Deals', description: 'Delete deals', category: 'deals' },
-        ]},
-        { id: 'pg2', name: 'Quotations', permissions: [
-          { id: 'p5', key: 'quotations.view', label: 'View Quotations', description: 'View quotations', category: 'quotations' },
-          { id: 'p6', key: 'quotations.create', label: 'Create Quotations', description: 'Create new quotations', category: 'quotations' },
-          { id: 'p7', key: 'quotations.edit', label: 'Edit Quotations', description: 'Edit existing quotations', category: 'quotations' },
-        ]},
-        { id: 'pg3', name: 'Customers', permissions: [
-          { id: 'p8', key: 'customers.view', label: 'View Customers', description: 'View customer list', category: 'customers' },
-          { id: 'p9', key: 'customers.create', label: 'Create Customers', description: 'Create new customers', category: 'customers' },
-        ]},
-      ],
-    }
+  const response = await fetch(`${API_BASE}/roles/${id}`, { headers: getAuthHeaders() })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to fetch role')
+  return {
+    ...normalizeRole(json.data),
+    permissions: json.data?.permissions ?? {},
   }
 }
 
 export async function createRole(data: { name: string; displayName: string; description?: string }): Promise<Role> {
-  try {
-    const response = await fetch(`${API_BASE}/roles`, {
-      method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to create role')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/roles`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to create role')
+  return normalizeRole(json.data)
 }
 
 export async function updateRole(id: string, data: Partial<Pick<Role, 'displayName' | 'description' | 'status'>>): Promise<Role> {
-  try {
-    const response = await fetch(`${API_BASE}/roles/${id}`, {
-      method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to update role')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/roles/${id}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to update role')
+  return normalizeRole(json.data)
 }
 
 export async function updateRolePermissions(id: string, permissions: string[]): Promise<RoleDetail> {
-  try {
-    const response = await fetch(`${API_BASE}/roles/${id}/permissions`, {
-      method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify({ permissions }),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to update permissions')
-    return json.data
-  } catch (err) {
-    throw err
+  const response = await fetch(`${API_BASE}/roles/${id}/permissions`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ permissions }),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to update permissions')
+  return {
+    ...normalizeRole(json.data),
+    permissions: json.data?.permissions ?? permissions,
   }
 }
 
 export async function duplicateRole(id: string, data: { name: string; displayName: string }): Promise<Role> {
-  try {
-    const response = await fetch(`${API_BASE}/roles/${id}/duplicate`, {
-      method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to duplicate role')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/roles/${id}/duplicate`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to duplicate role')
+  return normalizeRole(json.data)
 }
 
 export async function deleteRole(id: string): Promise<void> {
-  try {
-    const response = await fetch(`${API_BASE}/roles/${id}`, {
-      method: 'DELETE', headers: getAuthHeaders(),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/roles/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
 }
 
 // ─── Customers ────────────────────────────────────────────
@@ -997,104 +1034,86 @@ export async function fetchCustomers(filters: CustomerFilters = {}): Promise<{ c
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch customers')
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const customers = rawList.map(normalizeCustomer)
     return {
-      customers: json.data,
-      total: json.meta?.total || 0,
+      customers,
+      total: json.meta?.total ?? customers.length,
       page: json.meta?.page || 1,
       perPage: json.meta?.per_page || 25,
       totalPages: json.meta?.total_pages || 1,
     }
-  } catch {
-    return {
-      customers: [
-        { id: 'c1', name: 'Acme Corp', tier: 'gold', status: 'active', ownerId: 'u2', ownerName: 'Jane Smith', contacts: [{ id: 'ct1', name: 'Rajesh Kumar', email: 'rajesh@acme.com', isPrimary: true }], billingAddress: { line1: '123 Park St', city: 'Bangalore', state: 'Karnataka', country: 'India', postalCode: '560102' }, totalDeals: 8, totalRevenue: 340000, lastActivity: '2026-09-05T10:00:00Z', createdAt: '2024-01-20' },
-        { id: 'c2', name: 'TechStart Inc', tier: 'silver', status: 'active', ownerId: 'u3', ownerName: 'Mike Chen', contacts: [{ id: 'ct2', name: 'Sarah Johnson', email: 'sarah@techstart.com', isPrimary: true }], billingAddress: { line1: '456 Tech Blvd', city: 'San Francisco', state: 'CA', country: 'US', postalCode: '94105' }, totalDeals: 5, totalRevenue: 180000, lastActivity: '2026-09-04T15:30:00Z', createdAt: '2024-03-15' },
-        { id: 'c3', name: 'GlobalNet Solutions', tier: 'platinum', status: 'active', ownerId: 'u2', ownerName: 'Jane Smith', contacts: [{ id: 'ct3', name: 'David Lee', email: 'david@globalnet.com', isPrimary: true }], billingAddress: { line1: '789 Global Ave', city: 'London', state: 'England', country: 'UK', postalCode: 'EC2A 1' }, totalDeals: 12, totalRevenue: 890000, lastActivity: '2026-09-03T09:15:00Z', createdAt: '2024-02-01' },
-        { id: 'c4', name: 'InnovateCo', tier: 'bronze', status: 'inactive', ownerId: 'u3', ownerName: 'Mike Chen', contacts: [{ id: 'ct4', name: 'Lisa Wang', email: 'lisa@innovate.co', isPrimary: true }], billingAddress: { line1: '321 Innovation Dr', city: 'Austin', state: 'TX', country: 'US', postalCode: '73301' }, totalDeals: 2, totalRevenue: 45000, lastActivity: '2026-08-10T12:00:00Z', createdAt: '2024-06-20' },
-      ],
-      total: 4, page: 1, perPage: 25, totalPages: 1,
-    }
+  } catch (err) {
+    console.error('Failed to fetch customers:', err)
+    return { customers: [], total: 0, page: 1, perPage: 25, totalPages: 1 }
   }
 }
 
 export async function fetchCustomerKpis(): Promise<CustomerKpis> {
   try {
-    const response = await fetch(`${API_BASE}/customers?per_page=1`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/customers`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch customer KPIs')
-    return json.data.kpis
-  } catch {
-    return { totalCustomers: 4, activeCustomers: 3, totalRevenue: 1455000, averageDealSize: 116400 }
+    const list = Array.isArray(json.data) ? json.data : []
+    const totalRev = list.reduce((acc: number, c: any) => acc + Number(c.total_revenue || c.totalRevenue || 0), 0)
+    return {
+      totalCustomers: list.length,
+      activeCustomers: list.filter((c: any) => c.status === 'active').length,
+      totalRevenue: totalRev,
+      averageDealSize: list.length ? Math.round(totalRev / list.length) : 0,
+    }
+  } catch (err) {
+    console.error('Failed to fetch customer KPIs:', err)
+    return { totalCustomers: 0, activeCustomers: 0, totalRevenue: 0, averageDealSize: 0 }
   }
 }
 
 export async function fetchCustomerById(id: string): Promise<CustomerDetail> {
-  try {
-    const response = await fetch(`${API_BASE}/customers/${id}`, { headers: getAuthHeaders() })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to fetch customer')
-    return json.data
-  } catch {
-    return {
-      id, name: 'Acme Corp', tier: 'gold', status: 'active', ownerId: 'u2', ownerName: 'Jane Smith',
-      contacts: [{ id: 'ct1', name: 'Rajesh Kumar', email: 'rajesh@acme.com', phone: '+91 98765 43210', title: 'CTO', isPrimary: true }],
-      billingAddress: { line1: '123 Park St', city: 'Bangalore', state: 'Karnataka', country: 'India', postalCode: '560102' },
-      totalDeals: 8, totalRevenue: 340000, lastActivity: '2026-09-05T10:00:00Z', createdAt: '2024-01-20',
-      deals: [
-        { id: 'd1', name: 'Enterprise License', value: 240000, stage: 'approved', risk: 'low', createdAt: '2026-08-15' },
-        { id: 'd2', name: 'Cloud Migration', value: 100000, stage: 'negotiation', risk: 'medium', createdAt: '2026-09-01' },
-      ],
-      orders: [
-        { id: 'o1', number: 'INV-2024-001', total: 120000, status: 'paid', createdAt: '2026-07-15' },
-        { id: 'o2', number: 'INV-2024-002', total: 120000, status: 'pending', createdAt: '2026-08-15' },
-      ],
-      billing: { outstandingBalance: 120000, totalInvoiced: 340000, totalPaid: 220000, lastInvoiceDate: '2026-08-15', paymentTerms: 'Net 30' },
-      recentActivity: [
-        { id: 'a1', actor: 'Jane Smith', action: 'updated', resource: 'Acme Corp profile', resourceType: 'customer', timestamp: '2026-09-05T10:00:00Z', category: 'user' },
-      ],
-    }
+  const response = await fetch(`${API_BASE}/customers/${id}`, { headers: getAuthHeaders() })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to fetch customer')
+  const base = normalizeCustomer(json.data)
+  return {
+    ...base,
+    deals: Array.isArray(json.data?.deals) ? json.data.deals : [],
+    orders: Array.isArray(json.data?.orders) ? json.data.orders : [],
+    billing: json.data?.billing ?? { outstandingBalance: 0, totalInvoiced: 0, totalPaid: 0, lastInvoiceDate: '', paymentTerms: 'Net 30' },
+    recentActivity: Array.isArray(json.data?.recentActivity) ? json.data.recentActivity : [],
   }
 }
 
 export async function createCustomer(data: CustomerCreateInput): Promise<Customer> {
-  try {
-    const response = await fetch(`${API_BASE}/customers`, {
-      method: 'POST', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to create customer')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/customers`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to create customer')
+  return normalizeCustomer(json.data)
 }
 
 export async function updateCustomer(id: string, data: Partial<Customer>): Promise<Customer> {
-  try {
-    const response = await fetch(`${API_BASE}/customers/${id}`, {
-      method: 'PATCH', headers: getAuthHeaders(), body: JSON.stringify(data),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to update customer')
-    return json.data
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/customers/${id}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to update customer')
+  return normalizeCustomer(json.data)
 }
 
 export async function deleteCustomer(id: string): Promise<void> {
-  try {
-    const response = await fetch(`${API_BASE}/customers/${id}`, {
-      method: 'DELETE', headers: getAuthHeaders(),
-    })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-  } catch (err) {
-    throw err
-  }
+  const response = await fetch(`${API_BASE}/customers/${id}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
 }
 
 // ─── Products ─────────────────────────────────────────────
@@ -1112,63 +1131,49 @@ export async function fetchProducts(filters: ProductFilters = {}): Promise<{ pro
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch products')
+    const rawList = Array.isArray(json.data) ? json.data : []
+    const products = rawList.map(normalizeProduct)
     return {
-      products: json.data,
-      total: json.meta?.total || 0,
+      products,
+      total: json.meta?.total ?? products.length,
       page: json.meta?.page || 1,
       perPage: json.meta?.per_page || 25,
       totalPages: json.meta?.total_pages || 1,
     }
-  } catch {
-    return {
-      products: [
-        { id: 'p1', name: 'Enterprise Suite', sku: 'ENT-001', category: 'Software', unitPrice: 5000, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 45, createdAt: '2024-01-20' },
-        { id: 'p2', name: 'Professional Suite', sku: 'PRO-001', category: 'Software', unitPrice: 2500, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 82, createdAt: '2024-01-20' },
-        { id: 'p3', name: 'Starter Pack', sku: 'STR-001', category: 'Software', unitPrice: 500, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 156, createdAt: '2024-01-20' },
-        { id: 'p4', name: 'Premium Support', sku: 'SUP-001', category: 'Services', unitPrice: 12000, currency: 'INR', unit: 'year', status: 'active', stock: 50, lowStockThreshold: 5, hasVariants: false, variantCount: 0, salesCount: 28, createdAt: '2024-02-15' },
-        { id: 'p5', name: 'Onboarding Package', sku: 'OBP-001', category: 'Services', unitPrice: 3000, currency: 'INR', unit: 'package', status: 'active', stock: 20, lowStockThreshold: 5, hasVariants: false, variantCount: 0, salesCount: 67, createdAt: '2024-03-01' },
-        { id: 'p6', name: 'Legacy Module', sku: 'LEG-001', category: 'Software', unitPrice: 800, currency: 'INR', unit: 'license', status: 'discontinued', stock: 0, lowStockThreshold: 0, hasVariants: false, variantCount: 0, salesCount: 12, createdAt: '2024-01-20' },
-      ],
-      total: 6, page: 1, perPage: 25, totalPages: 1,
-    }
+  } catch (err) {
+    console.error('Failed to fetch products:', err)
+    return { products: [], total: 0, page: 1, perPage: 25, totalPages: 1 }
   }
 }
 
 export async function fetchProductKpis(): Promise<ProductKpis> {
   try {
-    const response = await fetch(`${API_BASE}/products?per_page=1`, { headers: getAuthHeaders() })
+    const response = await fetch(`${API_BASE}/products`, { headers: getAuthHeaders() })
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
     const json = await response.json()
     if (!json.success) throw new Error(json.error?.message || 'Failed to fetch product KPIs')
-    return json.data.kpis
-  } catch {
-    return { totalProducts: 6, activeProducts: 5, lowStock: 0, totalValue: 125000 }
+    const list = Array.isArray(json.data) ? json.data : []
+    return {
+      totalProducts: list.length,
+      activeProducts: list.filter((p: any) => p.status === 'active').length,
+      lowStock: list.filter((p: any) => Number(p.stock_quantity ?? p.stock ?? 0) <= Number(p.low_stock_threshold ?? p.lowStockThreshold ?? 10)).length,
+      totalValue: list.reduce((sum: number, p: any) => sum + (Number(p.price || p.unit_price || p.unitPrice || 0) * Number(p.stock_quantity || p.stock || 0)), 0),
+    }
+  } catch (err) {
+    console.error('Failed to fetch product KPIs:', err)
+    return { totalProducts: 0, activeProducts: 0, lowStock: 0, totalValue: 0 }
   }
 }
 
 export async function fetchProductById(id: string): Promise<ProductDetail> {
-  try {
-    const response = await fetch(`${API_BASE}/products/${id}`, { headers: getAuthHeaders() })
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const json = await response.json()
-    if (!json.success) throw new Error(json.error?.message || 'Failed to fetch product')
-    return json.data
-  } catch {
-    return {
-      id, name: 'Enterprise Suite', sku: 'ENT-001', category: 'Software', unitPrice: 5000, currency: 'INR', unit: 'license', status: 'active', stock: 999, lowStockThreshold: 10, hasVariants: false, variantCount: 0, salesCount: 45, createdAt: '2024-01-20',
-      variants: [],
-      priceLists: [
-        { priceListId: 'pl1', priceListName: 'Standard', price: 5000, currency: 'INR' },
-        { priceListId: 'pl2', priceListName: 'Enterprise', price: 4500, currency: 'INR' },
-      ],
-      inventoryHistory: [
-        { id: 'inv1', type: 'in', quantity: 100, date: '2026-08-01', reference: 'Initial stock' },
-      ],
-      recentSales: [
-        { id: 's1', dealName: 'Enterprise License', customerName: 'Acme Corp', quantity: 5, unitPrice: 5000, total: 25000, date: '2026-09-01' },
-        { id: 's2', dealName: 'Cloud Services', customerName: 'GlobalNet', quantity: 10, unitPrice: 4500, total: 45000, date: '2026-08-20' },
-      ],
-    }
+  const response = await fetch(`${API_BASE}/products/${id}`, { headers: getAuthHeaders() })
+  if (!response.ok) throw new Error(`HTTP ${response.status}`)
+  const json = await response.json()
+  if (!json.success) throw new Error(json.error?.message || 'Failed to fetch product')
+  return {
+    ...normalizeProduct(json.data),
+    variants: Array.isArray(json.data?.variants) ? json.data.variants : [],
+    priceLists: Array.isArray(json.data?.priceLists) ? json.data.priceLists : [],
   }
 }
 

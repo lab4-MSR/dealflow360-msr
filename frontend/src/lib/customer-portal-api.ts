@@ -1,11 +1,13 @@
 import { api, type ApiResponse } from '@/lib/api'
 import { getErrorMessage } from '@/lib/errors'
 
-function unwrap<T>(response: ApiResponse<T>, fallback: T): T {
-  if (response && typeof response === 'object' && 'data' in response && 'success' in response) {
-    return (response as ApiResponse<T>).data ?? fallback
+function unwrap<T>(response: any, fallback: T): T {
+  if (!response) return fallback
+  const payload = response?.data !== undefined && response?.status !== undefined ? response.data : response
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return payload.data ?? fallback
   }
-  return (response as unknown as T) ?? fallback
+  return (payload as unknown as T) ?? fallback
 }
 
 async function unwrapOrThrow<T>(call: Promise<any>, fallback: T): Promise<T> {

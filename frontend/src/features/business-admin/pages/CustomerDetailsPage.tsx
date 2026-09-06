@@ -130,7 +130,7 @@ export function CustomerDetailsPage() {
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
               <AvatarFallback className="bg-primary text-primary-foreground text-[18px] font-bold">
-                {customer.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                {(customer.name || 'Account').split(' ').filter(Boolean).map((n) => n[0]).join('').slice(0, 2) || 'AC'}
               </AvatarFallback>
             </Avatar>
             <div>
@@ -244,7 +244,7 @@ export function CustomerDetailsPage() {
                     <div key={contact.id} className="flex items-start gap-4 p-4 rounded-lg border border-border">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className="bg-surface-muted text-foreground text-[12px] font-bold">
-                          {contact.name.split(' ').map((n) => n[0]).join('')}
+                          {(contact.name || 'Contact').split(' ').filter(Boolean).map((n) => n[0]).join('').slice(0, 2) || 'C'}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">

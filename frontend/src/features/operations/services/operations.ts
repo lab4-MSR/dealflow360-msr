@@ -250,38 +250,31 @@ const MOCK_OPERATIONS_ANALYTICS: Record<string, unknown> = {
 export async function getFulfillmentQueue(filters: OperationalFilters = {}): Promise<Paged<FulfillmentRow>> {
   try {
     return paged(await apiClient.get<ApiEnvelope<FulfillmentRow[]>>('/fulfillment/queue', { params: filters }))
-  } catch {
-    let list = [...MOCK_FULFILLMENT_QUEUE]
-    if (filters.search) {
-      const q = filters.search.toLowerCase()
-      list = list.filter(r => r.order_number?.toLowerCase().includes(q) || r.customer?.name?.toLowerCase().includes(q))
-    }
-    return { rows: list, meta: { total: list.length, page: 1, per_page: 20 } as any }
+  } catch (err) {
+    console.error('Failed to get fulfillment queue:', err)
+    return { rows: [], meta: { total: 0, page: 1, per_page: 20 } as any }
   }
 }
 
 export async function getFulfillment(id: string): Promise<FulfillmentRow> {
-  try {
-    return unwrap<FulfillmentRow>(await apiClient.get<ApiEnvelope<FulfillmentRow>>(`/fulfillment/${id}`))
-  } catch {
-    const found = MOCK_FULFILLMENT_QUEUE.find(f => f.id === id || f.order_id === id)
-    return found || MOCK_FULFILLMENT_QUEUE[0]
-  }
+  return unwrap<FulfillmentRow>(await apiClient.get<ApiEnvelope<FulfillmentRow>>(`/fulfillment/${id}`))
 }
 
 export async function getWarehouses(filters: OperationalFilters = {}): Promise<Paged<WarehouseRow>> {
   try {
     return paged(await apiClient.get<ApiEnvelope<WarehouseRow[]>>('/warehouses', { params: filters }))
-  } catch {
-    return { rows: MOCK_WAREHOUSES, meta: { total: MOCK_WAREHOUSES.length, page: 1, per_page: 20 } as any }
+  } catch (err) {
+    console.error('Failed to get warehouses:', err)
+    return { rows: [], meta: { total: 0, page: 1, per_page: 20 } as any }
   }
 }
 
 export async function getWarehouseInventory(warehouseId: string, filters: OperationalFilters = {}): Promise<Paged<InventoryRow>> {
   try {
     return paged(await apiClient.get<ApiEnvelope<InventoryRow[]>>(`/warehouses/${warehouseId}/inventory`, { params: filters }))
-  } catch {
-    return { rows: MOCK_INVENTORY, meta: { total: MOCK_INVENTORY.length, page: 1, per_page: 20 } as any }
+  } catch (err) {
+    console.error('Failed to get warehouse inventory:', err)
+    return { rows: [], meta: { total: 0, page: 1, per_page: 20 } as any }
   }
 }
 
@@ -289,92 +282,60 @@ export async function getStockMovements(warehouseId: string | undefined, filters
   const path = warehouseId ? `/warehouses/${warehouseId}/stock-movements` : '/stock-movements'
   try {
     return paged(await apiClient.get<ApiEnvelope<MovementRow[]>>(path, { params: filters }))
-  } catch {
-    return { rows: MOCK_MOVEMENTS, meta: { total: MOCK_MOVEMENTS.length, page: 1, per_page: 50 } as any }
+  } catch (err) {
+    console.error('Failed to get stock movements:', err)
+    return { rows: [], meta: { total: 0, page: 1, per_page: 50 } as any }
   }
 }
 
 export async function getSuggestedSplit(quotationId: string): Promise<SuggestedSplit> {
-  try {
-    return unwrap<SuggestedSplit>(await apiClient.get<ApiEnvelope<SuggestedSplit>>(`/quotations/${quotationId}/fulfillment/suggested-split`))
-  } catch {
-    return {
-      quotation_id: quotationId,
-      allocations: [
-        { warehouse_id: 'wh-blr-01', warehouse_name: 'Bengaluru Central Distribution Hub', product_id: 'prod-001', quantity: 14 },
-        { warehouse_id: 'wh-bom-01', warehouse_name: 'Mumbai West Logistics Center', product_id: 'prod-001', quantity: 6 },
-      ],
-      estimated_shipment_count: 2,
-      estimated_shipping_cost: 3450,
-      backorder_risk: 'Low (0 units unallocated)',
-      unfulfillable_quantity: 0,
-    }
-  }
+  return unwrap<SuggestedSplit>(await apiClient.get<ApiEnvelope<SuggestedSplit>>(`/quotations/${quotationId}/fulfillment/suggested-split`))
 }
 
 export async function acceptSuggestedSplit(quotationId: string, allocations: SuggestedSplit['allocations']) {
-  try {
-    return unwrap(await apiClient.post<ApiEnvelope<unknown>>(`/quotations/${quotationId}/fulfillment/accept-split`, { allocations }))
-  } catch {
-    return { success: true, message: 'Recommended allocation confirmed and applied.' }
-  }
+  return unwrap(await apiClient.post<ApiEnvelope<unknown>>(`/quotations/${quotationId}/fulfillment/accept-split`, { allocations }))
 }
 
 export async function overrideSplit(quotationId: string, allocations: SuggestedSplit['allocations'], reason: string) {
-  try {
-    return unwrap(await apiClient.post<ApiEnvelope<unknown>>(`/quotations/${quotationId}/fulfillment/override-split`, { allocations, reason }))
-  } catch {
-    return { success: true, message: `Split override applied. Reason: ${reason}` }
-  }
+  return unwrap(await apiClient.post<ApiEnvelope<unknown>>(`/quotations/${quotationId}/fulfillment/override-split`, { allocations, reason }))
 }
 
 export async function getBackorders(filters: OperationalFilters = {}): Promise<Paged<BackorderRow>> {
   try {
     return paged(await apiClient.get<ApiEnvelope<BackorderRow[]>>('/backorders', { params: filters }))
-  } catch {
-    return { rows: MOCK_BACKORDERS, meta: { total: MOCK_BACKORDERS.length, page: 1, per_page: 20 } as any }
+  } catch (err) {
+    console.error('Failed to get backorders:', err)
+    return { rows: [], meta: { total: 0, page: 1, per_page: 20 } as any }
   }
 }
 
 export async function getBackorder(id: string): Promise<BackorderRow> {
-  try {
-    return unwrap<BackorderRow>(await apiClient.get<ApiEnvelope<BackorderRow>>(`/backorders/${id}`))
-  } catch {
-    const found = MOCK_BACKORDERS.find(b => b.id === id)
-    return found || MOCK_BACKORDERS[0]
-  }
+  return unwrap<BackorderRow>(await apiClient.get<ApiEnvelope<BackorderRow>>(`/backorders/${id}`))
 }
 
 export async function consolidateBackorder(id: string) {
-  try {
-    return unwrap(await apiClient.post<ApiEnvelope<unknown>>(`/backorders/${id}/consolidate`))
-  } catch {
-    return { success: true, message: 'Backorder consolidated into pending purchase requisition.' }
-  }
+  return unwrap(await apiClient.post<ApiEnvelope<unknown>>(`/backorders/${id}/consolidate`))
 }
 
 export async function getShipments(filters: OperationalFilters = {}): Promise<Paged<ShipmentRow>> {
   try {
     return paged(await apiClient.get<ApiEnvelope<ShipmentRow[]>>('/shipments', { params: filters }))
-  } catch {
-    return { rows: MOCK_SHIPMENTS, meta: { total: MOCK_SHIPMENTS.length, page: 1, per_page: 20 } as any }
+  } catch (err) {
+    console.error('Failed to get shipments:', err)
+    return { rows: [], meta: { total: 0, page: 1, per_page: 20 } as any }
   }
 }
 
 export async function getShipment(id: string): Promise<ShipmentRow> {
-  try {
-    return unwrap<ShipmentRow>(await apiClient.get<ApiEnvelope<ShipmentRow>>(`/shipments/${id}`))
-  } catch {
-    const found = MOCK_SHIPMENTS.find(s => s.id === id)
-    return found || MOCK_SHIPMENTS[0]
-  }
+  return unwrap<ShipmentRow>(await apiClient.get<ApiEnvelope<ShipmentRow>>(`/shipments/${id}`))
 }
 
 /** Contract §18 documents this aggregate; backend must also grant operations read access. */
 export async function getOperationsAnalytics(filters: OperationalFilters = {}): Promise<Record<string, unknown>> {
   try {
     return unwrap<Record<string, unknown>>(await apiClient.get<ApiEnvelope<Record<string, unknown>>>('/analytics/fulfillment', { params: filters }))
-  } catch {
-    return MOCK_OPERATIONS_ANALYTICS
+  } catch (err) {
+    console.error('Failed to get operations analytics:', err)
+    return {}
   }
 }

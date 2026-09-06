@@ -432,21 +432,34 @@ const MOCK_DELIVERY_SLIPPAGE: DeliverySlippageItem[] = [
   },
 ]
 
+function extractData<T>(res: unknown): T {
+  if (res && typeof res === 'object') {
+    const r = res as Record<string, any>
+    if (r.data && typeof r.data === 'object' && 'data' in r.data && r.data.data !== undefined) {
+      return r.data.data as T
+    }
+    if ('data' in r && r.data !== undefined) {
+      return r.data as T
+    }
+  }
+  return res as T
+}
+
 export const intelligenceService = {
   async getIntelligenceDashboard(): Promise<IntelligenceDashboardData> {
     try {
       const res = await apiClient.get<IntelligenceDashboardData>('/intelligence/dashboard')
-      const data = (res as any)?.data || res
-      if (data && data.kpis) {
+      const data = extractData<any>(res)
+      if (data && (data.kpis || data.summary || data.risk_overview)) {
         return {
           ...data,
-          active_insights_count: data.active_insights_count ?? data.recent_insights?.length ?? 4,
-          high_risk_deals_count: data.high_risk_deals_count ?? data.kpis?.high_risk_deals ?? 4,
-          high_risk_pipeline_value: data.high_risk_pipeline_value ?? 7525000,
-          identified_revenue_uplift: data.identified_revenue_uplift ?? data.recommendation_overview?.expected_revenue_impact ?? 672500,
-          stalled_deals_count: data.stalled_deals_count ?? data.deal_health?.stalled ?? 3,
-          stalled_pipeline_value: data.stalled_pipeline_value ?? 4220000,
-          active_anomalies_count: data.active_anomalies_count ?? data.kpis?.deal_anomalies ?? 5,
+          active_insights_count: data.active_insights_count ?? data.recent_insights?.length ?? 0,
+          high_risk_deals_count: data.high_risk_deals_count ?? data.kpis?.high_risk_deals ?? 0,
+          high_risk_pipeline_value: data.high_risk_pipeline_value ?? 0,
+          identified_revenue_uplift: data.identified_revenue_uplift ?? data.recommendation_overview?.expected_revenue_impact ?? 0,
+          stalled_deals_count: data.stalled_deals_count ?? data.deal_health?.stalled ?? 0,
+          stalled_pipeline_value: data.stalled_pipeline_value ?? 0,
+          active_anomalies_count: data.active_anomalies_count ?? data.kpis?.deal_anomalies ?? 0,
         }
       }
     } catch {
@@ -499,28 +512,23 @@ export const intelligenceService = {
   async getRiskOverview(): Promise<RiskOverviewData> {
     try {
       const res = await apiClient.get<RiskOverviewData>('/risk/overview')
-      const data = (res as any)?.data || res
-      if (data && data.kpis) {
+      const data = extractData<any>(res)
+      if (data && (data.kpis || data.distribution)) {
         return {
           ...data,
-          total_deals_assessed: data.total_deals_assessed ?? data.kpis?.total_deals ?? 34,
-          average_risk_score: data.average_risk_score ?? 42,
-          high_risk_deals: data.high_risk_deals ?? data.kpis?.high_risk ?? 3,
-          critical_risk_deals: data.critical_risk_deals ?? data.kpis?.critical_risk ?? 1,
-          margin_at_risk: data.margin_at_risk ?? 420000,
+          total_deals_assessed: data.total_deals_assessed ?? data.kpis?.total_deals ?? 0,
+          average_risk_score: data.average_risk_score ?? 0,
+          high_risk_deals: data.high_risk_deals ?? data.kpis?.high_risk ?? 0,
+          critical_risk_deals: data.critical_risk_deals ?? data.kpis?.critical_risk ?? 0,
+          margin_at_risk: data.margin_at_risk ?? 0,
           distribution: {
             ...data.distribution,
-            low: data.distribution?.low ?? data.kpis?.low_risk ?? 18,
-            medium: data.distribution?.medium ?? data.kpis?.medium_risk ?? 12,
-            high: data.distribution?.high ?? data.kpis?.high_risk ?? 3,
-            critical: data.distribution?.critical ?? data.kpis?.critical_risk ?? 1,
+            low: data.distribution?.low ?? data.kpis?.low_risk ?? 0,
+            medium: data.distribution?.medium ?? data.kpis?.medium_risk ?? 0,
+            high: data.distribution?.high ?? data.kpis?.high_risk ?? 0,
+            critical: data.distribution?.critical ?? data.kpis?.critical_risk ?? 0,
           },
-          risk_factors: data.risk_factors || [
-            { factor: 'Cloud Services Ceiling Breach', impacted_deals: 4, average_impact: 18.5 },
-            { factor: 'Gross Margin Under 25%', impacted_deals: 3, average_impact: 22.0 },
-            { factor: 'Multiple Small Line Discount Accumulation', impacted_deals: 5, average_impact: 14.2 },
-            { factor: 'Credit Exposure Limit Approaching', impacted_deals: 2, average_impact: 11.0 },
-          ],
+          risk_factors: data.risk_factors || [],
         }
       }
     } catch {}
@@ -612,8 +620,10 @@ export const intelligenceService = {
 
   async getHighRiskDeals(filters?: Record<string, string>): Promise<HighRiskDealItem[]> {
     try {
-      const res = await apiClient.get<HighRiskDealItem[]>('/risk/high-risk-deals', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<HighRiskDealItem[]>('/risk/high-risk-deals', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.deals) ? data.deals : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_HIGH_RISK_DEALS]
     if (filters?.risk_level && filters.risk_level !== 'all') {
@@ -629,7 +639,7 @@ export const intelligenceService = {
   async getRiskDetails(id: string): Promise<RiskDetailRecord> {
     try {
       const res = await apiClient.get<RiskDetailRecord>(`/risk/${id}`)
-      const data = (res as any)?.data || res
+      const data = extractData<any>(res)
       if (data && data.risk_score !== undefined) return data
     } catch {}
     return {
@@ -723,8 +733,10 @@ export const intelligenceService = {
 
   async getUpsellRecommendations(filters?: Record<string, string>): Promise<RecommendationItem[]> {
     try {
-      const res = await apiClient.get<RecommendationItem[]>('/recommendations/upsell', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<RecommendationItem[]>('/recommendations/upsell', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.recommendations) ? data.recommendations : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_UPSELL]
     if (filters?.search) {
@@ -736,8 +748,10 @@ export const intelligenceService = {
 
   async getCrossSellRecommendations(filters?: Record<string, string>): Promise<RecommendationItem[]> {
     try {
-      const res = await apiClient.get<RecommendationItem[]>('/recommendations/cross-sell', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<RecommendationItem[]>('/recommendations/cross-sell', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.recommendations) ? data.recommendations : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_CROSS_SELL]
     if (filters?.search) {
@@ -750,8 +764,8 @@ export const intelligenceService = {
   async getRecommendationDetails(id: string): Promise<RecommendationDetailRecord> {
     try {
       const res = await apiClient.get<RecommendationDetailRecord>(`/recommendations/${id}`)
-      const data = (res as any)?.data || res
-      if (data && data.why_recommended) return data
+      const data = extractData<any>(res)
+      if (data && (data.why_recommended || data.id)) return data
     } catch {}
     const base = [...MOCK_UPSELL, ...MOCK_CROSS_SELL].find(r => r.id === id) || MOCK_UPSELL[0]
     return {
@@ -787,7 +801,7 @@ export const intelligenceService = {
   async applyRecommendation(recommendationId: string, dealId: string): Promise<{ success: boolean; message: string }> {
     try {
       const res = await apiClient.post<{ success: boolean; message: string }>(`/recommendations/${recommendationId}/apply`, { deal_id: dealId })
-      return (res as any)?.data || res
+      return extractData<any>(res)
     } catch {
       return { success: true, message: 'Recommended product line added to deal quotation and pricing re-evaluated.' }
     }
@@ -805,19 +819,19 @@ export const intelligenceService = {
     }
     try {
       const res = await apiClient.get<DealHealthOverviewData>('/deal-health/overview')
-      const data = (res as any)?.data || res
-      if (data && data.kpis) {
+      const data = extractData<any>(res)
+      if (data && (data.kpis || data.breakdown || data.health_score_breakdown)) {
         const bd = data.breakdown || data.health_score_breakdown || defaultBreakdown
         return {
           ...data,
           breakdown: bd,
           health_score_breakdown: bd,
           average_health_score: data.average_health_score ?? bd.overall_health ?? 74,
-          healthy_deals: data.healthy_deals ?? data.kpis?.healthy ?? 22,
-          at_risk_deals: data.at_risk_deals ?? data.kpis?.at_risk ?? 7,
-          stalled_deals: data.stalled_deals ?? data.kpis?.stalled ?? 3,
-          critical_deals: data.critical_deals ?? data.kpis?.critical ?? 2,
-          critical_pipeline_value: data.critical_pipeline_value ?? 3270000,
+          healthy_deals: data.healthy_deals ?? data.kpis?.healthy ?? 0,
+          at_risk_deals: data.at_risk_deals ?? data.kpis?.at_risk ?? 0,
+          stalled_deals: data.stalled_deals ?? data.kpis?.stalled ?? 0,
+          critical_deals: data.critical_deals ?? data.kpis?.critical ?? 0,
+          critical_pipeline_value: data.critical_pipeline_value ?? 0,
         }
       }
     } catch {}
@@ -894,8 +908,10 @@ export const intelligenceService = {
 
   async getStalledDeals(filters?: Record<string, string>): Promise<StalledDealItem[]> {
     try {
-      const res = await apiClient.get<StalledDealItem[]>('/deal-health/stalled-deals', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<StalledDealItem[]>('/deal-health/stalled-deals', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.deals) ? data.deals : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_STALLED_DEALS]
     if (filters?.stage && filters.stage !== 'all') {
@@ -910,8 +926,10 @@ export const intelligenceService = {
 
   async getDiscountAnomalies(filters?: Record<string, string>): Promise<DiscountAnomalyItem[]> {
     try {
-      const res = await apiClient.get<DiscountAnomalyItem[]>('/deal-health/discount-anomalies', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<DiscountAnomalyItem[]>('/deal-health/discount-anomalies', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.anomalies) ? data.anomalies : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_DISCOUNT_ANOMALIES]
     if (filters?.severity && filters.severity !== 'all') {
@@ -940,8 +958,10 @@ export const intelligenceService = {
 
   async getDeliverySlippage(filters?: Record<string, string>): Promise<DeliverySlippageItem[]> {
     try {
-      const res = await apiClient.get<DeliverySlippageItem[]>('/deal-health/delivery-slippage', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<DeliverySlippageItem[]>('/deal-health/delivery-slippage', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.slippages) ? data.slippages : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_DELIVERY_SLIPPAGE]
     if (filters?.warehouse && filters.warehouse !== 'all') {
@@ -956,8 +976,10 @@ export const intelligenceService = {
 
   async getDecisionInsights(filters?: Record<string, string>): Promise<DecisionInsightItem[]> {
     try {
-      const res = await apiClient.get<DecisionInsightItem[]>('/insights', filters)
-      if (Array.isArray(res)) return res
+      const res = await apiClient.get<DecisionInsightItem[]>('/insights', { params: filters })
+      const data = extractData<any>(res)
+      const list = Array.isArray(data) ? data : Array.isArray(data?.insights) ? data.insights : []
+      if (list.length > 0 || data) return list
     } catch {}
     let list = [...MOCK_INSIGHTS]
     if (filters?.category && filters.category !== 'all') {
