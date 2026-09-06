@@ -178,7 +178,7 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
     .toUpperCase() || 'DF'
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 sm:gap-4 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-6 lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 sm:gap-4 border-b border-border/70 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xs sm:px-6 lg:px-6">
       {/* Left: Mobile Trigger & Breadcrumb */}
       <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink-0">
         <button

@@ -98,7 +98,7 @@ export function CustomerPortalLayout() {
     .toUpperCase() || 'CU'
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* ─── MOBILE DRAWER OVERLAY ─── */}
       {mobileMenuOpen && (
         <div
@@ -236,8 +236,7 @@ export function CustomerPortalLayout() {
 
       {/* ─── MAIN CONTENT AREA (Offset by Sidebar Width) ─── */}
       <div className={cn('transition-all duration-200 flex flex-col min-h-screen', sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-[260px]')}>
-        {/* Topbar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/80 bg-background/90 px-4 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/80 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile Drawer Trigger */}
             <button
