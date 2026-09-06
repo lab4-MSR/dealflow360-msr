@@ -47,12 +47,29 @@ export function SecuritySection({
 
       {/* Active Sessions */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Radio className="h-4 w-4 text-primary" aria-hidden />
-            Active Sessions
-          </CardTitle>
-          <CardDescription>Devices currently signed in to your account.</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <Radio className="h-4 w-4 text-primary" aria-hidden />
+              Active Sessions
+            </CardTitle>
+            <CardDescription>Devices currently signed in to your account.</CardDescription>
+          </div>
+          {sessions.filter(s => !s.current && !s.is_current).length > 0 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                const others = sessions.filter(s => !s.current && !s.is_current)
+                for (const sess of others) {
+                  await onRevokeSession(sess.id)
+                }
+              }}
+              className="text-xs text-danger hover:bg-danger/10 cursor-pointer"
+            >
+              Terminate Other Sessions
+            </Button>
+          )}
         </CardHeader>
         <CardContent>
           {sessionsLoading ? (

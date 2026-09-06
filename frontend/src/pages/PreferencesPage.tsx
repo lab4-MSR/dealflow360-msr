@@ -124,8 +124,19 @@ export function PreferencesPage() {
       />
 
       <div className="flex items-center gap-2">
-        <Button onClick={handleSave} loading={saveMutation.isPending}>
+        <Button onClick={handleSave} loading={saveMutation.isPending} className="cursor-pointer">
           Save Preferences
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setPrefs(DEFAULT_PREFS)
+            setTheme('system')
+            toast.info('Preferences reset to default configuration')
+          }}
+          className="cursor-pointer"
+        >
+          Reset to Defaults
         </Button>
         {saveMutation.isError && (
           <span className="text-body-small text-danger" role="alert">

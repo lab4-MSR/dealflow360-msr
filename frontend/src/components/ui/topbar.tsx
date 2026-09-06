@@ -60,6 +60,23 @@ function getActiveSidebarFeature(pathname: string): ActiveNavFeature | null {
     return { feature: 'Platform Dashboard', featurePath: '/platform/dashboard', subFeature: 'Deal Details' }
   }
 
+  // Shared workspace routes
+  if (pathname === '/profile') {
+    return { feature: 'Profile Details', featurePath: '/profile' }
+  }
+  if (pathname === '/preferences') {
+    return { feature: 'Preferences', featurePath: '/preferences' }
+  }
+  if (pathname === '/settings') {
+    return { feature: 'Settings', featurePath: '/settings' }
+  }
+  if (pathname === '/notifications') {
+    return { feature: 'Notification Center', featurePath: '/notifications' }
+  }
+  if (pathname === '/help') {
+    return { feature: 'Help Center', featurePath: '/help' }
+  }
+
   // 2. Generic SIDEBAR_NAV search
   const allNavItems = SIDEBAR_NAV.flatMap((section) => section.items)
 
@@ -81,6 +98,10 @@ function getActiveSidebarFeature(pathname: string): ActiveNavFeature | null {
   // Root or /dashboard
   if (pathname === '/' || pathname === '/dashboard') {
     return { feature: 'Sales Dashboard', featurePath: '/dashboard' }
+  }
+
+  if (pathname.startsWith('/platform')) {
+    return { feature: 'Platform Dashboard', featurePath: '/platform/dashboard' }
   }
 
   return null
@@ -144,6 +165,10 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
   const isSuperAdminPage = location.pathname.startsWith('/platform') || user?.role === 'super_admin'
   const effectiveRole = isSuperAdminPage ? 'Super Admin' : displayRole
   const activeFeature = getActiveSidebarFeature(location.pathname)
+  const defaultFeature = isSuperAdminPage
+    ? { feature: 'Platform Dashboard', featurePath: '/platform/dashboard' }
+    : { feature: 'Sales Dashboard', featurePath: '/dashboard' }
+  const resolvedFeature = activeFeature || defaultFeature
   const initials = displayName
     .split(' ')
     .filter(Boolean)
@@ -164,35 +189,30 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Breadcrumb / Organization Title & Selected Feature */}
+      {/* Breadcrumb: [Feature Name] / [Role] (e.g. Platform Dashboard / Super Admin) */}
       <div className="flex items-center gap-1.5 sm:gap-2 text-small text-muted-foreground min-w-0">
-        <span className="text-foreground font-medium truncate hidden md:inline">
-          {user?.business_name || 'DealFlow360'}
-        </span>
-        <span className="text-muted-foreground/60 shrink-0 hidden md:inline">/</span>
-        <span className="text-xs capitalize font-medium text-muted-foreground shrink-0">
-          {effectiveRole}
-        </span>
-        {activeFeature && (
+        <Link
+          to={resolvedFeature.featurePath}
+          className="text-foreground font-semibold hover:text-primary transition-colors truncate text-xs sm:text-sm"
+          title={resolvedFeature.feature}
+        >
+          {resolvedFeature.feature}
+        </Link>
+        {resolvedFeature.subFeature && (
           <>
             <span className="text-muted-foreground/60 shrink-0">/</span>
-            <Link
-              to={activeFeature.featurePath}
-              className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 transition-colors shrink-0 max-w-[140px] sm:max-w-[200px] truncate"
-              title={activeFeature.feature}
+            <span
+              className="text-xs font-medium text-foreground/80 truncate max-w-[120px] sm:max-w-[180px]"
+              title={resolvedFeature.subFeature}
             >
-              {activeFeature.feature}
-            </Link>
-          </>
-        )}
-        {activeFeature?.subFeature && (
-          <>
-            <span className="text-muted-foreground/60 shrink-0 hidden lg:inline">/</span>
-            <span className="text-xs font-medium text-foreground truncate hidden lg:inline max-w-[160px]" title={activeFeature.subFeature}>
-              {activeFeature.subFeature}
+              {resolvedFeature.subFeature}
             </span>
           </>
         )}
+        <span className="text-muted-foreground/60 shrink-0">/</span>
+        <span className="text-xs capitalize font-medium text-muted-foreground shrink-0">
+          {effectiveRole}
+        </span>
       </div>
 
       {/* Spacer */}

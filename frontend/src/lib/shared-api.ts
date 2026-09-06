@@ -82,27 +82,76 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   },
 ]
 
-const MOCK_PROFILE: UserProfile = {
-  id: 'usr-current',
-  user_id: 'usr-current',
-  full_name: 'Shubham Kumar',
-  email: 'shubhamkumar997800@gmail.com',
-  role: 'super_admin',
-  department: 'Enterprise Sales & Operations',
-  phone: '+91 98765 43210',
-  timezone: 'Asia/Kolkata',
-  avatar_url: '',
-  created_at: '2026-01-15T00:00:00Z',
-  login_activity: [
-    { id: 'log-1', ip_address: '103.21.124.8', user_agent: 'Chrome on Windows', timestamp: new Date().toISOString(), status: 'success' },
-  ],
+function getStoredProfile(): UserProfile {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('dealflow360_user_profile') : null
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (parsed && parsed.full_name) return parsed
+    }
+  } catch {}
+
+  let email = 'admin@dealflow360.com'
+  let name = 'Platform Admin'
+  let role: UserRole = 'super_admin'
+  let business = 'DealFlow360 Platform'
+  try {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('dealflow360-access-token') : null
+    if (token?.startsWith('demo-mock-access-token:')) {
+      email = token.replace('demo-mock-access-token:', '')
+      if (email.includes('acme')) {
+        name = email.startsWith('admin') ? 'Sarah Johnson' : 'John Doe'
+        role = email.startsWith('admin') ? 'business_admin' : 'sales_rep'
+        business = 'Acme Enterprise Solutions'
+      }
+    }
+  } catch {}
+
+  return {
+    id: 'usr-current',
+    user_id: 'usr-current',
+    full_name: name,
+    email: email,
+    role: role,
+    department: 'Platform Governance & Operations',
+    phone: '+1 (555) 234-5678',
+    timezone: 'Asia/Kolkata',
+    avatar_url: '',
+    business_name: business,
+    account_status: 'active',
+    created_at: '2026-01-15T00:00:00Z',
+    permissions: ['all_permissions', 'manage_workspace', 'manage_users', 'manage_billing', 'system_diagnostics'],
+    login_activity: [
+      { id: 'log-1', ip_address: '103.21.124.8', user_agent: 'Chrome on Windows 11', timestamp: new Date().toISOString(), status: 'success', location: 'Bengaluru, India' },
+      { id: 'log-2', ip_address: '103.21.124.8', user_agent: 'Chrome on Windows 11', timestamp: new Date(Date.now() - 86400000).toISOString(), status: 'success', location: 'Bengaluru, India' },
+      { id: 'log-3', ip_address: '103.21.124.8', user_agent: 'Firefox on macOS', timestamp: new Date(Date.now() - 172800000).toISOString(), status: 'success', location: 'Bengaluru, India' },
+    ],
+  }
 }
 
-const MOCK_SESSIONS: ActiveSession[] = [
-  { id: 'sess-1', device: 'Chrome on Windows 11', ip_address: '103.21.124.8', last_active: new Date().toISOString(), is_current: true },
+const INITIAL_SESSIONS: ActiveSession[] = [
+  { id: 'sess-1', device: 'Chrome on Windows 11', browser: 'Chrome 128.0', ip_address: '103.21.124.8', location: 'Bengaluru, India', last_active: new Date().toISOString(), is_current: true, current: true },
+  { id: 'sess-2', device: 'Safari on iPhone 15 Pro', browser: 'Safari Mobile 18.0', ip_address: '103.21.124.9', location: 'Bengaluru, India', last_active: new Date(Date.now() - 7200000).toISOString(), is_current: false, current: false },
+  { id: 'sess-3', device: 'Edge on Windows 11', browser: 'Edge 128.0', ip_address: '49.37.112.4', location: 'Mumbai, India', last_active: new Date(Date.now() - 86400000).toISOString(), is_current: false, current: false },
 ]
 
-const MOCK_PREFERENCES: UserPreferences = {
+function getStoredSessions(): ActiveSession[] {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('dealflow360_sessions') : null
+    if (raw) return JSON.parse(raw)
+  } catch {}
+  return INITIAL_SESSIONS
+}
+
+function saveStoredSessions(sessions: ActiveSession[]) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('dealflow360_sessions', JSON.stringify(sessions))
+    }
+  } catch {}
+}
+
+const DEFAULT_PREFERENCES: UserPreferences = {
   theme: 'system',
   density: 'comfortable',
   language: 'en',
@@ -110,6 +159,22 @@ const MOCK_PREFERENCES: UserPreferences = {
   currency: 'INR',
   date_format: 'dd/MM/yyyy',
   notifications: { email: true, in_app: true, approval: true, deal: true, billing: true },
+}
+
+function getStoredPreferences(): UserPreferences {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('dealflow360_preferences') : null
+    if (raw) return { ...DEFAULT_PREFERENCES, ...JSON.parse(raw) }
+  } catch {}
+  return DEFAULT_PREFERENCES
+}
+
+function saveStoredPreferences(prefs: UserPreferences) {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('dealflow360_preferences', JSON.stringify(prefs))
+    }
+  } catch {}
 }
 
 const MOCK_HELP_ARTICLES: HelpArticle[] = [
@@ -143,8 +208,8 @@ const MOCK_HELP_ARTICLES: HelpArticle[] = [
 ]
 
 const MOCK_ORG_SETTINGS: OrgSettings = {
-  name: 'DealFlow360 Enterprise',
-  domain: 'dealflow360.internal',
+  name: 'DealFlow360 Platform',
+  domain: 'dealflow360.com',
   fiscal_year_start: 'April',
   default_currency: 'INR',
 }
@@ -158,9 +223,17 @@ const MOCK_ORG_LOCALIZATION: OrgLocalization = {
 }
 
 const MOCK_ORG_GENERAL: OrgGeneralSettings = {
-  company_name: 'DealFlow360 Enterprise Solutions',
-  support_email: 'support@dealflow360.internal',
-  compliance_tier: 'Enterprise ISO-27001',
+  company_name: 'DealFlow360 Platform',
+  support_email: 'admin@dealflow360.com',
+  compliance_tier: 'Enterprise ISO-27001 / SOC-2 Type II',
+}
+
+function getStoredOrgSettings(): OrgSettings {
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('dealflow360_org_settings') : null
+    if (raw) return { ...MOCK_ORG_SETTINGS, ...JSON.parse(raw) }
+  } catch {}
+  return MOCK_ORG_SETTINGS
 }
 
 /**
@@ -188,13 +261,21 @@ export const sharedApi = {
   /* Profile (10.4) */
   profile: (): Promise<UserProfile> =>
     api.get<ApiResponse<UserProfile>>('/me/profile')
-      .then((r) => unwrap<UserProfile>(r, MOCK_PROFILE))
-      .catch(() => MOCK_PROFILE),
+      .then((r) => unwrap<UserProfile>(r, getStoredProfile()))
+      .catch(() => getStoredProfile()),
 
   updateProfile: (payload: UpdateProfilePayload): Promise<UserProfile> =>
     api.patch<ApiResponse<UserProfile>>('/me/profile', payload)
-      .then((r) => unwrap<UserProfile>(r, { ...MOCK_PROFILE, ...payload }))
-      .catch(() => ({ ...MOCK_PROFILE, ...payload })),
+      .then((r) => {
+        const updated = unwrap<UserProfile>(r, { ...getStoredProfile(), ...payload })
+        try { localStorage.setItem('dealflow360_user_profile', JSON.stringify(updated)) } catch {}
+        return updated
+      })
+      .catch(() => {
+        const updated = { ...getStoredProfile(), ...payload }
+        try { localStorage.setItem('dealflow360_user_profile', JSON.stringify(updated)) } catch {}
+        return updated
+      }),
 
   changePassword: (payload: ChangePasswordPayload): Promise<null> =>
     api.post<ApiResponse<null>>('/me/change-password', payload)
@@ -203,32 +284,54 @@ export const sharedApi = {
 
   sessions: (): Promise<ActiveSession[]> =>
     api.get<ApiResponse<ActiveSession[]>>('/me/sessions')
-      .then((r) => unwrap(r, MOCK_SESSIONS))
-      .catch(() => MOCK_SESSIONS),
+      .then((r) => unwrap(r, getStoredSessions()))
+      .catch(() => getStoredSessions()),
 
   revokeSession: (id: string): Promise<null> =>
     api.delete<ApiResponse<null>>(`/me/sessions/${id}`)
-      .then((r) => unwrap(r, null))
-      .catch(() => null),
+      .then((r) => {
+        const filtered = getStoredSessions().filter(s => s.id !== id)
+        saveStoredSessions(filtered)
+        return unwrap(r, null)
+      })
+      .catch(() => {
+        const filtered = getStoredSessions().filter(s => s.id !== id)
+        saveStoredSessions(filtered)
+        return null
+      }),
+
+  revokeAllOtherSessions: (): Promise<null> => {
+    const remaining = getStoredSessions().filter(s => s.is_current || s.current)
+    saveStoredSessions(remaining)
+    return Promise.resolve(null)
+  },
 
   loginActivity: (): Promise<LoginActivity[]> =>
     api.get<ApiResponse<UserProfile>>('/me/profile')
       .then((r) => {
-        const profile = unwrap<UserProfile>(r, MOCK_PROFILE)
-        return profile.login_activity ?? MOCK_PROFILE.login_activity ?? []
+        const profile = unwrap<UserProfile>(r, getStoredProfile())
+        return profile.login_activity ?? getStoredProfile().login_activity ?? []
       })
-      .catch(() => MOCK_PROFILE.login_activity ?? []),
+      .catch(() => getStoredProfile().login_activity ?? []),
 
   /* Preferences (10.5) */
   preferences: (): Promise<UserPreferences> =>
     api.get<ApiResponse<UserPreferences>>('/me/preferences')
-      .then((r) => unwrap<UserPreferences>(r, MOCK_PREFERENCES))
-      .catch(() => MOCK_PREFERENCES),
+      .then((r) => unwrap<UserPreferences>(r, getStoredPreferences()))
+      .catch(() => getStoredPreferences()),
 
   updatePreferences: (payload: Partial<UserPreferences>): Promise<UserPreferences> =>
     api.patch<ApiResponse<UserPreferences>>('/me/preferences', payload)
-      .then((r) => unwrap<UserPreferences>(r, { ...MOCK_PREFERENCES, ...payload }))
-      .catch(() => ({ ...MOCK_PREFERENCES, ...payload })),
+      .then((r) => {
+        const next = unwrap<UserPreferences>(r, { ...getStoredPreferences(), ...payload })
+        saveStoredPreferences(next)
+        return next
+      })
+      .catch(() => {
+        const next = { ...getStoredPreferences(), ...payload }
+        saveStoredPreferences(next)
+        return next
+      }),
 
   /* Help Center (10.6) */
   helpArticles: (): Promise<HelpArticle[]> =>
@@ -281,13 +384,21 @@ export const sharedApi = {
   /* Shared Settings (10.7) */
   orgSettings: (): Promise<OrgSettings> =>
     api.get<ApiResponse<OrgSettings>>('/org/settings')
-      .then((r) => unwrap<OrgSettings>(r, MOCK_ORG_SETTINGS))
-      .catch(() => MOCK_ORG_SETTINGS),
+      .then((r) => unwrap<OrgSettings>(r, getStoredOrgSettings()))
+      .catch(() => getStoredOrgSettings()),
 
   updateOrgSettings: (payload: Partial<OrgSettings>): Promise<OrgSettings> =>
     api.patch<ApiResponse<OrgSettings>>('/org/settings', payload)
-      .then((r) => unwrap<OrgSettings>(r, { ...MOCK_ORG_SETTINGS, ...payload }))
-      .catch(() => ({ ...MOCK_ORG_SETTINGS, ...payload })),
+      .then((r) => {
+        const next = unwrap<OrgSettings>(r, { ...getStoredOrgSettings(), ...payload })
+        try { localStorage.setItem('dealflow360_org_settings', JSON.stringify(next)) } catch {}
+        return next
+      })
+      .catch(() => {
+        const next = { ...getStoredOrgSettings(), ...payload }
+        try { localStorage.setItem('dealflow360_org_settings', JSON.stringify(next)) } catch {}
+        return next
+      }),
 
   orgLocalization: (): Promise<OrgLocalization> =>
     api.get<ApiResponse<OrgLocalization>>('/org/localization')
