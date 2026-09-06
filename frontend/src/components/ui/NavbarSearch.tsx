@@ -209,7 +209,7 @@ export function NavbarSearch() {
   }
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="relative w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl" ref={containerRef}>
       {/* Desktop Search Bar */}
       <div
         onClick={() => {
@@ -217,12 +217,12 @@ export function NavbarSearch() {
           inputRef.current?.focus()
         }}
         className={cn(
-          'hidden md:flex items-center gap-2 h-9 w-64 lg:w-80 rounded-lg border border-border bg-card/60 px-3 text-xs text-muted-foreground transition-all duration-150 cursor-text',
+          'hidden md:flex items-center gap-2.5 h-11 w-full rounded-xl border border-border/80 bg-card/70 px-3.5 sm:px-4 text-sm sm:text-base text-muted-foreground transition-all duration-150 cursor-text shadow-xs',
           'hover:bg-accent/40 hover:border-border-strong',
-          isOpen && 'border-primary/50 ring-2 ring-primary/20 bg-card'
+          isOpen && 'border-primary/50 ring-2 ring-primary/25 bg-card shadow-sm'
         )}
       >
-        <Search className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+        <Search className="h-4.5 w-4.5 shrink-0 text-muted-foreground" />
         <input
           ref={inputRef}
           type="text"
@@ -234,7 +234,7 @@ export function NavbarSearch() {
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search deals, quotes, pages..."
-          className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
+          className="w-full bg-transparent text-sm sm:text-base font-medium text-foreground placeholder:text-muted-foreground/60 placeholder:text-sm sm:placeholder:text-base placeholder:font-normal focus:outline-none"
         />
         {query ? (
           <button
@@ -244,12 +244,12 @@ export function NavbarSearch() {
               setQuery('')
               inputRef.current?.focus()
             }}
-            className="p-0.5 hover:bg-muted rounded text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
+            className="p-1 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground cursor-pointer shrink-0"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         ) : (
-          <kbd className="pointer-events-none hidden h-5 select-none items-center gap-0.5 rounded border border-border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground lg:flex shrink-0">
+          <kbd className="pointer-events-none hidden h-6 select-none items-center gap-1 rounded-md border border-border bg-muted px-2 text-xs font-semibold text-muted-foreground lg:flex shrink-0">
             <span>Ctrl</span>
             <span>K</span>
           </kbd>
@@ -265,15 +265,15 @@ export function NavbarSearch() {
           setTimeout(() => mobileInputRef.current?.focus(), 50)
         }}
         aria-label="Search"
-        className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors cursor-pointer"
+        className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-border text-muted-foreground hover:bg-accent hover:text-foreground transition-colors cursor-pointer"
       >
-        <Search className="h-4 w-4" />
+        <Search className="h-4.5 w-4.5" />
       </button>
 
       {/* Mobile Full-width Expanded Overlay */}
       {mobileExpanded && (
-        <div className="fixed inset-x-0 top-0 h-16 bg-background border-b border-border z-50 flex items-center px-4 gap-2 md:hidden">
-          <Search className="h-4 w-4 text-muted-foreground shrink-0" />
+        <div className="fixed inset-x-0 top-0 h-16 bg-background border-b border-border z-50 flex items-center px-4 gap-3 md:hidden">
+          <Search className="h-5 w-5 text-muted-foreground shrink-0" />
           <input
             ref={mobileInputRef}
             type="text"
@@ -281,7 +281,7 @@ export function NavbarSearch() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Search deals, quotes, pages..."
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            className="flex-1 bg-transparent text-base font-medium text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
           {query && (
             <button
@@ -310,7 +310,7 @@ export function NavbarSearch() {
         <div
           role="dialog"
           aria-label="Search results"
-          className="absolute left-0 sm:left-auto sm:right-0 md:left-0 mt-2 w-[calc(100vw-2rem)] sm:w-[480px] md:w-[520px] rounded-2xl border border-border bg-card shadow-elevation-3 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150 ease-out origin-top-left motion-reduce:animate-none"
+          className="absolute left-1/2 -translate-x-1/2 mt-2 w-[calc(100vw-2rem)] sm:w-[520px] md:w-[600px] rounded-2xl border border-border bg-card shadow-elevation-3 z-50 overflow-hidden animate-in fade-in-0 zoom-in-95 duration-150 ease-out origin-top motion-reduce:animate-none"
         >
           {/* Scope Filter Tabs */}
           <div className="flex items-center gap-1.5 px-3 py-2 border-b border-border/60 bg-muted/40 overflow-x-auto scrollbar-none">

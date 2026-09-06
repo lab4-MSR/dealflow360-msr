@@ -178,50 +178,52 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
     .toUpperCase() || 'DF'
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-6 lg:px-6">
-      {/* Mobile Menu Trigger Button */}
-      <button
-        type="button"
-        onClick={onOpenMobileMenu}
-        className="lg:hidden flex items-center justify-center h-9 w-9 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer shrink-0"
-        aria-label="Open navigation menu"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
-
-      {/* Breadcrumb: [Feature Name] / [Role] (e.g. Platform Dashboard / Super Admin) */}
-      <div className="flex items-center gap-1.5 sm:gap-2 text-small text-muted-foreground min-w-0">
-        <Link
-          to={resolvedFeature.featurePath}
-          className="text-foreground font-semibold hover:text-primary transition-colors truncate text-xs sm:text-sm"
-          title={resolvedFeature.feature}
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-2 sm:gap-4 border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-6 lg:px-6">
+      {/* Left: Mobile Trigger & Breadcrumb */}
+      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink-0">
+        <button
+          type="button"
+          onClick={onOpenMobileMenu}
+          className="lg:hidden flex items-center justify-center h-9 w-9 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-accent transition-colors cursor-pointer shrink-0"
+          aria-label="Open navigation menu"
         >
-          {resolvedFeature.feature}
-        </Link>
-        {resolvedFeature.subFeature && (
-          <>
-            <span className="text-muted-foreground/60 shrink-0">/</span>
-            <span
-              className="text-xs font-medium text-foreground/80 truncate max-w-[120px] sm:max-w-[180px]"
-              title={resolvedFeature.subFeature}
-            >
-              {resolvedFeature.subFeature}
-            </span>
-          </>
-        )}
-        <span className="text-muted-foreground/60 shrink-0">/</span>
-        <span className="text-xs capitalize font-medium text-muted-foreground shrink-0">
-          {effectiveRole}
-        </span>
+          <Menu className="h-5 w-5" />
+        </button>
+
+        {/* Breadcrumb: [Feature Name] / [Role] (e.g. Platform Dashboard / Super Admin) */}
+        <div className="flex items-center gap-1.5 sm:gap-2 text-small text-muted-foreground min-w-0">
+          <Link
+            to={resolvedFeature.featurePath}
+            className="text-foreground font-semibold hover:text-primary transition-colors truncate text-xs sm:text-sm"
+            title={resolvedFeature.feature}
+          >
+            {resolvedFeature.feature}
+          </Link>
+          {resolvedFeature.subFeature && (
+            <>
+              <span className="text-muted-foreground/60 shrink-0">/</span>
+              <span
+                className="text-xs font-medium text-foreground/80 truncate max-w-[90px] sm:max-w-[140px]"
+                title={resolvedFeature.subFeature}
+              >
+                {resolvedFeature.subFeature}
+              </span>
+            </>
+          )}
+          <span className="text-muted-foreground/60 shrink-0">/</span>
+          <span className="text-xs capitalize font-medium text-muted-foreground shrink-0 hidden sm:inline">
+            {effectiveRole}
+          </span>
+        </div>
       </div>
 
-      {/* Spacer */}
-      <div className="flex-1" />
-
-      {/* Actions */}
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* Global Search - Works directly on navbar, no separate search page */}
+      {/* Center: Search Bar */}
+      <div className="flex-1 flex items-center justify-center px-2 sm:px-4 max-w-xl mx-auto">
         <NavbarSearch />
+      </div>
+
+      {/* Right: Actions */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
         {/* Help */}
         <Button
