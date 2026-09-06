@@ -57,7 +57,8 @@ export function PriceListsPage() {
   })
 
   const statusMapping = (v: string) => v === 'all' ? '' : v
-  const filters = { search, status: statusMapping(statusFilter), currency: currencyFilter || 'INR', page, perPage: 10 }
+  const currencyMapping = (v: string) => v === 'all' ? '' : v
+  const filters = { search, status: statusMapping(statusFilter), currency: currencyMapping(currencyFilter), page, perPage: 10 }
   const { data, isLoading, error, refetch } = usePriceLists(filters)
   const { data: kpis, isLoading: kpisLoading } = usePriceListKpis()
   const createPriceList = useCreatePriceList()
