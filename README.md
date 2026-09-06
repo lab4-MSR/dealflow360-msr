@@ -139,11 +139,15 @@ flowchart TB
 
 ## 👥 Live Testing Personas & Credentials
 
-The system comes pre-seeded with sample enterprise data for **Acme Enterprise Solutions** (`a0000000-0000-0000-0000-000000000001`) and a platform superadmin:
+The system comes pre-seeded with sample enterprise data for **Acme Enterprise Solutions** (`a0000000-0000-0000-0000-000000000001`) and full platform superadmin accounts:
+
+> [!IMPORTANT]
+> **Super Admin Access**: Log in with `superadmin@dealflow360.com` or `admin@dealflow360.com` (Password: `admin123`) to access the Platform Administration Console (`/platform`), manage all onboarded businesses, configure platform settings, and inspect global audit telemetry.
 
 | Role | Name | Email | Password | Scope & Access |
 |---|---|---|---|---|
-| **Platform Superadmin** | DealFlow Admin | `admin@dealflow360.com` | `admin123` | Global cross-tenant management, all businesses, platform audit |
+| **Super Admin (Primary)** | Super Admin | `superadmin@dealflow360.com` | `admin123` | Full root platform control, cross-tenant management, all businesses, system health |
+| **Super Admin (Alternate)** | Platform Admin | `admin@dealflow360.com` | `admin123` | Global cross-tenant management, all businesses, platform audit |
 | **Business Admin** | Sarah Johnson | `admin@acme.com` | `admin123` | Acme organization settings, users, roles, teams, catalog, pricing |
 | **Sales Manager** | Michael Chang | `manager@acme.com` | `admin123` | Approval inbox, team deals, pipeline analytics, team performance |
 | **Sales Representative** | Emma Davis | `rep@acme.com` | `admin123` | Deal pipeline, quotation builder, customer list, discount simulator |
