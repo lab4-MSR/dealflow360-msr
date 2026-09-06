@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Briefcase, Search, Filter, ArrowRight, TrendingUp, AlertCircle, Shield, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -59,19 +60,25 @@ export function TeamDealListPage() {
 
   return (
     <div className="space-y-6 pb-12">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Team Pipeline & Deals</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Complete managerial oversight over active team opportunities, risks, and stage velocity.
-          </p>
-        </div>
-
-        <Button size="sm" variant="outline" onClick={handleExportCsv} className="text-xs self-start sm:self-auto">
-          <Download className="mr-1.5 h-3.5 w-3.5" />
-          Export Pipeline CSV
-        </Button>
-      </div>
+      <PageHeader
+        title="Team Pipeline & Deals"
+        description="Complete managerial oversight over active team opportunities, risks, and stage velocity."
+        breadcrumbs={[
+          { label: 'Sales Manager', href: '/sales-manager' },
+          { label: 'Deals' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            Manager Oversight
+          </span>
+        }
+        actions={
+          <Button size="sm" variant="outline" onClick={handleExportCsv} className="gap-1.5 text-xs">
+            <Download className="h-3.5 w-3.5" />
+            <span>Export Pipeline CSV</span>
+          </Button>
+        }
+      />
 
       {/* Filters Bar */}
       <Card>

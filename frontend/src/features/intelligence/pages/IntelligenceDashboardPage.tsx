@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { Badge } from '@/components/ui/badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -76,32 +77,35 @@ export const IntelligenceDashboardPage: React.FC = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
-        <div>
+      <PageHeader
+        title="Intelligence & Decision Command"
+        description="Real-time algorithmic risk evaluation, upsell modeling, deal health monitoring, and governance anomaly alerts."
+        breadcrumbs={[
+          { label: 'Intelligence', href: '/intelligence' },
+          { label: 'Command Center' },
+        ]}
+        badge={
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-intelligence/10 text-intelligence border border-intelligence/20">
+            <Sparkles className="h-3 w-3" />
+            AI & Analytics
+          </span>
+        }
+        actions={
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
-              <Sparkles className="h-5 w-5" />
-            </span>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Intelligence & Decision Command</h1>
+            <Button variant="outline" size="sm" onClick={loadData} className="gap-1.5 text-xs">
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>Refresh</span>
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => navigate('/intelligence/insights')}
+              className="gap-1.5 text-xs"
+            >
+              <span>All Insights ({dashboardData.active_insights_count ?? dashboardData.recent_insights?.length ?? 4})</span>
+            </Button>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
-            Real-time algorithmic risk evaluation, upsell modeling, deal health monitoring, and governance anomaly alerts.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={loadData} className="gap-1 text-xs">
-            <RefreshCw className="h-3.5 w-3.5" /> Refresh
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => navigate('/intelligence/insights')}
-            className="gap-1 text-xs"
-          >
-            All Insights ({dashboardData.active_insights_count ?? dashboardData.recent_insights?.length ?? 4})
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* KPI Highlights */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

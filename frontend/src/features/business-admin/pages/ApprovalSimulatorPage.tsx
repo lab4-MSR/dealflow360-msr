@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -8,13 +8,10 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useCustomers } from '../hooks/use-business-admin'
 import { useProducts } from '../hooks/use-business-admin'
-import { useCategories } from '../hooks/use-business-admin'
 import { useSimulateApproval } from '../hooks/use-business-admin'
 import type { ApprovalSimulatorRequest, ApprovalSimulatorResponse } from '../types'
 import { toast } from 'sonner'
-import { Plus, Minus, Search, RefreshCw, Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle, ArrowRight, Users, Package, Layers, IndianRupee, BarChart, Target } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { PercentageDisplay } from '@/components/shared'
+import { Plus, Minus, Search, RefreshCw, Shield, AlertTriangle, CheckCircle, XCircle, HelpCircle, ArrowRight, Users, Package, Layers, IndianRupee, Target } from 'lucide-react'
 import { MoneyDisplay } from '@/components/shared'
 
 const DECISION_VARIANT: Record<string, 'success' | 'warning' | 'danger'> = {
@@ -33,10 +30,8 @@ function ApprovalSimulatorPage() {
 
   const { data: customersData } = useCustomers({ perPage: 100 })
   const { data: productsData } = useProducts({ perPage: 100, status: 'active' })
-  const { data: categoriesData } = useCategories({ status: 'active' })
   const simulateApproval = useSimulateApproval()
 
-  const selectedCustomer = useMemo(() => customersData?.customers.find(c => c.id === customerId), [customersData, customerId])
   const selectedProduct = (id: string) => productsData?.products.find(p => p.id === id)
 
   const updateDealValue = () => {

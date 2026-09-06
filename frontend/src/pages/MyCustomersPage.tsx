@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
+import { PageHeader } from '@/components/ui/page-header'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
 import { Users, Search, Filter, Download, UserPlus, AlertTriangle } from 'lucide-react'
@@ -140,10 +141,38 @@ export function MyCustomersPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div><h1 className="text-h1 font-semibold">My Customers</h1><p className="text-body-small text-muted-foreground">Customers in your portfolio or assigned territory</p></div>
-        <div className="flex gap-2"><div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><Input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search customers..." className="pl-9 w-64" /></div><Button asChild><Link to="/business-admin/customers/create"><UserPlus className="h-4 w-4" />New Customer</Link></Button></div>
-      </div>
+      <PageHeader
+        title="My Customers"
+        description="Customers in your portfolio or assigned territory"
+        breadcrumbs={[
+          { label: 'Sales', href: '/sales/deals' },
+          { label: 'Customers' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            Portfolio
+          </span>
+        }
+        actions={
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search customers..."
+                className="pl-9 w-52 sm:w-64 h-9 text-xs sm:text-sm bg-surface"
+              />
+            </div>
+            <Button size="sm" asChild className="gap-1.5 shadow-xs">
+              <Link to="/business-admin/customers/create">
+                <UserPlus className="h-4 w-4" />
+                <span>New Customer</span>
+              </Link>
+            </Button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
         <KpiCard label="Total" value={String(total)} icon={<Users className="h-4 w-4" />} />

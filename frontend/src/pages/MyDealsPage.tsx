@@ -11,6 +11,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
+import { PageHeader } from '@/components/ui/page-header'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
 import { Search, Plus, Download, LayoutGrid, TableIcon, TrendingUp, AlertTriangle } from 'lucide-react'
@@ -128,13 +129,38 @@ export function MyDealsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div><h1 className="text-h1 font-semibold">My Deals</h1><p className="text-body-small text-muted-foreground">Your deal workspace — single source of truth, one state machine</p></div>
-        <div className="flex gap-2">
-          <div className="relative"><Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" /><Input value={q} onChange={e=>setQ(e.target.value)} placeholder="Search deals..." className="pl-9 w-64" /></div>
-          <Button asChild><Link to="/sales/quotations/create"><Plus className="h-4 w-4" />Create Quotation</Link></Button>
-        </div>
-      </div>
+      <PageHeader
+        title="My Deals"
+        description="Your deal workspace — single source of truth, one state machine"
+        breadcrumbs={[
+          { label: 'Sales', href: '/sales/deals' },
+          { label: 'Deals' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            Pipeline
+          </span>
+        }
+        actions={
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search deals..."
+                className="pl-9 w-52 sm:w-64 h-9 text-xs sm:text-sm bg-surface"
+              />
+            </div>
+            <Button size="sm" asChild className="gap-1.5 shadow-xs">
+              <Link to="/sales/quotations/create">
+                <Plus className="h-4 w-4" />
+                <span>Create Quotation</span>
+              </Link>
+            </Button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <KpiCard label="Total Pipeline" value={total ? `₹${total}` : '—'} icon={<TrendingUp className="h-5 w-5" />} />

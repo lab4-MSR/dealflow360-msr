@@ -4,6 +4,8 @@ import { FileText, RefreshCw, Search, Download } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { PageHeader } from "@/components/ui/page-header"
+import { KpiCard } from "@/components/ui/kpi-card"
 import { InvoiceStatusBadge, CurrencyValue } from "../components/FinanceBadges"
 import { getInvoices, getInvoiceKpis } from "../services/finance.service"
 
@@ -53,22 +55,40 @@ export function InvoicesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between border-b border-border pb-5">
-        <div><h1 className="text-2xl font-bold tracking-tight">Invoices</h1><p className="text-sm text-muted-foreground mt-1">Manage billing and invoices</p></div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={handleExport}><Download className="h-4 w-4 mr-2" />Export</Button>
-          <Button variant="outline" size="sm" onClick={loadInvoices}><RefreshCw className="h-4 w-4 mr-2" />Refresh</Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Invoices"
+        description="Manage billing, invoice generation, payment statuses, and financial collections"
+        breadcrumbs={[
+          { label: 'Finance', href: '/finance' },
+          { label: 'Invoices' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            Billing
+          </span>
+        }
+        actions={
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleExport} className="gap-1.5 text-xs">
+              <Download className="h-3.5 w-3.5" />
+              <span>Export</span>
+            </Button>
+            <Button variant="outline" size="sm" onClick={loadInvoices} className="gap-1.5 text-xs">
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>Refresh</span>
+            </Button>
+          </div>
+        }
+      />
 
       {kpis && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-          <Card><CardContent className="p-4"><p className="text-caption text-muted-foreground">Total</p><p className="text-h2 font-semibold">{kpis.total || 0}</p></CardContent></Card>
-          <Card><CardContent className="p-4"><p className="text-caption text-muted-foreground">Paid</p><p className="text-h2 font-semibold text-success">{kpis.paid || 0}</p></CardContent></Card>
-          <Card><CardContent className="p-4"><p className="text-caption text-muted-foreground">Pending</p><p className="text-h2 font-semibold text-warning">{kpis.issued || 0}</p></CardContent></Card>
-          <Card><CardContent className="p-4"><p className="text-caption text-muted-foreground">Overdue</p><p className="text-h2 font-semibold text-danger">{kpis.overdue || 0}</p></CardContent></Card>
-          <Card><CardContent className="p-4"><p className="text-caption text-muted-foreground">Failed</p><p className="text-h2 font-semibold text-danger">{kpis.failed || 0}</p></CardContent></Card>
-          <Card><CardContent className="p-4"><p className="text-caption text-muted-foreground">Draft</p><p className="text-h2 font-semibold text-muted-foreground">{kpis.draft || 0}</p></CardContent></Card>
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+          <KpiCard label="Total" value={kpis.total || 0} />
+          <KpiCard label="Paid" value={kpis.paid || 0} variant="success" />
+          <KpiCard label="Pending" value={kpis.issued || 0} variant="warning" />
+          <KpiCard label="Overdue" value={kpis.overdue || 0} variant="danger" />
+          <KpiCard label="Failed" value={kpis.failed || 0} variant="danger" />
+          <KpiCard label="Total Value" value={`₹${((kpis.total_amount || 0) / 100000).toFixed(1)}L`} />
         </div>
       )}
 

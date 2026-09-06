@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { TrendingUp, DollarSign, Clock, AlertTriangle, CheckCircle, XCircle, FileText, RefreshCw, ArrowRight, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { KpiCard } from "@/components/ui/kpi-card"
+import { PageHeader } from "@/components/ui/page-header"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { InvoiceStatusBadge, CurrencyValue } from "../components/FinanceBadges"
@@ -39,10 +40,25 @@ export function FinanceDashboardPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between border-b border-border pb-5">
-        <div><h1 className="text-2xl font-bold tracking-tight">Finance Command Center</h1><p className="text-sm text-muted-foreground mt-1">Financial operations overview</p></div>
-        <Button variant="outline" size="sm" onClick={loadDashboard}><RefreshCw className="h-4 w-4 mr-2" />Refresh</Button>
-      </div>
+      <PageHeader
+        title="Finance Command Center"
+        description="Financial operations overview, revenue intelligence, and high-risk deal reviews"
+        breadcrumbs={[
+          { label: 'Finance', href: '/finance' },
+          { label: 'Dashboard' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            Finance
+          </span>
+        }
+        actions={
+          <Button variant="outline" size="sm" onClick={loadDashboard} className="gap-1.5 text-xs">
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>Refresh</span>
+          </Button>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         <KpiCard label="Total Revenue" value={`₹${(kpis.total_revenue || 0).toLocaleString("en-IN")}`} icon={<DollarSign className="h-5 w-5" />} />

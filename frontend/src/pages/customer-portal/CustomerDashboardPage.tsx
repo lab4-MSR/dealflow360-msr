@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { StatusBadge } from '@/components/ui/status-badge'
@@ -62,37 +63,39 @@ export function CustomerDashboardPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-page-enter">
-      {/* ─── WELCOME HEADER ─── */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-border/70 pb-5">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Customer Portal
-            </h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-subtle text-primary border border-primary/20">
-              Verified Account
-            </span>
-          </div>
-          <p className="text-sm text-muted-foreground mt-1">
+      <PageHeader
+        title="Customer Portal"
+        description={
+          <>
             Welcome back, <span className="font-semibold text-foreground">{user?.full_name || 'Valued Customer'}</span>. Review quotations, track shipments, and manage orders in real-time.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
-            <Link to="/customer-portal/quotations">
-              <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-              <span>My Quotations</span>
-            </Link>
-          </Button>
-          <Button asChild size="sm" className="gap-1.5 text-xs font-semibold shadow-xs">
-            <Link to="/customer-portal/orders">
-              <Package className="h-3.5 w-3.5" />
-              <span>Track Orders</span>
-            </Link>
-          </Button>
-        </div>
-      </div>
+          </>
+        }
+        breadcrumbs={[
+          { label: 'Customer Portal', href: '/customer-portal' },
+          { label: 'Dashboard' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-subtle text-primary border border-primary/20">
+            Verified Account
+          </span>
+        }
+        actions={
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Link to="/customer-portal/quotations">
+                <FileText className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>My Quotations</span>
+              </Link>
+            </Button>
+            <Button asChild size="sm" className="gap-1.5 text-xs font-semibold shadow-xs">
+              <Link to="/customer-portal/orders">
+                <Package className="h-3.5 w-3.5" />
+                <span>Track Orders</span>
+              </Link>
+            </Button>
+          </div>
+        }
+      />
 
       {/* ─── 5 ASSETRIX-STYLE KPI TILES ─── */}
       {isLoading ? (

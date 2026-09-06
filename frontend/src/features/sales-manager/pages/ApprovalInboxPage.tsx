@@ -15,6 +15,7 @@ import {
   Download,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { RiskBadge } from '@/components/ui/risk-badge'
@@ -181,60 +182,60 @@ export function ApprovalInboxPage() {
 
   return (
     <div className="space-y-6">
-      {/* ─── HEADER ─── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border pb-5">
-        <div>
+      <PageHeader
+        title="Manager Approval Inbox"
+        description="Review and govern customer discounts, blended contract risks, and margin exceptions."
+        breadcrumbs={[
+          { label: 'Sales Manager', href: '/sales-manager' },
+          { label: 'Approvals' },
+        ]}
+        badge={
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+            {approvals.length} Pending
+          </span>
+        }
+        actions={
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">Manager Approval Inbox</h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-              {approvals.length} Pending
-            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                if (!approvals.length) {
+                  toast.error('No pending approvals to export.')
+                  return
+                }
+                const rows = approvals.map((a) => ({
+                  Quote_Number: a.quote_number,
+                  Deal_Name: a.deal_name,
+                  Customer_Name: a.customer.name,
+                  Customer_Tier: a.customer.tier,
+                  Representative: a.rep.name,
+                  Deal_Value_INR: a.deal_value,
+                  Requested_Discount_Pct: `${a.requested_discount_percent}%`,
+                  Allowed_Ceiling_Pct: `${a.allowed_discount_percent}%`,
+                  Margin_Pct: `${a.margin_percent}%`,
+                  Risk_Score: a.blended_risk_score,
+                  Risk_Level: a.risk_level,
+                  Approval_Level: a.approval_level,
+                }))
+                downloadCsv(`Pending_Approvals_Queue_${new Date().toISOString().split('T')[0]}`, rows)
+                toast.success('Pending approvals queue exported to CSV!')
+              }}
+              className="gap-1.5 text-xs"
+            >
+              <Download className="h-4 w-4" />
+              <span>Export Queue CSV</span>
+            </Button>
+
+            <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
+              <Link to="/sales-manager/approvals/history">
+                <History className="h-4 w-4" />
+                <span>Approval History</span>
+              </Link>
+            </Button>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
-            Review and govern customer discounts, blended contract risks, and margin exceptions.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              if (!approvals.length) {
-                toast.error('No pending approvals to export.')
-                return
-              }
-              const rows = approvals.map((a) => ({
-                Quote_Number: a.quote_number,
-                Deal_Name: a.deal_name,
-                Customer_Name: a.customer.name,
-                Customer_Tier: a.customer.tier,
-                Representative: a.rep.name,
-                Deal_Value_INR: a.deal_value,
-                Requested_Discount_Pct: `${a.requested_discount_percent}%`,
-                Allowed_Ceiling_Pct: `${a.allowed_discount_percent}%`,
-                Margin_Pct: `${a.margin_percent}%`,
-                Risk_Score: a.blended_risk_score,
-                Risk_Level: a.risk_level,
-                Approval_Level: a.approval_level,
-              }))
-              downloadCsv(`Pending_Approvals_Queue_${new Date().toISOString().split('T')[0]}`, rows)
-              toast.success('Pending approvals queue exported to CSV!')
-            }}
-            className="gap-1.5 text-xs"
-          >
-            <Download className="h-4 w-4" />
-            <span>Export Queue CSV</span>
-          </Button>
-
-          <Button asChild variant="outline" size="sm" className="gap-1.5 text-xs">
-            <Link to="/sales-manager/approvals/history">
-              <History className="h-4 w-4" />
-              <span>Approval History</span>
-            </Link>
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* ─── PRIORITY QUEUE TABS ─── */}
       <div className="flex border-b border-border gap-2 overflow-x-auto">

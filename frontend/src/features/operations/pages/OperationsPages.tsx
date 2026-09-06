@@ -11,6 +11,7 @@ import { LoadingState } from '@/components/shared/LoadingState'
 import { Input } from '@/components/ui/input'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { PageHeader as BasePageHeader } from '@/components/ui/page-header'
 import { useAcceptSplit, useBackorder, useBackorders, useConsolidateBackorder, useFulfillment, useFulfillmentQueue, useOperationsAnalytics, useOverrideSplit, useShipment, useShipments, useStockMovements, useSuggestedSplit, useWarehouses, useWarehouseInventory } from '../hooks/use-operations'
 import type { ApiMeta, BackorderRow, FulfillmentRow, InventoryRow, MovementRow, OperationalFilters, ShipmentRow, WarehouseRow } from '../types'
 
@@ -34,7 +35,23 @@ function PermissionGate({ children }: { children: React.ReactNode }) {
 }
 
 function PageHeader({ title, description, children }: { title: string; description: string; children?: React.ReactNode }) {
-  return <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div><h1 className="text-h1 text-foreground">{title}</h1><p className="mt-1 text-body-small text-muted-foreground">{description}</p></div>{children && <div className="flex flex-wrap gap-2">{children}</div>}</div>
+  return (
+    <BasePageHeader
+      title={title}
+      description={description}
+      breadcrumbs={[
+        { label: 'Operations', href: '/operations' },
+        { label: title },
+      ]}
+      badge={
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
+          Operations
+        </span>
+      }
+      actions={children}
+      className="mb-6"
+    />
+  )
 }
 
 function QueryState({ isLoading, error, isEmpty, onRetry, children }: { isLoading: boolean; error: unknown; isEmpty: boolean; onRetry: () => void; children: React.ReactNode }) {
