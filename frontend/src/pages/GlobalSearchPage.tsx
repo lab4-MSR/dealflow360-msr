@@ -155,69 +155,17 @@ export function GlobalSearchPage() {
   const { data: searchResponse, isLoading, error, refetch } = useQuery<SearchResponse>({
     queryKey: ['global-search', apiParams],
     queryFn: async () => {
-      try {
-        const response = await api.get<SearchResponse>('/search', { params: apiParams })
-        return response.data
-      } catch {
-        const q = query.toLowerCase()
-        const allMocks: SearchResult[] = [
-          {
-            id: 'deal-001',
-            type: 'deal',
-            title: 'Acme Corp Annual Enterprise Expansion',
-            description: 'Enterprise cloud & hardware expansion · ₹24,50,000 · Stage: Negotiation',
-            subtitle: 'Enterprise cloud & hardware expansion · ₹24,50,000 · Stage: Negotiation',
-            status: 'negotiation',
-            url: '/sales/deals/deal-001',
-          },
-          {
-            id: 'qt-001',
-            type: 'quotation',
-            title: 'QT-2026-00482 Acme Systems Expansion',
-            description: 'Approved quotation · Gold Tier · Net: ₹1,34,640',
-            subtitle: 'Approved quotation · Gold Tier · Net: ₹1,34,640',
-            status: 'approved',
-            url: '/sales/quotations/qt-001',
-          },
-          {
-            id: 'cust-001',
-            type: 'customer',
-            title: 'Acme Technologies Ltd',
-            description: 'Enterprise account · Tier: Gold · Primary: contact@acme.corp',
-            subtitle: 'Enterprise account · Tier: Gold · Primary: contact@acme.corp',
-            status: 'active',
-            url: '/sales/customers/cust-001',
-          },
-          {
-            id: 'ord-001',
-            type: 'order',
-            title: 'ORD-2026-00482 Hardware Batch',
-            description: 'Warehouse: BLR-01 · 14 units allocated · High priority',
-            subtitle: 'Warehouse: BLR-01 · 14 units allocated · High priority',
-            status: 'processing',
-            url: '/operations/fulfillment/ful-001',
-          },
-          {
-            id: 'inv-001',
-            type: 'invoice',
-            title: 'INV-2026-0089 Acme Cloud Deployment',
-            description: 'Amount: ₹4,50,000 · Due: 20 Sep 2026',
-            subtitle: 'Amount: ₹4,50,000 · Due: 20 Sep 2026',
-            status: 'issued',
-            url: '/finance/invoices/inv-001',
-          },
-        ]
-        const filtered = allMocks.filter(
-          (m) =>
-            m.title.toLowerCase().includes(q) ||
-            (m.description && m.description.toLowerCase().includes(q)) ||
-            (apiParams.type && m.type === apiParams.type)
-        )
-        return {
-          data: filtered.length > 0 ? filtered : allMocks,
-          meta: { total: filtered.length > 0 ? filtered.length : allMocks.length },
-        } as unknown as SearchResponse
+      const response = await api.get<SearchResponse>('/search', { params: apiParams })
+      const resData = response.data as any
+      if (resData?.data && Array.isArray(resData.data)) {
+        return resData
       }
+      return {
+        success: true,
+        data: Array.isArray(resData) ? resData : [],
+        meta: { total: Array.isArray(resData) ? resData.length : (resData?.meta?.total || 0), query },
+        error: null,
+      } as SearchResponse
     },
     enabled: hasSearched && query.trim().length > 0,
     staleTime: 30 * 1000,

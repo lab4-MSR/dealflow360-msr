@@ -631,71 +631,137 @@ export function getMockQuotationDetails(id: string = 'QT-2026-00482', activeVers
   }
 }
 
-// Service API layer with resilient backend fetching + automatic domain fallback
+// Service API layer directly wired to backend
 export async function getQuotationDetails(id: string, version?: number): Promise<QuotationCompleteDetails> {
-  try {
-    const res = await apiClient.get(`/quotations/${id}${version ? `?version=${version}` : ''}`)
-    if (res.data?.data && res.data.data.quote_number) {
-      // If backend returns a partial or full quotation object, merge with our typed contract
-      const backendData = res.data.data
-      const fallback = getMockQuotationDetails(id, version || backendData.version || 3)
-      return {
-        ...fallback,
-        ...backendData,
-        overview: { ...fallback.overview, ...(backendData.overview || {}) },
-        pricing: { ...fallback.pricing, ...(backendData.pricing || {}) },
-        discount_analysis: { ...fallback.discount_analysis, ...(backendData.discount_analysis || {}) },
-        margin: { ...fallback.margin, ...(backendData.margin || {}) },
-        risk: { ...fallback.risk, ...(backendData.risk || {}) },
-        approval: { ...fallback.approval, ...(backendData.approval || {}) },
-        negotiation: { ...fallback.negotiation, ...(backendData.negotiation || {}) },
-        fulfillment: { ...fallback.fulfillment, ...(backendData.fulfillment || {}) },
-        billing: { ...fallback.billing, ...(backendData.billing || {}) },
-        audit: backendData.audit?.length ? backendData.audit : fallback.audit,
-      }
+  const res = await apiClient.get(`/quotations/${id}${version ? `?version=${version}` : ''}`)
+  const backendData = res.data?.data ?? res.data
+  if (backendData && (backendData.id || backendData.quote_number)) {
+    return {
+      id: backendData.id || id,
+      quote_number: backendData.quote_number || `QT-${String(id).slice(0, 6)}`,
+      version: backendData.version || 1,
+      total_versions: backendData.total_versions || 1,
+      available_versions: backendData.available_versions || [backendData.version || 1],
+      status: backendData.status || 'draft',
+      total_value: Number(backendData.pricing?.grand_total || backendData.grand_total || 0),
+      currency: backendData.currency || 'INR',
+      overview: backendData.overview || {
+        quote_number: backendData.quote_number || `QT-${String(id).slice(0, 6)}`,
+        status: backendData.status || 'draft',
+        currency: 'INR',
+        version: backendData.version || 1,
+        total_versions: backendData.total_versions || 1,
+        quote_type: 'Standard Commercial',
+        payment_terms: 'Net 30 Days',
+        shipping_terms: 'FOB Destination',
+        company_name: backendData.customer_name || 'Customer Organization',
+        customer_id: backendData.customer_id || 'cust-1',
+        customer_tier: 'Standard',
+        customer_health: 'healthy',
+        primary_contact: 'Procurement',
+        customer_email: 'procurement@customer.com',
+        customer_phone: '',
+        customer_address: '',
+        price_list: 'Standard',
+        deal_id: backendData.deal_id || 'deal-1',
+        deal_name: backendData.deal_name || 'Deal',
+        deal_stage: 'Proposal',
+        deal_value: Number(backendData.pricing?.grand_total || backendData.grand_total || 0),
+        sales_rep_name: 'Sales Representative',
+        sales_rep_id: 'usr-01',
+        sales_rep_avatar: '',
+        expected_close_date: new Date().toISOString().slice(0, 10),
+        created_by_name: 'Sales Rep',
+        created_by_role: 'Sales Representative',
+        created_date: backendData.created_at || new Date().toISOString(),
+        expiry_date: backendData.expiry_date || new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
+        remaining_days: 30,
+        is_expired: false,
+        current_version_summary: 'Initial draft',
+        last_updated_at: new Date().toISOString(),
+      },
+      line_items: backendData.lines || backendData.line_items || [],
+      recommendations: backendData.recommendations || [],
+      pricing: backendData.pricing || {
+        subtotal: Number(backendData.subtotal || 0),
+        line_discounts_total: Number(backendData.discount_amount || 0),
+        order_discount: 0,
+        order_discount_percent: 0,
+        shipping: 0,
+        tax: Number(backendData.tax || 0),
+        grand_total: Number(backendData.grand_total || 0),
+        currency: 'INR',
+      },
+      discount_analysis: backendData.discount_analysis || {
+        blended_discount_percent: Number(backendData.discount_percent || 0),
+        max_line_discount_percent: Number(backendData.discount_percent || 0),
+        has_discount_violations: false,
+        violations: [],
+      },
+      margin: backendData.margin || {
+        margin_percent: Number(backendData.margin_percent || 30),
+        minimum_margin_percent: 20,
+        margin_impact: 'Healthy',
+      },
+      risk: backendData.risk || {
+        blended_risk_score: 20,
+        risk_level: 'low',
+        factors: [],
+      },
+      approval: backendData.approval || {
+        approval_required: false,
+        approval_chain: [],
+        current_step: 0,
+        total_steps: 0,
+      },
+      negotiation: backendData.negotiation || {
+        counter_offers_count: 0,
+        change_requests_count: 0,
+      },
+      fulfillment: backendData.fulfillment || {
+        status: 'pending',
+        warehouse_allocations: [],
+      },
+      billing: backendData.billing || {
+        invoicing_status: 'unbilled',
+        payment_terms: 'Net 30',
+      },
+      audit: backendData.audit || [],
+      permissions: backendData.permissions || {
+        can_edit: true,
+        can_delete: true,
+        can_submit_approval: true,
+        can_send_to_customer: true,
+        can_approve: true,
+        can_reject: true,
+        can_return: true,
+        can_create_version: true,
+        can_view_cost: true,
+        can_view_margin: true,
+        can_override_split: true,
+        can_counter_negotiate: true,
+      },
     }
-  } catch {
-    // Graceful fallback to rich domain model
   }
-  return getMockQuotationDetails(id, version || 3)
+  throw new Error('Quotation not found')
 }
 
 export async function submitForApprovalAction(id: string): Promise<{ success: boolean; message: string }> {
-  try {
-    const res = await apiClient.post(`/quotations/${id}/submit-for-approval`)
-    return { success: true, message: res.data?.message || 'Quotation submitted for approval.' }
-  } catch (err) {
-    // If backend is offline, return successful simulated submission
-    return { success: true, message: 'Submitted for multi-level approval (Sales Manager & Finance).' }
-  }
+  const res = await apiClient.post(`/quotations/${id}/submit-for-approval`)
+  return { success: true, message: res.data?.message || 'Quotation submitted for approval.' }
 }
 
 export async function validateQuotationAction(id: string): Promise<{ valid: boolean; messages: string[] }> {
-  try {
-    const res = await apiClient.post(`/quotations/${id}/validate`)
-    return {
-      valid: true,
-      messages: res.data?.messages || ['Quotation validated successfully. Discount and margin checks completed.'],
-    }
-  } catch (err) {
-    return {
-      valid: true,
-      messages: [
-        'Customer credit verified (Gold Tier active).',
-        'Category discount limit checked (Services ceiling: 10%).',
-        'Warehouse inventory split previewed across 2 hubs.',
-      ],
-    }
+  const res = await apiClient.post(`/quotations/${id}/validate`)
+  return {
+    valid: true,
+    messages: res.data?.messages || ['Quotation validated successfully. Discount and margin checks completed.'],
   }
 }
 
 export async function sendToCustomerAction(id: string): Promise<{ success: boolean; message: string }> {
-  try {
-    const res = await apiClient.post(`/quotations/${id}/send`)
-    return { success: true, message: res.data?.message || 'Quotation sent to customer portal.' }
-  } catch (err) {
-    return { success: true, message: 'Quotation sent to Sarah Jenkins at Acme Corp via Secure Customer Portal.' }
-  }
+  const res = await apiClient.post(`/quotations/${id}/send`)
+  return { success: true, message: res.data?.message || 'Quotation sent to customer portal.' }
 }
 
 export async function recordApprovalDecision(
@@ -703,10 +769,6 @@ export async function recordApprovalDecision(
   action: 'approve' | 'reject' | 'return',
   reason?: string
 ): Promise<{ success: boolean; message: string }> {
-  try {
-    const res = await apiClient.post(`/approvals/${id}/${action}`, { reason })
-    return { success: true, message: res.data?.message || `Approval ${action} recorded.` }
-  } catch (err) {
-    return { success: true, message: `Approval successfully recorded: ${action.toUpperCase()}${reason ? ` (${reason})` : ''}` }
-  }
+  const res = await apiClient.post(`/approvals/${id}/${action}`, { reason })
+  return { success: true, message: res.data?.message || `Approval ${action} recorded.` }
 }

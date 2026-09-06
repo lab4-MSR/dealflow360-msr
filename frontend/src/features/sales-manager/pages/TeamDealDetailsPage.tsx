@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { RiskBadge } from '@/components/ui/risk-badge'
 import { Input } from '@/components/ui/input'
 import { getTeamDeal, addDealCoachingNote } from '@/services/salesManager'
-import type { TeamDeal } from '@/types/salesManager'
+import type { TeamDeal, DealStage } from '@/types/salesManager'
 import { toast } from 'sonner'
 
 export function TeamDealDetailsPage() {
@@ -212,14 +212,14 @@ export function TeamDealDetailsPage() {
                 <select
                   value={deal.stage}
                   onChange={(e) => {
-                    const newStage = e.target.value
+                    const newStage = e.target.value as DealStage
                     setDeal((prev) => prev ? { ...prev, stage: newStage } : null)
                     toast.success(`Deal stage transitioned to ${newStage.replace(/_/g, ' ').toUpperCase()}`)
                   }}
                   className="w-full h-8 rounded-lg border border-border bg-card px-2.5 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary capitalize"
                 >
                   <option value="discovery">Discovery</option>
-                  <option value="solution_proposal">Solution Proposal</option>
+                  <option value="proposal">Solution Proposal</option>
                   <option value="negotiation">Price Negotiation</option>
                   <option value="approval">Manager Approval</option>
                   <option value="closed_won">Closed Won</option>

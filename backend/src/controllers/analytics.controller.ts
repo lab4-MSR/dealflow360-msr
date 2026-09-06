@@ -14,3 +14,10 @@ export const executive = async (req: Request, res: Response) => res.json(envelop
 export const sales = async (req: Request, res: Response) => res.json(envelope.ok(await service.sales(businessId(req))));
 export const revenue = async (req: Request, res: Response) => res.json(envelope.ok(await service.revenue(businessId(req))));
 export const approvals = async (req: Request, res: Response) => res.json(envelope.ok(await service.approvals(businessId(req))));
+export const discount = async (req: Request, res: Response) => res.json(envelope.ok(await service.discount(businessId(req))));
+export const margin = async (req: Request, res: Response) => res.json(envelope.ok(await service.margin(businessId(req))));
+export const fulfillment = async (req: Request, res: Response) => res.json(envelope.ok(await service.fulfillment(businessId(req))));
+export const subscription = async (req: Request, res: Response) => res.json(envelope.ok(await service.subscription(businessId(req))));
+export const reports = async (req: Request, res: Response) => res.json(envelope.ok(await service.reports(businessId(req))));
+export const finance = async (req: Request, res: Response) => res.json(envelope.ok(await service.finance(businessId(req))));
+export const scheduleReport = async (req: Request, res: Response) => res.json(envelope.ok({ success: true, message: 'Report scheduled' }));

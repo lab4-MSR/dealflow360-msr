@@ -16,7 +16,7 @@ export function SalesManagerReportsPage() {
   })
   const [activeModal, setActiveModal] = useState<string | null>(null)
   const [recipientEmail, setRecipientEmail] = useState('manager@dealflow360.app')
-  const [selectedFreq, setSelectedFreq] = useState('weekly')
+  const [selectedFreq, setSelectedFreq] = useState<'monthly' | 'daily' | 'weekly'>('weekly')
   const [previewReport, setPreviewReport] = useState<any | null>(null)
 
   const reportDatasets: Record<string, Record<string, any>[]> = {
@@ -178,7 +178,7 @@ export function SalesManagerReportsPage() {
               <label className="text-xs font-semibold text-foreground">Delivery Frequency</label>
               <select
                 value={selectedFreq}
-                onChange={(e) => setSelectedFreq(e.target.value)}
+                onChange={(e) => setSelectedFreq(e.target.value as 'monthly' | 'daily' | 'weekly')}
                 className="w-full h-9 rounded-lg border border-border bg-card px-3 text-xs font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="daily">Daily at 08:00 AM</option>

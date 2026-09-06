@@ -34,12 +34,14 @@ const STATUS_LABELS: Record<UserStatus, string> = {
   active: 'Active',
   inactive: 'Inactive',
   pending: 'Pending',
+  suspended: 'Suspended',
 }
 
 const STATUS_VARIANT: Record<UserStatus, 'success' | 'danger' | 'warning'> = {
   active: 'success',
   inactive: 'danger',
   pending: 'warning',
+  suspended: 'danger',
 }
 
 function formatDate(iso: string): string {

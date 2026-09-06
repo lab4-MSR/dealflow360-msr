@@ -20,3 +20,11 @@ export const listAnomalies = async (req: Request, res: Response) => res.json(env
 export const dismissAnomaly = async (req: Request, res: Response) => res.json(envelope.ok(await service.dismissAnomaly(businessId(req), String(req.params.id), getAuth(req).userId)));
 export const listInsights = async (req: Request, res: Response) => res.json(envelope.okList(await service.listInsights(businessId(req))));
 export const actOnInsight = async (req: Request, res: Response) => res.json(envelope.ok(await service.actOnInsight(businessId(req), String(req.params.id), req.body ?? {})));
+export const stalledDeals = async (req: Request, res: Response) => res.json(envelope.okList(await service.stalledDeals(businessId(req))));
+export const deliverySlippage = async (req: Request, res: Response) => res.json(envelope.okList(await service.deliverySlippage(businessId(req))));
+export const highRiskDeals = async (req: Request, res: Response) => res.json(envelope.okList(await service.highRiskDeals(businessId(req))));
+export const riskOverview = async (req: Request, res: Response) => res.json(envelope.ok(await service.riskOverview(businessId(req))));
+export const listUpsellRecommendations = async (req: Request, res: Response) => res.json(envelope.okList(await service.listAllRecommendations(businessId(req), 'upsell')));
+export const listCrossSellRecommendations = async (req: Request, res: Response) => res.json(envelope.okList(await service.listAllRecommendations(businessId(req), 'cross_sell')));
+export const getRecommendationDetails = async (req: Request, res: Response) => res.json(envelope.ok(await service.getRecommendationDetails(businessId(req), String(req.params.id))));
+export const applyRecommendation = async (req: Request, res: Response) => res.json(envelope.ok(await service.applyRecommendation(businessId(req), String(req.params.id), String(req.body?.deal_id))));

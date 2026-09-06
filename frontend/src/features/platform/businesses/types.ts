@@ -158,7 +158,7 @@ export interface ApiResponse<T> {
 // ─── Business Users ───────────────────────────────────────
 
 export type UserRole = 'business_admin' | 'sales_manager' | 'sales_rep' | 'viewer'
-export type UserStatus = 'active' | 'inactive' | 'pending'
+export type UserStatus = 'active' | 'inactive' | 'pending' | 'suspended'
 
 export interface BusinessUser {
   id: string

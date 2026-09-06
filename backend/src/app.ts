@@ -18,10 +18,11 @@ import {
 import { dealsRouter, quotationsRouter, approvalsRouter } from './routes/deal';
 import { backordersRouter, fulfillmentRouter, shippingRulesRouter, shipmentsRouter, warehousesRouter } from './routes/fulfillment';
 import { billingCyclesRouter, invoicesRouter, paymentsRouter, prorationRulesRouter, subscriptionPlansRouter, subscriptionsRouter } from './routes/billing';
-import { auditRouter, dealHealthRouter, insightsRouter } from './routes/intelligence';
+import { auditRouter, dealHealthRouter, insightsRouter, riskRouter, recommendationsRouter } from './routes/intelligence';
 import { meRouter, notificationsRouter, searchRouter } from './routes/shared';
 import { portalRouter } from './routes/portal';
 import { analyticsRouter } from './routes/analytics';
+import { platformRouter } from './routes/platform';
 
 /**
  * Build the Express application (kept separate from server for testability).
@@ -80,11 +81,14 @@ export function createApp(): Application {
   app.use('/api/v1/audit', auditRouter);
   app.use('/api/v1/deal-health', dealHealthRouter);
   app.use('/api/v1/insights', insightsRouter);
+  app.use('/api/v1/risk', riskRouter);
+  app.use('/api/v1/recommendations', recommendationsRouter);
   app.use('/api/v1/notifications', notificationsRouter);
   app.use('/api/v1/me', meRouter);
   app.use('/api/v1/search', searchRouter);
   app.use('/api/v1/portal', portalRouter);
   app.use('/api/v1/analytics', analyticsRouter);
+  app.use('/api/v1/platform', platformRouter);
 
   // 404 + error handling LAST
   app.use(notFound);

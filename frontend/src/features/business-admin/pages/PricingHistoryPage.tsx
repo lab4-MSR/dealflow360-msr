@@ -45,6 +45,8 @@ export function PricingHistoryPage() {
     perPage: 15,
   }
 
+  const { data, isLoading, error, refetch } = usePricingHistory(filters)
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearch(searchInput)

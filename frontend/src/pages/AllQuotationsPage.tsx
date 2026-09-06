@@ -17,47 +17,11 @@ import { toast } from 'sonner'
 import { Search, Plus, Download, Archive, Send, FileText, Clock, AlertTriangle } from 'lucide-react'
 import { SalesWorkspaceTopMenu } from '@/components/ui/SalesWorkspaceTopMenu'
 
-const FALLBACK_QUOTATIONS = {
-  data: [
-    {
-      id: 'qt-001',
-      quote_number: 'QT-2026-00482',
-      customer_name: 'Acme Technologies Ltd',
-      status: 'pending_approval',
-      grand_total: 1346400,
-      valid_until: '2026-09-30',
-      created_at: '2026-09-05T09:45:00Z',
-      version: 2,
-    },
-    {
-      id: 'qt-002',
-      quote_number: 'QT-2026-00481',
-      customer_name: 'Hyperion Systems',
-      status: 'approved',
-      grand_total: 5800000,
-      valid_until: '2026-10-15',
-      created_at: '2026-09-04T11:00:00Z',
-      version: 1,
-    },
-    {
-      id: 'qt-003',
-      quote_number: 'QT-2026-00480',
-      customer_name: 'Nexus Dynamics',
-      status: 'draft',
-      grand_total: 1650000,
-      valid_until: '2026-09-25',
-      created_at: '2026-09-03T15:30:00Z',
-      version: 1,
-    },
-  ],
-  meta: { total: 3, page: 1, per_page: 20, total_pages: 1 },
-}
-
 export function AllQuotationsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const search = searchParams.get('search') ?? ''
   const status = searchParams.get('status') ?? ''
-  const [data, setData] = useState<{ data: Array<Record<string, unknown>>; meta: { total: number; page: number; total_pages: number } } | null>(null)
+  const [data, setData] = useState<{ data: Array<Record<string, unknown>>; meta: { total: number; page: number; total_pages: number; per_page?: number } } | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string|null>(null)
   const [q, setQ] = useState(search)
@@ -78,53 +42,24 @@ export function AllQuotationsPage() {
         params.set('page',searchParams.get('page')??'1');
         params.set('per_page','20');
         const r=await apiClient.get(`/quotations?${params.toString()}`);
-        const filterFallback = () => {
-          let list = [...FALLBACK_QUOTATIONS.data];
-          if (search) {
-            const sq = search.toLowerCase().trim();
-            list = list.filter(item =>
-              item.quote_number.toLowerCase().includes(sq) ||
-              item.customer_name.toLowerCase().includes(sq) ||
-              item.status.toLowerCase().includes(sq)
-            );
-          }
-          if (status && status !== 'all') {
-            list = list.filter(item => item.status === status);
-          }
-          return { data: list, meta: { total: list.length, page: 1, per_page: 20, total_pages: Math.max(1, Math.ceil(list.length / 20)) } };
-        };
-
         if (!c) {
-          if (r.data && Array.isArray(r.data.data)) {
-            setData(r.data);
-          } else {
-            setData(filterFallback());
-          }
+          const raw = r.data?.data ?? r.data ?? []
+          const list = Array.isArray(raw) ? raw : []
+          setData({
+            data: list,
+            meta: r.data?.meta ?? { total: list.length, page: 1, per_page: 20, total_pages: Math.max(1, Math.ceil(list.length / 20)) },
+          });
         }
-      } catch {
+      } catch (err) {
         if (!c) {
-          const filterFallback = () => {
-            let list = [...FALLBACK_QUOTATIONS.data];
-            if (search) {
-              const sq = search.toLowerCase().trim();
-              list = list.filter(item =>
-                item.quote_number.toLowerCase().includes(sq) ||
-                item.customer_name.toLowerCase().includes(sq) ||
-                item.status.toLowerCase().includes(sq)
-              );
-            }
-            if (status && status !== 'all') {
-              list = list.filter(item => item.status === status);
-            }
-            return { data: list, meta: { total: list.length, page: 1, per_page: 20, total_pages: Math.max(1, Math.ceil(list.length / 20)) } };
-          };
-          setData(filterFallback());
+          setError(getApiErrorMessage(err));
+          setData({ data: [], meta: { total: 0, page: 1, per_page: 20, total_pages: 1 } });
         }
       } finally {
-        if(!c) setLoading(false);
+        if (!c) setLoading(false);
       }
     }
-    load(); return()=>{c=true}
+    load(); return() => { c=true }
   },[search,status,searchParams])
 
   const total = data?.meta.total ?? 0

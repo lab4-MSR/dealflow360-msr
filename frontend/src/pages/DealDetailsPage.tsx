@@ -23,36 +23,22 @@ export function DealDetailsPage() {
     async function load() {
       if (!id) return
       setLoading(true)
+      setError(null)
       try {
         const r = await apiClient.get(`/deals/${id}`)
         if (!c && r.data?.data) {
           setDeal(r.data.data)
-          setLoading(false)
-          return
+        } else if (!c) {
+          setError('Deal not found.')
+          setDeal(null)
         }
-      } catch {
-        // fallback to structured mock deal
-      }
-      if (!c) {
-        setDeal({
-          id: id,
-          name: id === 'AST-8241' ? 'Acme Corp Annual Enterprise Expansion' : `Enterprise Expansion Deal (${id})`,
-          customer_name: 'Acme Technologies Ltd',
-          customer_id: 'cust-001',
-          stage: 'negotiation',
-          deal_value: 2450000,
-          value: 2450000,
-          discount_percent: 12,
-          margin_percent: 34,
-          risk_level: 'medium',
-          probability: 75,
-          expected_close_date: '2026-09-30',
-          risk: 'medium',
-          quotation_id: 'QT-2026-00482',
-          health_score: 82,
-          notes: 'Customer requested 18% volume discount on hardware lines. Approval exception pending.',
-        })
-        setLoading(false)
+      } catch (err) {
+        if (!c) {
+          setError(getApiErrorMessage(err))
+          setDeal(null)
+        }
+      } finally {
+        if (!c) setLoading(false)
       }
     }
     load()

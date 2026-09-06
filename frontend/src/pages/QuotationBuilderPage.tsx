@@ -15,19 +15,12 @@ import { toast } from 'sonner'
 import { AlertTriangle, Save, Send, Shield, TrendingUp, Package, Truck, CreditCard, Lightbulb, IndianRupee, Search, Plus, Trash2, Info } from 'lucide-react'
 import { SalesWorkspaceTopMenu } from '@/components/ui/SalesWorkspaceTopMenu'
 
-const FALLBACK_BUILDER_PRODUCTS = [
-  { id: 'prod-001', name: 'Cloud Enterprise Engine License', sku: 'ENG-CLOUD-01', price: 145000 },
-  { id: 'prod-002', name: 'Managed SOC Security Sensor Node', sku: 'SEC-SOC-800', price: 92000 },
-  { id: 'prod-003', name: 'High-Throughput Rack Server Node', sku: 'HW-SRV-4U', price: 340000 },
-  { id: 'prod-004', name: '24/7 SLA Mission Critical Support Pack', sku: 'SUP-247-MC', price: 58000 },
-]
-
 export function QuotationBuilderPage() {
   const { id } = useParams()
   const [q, setQ] = useState<Record<string, unknown> | null>(null)
   const [evalData, setEvalData] = useState<Record<string, unknown> | null>(null)
   const [recommendations, setRecommendations] = useState<Array<Record<string, unknown>>>([])
-  const [products, setProducts] = useState<Array<Record<string, unknown>>>(FALLBACK_BUILDER_PRODUCTS)
+  const [products, setProducts] = useState<Array<Record<string, unknown>>>([])
   const [searchQ, setSearchQ] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -35,53 +28,6 @@ export function QuotationBuilderPage() {
   const [saveStatus, setSaveStatus] = useState<'saved'|'unsaved'|'saving'|'failed'>('saved')
   const [internalNotes, setInternalNotes] = useState('')
   const [customerNotes, setCustomerNotes] = useState('')
-
-  const getFallbackQuote = (quoteId: string) => ({
-    id: quoteId,
-    quote_number: quoteId,
-    status: 'draft',
-    version: 2,
-    customer: {
-      id: 'cust-001',
-      name: 'Acme Technologies Ltd',
-      tier: 'tier_1',
-      price_list: 'Enterprise Tier Price List',
-      payment_terms: 'Net 30',
-      shipping_address: 'Level 5, Embassy Tech Village, Outer Ring Road, Bengaluru 560103',
-    },
-    internal_notes: 'Priority expansion deal. 15% discount approved by Sales Lead.',
-    customer_notes: 'Standard 30-day payment terms apply.',
-    lines: [
-      {
-        id: 'line-1',
-        product_id: 'prod-001',
-        product_name: 'Cloud Enterprise Engine License',
-        sku: 'ENG-CLOUD-01',
-        quantity: 5,
-        unit_price: 145000,
-        discount_percent: 10,
-        line_total: 652500,
-        margin_percent: 36,
-      },
-      {
-        id: 'line-2',
-        product_id: 'prod-002',
-        product_name: 'Managed SOC Security Sensor Node',
-        sku: 'SEC-SOC-800',
-        quantity: 3,
-        unit_price: 92000,
-        discount_percent: 5,
-        line_total: 262200,
-        margin_percent: 42,
-      },
-    ],
-    pricing: {
-      subtotal: 1001000,
-      discount_amount: 86300,
-      tax: 164700,
-      grand_total: 1079400,
-    },
-  })
 
   const load = async () => {
     if (!id) return
@@ -97,31 +43,19 @@ export function QuotationBuilderPage() {
         setInternalNotes(String((qRes.value.data.data as {internal_notes?:string}).internal_notes ?? ''))
         setCustomerNotes(String((qRes.value.data.data as {customer_notes?:string}).customer_notes ?? ''))
       } else {
-        const fb = getFallbackQuote(id)
-        setQ(fb)
-        setInternalNotes(fb.internal_notes)
-        setCustomerNotes(fb.customer_notes)
+        setQ(null)
+        setError('Quotation not found.')
       }
       if (evalRes.status === 'fulfilled' && evalRes.value.data?.data) {
         setEvalData(evalRes.value.data.data)
       } else {
-        setEvalData({
-          margin: { margin_percent: 38, minimum_margin_percent: 25, margin_impact: 'Positive healthy margin' },
-          approval_preview: { approval_required: false },
-          risk: { blended_risk_score: 18, risk_level: 'low' },
-        })
+        setEvalData(null)
       }
       if (recRes.status === 'fulfilled') setRecommendations(recRes.value.data?.data ?? [])
-    } catch {
-      const fb = getFallbackQuote(id)
-      setQ(fb)
-      setInternalNotes(fb.internal_notes)
-      setCustomerNotes(fb.customer_notes)
-      setEvalData({
-        margin: { margin_percent: 38, minimum_margin_percent: 25, margin_impact: 'Positive healthy margin' },
-        approval_preview: { approval_required: false },
-        risk: { blended_risk_score: 18, risk_level: 'low' },
-      })
+    } catch (err) {
+      setQ(null)
+      setError(getApiErrorMessage(err))
+      setEvalData(null)
     } finally { setLoading(false) }
   }
 
@@ -130,10 +64,10 @@ export function QuotationBuilderPage() {
     apiClient
       .get('/products?per_page=100')
       .then((r) => {
-        if (r.data?.data && r.data.data.length > 0) setProducts(r.data.data)
-        else setProducts(FALLBACK_BUILDER_PRODUCTS)
+        const raw = r.data?.data ?? r.data ?? []
+        setProducts(Array.isArray(raw) ? raw : [])
       })
-      .catch(() => setProducts(FALLBACK_BUILDER_PRODUCTS))
+      .catch(() => setProducts([]))
   }, [])
 
   const lines = (q as {lines?: Array<Record<string,unknown>>})?.lines ?? []

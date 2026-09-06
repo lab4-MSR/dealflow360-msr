@@ -9,7 +9,7 @@ export interface BreadcrumbItem {
   path?: string
 }
 
-export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   title: React.ReactNode
   description?: React.ReactNode
   breadcrumbs?: BreadcrumbItem[]

@@ -58,114 +58,6 @@ const KANBAN_STAGES: Array<{ id: DealRecord['stage']; label: string; color: stri
   { id: 'lost', label: 'Lost', color: 'border-rose-500/40 bg-rose-500/5' },
 ]
 
-const INITIAL_FALLBACK_DEALS: DealRecord[] = [
-  {
-    id: 'deal-001',
-    name: 'Acme Corp Annual Enterprise Expansion',
-    customer_name: 'Acme Technologies Ltd',
-    stage: 'negotiation',
-    value: 2450000,
-    discount_percent: 12,
-    margin_percent: 34,
-    risk_level: 'low',
-    health_score: 82,
-    health_status: 'healthy',
-    owner_name: 'Rahul Verma',
-    expected_close_date: '2026-09-30',
-    is_flagged: false,
-  },
-  {
-    id: 'deal-002',
-    name: 'Hyperion Server Infrastructure Refresh',
-    customer_name: 'Hyperion Systems',
-    stage: 'proposal',
-    value: 5800000,
-    discount_percent: 18,
-    margin_percent: 28,
-    risk_level: 'medium',
-    health_score: 74,
-    health_status: 'at_risk',
-    owner_name: 'Neha Sharma',
-    expected_close_date: '2026-10-15',
-    is_flagged: false,
-  },
-  {
-    id: 'deal-003',
-    name: 'Nexus SOC Platform Migration',
-    customer_name: 'Nexus Dynamics',
-    stage: 'closing',
-    value: 1650000,
-    discount_percent: 8,
-    margin_percent: 42,
-    risk_level: 'low',
-    health_score: 88,
-    health_status: 'healthy',
-    owner_name: 'Karan Patel',
-    expected_close_date: '2026-09-25',
-    is_flagged: false,
-  },
-  {
-    id: 'deal-004',
-    name: 'Zenith AI Core Appliance Deployment',
-    customer_name: 'Zenith Corp',
-    stage: 'draft',
-    value: 3200000,
-    discount_percent: 10,
-    margin_percent: 38,
-    risk_level: 'low',
-    health_score: 90,
-    health_status: 'healthy',
-    owner_name: 'Rahul Verma',
-    expected_close_date: '2026-11-01',
-    is_flagged: false,
-  },
-  {
-    id: 'deal-005',
-    name: 'Globex Multi-Tenant Cloud Fleet',
-    customer_name: 'Globex International',
-    stage: 'pending_approval',
-    value: 4100000,
-    discount_percent: 22,
-    margin_percent: 21,
-    risk_level: 'high',
-    health_score: 58,
-    health_status: 'at_risk',
-    owner_name: 'Neha Sharma',
-    expected_close_date: '2026-10-05',
-    is_flagged: true,
-  },
-  {
-    id: 'deal-006',
-    name: 'Stark Data Lake Expansion',
-    customer_name: 'Stark Industries',
-    stage: 'won',
-    value: 7200000,
-    discount_percent: 5,
-    margin_percent: 45,
-    risk_level: 'low',
-    health_score: 96,
-    health_status: 'healthy',
-    owner_name: 'Rahul Verma',
-    expected_close_date: '2026-08-30',
-    is_flagged: false,
-  },
-  {
-    id: 'deal-007',
-    name: 'Wayne Security Edge Appliance',
-    customer_name: 'Wayne Enterprises',
-    stage: 'lost',
-    value: 1900000,
-    discount_percent: 15,
-    margin_percent: 25,
-    risk_level: 'high',
-    health_score: 42,
-    health_status: 'stalled',
-    owner_name: 'Karan Patel',
-    expected_close_date: '2026-08-20',
-    is_flagged: true,
-  },
-]
-
 export function MyDealsPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const search = searchParams.get('search') ?? ''
@@ -175,7 +67,7 @@ export function MyDealsPage() {
   const [view, setView] = useState<'table' | 'kanban'>(
     viewParam === 'kanban' || viewParam === 'pipeline' ? 'kanban' : 'table'
   )
-  const [deals, setDeals] = useState<DealRecord[]>(INITIAL_FALLBACK_DEALS)
+  const [deals, setDeals] = useState<DealRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [q, setQ] = useState(search)
@@ -214,29 +106,27 @@ export function MyDealsPage() {
       params.set('per_page', '50')
 
       const res = await apiClient.get(`/deals?${params.toString()}`)
-      if (res.data?.data && Array.isArray(res.data.data) && res.data.data.length > 0) {
-        // Normalize backend deals
-        const normalized: DealRecord[] = res.data.data.map((d: any) => ({
-          id: d.id,
-          name: d.name || d.title || `Deal-${d.id.slice(0, 6)}`,
-          customer_name: d.customer_name || d.customer?.name || 'Customer Organization',
-          stage: d.stage || 'draft',
-          value: Number(d.value || d.deal_value || 0),
-          discount_percent: Number(d.discount_percent ?? d.discount ?? 10),
-          margin_percent: Number(d.margin_percent ?? d.margin ?? 35),
-          risk_level: d.risk_level ?? 'low',
-          health_score: Number(d.health_score ?? 80),
-          health_status: d.health_status ?? (d.health_score > 75 ? 'healthy' : 'at_risk'),
-          owner_name: d.owner_name || d.owner?.name || 'Sales Representative',
-          expected_close_date: d.expected_close_date || new Date().toISOString().slice(0, 10),
-          is_flagged: Boolean(d.is_flagged),
-        }))
-        setDeals(normalized)
-      } else {
-        setDeals(INITIAL_FALLBACK_DEALS)
-      }
-    } catch {
-      setDeals(INITIAL_FALLBACK_DEALS)
+      const raw = res.data?.data ?? res.data ?? []
+      const list = Array.isArray(raw) ? raw : []
+      const normalized: DealRecord[] = list.map((d: any) => ({
+        id: d.id,
+        name: d.name || d.title || `Deal-${String(d.id).slice(0, 6)}`,
+        customer_name: d.customer_name || d.customer?.name || 'Customer Organization',
+        stage: d.stage || 'draft',
+        value: Number(d.value || d.deal_value || 0),
+        discount_percent: Number(d.discount_percent ?? d.discount ?? 10),
+        margin_percent: Number(d.margin_percent ?? d.margin ?? 35),
+        risk_level: d.risk_level ?? 'low',
+        health_score: Number(d.health_score ?? 80),
+        health_status: d.health_status ?? (Number(d.health_score ?? 80) > 75 ? 'healthy' : 'at_risk'),
+        owner_name: d.owner_name || d.owner?.name || 'Sales Representative',
+        expected_close_date: d.expected_close_date || new Date().toISOString().slice(0, 10),
+        is_flagged: Boolean(d.is_flagged),
+      }))
+      setDeals(normalized)
+    } catch (err) {
+      setDeals([])
+      setError(getApiErrorMessage(err))
     } finally {
       setLoading(false)
     }

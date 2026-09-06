@@ -99,7 +99,15 @@ export async function signup(input: SignupInput) {
   if (claimsErr) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: `Failed to set claims: ${claimsErr.message}` });
 
   const sessionPayload = await buildSessionPayload(userId, email, 'business_admin', businessId, null);
-  return { business_id: businessId, ...sessionPayload };
+  const { data: signInData } = await anonClient.auth.signInWithPassword({ email, password });
+  return {
+    access_token: signInData?.session?.access_token ?? '',
+    refresh_token: signInData?.session?.refresh_token ?? '',
+    expires_at: signInData?.session?.expires_at,
+    user: sessionPayload,
+    business_id: businessId,
+    ...sessionPayload,
+  };
 }
 
 /** §5 POST /auth/login — password login via Supabase Auth. */

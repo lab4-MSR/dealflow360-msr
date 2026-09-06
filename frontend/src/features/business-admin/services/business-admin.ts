@@ -664,8 +664,11 @@ export async function addTaxRate(rate: Omit<TaxRate, 'id'>): Promise<TaxRate> {
   } catch {}
   const current = getLocalItem('dealflow360_currency_tax', DEFAULT_CURRENCY_TAX)
   const newRate: TaxRate = {
-    ...rate,
     id: `tr-${Date.now()}`,
+    name: rate.name,
+    rate: rate.rate,
+    type: rate.type,
+    country: rate.country,
   }
   const updated = {
     ...current,
@@ -3212,7 +3215,15 @@ export async function fetchAuditEvent(id: string): Promise<AuditEvent | null> {
 // --- Notification Settings -------------------------------
 
 const DEFAULT_NOTIFICATION_SETTINGS: NotificationSettings = {
-  emailNotifications: true, inAppNotifications: true, slackAlerts: false, digestFrequency: 'daily',
+  id: 'notif-settings-1',
+  emailNotifications: true,
+  approvalNotifications: true,
+  dealAlerts: true,
+  inventoryAlerts: true,
+  billingAlerts: true,
+  systemAlerts: true,
+  dailyDigest: true,
+  weeklyReport: false,
 }
 
 export async function fetchNotificationSettings(): Promise<NotificationSettings | null> {
@@ -3250,7 +3261,19 @@ export async function updateNotificationSettings(data: Partial<NotificationSetti
 // --- Security Settings -----------------------------------
 
 const DEFAULT_SECURITY_SETTINGS: SecuritySettings = {
-  twoFactorRequired: false, sessionTimeoutMinutes: 60, passwordRotationDays: 90, ipWhitelistEnabled: false,
+  id: 'sec-settings-1',
+  passwordMinLength: 8,
+  passwordRequireUppercase: true,
+  passwordRequireLowercase: true,
+  passwordRequireNumbers: true,
+  passwordRequireSpecialChars: false,
+  passwordExpiryDays: 90,
+  sessionDuration: 60,
+  idleTimeout: 15,
+  maxConcurrentSessions: 3,
+  mfaRequired: false,
+  ipRestriction: false,
+  allowedIps: [],
 }
 
 export async function fetchSecuritySettings(): Promise<SecuritySettings | null> {
@@ -3288,7 +3311,14 @@ export async function updateSecuritySettings(data: Partial<SecuritySettings>): P
 // --- Integration Settings --------------------------------
 
 const DEFAULT_INTEGRATION_SETTINGS: IntegrationSettings = {
-  crmSyncEnabled: true, accountingSyncEnabled: true, webhookUrl: '', apiRateLimit: 1000,
+  id: 'int-settings-1',
+  emailProvider: 'smtp',
+  emailConfigured: true,
+  paymentProvider: 'stripe',
+  paymentConfigured: false,
+  shippingProvider: 'fedex',
+  shippingConfigured: false,
+  externalServices: [],
 }
 
 export async function fetchIntegrationSettings(): Promise<IntegrationSettings | null> {
@@ -3326,7 +3356,14 @@ export async function updateIntegrationSettings(data: Partial<IntegrationSetting
 // --- Data Privacy Settings -------------------------------
 
 const DEFAULT_DATA_PRIVACY_SETTINGS: DataPrivacySettings = {
-  gdprCompliance: true, auditLogRetentionMonths: 24, anonymizeDeletedUsers: true,
+  id: 'dp-settings-1',
+  dataRetentionDays: 730,
+  autoDeleteInactive: false,
+  exportEnabled: true,
+  anonymizeData: true,
+  privacyPolicyUrl: '',
+  termsOfServiceUrl: '',
+  gdprCompliant: true,
 }
 
 export async function fetchDataPrivacySettings(): Promise<DataPrivacySettings | null> {

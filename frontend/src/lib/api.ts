@@ -86,7 +86,7 @@ apiClient.interceptors.response.use(
       url.includes('/auth/signup') ||
       url.includes('/auth/session')
     const token = localStorage.getItem('dealflow360-access-token')
-    const isMockToken = token?.startsWith('mock_token_')
+    const isMockToken = Boolean(token?.startsWith('mock_token_') || token?.startsWith('demo-mock-access-token:'))
 
     if (error.response?.status === 401 && !isAuthRequest && !isMockToken) {
       localStorage.removeItem('dealflow360-access-token')

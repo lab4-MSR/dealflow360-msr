@@ -36,6 +36,15 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
+const VELOCITY_CHART_DATA = [
+  { month: 'Apr', velocity: 45 },
+  { month: 'May', velocity: 52 },
+  { month: 'Jun', velocity: 58 },
+  { month: 'Jul', velocity: 65 },
+  { month: 'Aug', velocity: 74 },
+  { month: 'Sep', velocity: 82 },
+]
+
 interface DealItem {
   id: string
   title: string
@@ -56,103 +65,10 @@ interface QuotationItem {
   version: number
 }
 
-const DEFAULT_DEALS: DealItem[] = [
-  {
-    id: 'DEAL-8241',
-    title: 'Acme Corp Annual Enterprise Expansion',
-    customer: { name: 'Acme Technologies Ltd' },
-    stage: 'negotiation',
-    deal_value: 2450000,
-    health_score: 82,
-    expected_close_date: '2026-09-30',
-  },
-  {
-    id: 'DEAL-8240',
-    title: 'Hyperion Server Infrastructure Refresh',
-    customer: { name: 'Hyperion Systems' },
-    stage: 'proposal',
-    deal_value: 5800000,
-    health_score: 74,
-    expected_close_date: '2026-10-15',
-  },
-  {
-    id: 'DEAL-8239',
-    title: 'Nexus SOC Platform Migration',
-    customer: { name: 'Nexus Dynamics' },
-    stage: 'closing',
-    deal_value: 1650000,
-    health_score: 68,
-    expected_close_date: '2026-09-25',
-  },
-  {
-    id: 'DEAL-8238',
-    title: 'FinEdge Core Banking API Connectors',
-    customer: { name: 'FinEdge Financials' },
-    stage: 'approved',
-    deal_value: 3200000,
-    health_score: 91,
-    expected_close_date: '2026-10-05',
-  },
-  {
-    id: 'DEAL-8237',
-    title: 'Vanguard Multi-Region Warehouse Logistics',
-    customer: { name: 'Vanguard Global' },
-    stage: 'fulfillment',
-    deal_value: 4100000,
-    health_score: 88,
-    expected_close_date: '2026-09-28',
-  },
-]
-
-const DEFAULT_QUOTATIONS: QuotationItem[] = [
-  {
-    id: 'qt-001',
-    quote_number: 'QT-2026-00482',
-    customer_name: 'Acme Technologies Ltd',
-    status: 'pending_approval',
-    grand_total: 1346400,
-    valid_until: '2026-09-30',
-    version: 2,
-  },
-  {
-    id: 'qt-002',
-    quote_number: 'QT-2026-00481',
-    customer_name: 'Hyperion Systems',
-    status: 'approved',
-    grand_total: 5800000,
-    valid_until: '2026-10-15',
-    version: 1,
-  },
-  {
-    id: 'qt-003',
-    quote_number: 'QT-2026-00480',
-    customer_name: 'Nexus Dynamics',
-    status: 'draft',
-    grand_total: 1650000,
-    valid_until: '2026-09-25',
-    version: 1,
-  },
-]
-
-const VELOCITY_CHART_DATA = [
-  { month: 'Jan', velocity: 420 },
-  { month: 'Feb', velocity: 460 },
-  { month: 'Mar', velocity: 580 },
-  { month: 'Apr', velocity: 510 },
-  { month: 'May', velocity: 690 },
-  { month: 'Jun', velocity: 740 },
-  { month: 'Jul', velocity: 680 },
-  { month: 'Aug', velocity: 810 },
-  { month: 'Sep', velocity: 870 },
-  { month: 'Oct', velocity: 920 },
-  { month: 'Nov', velocity: 860 },
-  { month: 'Dec', velocity: 980 },
-]
-
 export function DashboardPage() {
   const { user } = useAuth()
-  const [deals, setDeals] = useState<DealItem[]>(DEFAULT_DEALS)
-  const [quotations, setQuotations] = useState<QuotationItem[]>(DEFAULT_QUOTATIONS)
+  const [deals, setDeals] = useState<DealItem[]>([])
+  const [quotations, setQuotations] = useState<QuotationItem[]>([])
   const [, setLoading] = useState(true)
   const [showAiBanner, setShowAiBanner] = useState(true)
 
@@ -169,21 +85,43 @@ export function DashboardPage() {
 
         if (!active) return
 
-        if (dealsRes.status === 'fulfilled' && dealsRes.value.data?.data?.length) {
-          setDeals(dealsRes.value.data.data)
+        if (dealsRes.status === 'fulfilled') {
+          const raw = dealsRes.value.data?.data ?? dealsRes.value.data ?? []
+          const list = Array.isArray(raw) ? raw : []
+          const mapped: DealItem[] = list.map((d: any) => ({
+            id: String(d.id),
+            title: d.name || d.title || `Deal #${String(d.id).slice(0, 6)}`,
+            customer: { name: d.customer?.name || d.customer_name || 'Customer Organization' },
+            stage: d.stage || 'draft',
+            deal_value: Number(d.value || d.deal_value || 0),
+            health_score: Number(d.health_score ?? 80),
+            expected_close_date: d.expected_close_date || new Date().toISOString().slice(0, 10),
+          }))
+          setDeals(mapped)
         } else {
-          setDeals(DEFAULT_DEALS)
+          setDeals([])
         }
 
-        if (quotesRes.status === 'fulfilled' && quotesRes.value.data?.data?.length) {
-          setQuotations(quotesRes.value.data.data)
+        if (quotesRes.status === 'fulfilled') {
+          const raw = quotesRes.value.data?.data ?? quotesRes.value.data ?? []
+          const list = Array.isArray(raw) ? raw : []
+          const mapped: QuotationItem[] = list.map((q: any) => ({
+            id: String(q.id),
+            quote_number: q.quote_number || `QT-${String(q.id).slice(0, 6)}`,
+            customer_name: q.customer?.name || q.customer_name || 'Customer Organization',
+            status: q.status || 'draft',
+            grand_total: Number(q.pricing?.grand_total || q.grand_total || 0),
+            valid_until: q.expiry_date || q.valid_until || new Date().toISOString().slice(0, 10),
+            version: q.version || 1,
+          }))
+          setQuotations(mapped)
         } else {
-          setQuotations(DEFAULT_QUOTATIONS)
+          setQuotations([])
         }
       } catch {
         if (active) {
-          setDeals(DEFAULT_DEALS)
-          setQuotations(DEFAULT_QUOTATIONS)
+          setDeals([])
+          setQuotations([])
         }
       } finally {
         if (active) setLoading(false)
@@ -279,9 +217,9 @@ export function DashboardPage() {
             <Layers className="h-3.5 w-3.5 text-primary" />
           </div>
           <p className="text-2xl font-bold text-foreground font-numeric">
-            {quotations.length * 9}
+            {quotations.length}
           </p>
-          <span className="text-[11px] font-semibold text-primary">₹8.4 Cr proposal volume</span>
+          <span className="text-[11px] font-semibold text-primary">Live Proposal Count</span>
         </div>
 
         {/* Card 3: Margin Approvals Pending */}
@@ -291,9 +229,9 @@ export function DashboardPage() {
             <Zap className="h-3.5 w-3.5 text-amber-500" />
           </div>
           <p className="text-2xl font-bold text-foreground font-numeric">
-            {pendingApprovalsCount > 0 ? pendingApprovalsCount : '4'}
+            {pendingApprovalsCount}
           </p>
-          <span className="text-[11px] font-semibold text-amber-500">SLA &lt; 2 hours</span>
+          <span className="text-[11px] font-semibold text-amber-500">Pending Review</span>
         </div>
 
         {/* Card 4: Fulfillments Active */}
@@ -530,47 +468,53 @@ export function DashboardPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {deals.map((deal) => (
-                  <TableRow key={deal.id} className="hover:bg-secondary/20 transition-colors">
-                    <TableCell className="py-3">
-                      <Link
-                        to={`/sales/deals/${deal.id}`}
-                        className="font-mono text-xs font-semibold text-foreground hover:text-sky-400 transition-colors"
-                      >
-                        {deal.id}
-                      </Link>
-                      <span className="text-[11px] text-muted-foreground block truncate max-w-[200px]">
-                        {deal.title}
-                      </span>
-                    </TableCell>
-                    <TableCell className="py-3 text-xs text-muted-foreground">
-                      {deal.customer.name}
-                    </TableCell>
-                    <TableCell className="py-3">
-                      <StatusBadge status={deal.stage as never} className="capitalize text-[10px]">
-                        {deal.stage.replace('_', ' ')}
-                      </StatusBadge>
-                    </TableCell>
-                    <TableCell className="py-3 text-right font-mono text-xs tabular-nums font-semibold text-foreground">
-                      <MoneyDisplay amount={deal.deal_value} />
-                    </TableCell>
-                    <TableCell className="py-3 text-center">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          deal.health_score >= 80
-                            ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
-                            : deal.health_score >= 60
-                            ? 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
-                            : 'bg-rose-500/15 text-rose-400 border border-rose-500/20'
-                        }`}
-                      >
-                        {deal.health_score}%
-                      </span>
-                    </TableCell>
-                    <TableCell className="py-3 text-right font-mono text-xs text-muted-foreground">
-                      {deal.expected_close_date}
+                {deals.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="py-8 text-center text-xs text-muted-foreground">
+                      No active enterprise pipeline deals found. Create a quotation or deal to get started.
                     </TableCell>
                   </TableRow>
+                ) : deals.map((deal) => (
+                    <TableRow key={deal.id} className="hover:bg-secondary/20 transition-colors">
+                      <TableCell className="py-3">
+                        <Link
+                          to={`/sales/deals/${deal.id}`}
+                          className="font-mono text-xs font-semibold text-foreground hover:text-sky-400 transition-colors"
+                        >
+                          {deal.id}
+                        </Link>
+                        <span className="text-[11px] text-muted-foreground block truncate max-w-[200px]">
+                          {deal.title}
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-3 text-xs text-muted-foreground">
+                        {deal.customer.name}
+                      </TableCell>
+                      <TableCell className="py-3">
+                        <StatusBadge status={deal.stage as never} className="capitalize text-[10px]">
+                          {deal.stage.replace('_', ' ')}
+                        </StatusBadge>
+                      </TableCell>
+                      <TableCell className="py-3 text-right font-mono text-xs tabular-nums font-semibold text-foreground">
+                        <MoneyDisplay amount={deal.deal_value} />
+                      </TableCell>
+                      <TableCell className="py-3 text-center">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            deal.health_score >= 80
+                              ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20'
+                              : deal.health_score >= 60
+                              ? 'bg-amber-500/15 text-amber-400 border border-amber-500/20'
+                              : 'bg-rose-500/15 text-rose-400 border border-rose-500/20'
+                          }`}
+                        >
+                          {deal.health_score}%
+                        </span>
+                      </TableCell>
+                      <TableCell className="py-3 text-right font-mono text-xs text-muted-foreground">
+                        {deal.expected_close_date}
+                      </TableCell>
+                    </TableRow>
                 ))}
               </TableBody>
             </Table>

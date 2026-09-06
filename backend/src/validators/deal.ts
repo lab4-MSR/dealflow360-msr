@@ -1,16 +1,28 @@
 import { z } from 'zod';
 
 export const createDealSchema = z.object({
-  name: z.string().min(1).max(200),
-  customer_id: z.string().uuid(),
+  name: z.string().min(1).max(200).optional(),
+  title: z.string().min(1).max(200).optional(),
+  customer_id: z.string().uuid().optional().nullable(),
+  stage: z.string().max(40).optional(),
+  value: z.number().min(0).optional(),
+  deal_value: z.number().min(0).optional(),
   expected_close_date: z.string().optional().nullable(),
-}).strict();
+}).passthrough().refine(data => Boolean(data.name || data.title), {
+  message: "Either 'name' or 'title' is required.",
+  path: ['name'],
+});
+
 export const updateDealSchema = z.object({
   name: z.string().min(1).max(200).optional(),
+  title: z.string().min(1).max(200).optional(),
   stage: z.string().max(40).optional(),
   expected_close_date: z.string().optional().nullable(),
   status: z.string().max(40).optional(),
-}).strict();
+  value: z.number().min(0).optional(),
+  deal_value: z.number().min(0).optional(),
+  customer_id: z.string().uuid().optional().nullable(),
+}).passthrough();
 
 export const createQuotationSchema = z.object({
   customer_id: z.string().uuid(),

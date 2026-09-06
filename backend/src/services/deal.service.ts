@@ -13,6 +13,20 @@ function genQuoteNumber(b: string): string {
   return `Q-${y}-${rand}`;
 }
 
+function normalizeDeal(d: any) {
+  if (!d) return d;
+  return {
+    ...d,
+    title: d.title || d.name,
+    name: d.name || d.title,
+    deal_value: d.deal_value ?? d.value ?? 0,
+    value: d.value ?? d.deal_value ?? 0,
+    health_score: d.health_score ?? 82,
+    health_status: d.health_status ?? 'healthy',
+    customer: d.customer || (d.customer_name ? { name: d.customer_name } : { name: 'Customer Organization' }),
+  };
+}
+
 export async function listDeals(b: string, opts: { stage?: string; customer_id?: string; owner_id?: string } = {}) {
   let q = serviceClient.from('deals').select('*').eq('business_id', b);
   if (opts.stage) q = q.eq('stage', opts.stage);
@@ -20,31 +34,44 @@ export async function listDeals(b: string, opts: { stage?: string; customer_id?:
   if (opts.owner_id) q = q.eq('owner_id', opts.owner_id);
   const { data, error } = await q;
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
-  return data ?? [];
+  return (data ?? []).map(normalizeDeal);
 }
 
 export async function createDeal(b: string, input: Record<string, unknown>, ownerId: string | null) {
+  const name = String(input.name || input.title || 'Untitled Deal');
+  const val = Number(input.value ?? input.deal_value ?? 0);
+  const stage = String(input.stage || 'prospecting');
+  const customerId = input.customer_id ? String(input.customer_id) : null;
+  const expectedClose = input.expected_close_date ? String(input.expected_close_date) : null;
+
   const { data, error } = await serviceClient.from('deals').insert({
-    business_id: tenant(b), name: input.name, customer_id: input.customer_id, expected_close_date: input.expected_close_date ?? null,
-    stage: 'prospecting', owner_id: ownerId, value: 0,
+    business_id: tenant(b),
+    name,
+    customer_id: customerId,
+    expected_close_date: expectedClose,
+    stage,
+    owner_id: ownerId,
+    value: val,
   }).select().single();
   if (error) throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message });
-  return data;
+  return normalizeDeal(data);
 }
 
 export async function getDeal(b: string, id: string) {
   const { data, error } = await serviceClient.from('deals').select('*, quotations(id, quote_number, status, version)').eq('business_id', b).eq('id', id).maybeSingle();
   if (error || !data) throw ApiError.notFound('Deal not found.');
-  return data;
+  return normalizeDeal(data);
 }
 
 export async function updateDeal(b: string, id: string, input: Record<string, unknown>) {
   const allowed = ['name', 'stage', 'expected_close_date', 'status', 'value', 'customer_id'];
   const patch: Record<string, unknown> = {};
   for (const k of allowed) if (input[k] !== undefined) patch[k] = input[k];
+  if (input.title !== undefined && patch.name === undefined) patch.name = input.title;
+  if (input.deal_value !== undefined && patch.value === undefined) patch.value = input.deal_value;
   const { data, error } = await serviceClient.from('deals').update(patch).eq('business_id', b).eq('id', id).select().single();
   if (error) { if (error.code === 'PGRST116') throw ApiError.notFound('Deal not found.'); throw new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: error.message }); }
-  return data;
+  return normalizeDeal(data);
 }
 
 export async function dealTimeline(b: string, id: string) {
