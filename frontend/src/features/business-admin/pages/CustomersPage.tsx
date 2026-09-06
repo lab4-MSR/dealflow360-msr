@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -149,8 +149,8 @@ export function CustomersPage() {
         email: createForm.contactEmail.trim().toLowerCase(),
         phone: createForm.contactPhone.trim(),
         creditLimit: Number(createForm.creditLimit) || 0,
-        ownerId: createForm.ownerId.trim() || undefined,
-        defaultPriceListId: createForm.defaultPriceListId.trim() || undefined,
+        ownerId: (createForm.ownerId as string | undefined)?.trim() || undefined,
+        defaultPriceListId: (createForm.defaultPriceListId as string | undefined)?.trim() || undefined,
         contacts: [
           {
             name: createForm.contactName.trim() || createForm.name.trim(),
@@ -213,8 +213,8 @@ export function CustomersPage() {
     toast.success('Customer directory exported as CSV')
   }
 
-  const getTierBadge = (tier: string = 'bronze') => {
-    const t = tier.toLowerCase()
+  const getTierBadge = (tier?: string | null) => {
+    const t = (tier || 'bronze').toLowerCase()
     if (t === 'platinum') {
       return (
         <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-900 text-slate-50 dark:bg-slate-100 dark:text-slate-900 border border-slate-700 shadow-2xs">

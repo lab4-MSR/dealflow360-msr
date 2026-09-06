@@ -520,6 +520,8 @@ export function App() {
           <Route path="/settings" element={<SettingsPage />} />
 
           {/* Alias / compatibility routes for direct entity links */}
+          <Route path="/customers" element={<Navigate to="/business-admin/customers" replace />} />
+          <Route path="/customers/create" element={<Navigate to="/business-admin/customers/create" replace />} />
           <Route path="/deals/:id" element={<DealDetailsPage />} />
           <Route path="/quotations/:id" element={<QuotationDetailsPage />} />
           <Route path="/customers/:id" element={<CustomerDetailsPage />} />
