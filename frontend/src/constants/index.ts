@@ -150,7 +150,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'INTELLIGENCE',
-    roles: ['sales_manager'],
+    roles: ['super_admin', 'business_admin', 'sales_manager'],
     items: [
       { label: 'Intelligence Command', path: '/intelligence', icon: 'Sparkles' },
       { label: 'Risk Overview', path: '/intelligence/risks', icon: 'ShieldAlert' },
@@ -164,7 +164,7 @@ export const SIDEBAR_NAV: NavSection[] = [
   },
   {
     section: 'ANALYTICS & BI',
-    roles: ['sales_manager', 'finance', 'operations'],
+    roles: ['super_admin', 'business_admin', 'sales_manager', 'finance', 'operations'],
     items: [
       { label: 'Executive Dashboard', path: '/analytics/executive', icon: 'BarChart3' },
       { label: 'Sales Analytics', path: '/analytics/sales', icon: 'TrendingUp' },

@@ -43,9 +43,9 @@ export const DiscountAnomaliesPage: React.FC = () => {
 
   const filtered = anomalies.filter(
     (a) =>
-      a.deal_name.toLowerCase().includes(search.toLowerCase()) ||
-      a.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-      a.rep_name.toLowerCase().includes(search.toLowerCase())
+      (a.deal_name || '').toLowerCase().includes(search.toLowerCase()) ||
+      (a.customer_name || '').toLowerCase().includes(search.toLowerCase()) ||
+      (a.rep_name || a.sales_rep_name || '').toLowerCase().includes(search.toLowerCase())
   )
 
   const totalErosion = anomalies.reduce((acc, a) => acc + (Number(a.margin_impact) || 0), 0)

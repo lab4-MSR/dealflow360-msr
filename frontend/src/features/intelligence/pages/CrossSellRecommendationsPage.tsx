@@ -31,11 +31,11 @@ export const CrossSellRecommendationsPage: React.FC = () => {
   }, [])
 
   const filtered = recommendations.filter((r) =>
-    r.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-    r.recommended_product.toLowerCase().includes(search.toLowerCase())
+    (r.customer_name || '').toLowerCase().includes(search.toLowerCase()) ||
+    (r.recommended_product || r.recommended_product_name || '').toLowerCase().includes(search.toLowerCase())
   )
 
-  const totalUplift = recommendations.reduce((sum, r) => sum + r.potential_revenue_uplift, 0)
+  const totalUplift = recommendations.reduce((sum, r) => sum + (r.potential_revenue_uplift ?? r.revenue_delta ?? 0), 0)
 
   return (
     <div className="space-y-8">

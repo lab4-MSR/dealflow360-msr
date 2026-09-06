@@ -126,14 +126,14 @@ export const StalledDealsPage: React.FC = () => {
                 </thead>
                 <tbody className="divide-y divide-border">
                   {filtered.map((deal) => (
-                    <tr key={deal.deal_id} className="hover:bg-surface-muted/50 transition-colors">
+                    <tr key={deal.deal_id || deal.id} className="hover:bg-surface-muted/50 transition-colors">
                       <td className="py-3.5 px-4">
                         <span className="font-semibold text-foreground block">{deal.deal_name}</span>
                         <span className="text-[11px] text-muted-foreground">{deal.customer_name}</span>
                       </td>
                       <td className="py-3.5 px-3 font-medium text-foreground">{deal.rep_name}</td>
                       <td className="py-3.5 px-3 font-semibold text-foreground">
-                        ₹{deal.deal_value.toLocaleString('en-IN')}
+                        ₹{Number(deal.deal_value ?? deal.total_value ?? 0).toLocaleString('en-IN')}
                       </td>
                       <td className="py-3.5 px-3">
                         <Badge variant="outline" className="text-[10px]">{deal.stage}</Badge>
@@ -142,7 +142,7 @@ export const StalledDealsPage: React.FC = () => {
                         <span className="font-bold text-amber-600">{deal.stalled_days} days</span>
                       </td>
                       <td className="py-3.5 px-3">
-                        <span className="text-foreground font-medium block">{deal.reason}</span>
+                        <span className="text-foreground font-medium block">{deal.reason || deal.reason_explanation}</span>
                       </td>
                       <td className="py-3.5 px-3 max-w-xs text-muted-foreground">
                         {deal.recommended_action}

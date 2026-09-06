@@ -70,7 +70,7 @@ export const DealHealthOverviewPage: React.FC = () => {
             onClick={() => navigate('/intelligence/health/stalled')}
             className="bg-amber-600 hover:bg-amber-700 text-white gap-1 text-xs"
           >
-            Stalled Deals Queue ({data.stalled_deals})
+            Stalled Deals Queue ({data.stalled_deals ?? data.kpis?.stalled ?? 0})
           </Button>
         </div>
       </div>

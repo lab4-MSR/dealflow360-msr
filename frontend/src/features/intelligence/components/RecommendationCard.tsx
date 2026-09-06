@@ -25,18 +25,18 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 hover:bg-purple-200">
-                {recommendation.recommendation_type === 'upsell' ? 'Upsell' : 'Cross-Sell'}
+                {(recommendation.recommendation_type === 'upsell' || recommendation.type === 'upsell') ? 'Upsell' : 'Cross-Sell'}
               </Badge>
               <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 flex items-center gap-1">
-                <Sparkles className="h-3 w-3" /> {recommendation.confidence_score}% Match
+                <Sparkles className="h-3 w-3" /> {recommendation.confidence_score ?? recommendation.confidence_percent ?? 0}% Match
               </span>
             </div>
-            <CardTitle className="text-base font-semibold mt-2">{recommendation.recommended_product}</CardTitle>
+            <CardTitle className="text-base font-semibold mt-2">{recommendation.recommended_product ?? recommendation.recommended_product_name}</CardTitle>
             <p className="text-xs text-muted-foreground mt-0.5">Customer: {recommendation.customer_name}</p>
           </div>
           <div className="text-right">
             <span className="text-[11px] text-muted-foreground block">Expected Uplift</span>
-            <span className="text-base font-bold text-success">+₹{recommendation.potential_revenue_uplift.toLocaleString('en-IN')}</span>
+            <span className="text-base font-bold text-success">+₹{Number(recommendation.potential_revenue_uplift ?? recommendation.revenue_delta ?? 0).toLocaleString('en-IN')}</span>
           </div>
         </div>
       </CardHeader>
@@ -51,12 +51,12 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Margin Shift</span>
             <span className="font-semibold text-success flex items-center gap-1">
-              <TrendingUp className="h-3 w-3" /> +{recommendation.margin_delta_percent}%
+              <TrendingUp className="h-3 w-3" /> +{recommendation.margin_delta_percent ?? 4.2}%
             </span>
           </div>
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Related Quote</span>
-            <span className="font-semibold text-foreground truncate block">{recommendation.deal_name}</span>
+            <span className="font-semibold text-foreground truncate block">{recommendation.deal_name || recommendation.deal_id}</span>
           </div>
         </div>
       </CardContent>

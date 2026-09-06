@@ -99,7 +99,7 @@ export const DeliverySlippagePage: React.FC = () => {
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Total Order Value Impacted</span>
           <p className="text-2xl font-bold text-foreground mt-1">
-            ₹{slippages.reduce((acc, s) => acc + s.order_value, 0).toLocaleString('en-IN')}
+            ₹{slippages.reduce((acc, s) => acc + (Number(s.order_value) || 0), 0).toLocaleString('en-IN')}
           </p>
           <span className="text-[11px] text-muted-foreground">Fulfillment pending</span>
         </div>

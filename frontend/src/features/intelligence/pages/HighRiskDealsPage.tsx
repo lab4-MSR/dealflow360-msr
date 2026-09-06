@@ -149,26 +149,26 @@ export const HighRiskDealsPage: React.FC = () => {
                     </tr>
                   ) : (
                     filteredDeals.map((deal) => (
-                      <tr key={deal.deal_id} className="hover:bg-surface-muted/50 transition-colors">
+                      <tr key={deal.deal_id || deal.id} className="hover:bg-surface-muted/50 transition-colors">
                         <td className="py-3.5 px-4">
                           <span className="font-semibold text-foreground block">{deal.deal_name}</span>
                           <span className="text-[11px] text-muted-foreground">{deal.customer_name}</span>
                         </td>
                         <td className="py-3.5 px-3 font-medium text-foreground">{deal.rep_name}</td>
                         <td className="py-3.5 px-3 font-semibold text-foreground">
-                          ₹{deal.deal_value.toLocaleString('en-IN')}
+                          ₹{Number(deal.deal_value ?? deal.total_value ?? 0).toLocaleString('en-IN')}
                         </td>
                         <td className="py-3.5 px-3">
-                          <RiskBadge risk={deal.risk_level}>{deal.blended_score} / 100</RiskBadge>
+                          <RiskBadge risk={deal.risk_level}>{(deal.blended_score ?? deal.risk_score ?? 0)} / 100</RiskBadge>
                         </td>
                         <td className="py-3.5 px-3 font-medium text-foreground">{deal.margin_percent}%</td>
                         <td className="py-3.5 px-3">
-                          <span className="font-semibold text-foreground block">{deal.primary_risk_driver}</span>
+                          <span className="font-semibold text-foreground block">{deal.primary_risk_driver ?? deal.primary_risk}</span>
                           <span className="text-[11px] text-muted-foreground">Erosion risk</span>
                         </td>
                         <td className="py-3.5 px-4 text-right">
                           <Button asChild size="sm" variant="outline" className="text-xs h-7 gap-1">
-                            <Link to={`/intelligence/risks/${deal.quotation_id}`}>
+                            <Link to={`/intelligence/risks/${deal.quotation_id || deal.deal_id || deal.id}`}>
                               Inspect Risk <ArrowRight className="h-3 w-3" />
                             </Link>
                           </Button>

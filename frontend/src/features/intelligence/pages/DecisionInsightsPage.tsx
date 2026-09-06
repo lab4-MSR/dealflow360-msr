@@ -48,11 +48,11 @@ export const DecisionInsightsPage: React.FC = () => {
   }
 
   const filtered = insights.filter((item) => {
-    const matchesCategory = categoryFilter === 'all' || item.category.toLowerCase() === categoryFilter.toLowerCase()
+    const matchesCategory = categoryFilter === 'all' || (item.category || '').toLowerCase() === categoryFilter.toLowerCase()
     const matchesSearch =
-      item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.explanation.what.toLowerCase().includes(search.toLowerCase()) ||
-      item.explanation.why.toLowerCase().includes(search.toLowerCase())
+      (item.title || '').toLowerCase().includes(search.toLowerCase()) ||
+      (item.explanation?.what || '').toLowerCase().includes(search.toLowerCase()) ||
+      (item.explanation?.why || '').toLowerCase().includes(search.toLowerCase())
     return matchesCategory && matchesSearch
   })
 
