@@ -62,12 +62,12 @@ export const RecommendationDetailsPage: React.FC = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate('/intelligence/recommendations/upsell')}
-            className="gap-1 text-xs mb-2 text-muted-foreground"
+            className="gap-1 text-xs mb-2 text-primary hover:text-primary-hover p-0 h-auto"
           >
             <ArrowLeft className="h-3 w-3" /> Back to Recommendations
           </Button>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-purple-100 dark:bg-purple-950 text-purple-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <Sparkles className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
@@ -109,7 +109,7 @@ export const RecommendationDetailsPage: React.FC = () => {
               }
             }}
             disabled={applied}
-            className="bg-purple-600 hover:bg-purple-700 text-white gap-1 text-xs"
+            className="bg-primary hover:bg-primary-hover text-white gap-1 text-xs"
           >
             {applied ? <Check className="h-3.5 w-3.5" /> : <Sparkles className="h-3.5 w-3.5" />}
             {applied ? 'Applied to Quotation' : 'Apply to Quotation'}
@@ -127,28 +127,28 @@ export const RecommendationDetailsPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Match Confidence</span>
-          <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">
+          <p className="text-2xl font-bold text-primary font-numeric mt-1">
             {data.confidence_score ?? data.confidence_percent ?? 90}%
           </p>
           <span className="text-[11px] text-muted-foreground">Purchase propensity score</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Revenue Uplift</span>
-          <p className="text-2xl font-bold text-success mt-1">
+          <p className="text-2xl font-bold text-success font-numeric mt-1">
             +₹{Number(data.potential_revenue_uplift ?? data.revenue_delta ?? 0).toLocaleString('en-IN')}
           </p>
           <span className="text-[11px] text-muted-foreground">Incremental ARR</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Margin Delta</span>
-          <p className="text-2xl font-bold text-success mt-1">
+          <p className="text-2xl font-bold text-success font-numeric mt-1">
             +{data.margin_delta_percent ?? 4.2}%
           </p>
           <span className="text-[11px] text-muted-foreground">Blended gross margin expansion</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Customer LTV Lift</span>
-          <p className="text-2xl font-bold text-foreground mt-1">
+          <p className="text-2xl font-bold text-foreground font-numeric mt-1">
             ₹{Number((data.potential_revenue_uplift ?? data.revenue_delta ?? 0) * 2.5).toLocaleString('en-IN')}
           </p>
           <span className="text-[11px] text-muted-foreground">Projected 3-year value</span>
@@ -187,20 +187,20 @@ export const RecommendationDetailsPage: React.FC = () => {
                 <tr>
                   <td className="py-3 px-4 font-medium text-foreground">Quoted Product / Package</td>
                   <td className="py-3 px-4 text-muted-foreground">{data.current_product || data.current_product_name || 'Standard Base Plan'}</td>
-                  <td className="py-3 px-4 font-semibold text-purple-700 dark:text-purple-400">
+                  <td className="py-3 px-4 font-semibold text-primary">
                     {data.recommended_product ?? data.recommended_product_name}
                   </td>
                   <td className="py-3 px-4 text-right font-medium text-success">Upgraded</td>
                 </tr>
                 <tr>
                   <td className="py-3 px-4 font-medium text-foreground">Total Contract Value</td>
-                  <td className="py-3 px-4 text-muted-foreground">
+                  <td className="py-3 px-4 text-muted-foreground font-numeric">
                     ₹{Number((data.potential_revenue_uplift ?? data.revenue_delta ?? 0) * 3).toLocaleString('en-IN')}
                   </td>
-                  <td className="py-3 px-4 font-semibold text-foreground">
+                  <td className="py-3 px-4 font-semibold text-foreground font-numeric">
                     ₹{Number((data.potential_revenue_uplift ?? data.revenue_delta ?? 0) * 4).toLocaleString('en-IN')}
                   </td>
-                  <td className="py-3 px-4 text-right font-semibold text-success">
+                  <td className="py-3 px-4 text-right font-semibold text-success font-numeric">
                     +₹{Number(data.potential_revenue_uplift ?? data.revenue_delta ?? 0).toLocaleString('en-IN')}
                   </td>
                 </tr>

@@ -60,7 +60,7 @@ export const StalledDealsPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <Clock className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Stalled Deals Queue</h1>
@@ -132,14 +132,14 @@ export const StalledDealsPage: React.FC = () => {
                         <span className="text-[11px] text-muted-foreground">{deal.customer_name}</span>
                       </td>
                       <td className="py-3.5 px-3 font-medium text-foreground">{deal.rep_name}</td>
-                      <td className="py-3.5 px-3 font-semibold text-foreground">
+                      <td className="py-3.5 px-3 font-semibold text-foreground font-numeric">
                         ₹{Number(deal.deal_value ?? deal.total_value ?? 0).toLocaleString('en-IN')}
                       </td>
                       <td className="py-3.5 px-3">
                         <Badge variant="outline" className="text-[10px]">{deal.stage}</Badge>
                       </td>
                       <td className="py-3.5 px-3">
-                        <span className="font-bold text-amber-600">{deal.stalled_days} days</span>
+                        <span className="font-bold text-warning font-numeric">{deal.stalled_days} days</span>
                       </td>
                       <td className="py-3.5 px-3">
                         <span className="text-foreground font-medium block">{deal.reason || deal.reason_explanation}</span>
@@ -151,7 +151,7 @@ export const StalledDealsPage: React.FC = () => {
                         <Button
                           size="sm"
                           onClick={() => handleUnstick(deal)}
-                          className="bg-amber-600 hover:bg-amber-700 text-white text-xs h-7 gap-1"
+                          className="bg-primary hover:bg-primary-hover text-white text-xs h-7 gap-1"
                         >
                           <Send className="h-3 w-3" /> Unstick
                         </Button>

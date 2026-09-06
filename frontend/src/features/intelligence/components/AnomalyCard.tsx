@@ -14,8 +14,8 @@ interface DiscountAnomalyCardProps {
 
 export const DiscountAnomalyCard: React.FC<DiscountAnomalyCardProps> = ({ item, onDismiss, onReview }) => {
   return (
-    <Card className="border-rose-200 dark:border-rose-900/60 overflow-hidden">
-      <CardHeader className="pb-3 border-b border-border/50 bg-rose-50/30 dark:bg-rose-950/10">
+    <Card className="border-border hover:border-danger/30 transition-colors overflow-hidden">
+      <CardHeader className="pb-3 border-b border-border bg-surface-muted/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-4 w-4 text-danger" />
@@ -33,19 +33,19 @@ export const DiscountAnomalyCard: React.FC<DiscountAnomalyCardProps> = ({ item, 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Quoted Discount</span>
-            <span className="font-bold text-danger text-sm">{item.quoted_discount_percent}%</span>
+            <span className="font-bold text-danger font-numeric text-sm">{item.quoted_discount_percent}%</span>
           </div>
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Max Permitted</span>
-            <span className="font-bold text-foreground text-sm">{item.allowed_discount_percent}%</span>
+            <span className="font-bold text-foreground font-numeric text-sm">{item.allowed_discount_percent}%</span>
           </div>
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Excess Variance</span>
-            <span className="font-bold text-rose-600 text-sm">+{item.difference_percent}%</span>
+            <span className="font-bold text-danger font-numeric text-sm">+{item.difference_percent}%</span>
           </div>
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Margin Erosion</span>
-            <span className="font-bold text-danger text-sm">₹{item.margin_impact.toLocaleString('en-IN')}</span>
+            <span className="font-bold text-danger font-numeric text-sm">₹{item.margin_impact.toLocaleString('en-IN')}</span>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export const DiscountAnomalyCard: React.FC<DiscountAnomalyCardProps> = ({ item, 
             </Button>
           )}
           {onReview && (
-            <Button size="sm" onClick={() => onReview(item.deal_id)} className="text-xs h-8 gap-1 bg-primary">
+            <Button size="sm" onClick={() => onReview(item.deal_id)} className="text-xs h-8 gap-1 bg-primary hover:bg-primary-hover text-white">
               Review Deal <ArrowRight className="h-3 w-3" />
             </Button>
           )}
@@ -78,8 +78,8 @@ interface DeliverySlippageCardProps {
 
 export const DeliverySlippageCard: React.FC<DeliverySlippageCardProps> = ({ item, onRemediate }) => {
   return (
-    <Card className="border-amber-200 dark:border-amber-900/60 overflow-hidden">
-      <CardHeader className="pb-3 border-b border-border/50 bg-amber-50/30 dark:bg-amber-950/10">
+    <Card className="border-border hover:border-warning/30 transition-colors overflow-hidden">
+      <CardHeader className="pb-3 border-b border-border bg-surface-muted/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-warning" />
@@ -87,7 +87,7 @@ export const DeliverySlippageCard: React.FC<DeliverySlippageCardProps> = ({ item
               Order #{item.order_number} · {item.customer_name}
             </CardTitle>
           </div>
-          <Badge className="bg-amber-500 text-white uppercase text-[10px]">{item.severity}</Badge>
+          <Badge className="bg-warning text-warning-foreground uppercase text-[10px]">{item.severity}</Badge>
         </div>
       </CardHeader>
 
@@ -107,7 +107,7 @@ export const DeliverySlippageCard: React.FC<DeliverySlippageCardProps> = ({ item
           </div>
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Slippage Delay</span>
-            <span className="font-bold text-danger">+{item.slippage_days} Days</span>
+            <span className="font-bold text-danger font-numeric">+{item.slippage_days} Days</span>
           </div>
         </div>
 
@@ -115,9 +115,9 @@ export const DeliverySlippageCard: React.FC<DeliverySlippageCardProps> = ({ item
       </CardContent>
 
       <CardFooter className="pt-2 pb-3 border-t border-border flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">Order Value: ₹{item.order_value.toLocaleString('en-IN')}</span>
+        <span className="text-xs text-muted-foreground font-numeric">Order Value: ₹{item.order_value.toLocaleString('en-IN')}</span>
         {onRemediate && (
-          <Button size="sm" onClick={() => onRemediate(item.id)} className="text-xs h-8 gap-1 bg-amber-600 hover:bg-amber-700 text-white">
+          <Button size="sm" onClick={() => onRemediate(item.id)} className="text-xs h-8 gap-1 bg-primary hover:bg-primary-hover text-white">
             Remediate Dispatch <ArrowRight className="h-3 w-3" />
           </Button>
         )}

@@ -43,7 +43,7 @@ export const CrossSellRecommendationsPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-purple-100 dark:bg-purple-950 text-purple-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <Layers className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Cross-Sell Bundles</h1>
@@ -71,19 +71,19 @@ export const CrossSellRecommendationsPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Cross-Sell Pipeline Uplift</span>
-          <p className="text-2xl font-bold text-purple-700 dark:text-purple-400 mt-1">
+          <p className="text-2xl font-bold text-primary font-numeric mt-1">
             ₹{totalUplift.toLocaleString('en-IN')}
           </p>
           <span className="text-[11px] text-muted-foreground">High-margin add-ons</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Avg Affinity Score</span>
-          <p className="text-2xl font-bold text-foreground mt-1">88%</p>
+          <p className="text-2xl font-bold text-foreground font-numeric mt-1">88%</p>
           <span className="text-[11px] text-success">Pattern affinity match</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Margin Expansion</span>
-          <p className="text-2xl font-bold text-success mt-1">+3.8%</p>
+          <p className="text-2xl font-bold text-success font-numeric mt-1">+3.8%</p>
           <span className="text-[11px] text-muted-foreground">Service margin uplift</span>
         </div>
       </div>

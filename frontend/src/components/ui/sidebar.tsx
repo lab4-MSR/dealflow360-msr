@@ -122,19 +122,53 @@ export function Sidebar({
 
   const role = user?.role
 
-  const visibleSections = SIDEBAR_NAV.map((section) => {
-    if (section.roles && role && !section.roles.includes(role)) {
-      return null
-    }
-    const visibleItems = section.items.filter((item) => {
-      if (item.roles && role && !item.roles.includes(role)) {
-        return false
+  const visibleSections = useMemo(() => {
+    return SIDEBAR_NAV.map((section) => {
+      if (section.roles && role && !section.roles.includes(role)) {
+        return null
       }
-      return true
-    })
-    if (visibleItems.length === 0) return null
-    return { ...section, items: visibleItems }
-  }).filter(Boolean) as typeof SIDEBAR_NAV
+      const visibleItems = section.items.filter((item) => {
+        if (item.roles && role && !item.roles.includes(role)) {
+          return false
+        }
+        return true
+      })
+      if (visibleItems.length === 0) return null
+      return { ...section, items: visibleItems }
+    }).filter(Boolean) as typeof SIDEBAR_NAV
+  }, [role])
+
+  const allVisibleItems = useMemo(
+    () => visibleSections.flatMap((s) => s.items),
+    [visibleSections]
+  )
+
+  const activePath = useMemo(() => {
+    const current = location.pathname
+
+    // 1. Check exact matches or specific route aliases
+    for (const item of allVisibleItems) {
+      if (item.path === current) return item.path
+      if (item.path === '/dashboard' && (current === '/' || current === '/dashboard')) return item.path
+      if (item.path === '/platform/dashboard' && (current === '/platform' || current === '/platform/dashboard')) return item.path
+      if (item.path === '/platform/health' && current === '/platform/system-health') return item.path
+    }
+
+    // 2. No exact match - find longest prefix with a slash boundary
+    let bestMatch: string | null = null
+    let bestLength = 0
+    for (const item of allVisibleItems) {
+      if (item.path !== '/' && item.path !== '/dashboard' && item.path !== '/platform/dashboard') {
+        if (current.startsWith(item.path + '/')) {
+          if (item.path.length > bestLength) {
+            bestLength = item.path.length
+            bestMatch = item.path
+          }
+        }
+      }
+    }
+    return bestMatch
+  }, [location.pathname, allVisibleItems])
 
   return (
     <>
@@ -193,39 +227,22 @@ export function Sidebar({
               <div className="mt-1 space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = iconMap[item.icon] || FileText
-                  const isItemActive = (active: boolean) => {
-                    if (active) return true
-                    if (item.path === '/dashboard' && (location.pathname === '/' || location.pathname === '/dashboard')) return true
-                    if (item.path === '/platform/dashboard' && (location.pathname === '/platform' || location.pathname === '/platform/dashboard')) return true
-                    if (item.path === '/platform/health' && location.pathname === '/platform/system-health') return true
-                    if (item.path !== '/dashboard' && item.path !== '/platform/dashboard' && location.pathname.startsWith(item.path + '/')) return true
-                    return false
-                  }
+                  const active = item.path === activePath
                   return (
                     <NavLink
                       key={item.path}
                       to={item.path}
                       title={collapsed ? item.label : undefined}
-                      className={({ isActive }) => {
-                        const active = isItemActive(isActive)
-                        return cn(
-                          'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-all duration-150 ease-out',
-                          collapsed && 'justify-center px-2',
-                          active
-                            ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-xs font-semibold'
-                            : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:scale-[0.99] motion-reduce:active:scale-100'
-                        )
-                      }}
+                      className={cn(
+                        'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-small font-medium transition-all duration-150 ease-out',
+                        collapsed && 'justify-center px-2',
+                        active
+                          ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-xs font-semibold'
+                          : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:scale-[0.99] motion-reduce:active:scale-100'
+                      )}
                     >
-                      {({ isActive }) => {
-                        const active = isItemActive(isActive)
-                        return (
-                          <>
-                            <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-150', active && 'scale-105')} />
-                            {!collapsed && <span className="truncate">{item.label}</span>}
-                          </>
-                        )
-                      }}
+                      <Icon className={cn('h-4 w-4 shrink-0 transition-transform duration-150', active && 'scale-105')} />
+                      {!collapsed && <span className="truncate">{item.label}</span>}
                     </NavLink>
                   )
                 })}

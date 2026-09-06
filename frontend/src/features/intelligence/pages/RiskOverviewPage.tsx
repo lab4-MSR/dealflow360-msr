@@ -60,7 +60,7 @@ export const RiskOverviewPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-950 text-rose-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <ShieldAlert className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Risk Engine Overview</h1>
@@ -76,7 +76,7 @@ export const RiskOverviewPage: React.FC = () => {
           <Button
             size="sm"
             onClick={() => navigate('/intelligence/risks/high')}
-            className="bg-rose-600 hover:bg-rose-700 text-white gap-1 text-xs"
+            className="gap-1 text-xs"
           >
             High-Risk Deals Queue ({data.high_risk_deals ?? data.kpis?.high_risk ?? 0})
           </Button>
@@ -88,36 +88,36 @@ export const RiskOverviewPage: React.FC = () => {
         <Card>
           <CardContent className="pt-5">
             <span className="text-xs text-muted-foreground">Total Assessed Deals</span>
-            <p className="text-2xl font-bold text-foreground mt-1">{data.total_deals_assessed ?? data.kpis?.total_deals ?? 0}</p>
+            <p className="text-2xl font-bold text-foreground font-numeric mt-1">{data.total_deals_assessed ?? data.kpis?.total_deals ?? 0}</p>
             <span className="text-[11px] text-muted-foreground">100% evaluated</span>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-5">
             <span className="text-xs text-muted-foreground">Avg Blended Score</span>
-            <p className="text-2xl font-bold text-foreground mt-1">{data.average_risk_score ?? 42} / 100</p>
+            <p className="text-2xl font-bold text-foreground font-numeric mt-1">{data.average_risk_score ?? 42} / 100</p>
             <span className="text-[11px] text-success">Healthy portfolio baseline</span>
           </CardContent>
         </Card>
-        <Card className="border-rose-200 dark:border-rose-900">
+        <Card>
           <CardContent className="pt-5">
             <span className="text-xs text-muted-foreground">High Risk Deals</span>
-            <p className="text-2xl font-bold text-rose-600 mt-1">{data.high_risk_deals ?? data.kpis?.high_risk ?? 0}</p>
+            <p className="text-2xl font-bold text-warning font-numeric mt-1">{data.high_risk_deals ?? data.kpis?.high_risk ?? 0}</p>
             <span className="text-[11px] text-muted-foreground">Requires manager signoff</span>
           </CardContent>
         </Card>
-        <Card className="border-rose-300 dark:border-rose-900 bg-rose-50/20 dark:bg-rose-950/20">
+        <Card>
           <CardContent className="pt-5">
             <span className="text-xs text-muted-foreground">Critical Risk Deals</span>
-            <p className="text-2xl font-bold text-danger mt-1">{data.critical_risk_deals ?? data.kpis?.critical_risk ?? 0}</p>
+            <p className="text-2xl font-bold text-danger font-numeric mt-1">{data.critical_risk_deals ?? data.kpis?.critical_risk ?? 0}</p>
             <span className="text-[11px] text-danger font-medium">Immediate block active</span>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="pt-5">
             <span className="text-xs text-muted-foreground">Margin at Risk</span>
-            <p className="text-xl font-bold text-foreground mt-1">₹{Number(data.margin_at_risk ?? 0).toLocaleString('en-IN')}</p>
-            <span className="text-[11px] text-rose-600 font-medium">Erosion risk</span>
+            <p className="text-xl font-bold text-foreground font-numeric mt-1">₹{Number(data.margin_at_risk ?? 0).toLocaleString('en-IN')}</p>
+            <span className="text-[11px] text-danger font-medium">Erosion risk</span>
           </CardContent>
         </Card>
       </div>
@@ -135,7 +135,7 @@ export const RiskOverviewPage: React.FC = () => {
                 <span className="text-xs font-semibold text-success uppercase">Low Risk</span>
                 <Badge className="bg-success text-white text-[10px]">0 - 25</Badge>
               </div>
-              <p className="text-2xl font-bold text-success mt-2">{data.distribution?.low ?? data.kpis?.low_risk ?? 0}</p>
+              <p className="text-2xl font-bold text-success font-numeric mt-2">{data.distribution?.low ?? data.kpis?.low_risk ?? 0}</p>
               <p className="text-xs text-muted-foreground mt-1">Auto-approved velocity path</p>
             </div>
 
@@ -144,7 +144,7 @@ export const RiskOverviewPage: React.FC = () => {
                 <span className="text-xs font-semibold text-warning uppercase">Medium Risk</span>
                 <Badge className="bg-warning text-white text-[10px]">26 - 50</Badge>
               </div>
-              <p className="text-2xl font-bold text-warning mt-2">{data.distribution?.medium ?? data.kpis?.medium_risk ?? 0}</p>
+              <p className="text-2xl font-bold text-warning font-numeric mt-2">{data.distribution?.medium ?? data.kpis?.medium_risk ?? 0}</p>
               <p className="text-xs text-muted-foreground mt-1">Standard governance checks</p>
             </div>
 
@@ -153,16 +153,16 @@ export const RiskOverviewPage: React.FC = () => {
                 <span className="text-xs font-semibold text-danger uppercase">High Risk</span>
                 <Badge className="bg-danger text-white text-[10px]">51 - 75</Badge>
               </div>
-              <p className="text-2xl font-bold text-danger mt-2">{data.distribution?.high ?? data.kpis?.high_risk ?? 0}</p>
+              <p className="text-2xl font-bold text-danger font-numeric mt-2">{data.distribution?.high ?? data.kpis?.high_risk ?? 0}</p>
               <p className="text-xs text-muted-foreground mt-1">Manager approval required</p>
             </div>
 
-            <div className="p-4 rounded-xl border border-rose-600 bg-rose-100/50 dark:bg-rose-950/40">
+            <div className="p-4 rounded-xl border border-danger/40 bg-danger-subtle/40">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-rose-700 dark:text-rose-400 uppercase">Critical Risk</span>
-                <Badge className="bg-rose-700 text-white text-[10px]">76 - 100</Badge>
+                <span className="text-xs font-semibold text-danger uppercase">Critical Risk</span>
+                <Badge className="bg-danger text-white text-[10px]">76 - 100</Badge>
               </div>
-              <p className="text-2xl font-bold text-rose-700 dark:text-rose-400 mt-2">{data.distribution?.critical ?? data.kpis?.critical_risk ?? 0}</p>
+              <p className="text-2xl font-bold text-danger font-numeric mt-2">{data.distribution?.critical ?? data.kpis?.critical_risk ?? 0}</p>
               <p className="text-xs text-muted-foreground mt-1">Executive VP signoff required</p>
             </div>
           </div>
@@ -181,13 +181,13 @@ export const RiskOverviewPage: React.FC = () => {
               <div key={idx} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-medium text-foreground">{factor.factor}</span>
-                  <span className="font-bold text-foreground">
+                  <span className="font-bold text-foreground font-numeric">
                     {factor.impacted_deals} deals · Avg {factor.average_impact}%
                   </span>
                 </div>
                 <div className="h-2 w-full bg-surface-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-rose-500 rounded-full"
+                    className="h-full bg-primary rounded-full"
                     style={{ width: `${(factor.impacted_deals / Math.max(1, data.total_deals_assessed || 34)) * 100}%` }}
                   />
                 </div>

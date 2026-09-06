@@ -54,7 +54,7 @@ export const DeliverySlippagePage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-amber-100 dark:bg-amber-950 text-amber-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <Clock className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Delivery Slippage Alerts</h1>
@@ -88,17 +88,17 @@ export const DeliverySlippagePage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Orders with Slippage Risk</span>
-          <p className="text-2xl font-bold text-amber-600 mt-1">{slippages.length}</p>
+          <p className="text-2xl font-bold text-warning font-numeric mt-1">{slippages.length}</p>
           <span className="text-[11px] text-muted-foreground">Proactive customer notification required</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Average Slippage</span>
-          <p className="text-2xl font-bold text-foreground mt-1">4.5 Days</p>
+          <p className="text-2xl font-bold text-foreground font-numeric mt-1">4.5 Days</p>
           <span className="text-[11px] text-muted-foreground">Warehouse replenishment delay</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Total Order Value Impacted</span>
-          <p className="text-2xl font-bold text-foreground mt-1">
+          <p className="text-2xl font-bold text-foreground font-numeric mt-1">
             ₹{slippages.reduce((acc, s) => acc + (Number(s.order_value) || 0), 0).toLocaleString('en-IN')}
           </p>
           <span className="text-[11px] text-muted-foreground">Fulfillment pending</span>

@@ -19,15 +19,15 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
   onDismiss,
 }) => {
   return (
-    <Card className="flex flex-col justify-between hover:border-purple-300 dark:hover:border-purple-800 transition-colors">
+    <Card className="flex flex-col justify-between hover:border-primary/40 transition-colors">
       <CardHeader className="pb-3 border-b border-border/50">
         <div className="flex items-start justify-between gap-2">
           <div>
             <div className="flex items-center gap-2">
-              <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300 hover:bg-purple-200">
+              <Badge className="bg-primary/10 text-primary border-primary/20 hover:bg-primary/20">
                 {(recommendation.recommendation_type === 'upsell' || recommendation.type === 'upsell') ? 'Upsell' : 'Cross-Sell'}
               </Badge>
-              <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 flex items-center gap-1">
+              <span className="text-xs font-semibold text-primary flex items-center gap-1">
                 <Sparkles className="h-3 w-3" /> {recommendation.confidence_score ?? recommendation.confidence_percent ?? 0}% Match
               </span>
             </div>
@@ -36,7 +36,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
           </div>
           <div className="text-right">
             <span className="text-[11px] text-muted-foreground block">Expected Uplift</span>
-            <span className="text-base font-bold text-success">+₹{Number(recommendation.potential_revenue_uplift ?? recommendation.revenue_delta ?? 0).toLocaleString('en-IN')}</span>
+            <span className="text-base font-bold text-success font-numeric">+₹{Number(recommendation.potential_revenue_uplift ?? recommendation.revenue_delta ?? 0).toLocaleString('en-IN')}</span>
           </div>
         </div>
       </CardHeader>
@@ -50,7 +50,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div className="p-2 rounded bg-surface border border-border">
             <span className="text-muted-foreground block text-[11px]">Margin Shift</span>
-            <span className="font-semibold text-success flex items-center gap-1">
+            <span className="font-semibold text-success font-numeric flex items-center gap-1">
               <TrendingUp className="h-3 w-3" /> +{recommendation.margin_delta_percent ?? 4.2}%
             </span>
           </div>
@@ -74,7 +74,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({
             </Button>
           )}
           {onApply && (
-            <Button size="sm" onClick={() => onApply(recommendation.id)} className="bg-purple-600 hover:bg-purple-700 text-white text-xs h-8 gap-1">
+            <Button size="sm" onClick={() => onApply(recommendation.id)} className="bg-primary hover:bg-primary-hover text-white text-xs h-8 gap-1">
               <Check className="h-3 w-3" /> Apply
             </Button>
           )}

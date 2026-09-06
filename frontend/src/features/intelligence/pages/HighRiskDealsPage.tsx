@@ -54,7 +54,7 @@ export const HighRiskDealsPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-950 text-rose-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <ShieldAlert className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">High & Critical Risk Deals</h1>
@@ -155,13 +155,13 @@ export const HighRiskDealsPage: React.FC = () => {
                           <span className="text-[11px] text-muted-foreground">{deal.customer_name}</span>
                         </td>
                         <td className="py-3.5 px-3 font-medium text-foreground">{deal.rep_name}</td>
-                        <td className="py-3.5 px-3 font-semibold text-foreground">
+                        <td className="py-3.5 px-3 font-semibold text-foreground font-numeric">
                           ₹{Number(deal.deal_value ?? deal.total_value ?? 0).toLocaleString('en-IN')}
                         </td>
-                        <td className="py-3.5 px-3">
+                        <td className="py-3.5 px-3 font-numeric">
                           <RiskBadge risk={deal.risk_level}>{(deal.blended_score ?? deal.risk_score ?? 0)} / 100</RiskBadge>
                         </td>
-                        <td className="py-3.5 px-3 font-medium text-foreground">{deal.margin_percent}%</td>
+                        <td className="py-3.5 px-3 font-medium text-foreground font-numeric">{deal.margin_percent}%</td>
                         <td className="py-3.5 px-3">
                           <span className="font-semibold text-foreground block">{deal.primary_risk_driver ?? deal.primary_risk}</span>
                           <span className="text-[11px] text-muted-foreground">Erosion risk</span>

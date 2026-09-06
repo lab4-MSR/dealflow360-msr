@@ -15,20 +15,20 @@ export const InsightCard: React.FC<InsightCardProps> = ({ insight, onAction }) =
   const getCategoryBadge = (cat: string) => {
     switch (cat.toLowerCase()) {
       case 'pricing':
-        return <Badge className="bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300">Pricing</Badge>
+        return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">Pricing</Badge>
       case 'margin':
-        return <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Margin</Badge>
+        return <Badge variant="secondary" className="bg-success-subtle text-success border-success/20">Margin</Badge>
       case 'fulfillment':
-        return <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Fulfillment</Badge>
+        return <Badge variant="secondary" className="bg-warning-subtle text-warning border-warning/20">Fulfillment</Badge>
       case 'pipeline':
-        return <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">Pipeline</Badge>
+        return <Badge variant="secondary" className="bg-primary/15 text-primary border-primary/20">Pipeline</Badge>
       default:
         return <Badge variant="outline">{cat}</Badge>
     }
   }
 
   return (
-    <Card className="hover:border-purple-200 dark:hover:border-purple-800 transition-colors">
+    <Card className="hover:border-primary/40 transition-colors">
       <CardHeader className="pb-3 border-b border-border">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-1">

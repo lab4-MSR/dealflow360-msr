@@ -22,9 +22,9 @@ export const DecisionExplanationPanel: React.FC<DecisionExplanationPanelProps> =
       case 'critical':
         return <Badge variant="destructive">Critical Urgency</Badge>
       case 'high':
-        return <Badge className="bg-amber-500 text-white hover:bg-amber-600">High Urgency</Badge>
+        return <Badge className="bg-warning text-warning-foreground">High Urgency</Badge>
       case 'medium':
-        return <Badge className="bg-blue-500 text-white hover:bg-blue-600">Medium Urgency</Badge>
+        return <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">Medium Urgency</Badge>
       default:
         return <Badge variant="secondary">Low Urgency</Badge>
     }
@@ -32,12 +32,12 @@ export const DecisionExplanationPanel: React.FC<DecisionExplanationPanelProps> =
 
   return (
     <div
-      className={`rounded-lg border border-purple-200 bg-purple-50/40 p-4 dark:border-purple-900/60 dark:bg-purple-950/20 ${className}`}
+      className={`rounded-lg border border-border bg-card p-4 shadow-sm ${className}`}
     >
-      <div className="flex items-center justify-between pb-3 border-b border-purple-100 dark:border-purple-900/40">
+      <div className="flex items-center justify-between pb-3 border-b border-border">
         <div className="flex items-center gap-2">
-          <Zap className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-purple-800 dark:text-purple-300">
+          <Zap className="h-4 w-4 text-primary" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-foreground">
             Intelligence Analysis & Decision Framework
           </span>
         </div>
@@ -48,7 +48,7 @@ export const DecisionExplanationPanel: React.FC<DecisionExplanationPanelProps> =
         {/* WHAT */}
         <div className="space-y-1">
           <span className="text-xs font-medium text-muted-foreground uppercase flex items-center gap-1">
-            <Info className="h-3 w-3 text-purple-600" /> What Detected
+            <Info className="h-3 w-3 text-primary" /> What Detected
           </span>
           <p className="text-foreground font-medium text-xs leading-relaxed">{explanation.what}</p>
         </div>
@@ -56,7 +56,7 @@ export const DecisionExplanationPanel: React.FC<DecisionExplanationPanelProps> =
         {/* WHY */}
         <div className="space-y-1">
           <span className="text-xs font-medium text-muted-foreground uppercase flex items-center gap-1">
-            <AlertCircle className="h-3 w-3 text-amber-500" /> Why / Root Cause
+            <AlertCircle className="h-3 w-3 text-warning" /> Why / Root Cause
           </span>
           <p className="text-foreground font-medium text-xs leading-relaxed">{explanation.why}</p>
         </div>
@@ -64,7 +64,7 @@ export const DecisionExplanationPanel: React.FC<DecisionExplanationPanelProps> =
         {/* IMPACT */}
         <div className="space-y-1">
           <span className="text-xs font-medium text-muted-foreground uppercase flex items-center gap-1">
-            <ShieldAlert className="h-3 w-3 text-rose-500" /> Business Impact
+            <ShieldAlert className="h-3 w-3 text-danger" /> Business Impact
           </span>
           <p className="text-foreground font-medium text-xs leading-relaxed">{explanation.impact}</p>
         </div>
@@ -72,28 +72,28 @@ export const DecisionExplanationPanel: React.FC<DecisionExplanationPanelProps> =
         {/* WHO */}
         <div className="space-y-1">
           <span className="text-xs font-medium text-muted-foreground uppercase flex items-center gap-1">
-            <UserCheck className="h-3 w-3 text-indigo-500" /> Action Owner
+            <UserCheck className="h-3 w-3 text-primary" /> Action Owner
           </span>
           <p className="text-foreground font-medium text-xs leading-relaxed">{explanation.who}</p>
         </div>
       </div>
 
       {/* NEXT ACTION */}
-      <div className="mt-4 pt-3 border-t border-purple-100 dark:border-purple-900/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-purple-100/50 dark:bg-purple-900/30 -mx-4 -mb-4 p-3 rounded-b-lg">
+      <div className="mt-4 pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-muted -mx-4 -mb-4 p-3 rounded-b-lg">
         <div className="flex items-start sm:items-center gap-2">
-          <ArrowRight className="h-4 w-4 text-purple-600 dark:text-purple-400 mt-0.5 sm:mt-0 shrink-0" />
+          <ArrowRight className="h-4 w-4 text-primary mt-0.5 sm:mt-0 shrink-0" />
           <div>
-            <span className="text-xs font-semibold text-purple-900 dark:text-purple-200 uppercase tracking-wide mr-1.5">
+            <span className="text-xs font-semibold text-foreground uppercase tracking-wide mr-1.5">
               Recommended Next Action:
             </span>
-            <span className="text-xs font-medium text-foreground">{explanation.next_action}</span>
+            <span className="text-xs font-medium text-muted-foreground">{explanation.next_action}</span>
           </div>
         </div>
         {onTakeAction && (
           <Button
             size="sm"
             onClick={onTakeAction}
-            className="bg-purple-600 hover:bg-purple-700 text-white shrink-0 text-xs h-8"
+            className="bg-primary hover:bg-primary-hover text-white shrink-0 text-xs h-8"
           >
             {actionLabel || 'Execute Action'}
           </Button>

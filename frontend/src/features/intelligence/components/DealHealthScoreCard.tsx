@@ -11,7 +11,7 @@ interface DealHealthScoreCardProps {
 export const DealHealthScoreCard: React.FC<DealHealthScoreCardProps> = ({ healthData }) => {
   const getStatusBadge = (score: number) => {
     if (score >= 80) return <Badge className="bg-success text-white">Healthy</Badge>
-    if (score >= 60) return <Badge className="bg-amber-500 text-white">At Risk</Badge>
+    if (score >= 60) return <Badge className="bg-warning text-warning-foreground">At Risk</Badge>
     return <Badge variant="destructive">Critical</Badge>
   }
 
@@ -33,7 +33,7 @@ export const DealHealthScoreCard: React.FC<DealHealthScoreCardProps> = ({ health
       <CardHeader className="border-b border-border pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Activity className="h-5 w-5 text-indigo-600" />
+            <Activity className="h-5 w-5 text-primary" />
             <CardTitle className="text-base font-semibold">6-Dimension Deal Health Engine</CardTitle>
           </div>
           {getStatusBadge(avgScore)}
@@ -43,19 +43,19 @@ export const DealHealthScoreCard: React.FC<DealHealthScoreCardProps> = ({ health
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl border border-border bg-surface-muted">
           <div>
             <span className="text-xs text-muted-foreground block">Healthy Deals</span>
-            <span className="text-2xl font-bold text-success">{healthData.healthy_deals ?? healthData.kpis?.healthy ?? 0}</span>
+            <span className="text-2xl font-bold text-success font-numeric">{healthData.healthy_deals ?? healthData.kpis?.healthy ?? 0}</span>
           </div>
           <div>
             <span className="text-xs text-muted-foreground block">At-Risk Deals</span>
-            <span className="text-2xl font-bold text-amber-500">{healthData.at_risk_deals ?? healthData.kpis?.at_risk ?? 0}</span>
+            <span className="text-2xl font-bold text-warning font-numeric">{healthData.at_risk_deals ?? healthData.kpis?.at_risk ?? 0}</span>
           </div>
           <div>
             <span className="text-xs text-muted-foreground block">Stalled Deals</span>
-            <span className="text-2xl font-bold text-rose-500">{healthData.stalled_deals ?? healthData.kpis?.stalled ?? 0}</span>
+            <span className="text-2xl font-bold text-danger font-numeric">{healthData.stalled_deals ?? healthData.kpis?.stalled ?? 0}</span>
           </div>
           <div>
             <span className="text-xs text-muted-foreground block">Critical Pipeline Value</span>
-            <span className="text-xl font-bold text-foreground">₹{Number(healthData.critical_pipeline_value ?? 0).toLocaleString('en-IN')}</span>
+            <span className="text-xl font-bold text-foreground font-numeric">₹{Number(healthData.critical_pipeline_value ?? 0).toLocaleString('en-IN')}</span>
           </div>
         </div>
 
@@ -68,12 +68,12 @@ export const DealHealthScoreCard: React.FC<DealHealthScoreCardProps> = ({ health
               <div key={i} className="p-3 rounded-lg border border-border bg-surface">
                 <div className="flex items-center justify-between text-xs mb-1.5">
                   <span className="font-medium text-foreground">{dim.label}</span>
-                  <span className="font-bold">{dim.score}%</span>
+                  <span className="font-bold font-numeric">{dim.score}%</span>
                 </div>
                 <div className="h-2 w-full bg-surface-muted rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full ${
-                      dim.score >= 75 ? 'bg-success' : dim.score >= 50 ? 'bg-amber-500' : 'bg-rose-500'
+                      dim.score >= 75 ? 'bg-success' : dim.score >= 50 ? 'bg-warning' : 'bg-danger'
                     }`}
                     style={{ width: `${dim.score}%` }}
                   />

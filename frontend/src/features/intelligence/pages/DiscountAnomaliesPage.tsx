@@ -56,7 +56,7 @@ export const DiscountAnomaliesPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-950 text-rose-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <ShieldAlert className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Discount Anomalies</h1>
@@ -84,19 +84,19 @@ export const DiscountAnomaliesPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Active Discount Anomalies</span>
-          <p className="text-2xl font-bold text-rose-600 mt-1">{anomalies.length}</p>
+          <p className="text-2xl font-bold text-danger font-numeric mt-1">{anomalies.length}</p>
           <span className="text-[11px] text-muted-foreground">Flagged for governance review</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Total Margin Erosion at Risk</span>
-          <p className="text-2xl font-bold text-danger mt-1">
+          <p className="text-2xl font-bold text-danger font-numeric mt-1">
             ₹{totalErosion.toLocaleString('en-IN')}
           </p>
           <span className="text-[11px] text-muted-foreground">Excess over approved policy</span>
         </div>
         <div className="p-4 rounded-xl border border-border bg-surface">
           <span className="text-xs text-muted-foreground">Policy Compliance Rate</span>
-          <p className="text-2xl font-bold text-success mt-1">94.8%</p>
+          <p className="text-2xl font-bold text-success font-numeric mt-1">94.8%</p>
           <span className="text-[11px] text-muted-foreground">Portfolio discount integrity</span>
         </div>
       </div>

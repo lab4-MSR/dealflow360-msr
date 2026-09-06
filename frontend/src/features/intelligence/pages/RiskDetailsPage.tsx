@@ -62,12 +62,12 @@ export const RiskDetailsPage: React.FC = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate('/intelligence/risks/high')}
-            className="gap-1 text-xs mb-2 text-muted-foreground"
+            className="gap-1 text-xs mb-2 text-primary hover:text-primary-hover p-0 h-auto"
           >
             <ArrowLeft className="h-3 w-3" /> Back to High Risk Deals
           </Button>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-rose-100 dark:bg-rose-950 text-rose-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <ShieldAlert className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">
@@ -114,7 +114,7 @@ export const RiskDetailsPage: React.FC = () => {
               className="flex items-center justify-between p-3.5 rounded-lg border border-border bg-surface hover:bg-surface-muted/50 transition-colors"
             >
               <div className="flex items-center gap-3">
-                <CheckCircle className="h-4 w-4 text-purple-600 shrink-0" />
+                <CheckCircle className="h-4 w-4 text-primary shrink-0" />
                 <span className="text-xs font-medium text-foreground">{act}</span>
               </div>
               <Button

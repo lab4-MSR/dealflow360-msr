@@ -29,7 +29,7 @@ export const RiskScoreCard: React.FC<RiskScoreCardProps> = ({ riskData, classNam
       <CardHeader className="border-b border-border pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-purple-600" />
+            <Shield className="h-5 w-5 text-primary" />
             <CardTitle className="text-base font-semibold">Blended Risk Assessment</CardTitle>
           </div>
           <RiskBadge risk={riskData.risk_level}>{riskData.risk_level.toUpperCase()}</RiskBadge>
@@ -41,7 +41,7 @@ export const RiskScoreCard: React.FC<RiskScoreCardProps> = ({ riskData, classNam
           <div>
             <span className="text-xs uppercase font-medium text-muted-foreground">Composite Risk Score</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-4xl font-bold tracking-tight text-foreground">{riskData.blended_score}</span>
+              <span className="text-4xl font-bold tracking-tight text-foreground font-numeric">{riskData.blended_score}</span>
               <span className="text-sm text-muted-foreground">/ 100</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -55,7 +55,7 @@ export const RiskScoreCard: React.FC<RiskScoreCardProps> = ({ riskData, classNam
           <div className="flex gap-4 sm:border-l sm:border-border sm:pl-6 text-center sm:text-left">
             <div>
               <span className="text-xs text-muted-foreground">Margin at Risk</span>
-              <p className="text-lg font-bold text-danger">₹{riskData.margin_impact.toLocaleString('en-IN')}</p>
+              <p className="text-lg font-bold text-danger font-numeric">₹{riskData.margin_impact.toLocaleString('en-IN')}</p>
             </div>
             <div>
               <span className="text-xs text-muted-foreground">Assessed Date</span>
@@ -74,7 +74,7 @@ export const RiskScoreCard: React.FC<RiskScoreCardProps> = ({ riskData, classNam
               <div key={idx} className="p-3 rounded-lg border border-border bg-surface flex flex-col justify-between">
                 <div className="flex items-center justify-between text-xs mb-1.5">
                   <span className="font-medium text-foreground">{dim.label}</span>
-                  <span className="font-bold text-foreground">{dim.score} / 100</span>
+                  <span className="font-bold text-foreground font-numeric">{dim.score} / 100</span>
                 </div>
                 {/* Progress bar */}
                 <div className="h-2 w-full bg-surface-muted rounded-full overflow-hidden">

@@ -62,7 +62,7 @@ export const DecisionInsightsPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-purple-100 dark:bg-purple-950 text-purple-600">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <Zap className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Decision Insights Feed</h1>

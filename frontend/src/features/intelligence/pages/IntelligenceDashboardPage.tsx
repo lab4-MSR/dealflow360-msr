@@ -80,7 +80,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-lg bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400">
+            <span className="p-1.5 rounded-lg bg-primary/10 text-primary">
               <Sparkles className="h-5 w-5" />
             </span>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Intelligence & Decision Command</h1>
@@ -96,7 +96,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
           <Button
             size="sm"
             onClick={() => navigate('/intelligence/insights')}
-            className="bg-purple-600 hover:bg-purple-700 text-white gap-1 text-xs"
+            className="gap-1 text-xs"
           >
             All Insights ({dashboardData.active_insights_count ?? dashboardData.recent_insights?.length ?? 4})
           </Button>
@@ -106,14 +106,14 @@ export const IntelligenceDashboardPage: React.FC = () => {
       {/* KPI Highlights */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* High Risk Deals */}
-        <Card className="hover:border-rose-300 dark:hover:border-rose-900 transition-colors">
+        <Card className="hover:border-danger/40 transition-colors">
           <CardContent className="pt-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">High-Risk Pipeline</span>
-              <ShieldAlert className="h-4 w-4 text-rose-500" />
+              <ShieldAlert className="h-4 w-4 text-danger" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-rose-600">{dashboardData.high_risk_deals_count ?? dashboardData.kpis?.high_risk_deals ?? 4}</span>
+              <span className="text-2xl font-bold text-danger font-numeric">{dashboardData.high_risk_deals_count ?? dashboardData.kpis?.high_risk_deals ?? 4}</span>
               <span className="text-xs text-muted-foreground">deals</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -122,7 +122,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
             <div className="mt-3 pt-2 border-t border-border">
               <Link
                 to="/intelligence/risks/high"
-                className="text-xs font-semibold text-rose-600 hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-danger hover:underline flex items-center gap-1"
               >
                 Inspect high risk deals <ArrowRight className="h-3 w-3" />
               </Link>
@@ -131,14 +131,14 @@ export const IntelligenceDashboardPage: React.FC = () => {
         </Card>
 
         {/* Upsell Revenue Opportunity */}
-        <Card className="hover:border-purple-300 dark:hover:border-purple-900 transition-colors">
+        <Card className="hover:border-primary/40 transition-colors">
           <CardContent className="pt-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Identified Revenue Uplift</span>
-              <Sparkles className="h-4 w-4 text-purple-600" />
+              <Sparkles className="h-4 w-4 text-primary" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-purple-700 dark:text-purple-400">
+              <span className="text-2xl font-bold text-primary font-numeric">
                 ₹{Number(dashboardData.identified_revenue_uplift ?? dashboardData.recommendation_overview?.expected_revenue_impact ?? 672500).toLocaleString('en-IN')}
               </span>
             </div>
@@ -146,7 +146,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
             <div className="mt-3 pt-2 border-t border-border">
               <Link
                 to="/intelligence/recommendations/upsell"
-                className="text-xs font-semibold text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
               >
                 Explore recommendations <ArrowRight className="h-3 w-3" />
               </Link>
@@ -155,14 +155,14 @@ export const IntelligenceDashboardPage: React.FC = () => {
         </Card>
 
         {/* Stalled Deals */}
-        <Card className="hover:border-amber-300 dark:hover:border-amber-900 transition-colors">
+        <Card className="hover:border-warning/40 transition-colors">
           <CardContent className="pt-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Stalled Pipeline</span>
-              <HeartPulse className="h-4 w-4 text-amber-500" />
+              <HeartPulse className="h-4 w-4 text-warning" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-amber-600">{dashboardData.stalled_deals_count ?? dashboardData.deal_health?.stalled ?? 3}</span>
+              <span className="text-2xl font-bold text-warning font-numeric">{dashboardData.stalled_deals_count ?? dashboardData.deal_health?.stalled ?? 3}</span>
               <span className="text-xs text-muted-foreground">stalled deals</span>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
@@ -171,7 +171,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
             <div className="mt-3 pt-2 border-t border-border">
               <Link
                 to="/intelligence/health/stalled"
-                className="text-xs font-semibold text-amber-600 hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-warning hover:underline flex items-center gap-1"
               >
                 Unstick stalled deals <ArrowRight className="h-3 w-3" />
               </Link>
@@ -180,14 +180,14 @@ export const IntelligenceDashboardPage: React.FC = () => {
         </Card>
 
         {/* Governance Anomalies */}
-        <Card className="hover:border-indigo-300 dark:hover:border-indigo-900 transition-colors">
+        <Card className="hover:border-border-strong transition-colors">
           <CardContent className="pt-5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">Active Anomalies</span>
-              <AlertTriangle className="h-4 w-4 text-indigo-500" />
+              <AlertTriangle className="h-4 w-4 text-primary" />
             </div>
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+              <span className="text-2xl font-bold text-foreground font-numeric">
                 {dashboardData.active_anomalies_count ?? dashboardData.kpis?.deal_anomalies ?? 5}
               </span>
               <span className="text-xs text-muted-foreground">violations</span>
@@ -196,7 +196,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
             <div className="mt-3 pt-2 border-t border-border">
               <Link
                 to="/intelligence/anomalies/discount"
-                className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                className="text-xs font-semibold text-primary hover:underline flex items-center gap-1"
               >
                 Inspect anomaly queue <ArrowRight className="h-3 w-3" />
               </Link>
@@ -213,54 +213,54 @@ export const IntelligenceDashboardPage: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <Link
             to="/intelligence/risks"
-            className="p-3 rounded-lg border border-border bg-surface hover:border-purple-300 dark:hover:border-purple-800 transition-colors text-center"
+            className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors text-center"
           >
-            <ShieldAlert className="h-5 w-5 mx-auto text-rose-600 mb-1.5" />
+            <ShieldAlert className="h-5 w-5 mx-auto text-danger mb-1.5" />
             <span className="text-xs font-semibold text-foreground block">Risk Overview</span>
             <span className="text-[11px] text-muted-foreground">Composite KPIs</span>
           </Link>
 
           <Link
             to="/intelligence/recommendations/upsell"
-            className="p-3 rounded-lg border border-border bg-surface hover:border-purple-300 dark:hover:border-purple-800 transition-colors text-center"
+            className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors text-center"
           >
-            <TrendingUp className="h-5 w-5 mx-auto text-purple-600 mb-1.5" />
+            <TrendingUp className="h-5 w-5 mx-auto text-primary mb-1.5" />
             <span className="text-xs font-semibold text-foreground block">Upsell Engine</span>
             <span className="text-[11px] text-muted-foreground">Tier upgrades</span>
           </Link>
 
           <Link
             to="/intelligence/recommendations/cross-sell"
-            className="p-3 rounded-lg border border-border bg-surface hover:border-purple-300 dark:hover:border-purple-800 transition-colors text-center"
+            className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors text-center"
           >
-            <Layers className="h-5 w-5 mx-auto text-purple-600 mb-1.5" />
+            <Layers className="h-5 w-5 mx-auto text-primary mb-1.5" />
             <span className="text-xs font-semibold text-foreground block">Cross-Sell</span>
             <span className="text-[11px] text-muted-foreground">Affinity bundles</span>
           </Link>
 
           <Link
             to="/intelligence/health"
-            className="p-3 rounded-lg border border-border bg-surface hover:border-purple-300 dark:hover:border-purple-800 transition-colors text-center"
+            className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors text-center"
           >
-            <HeartPulse className="h-5 w-5 mx-auto text-indigo-600 mb-1.5" />
+            <HeartPulse className="h-5 w-5 mx-auto text-warning mb-1.5" />
             <span className="text-xs font-semibold text-foreground block">Deal Health</span>
             <span className="text-[11px] text-muted-foreground">6-dimension index</span>
           </Link>
 
           <Link
             to="/intelligence/anomalies/discount"
-            className="p-3 rounded-lg border border-border bg-surface hover:border-purple-300 dark:hover:border-purple-800 transition-colors text-center"
+            className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors text-center"
           >
-            <AlertTriangle className="h-5 w-5 mx-auto text-amber-600 mb-1.5" />
+            <AlertTriangle className="h-5 w-5 mx-auto text-warning mb-1.5" />
             <span className="text-xs font-semibold text-foreground block">Discount Anomalies</span>
             <span className="text-[11px] text-muted-foreground">Margin policy checks</span>
           </Link>
 
           <Link
             to="/intelligence/insights"
-            className="p-3 rounded-lg border border-border bg-surface hover:border-purple-300 dark:hover:border-purple-800 transition-colors text-center"
+            className="p-3 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-muted/40 transition-colors text-center"
           >
-            <Sparkles className="h-5 w-5 mx-auto text-purple-600 mb-1.5" />
+            <Sparkles className="h-5 w-5 mx-auto text-primary mb-1.5" />
             <span className="text-xs font-semibold text-foreground block">Decision Insights</span>
             <span className="text-[11px] text-muted-foreground">WHAT/WHY/IMPACT</span>
           </Link>
@@ -277,7 +277,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
                 <CardTitle className="text-base font-semibold">High & Critical Risk Deals</CardTitle>
                 <CardDescription>Deals requiring executive or managerial risk mitigation</CardDescription>
               </div>
-              <Button asChild variant="ghost" size="sm" className="text-xs text-rose-600 gap-1">
+              <Button asChild variant="ghost" size="sm" className="text-xs text-danger hover:text-danger-hover gap-1">
                 <Link to="/intelligence/risks/high">
                   View All ({dashboardData.high_risk_deals_count}) <ArrowRight className="h-3 w-3" />
                 </Link>
@@ -332,12 +332,12 @@ export const IntelligenceDashboardPage: React.FC = () => {
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-purple-600" />
+              <Sparkles className="h-4 w-4 text-primary" />
               <h2 className="text-base font-semibold text-foreground">Smart Recommendations</h2>
             </div>
             <Link
               to="/intelligence/recommendations/upsell"
-              className="text-xs text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 font-medium"
+              className="text-xs text-primary hover:underline flex items-center gap-1 font-medium"
             >
               All Upsell <ArrowRight className="h-3 w-3" />
             </Link>
@@ -374,7 +374,7 @@ export const IntelligenceDashboardPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {insights.map((item) => (
-            <Card key={item.id} className="p-4 border-purple-200 dark:border-purple-900/60">
+            <Card key={item.id} className="p-4 border-border hover:border-primary/40 transition-colors">
               <div className="flex items-center justify-between mb-3">
                 <span className="text-sm font-semibold text-foreground">{item.title}</span>
                 <Badge variant={item.severity === 'critical' ? 'destructive' : 'default'} className="uppercase text-[10px]">
