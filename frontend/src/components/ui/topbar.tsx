@@ -178,9 +178,9 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
     .toUpperCase() || 'DF'
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-2 sm:gap-4 border-b border-border/70 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xs sm:px-6 lg:px-6">
+    <header className="sticky top-0 z-40 flex h-16 items-center justify-between gap-1.5 sm:gap-4 border-b border-border/70 bg-background/95 px-2.5 sm:px-6 lg:px-6 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xs">
       {/* Left: Mobile Trigger & Breadcrumb */}
-      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0 shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 shrink">
         <button
           type="button"
           onClick={onOpenMobileMenu}
@@ -191,10 +191,10 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
         </button>
 
         {/* Breadcrumb: [Feature Name] / [Role] (e.g. Platform Dashboard / Super Admin) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 text-small text-muted-foreground min-w-0">
+        <div className="flex items-center gap-1 sm:gap-2 text-small text-muted-foreground min-w-0">
           <Link
             to={resolvedFeature.featurePath}
-            className="text-foreground font-semibold hover:text-primary transition-colors truncate text-xs sm:text-sm"
+            className="text-foreground font-semibold hover:text-primary transition-colors truncate text-xs sm:text-sm max-w-[90px] xs:max-w-[130px] sm:max-w-none"
             title={resolvedFeature.feature}
           >
             {resolvedFeature.feature}
@@ -203,14 +203,14 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
             <>
               <span className="text-muted-foreground/60 shrink-0">/</span>
               <span
-                className="text-xs font-medium text-foreground/80 truncate max-w-[90px] sm:max-w-[140px]"
+                className="text-xs font-medium text-foreground/80 truncate max-w-[70px] sm:max-w-[140px]"
                 title={resolvedFeature.subFeature}
               >
                 {resolvedFeature.subFeature}
               </span>
             </>
           )}
-          <span className="text-muted-foreground/60 shrink-0">/</span>
+          <span className="text-muted-foreground/60 shrink-0 hidden sm:inline">/</span>
           <span className="text-xs capitalize font-medium text-muted-foreground shrink-0 hidden sm:inline">
             {effectiveRole}
           </span>
@@ -218,18 +218,18 @@ export function Topbar({ onOpenMobileMenu }: TopbarProps) {
       </div>
 
       {/* Center: Search Bar */}
-      <div className="flex-1 flex items-center justify-center px-2 sm:px-4 max-w-xl mx-auto">
+      <div className="flex-1 flex items-center justify-center px-1 sm:px-4 max-w-xl mx-auto">
         <NavbarSearch />
       </div>
 
       {/* Right: Actions */}
-      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
 
-        {/* Help */}
+        {/* Help (hidden on extra small screens) */}
         <Button
           variant="ghost"
           size="icon"
-          className="text-muted-foreground"
+          className="text-muted-foreground hidden sm:inline-flex"
           onClick={() => navigate('/help')}
           title="Help Center"
           aria-label="Help Center"

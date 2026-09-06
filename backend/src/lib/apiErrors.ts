@@ -83,20 +83,90 @@ export class ApiError extends Error {
   }
 }
 
-/** Convert an unknown thrown value into an ApiError, preserving known codes. */
+/** Convert an unknown thrown value into an ApiError, preserving known codes and human readability. */
 export function toApiError(err: unknown): ApiError {
   if (err instanceof ApiError) return err;
+
   if (err instanceof ZodError) {
-    const first = err.issues[0];
-    return ApiError.validation(
-      first?.message ?? 'Request body failed schema validation.',
-      first ? first.path.join('.') : undefined,
-      { issues: err.issues },
-    );
+    const formatted = err.issues.map((issue) => {
+      const pathStr = issue.path.filter((p) => typeof p === 'string' || typeof p === 'number').join('.');
+      if (!pathStr) return issue.message;
+      if (issue.message.toLowerCase() === 'required') {
+        return `"${pathStr.replace(/_/g, ' ')}" is required`;
+      }
+      return `"${pathStr.replace(/_/g, ' ')}": ${issue.message}`;
+    });
+    const mainMessage = formatted[0] || 'Validation failed. Please check the entered data.';
+    const firstField = err.issues[0]?.path?.filter((p) => typeof p === 'string' || typeof p === 'number').join('.') || undefined;
+    return ApiError.validation(mainMessage, firstField, {
+      issues: err.issues,
+      messages: formatted,
+    });
   }
+
+  // Handle PostgREST and PostgreSQL error codes
+  if (typeof err === 'object' && err !== null) {
+    const pgErr = err as {
+      code?: string;
+      message?: string;
+      detail?: string;
+      details?: string;
+      column?: string;
+      table?: string;
+    };
+
+    if (pgErr.code === 'PGRST116') {
+      return ApiError.notFound('The requested record could not be found.');
+    }
+
+    if (pgErr.code === '23505') {
+      const match = (pgErr.detail || pgErr.message || '').match(/Key \((.+?)\)=\((.+?)\) already exists/);
+      const msg = match
+        ? `A record with ${match[1].replace(/_/g, ' ')} "${match[2]}" already exists.`
+        : 'A record with this identifier or name already exists.';
+      return new ApiError({
+        code: ErrorCode.IDEMPOTENCY_CONFLICT,
+        message: msg,
+        field: match ? match[1] : undefined,
+        status: 409,
+        details: { detail: pgErr.detail },
+      });
+    }
+
+    if (pgErr.code === '23503') {
+      return new ApiError({
+        code: ErrorCode.VALIDATION_ERROR,
+        message: 'The referenced record does not exist or has been deleted.',
+        status: 422,
+        details: { detail: pgErr.detail },
+      });
+    }
+
+    if (pgErr.code === '23502') {
+      const col = pgErr.column ? `"${pgErr.column.replace(/_/g, ' ')}"` : 'Required field';
+      return ApiError.validation(`${col} cannot be empty.`, pgErr.column);
+    }
+
+    if (pgErr.code === '22P02') {
+      return ApiError.validation('Invalid format or identifier provided.');
+    }
+  }
+
   if (err instanceof Error) {
+    if (err.message.includes('duplicate key value violates unique constraint')) {
+      const match = err.message.match(/Key \((.+?)\)=\((.+?)\) already exists/);
+      const msg = match
+        ? `A record with ${match[1].replace(/_/g, ' ')} "${match[2]}" already exists.`
+        : 'A record with this identifier already exists.';
+      return new ApiError({
+        code: ErrorCode.IDEMPOTENCY_CONFLICT,
+        message: msg,
+        status: 409,
+      });
+    }
     return new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: err.message });
   }
+
   return new ApiError({ code: ErrorCode.INTERNAL_ERROR, message: 'An unexpected error occurred.' });
 }
 

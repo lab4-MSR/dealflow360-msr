@@ -9,6 +9,7 @@ import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useApprovalThresholds, useUpdateApprovalThresholds } from '../hooks/use-business-admin'
 import { useApprovalChains } from '../hooks/use-business-admin'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Save, ArrowRight, IndianRupee, Percent, AlertTriangle, BarChart, Shield, Users, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -122,7 +123,7 @@ function ApprovalThresholdsPage() {
       await updateApprovalThresholds.mutateAsync(payload)
       toast.success('Thresholds saved')
       refetch()
-    } catch { toast.error('Failed to save thresholds') }
+    } catch (err) { toast.error('Failed to save thresholds', { description: getErrorMessage(err) }) }
     finally { setSaving(false) }
   }
 
@@ -144,7 +145,7 @@ function ApprovalThresholdsPage() {
       ) : (
         <>
           <Tabs defaultValue="dealValue" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="flex w-full overflow-x-auto scrollbar-none sm:grid sm:grid-cols-5">
               <TabsTrigger value="dealValue">Deal Value</TabsTrigger>
               <TabsTrigger value="discount">Discount</TabsTrigger>
               <TabsTrigger value="risk">Risk</TabsTrigger>
@@ -184,7 +185,7 @@ function ApprovalThresholdsPage() {
                       unit="%" category="discount" index={i}
                     />
                   ))}
-                  <div className="grid grid-cols-3 gap-4 text-center text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-center text-sm">
                     <div className="p-3 rounded-lg bg-success/10 border border-success/20"><p className="font-medium text-success">Safe</p><p className="text-muted-foreground">No approval needed</p></div>
                     <div className="p-3 rounded-lg bg-warning/10 border border-warning/20"><p className="font-medium text-warning">Review</p><p className="text-muted-foreground">Manager review required</p></div>
                     <div className="p-3 rounded-lg bg-danger/10 border border-danger/20"><p className="font-medium text-danger">Escalation</p><p className="text-muted-foreground">Finance/multi-level</p></div>
@@ -205,7 +206,7 @@ function ApprovalThresholdsPage() {
                       category="risk" index={i}
                     />
                   ))}
-                  <div className="grid grid-cols-4 gap-4 text-center text-sm">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-center text-sm">
                     <div className="p-3 rounded-lg bg-success/10 border border-success/20"><p className="font-medium text-success">Low</p></div>
                     <div className="p-3 rounded-lg bg-warning/10 border border-warning/20"><p className="font-medium text-warning">Medium</p></div>
                     <div className="p-3 rounded-lg bg-danger/10 border border-danger/20"><p className="font-medium text-danger">High</p></div>
@@ -227,7 +228,7 @@ function ApprovalThresholdsPage() {
                       unit="%" category="margin" index={i}
                     />
                   ))}
-                  <div className="grid grid-cols-3 gap-4 text-center text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-center text-sm">
                     <div className="p-3 rounded-lg bg-success/10 border border-success/20"><p className="font-medium text-success">Healthy</p></div>
                     <div className="p-3 rounded-lg bg-warning/10 border border-warning/20"><p className="font-medium text-warning">Warning</p></div>
                     <div className="p-3 rounded-lg bg-danger/10 border border-danger/20"><p className="font-medium text-danger">Critical</p></div>
@@ -241,8 +242,8 @@ function ApprovalThresholdsPage() {
                 <CardHeader><CardTitle className="flex items-center gap-2"><Shield className="h-5 w-5" />Approval Mapping</CardTitle></CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground">Map each threshold level to an approver role and approval chain.</p>
-                  <div className="rounded-lg border border-border overflow-hidden">
-                    <table className="w-full">
+                  <div className="rounded-lg border border-border overflow-x-auto">
+                    <table className="w-full min-w-[550px] sm:min-w-full">
                       <thead className="bg-muted/50"><tr className="text-left text-sm text-muted-foreground"><th className="p-3">Threshold Category</th><th className="p-3">Threshold Level</th><th className="p-3">Approver Role</th><th className="p-3">Approval Chain</th></tr></thead>
                       <tbody className="divide-y divide-border">
                         {mappings.map((m, i) => (

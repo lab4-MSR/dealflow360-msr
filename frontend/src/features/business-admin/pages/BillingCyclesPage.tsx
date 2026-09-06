@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { Plus, Search, Edit2, Trash2, RefreshCw, Calendar, CreditCard, Users, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '../components/BusinessAdminPageHeader';
@@ -79,8 +79,19 @@ export function BillingCyclesPage() {
   const total = data?.total ?? 0;
 
   const handleSearch = () => {
-    setFilters(prev => ({ ...prev, search: searchInput, page: 1 }));
+    setFilters(prev => ({ ...prev, search: searchInput.trim() || undefined, page: 1 }));
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters(prev => {
+        const trimmed = searchInput.trim() || undefined;
+        if (prev.search === trimmed) return prev;
+        return { ...prev, search: trimmed, page: 1 };
+      });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const handleStatusFilter = (status: string) => {
     setFilters(prev => ({ ...prev, status: status === 'all' ? undefined : status, page: 1 }));

@@ -329,7 +329,7 @@ function MarginRulesPage() {
                   <div><p className="text-[13px] font-semibold text-foreground">{rule.name}</p><Badge variant={TYPE_VARIANT[rule.type] || 'secondary'}>{rule.type}</Badge></div>
                   <Badge variant={STATUS_VARIANT[rule.status] || 'secondary'}>{rule.status}</Badge>
                 </div>
-                <div className="grid grid-cols-3 gap-3 text-[12px]">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[12px]">
                   <div><p className="text-muted-foreground">Min Margin</p><p className="font-medium">{rule.minimumMarginPercent}%</p></div>
                   <div><p className="text-muted-foreground">Target Margin</p><p className="font-medium">{rule.targetMarginPercent ? `${rule.targetMarginPercent}%` : '—'}</p></div>
                   <div><p className="text-muted-foreground">Critical</p><p className="font-medium">{rule.criticalMarginPercent ? `${rule.criticalMarginPercent}%` : '—'}</p></div>

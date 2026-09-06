@@ -101,24 +101,10 @@ apiClient.interceptors.response.use(
   }
 )
 
-export function getApiErrorMessage(error: unknown): string {
-  if (axios.isAxiosError(error)) {
-    const apiError = error.response?.data as ApiErrorResponse | undefined
-    if (apiError?.error?.message) return apiError.error.message
-    if (error.response?.status === 0 || !error.response) {
-      return "We couldn't connect to DealFlow360. Please check your connection and try again."
-    }
-    if (error.response?.status === 429) {
-      return 'Too many attempts. Please wait a moment and try again.'
-    }
-    if (error.response?.status && error.response.status >= 500) {
-      return 'Something went wrong on our end. Please try again.'
-    }
-    return error.message || 'An unexpected error occurred.'
-  }
-  if (error instanceof Error) return error.message
-  return 'An unexpected error occurred.'
-}
+import { getErrorMessage, formatError, showErrorToast } from './errors'
+
+export { getErrorMessage, formatError, showErrorToast }
+export const getApiErrorMessage = getErrorMessage
 
 export function getApiErrorCode(error: unknown): string | undefined {
   if (axios.isAxiosError(error)) {
@@ -138,3 +124,4 @@ export function getApiErrorField(error: unknown): string | undefined {
 
 export const api = apiClient
 export default apiClient
+

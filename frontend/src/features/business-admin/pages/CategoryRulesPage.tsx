@@ -15,6 +15,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { useCategoryDiscountRules, useCategoryDiscountRuleKpis, useCreateCategoryDiscountRule, useUpdateCategoryDiscountRule, useDeleteCategoryDiscountRule } from '../hooks/use-business-admin'
 import type { CategoryDiscountRule } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Plus, Tag, CheckCircle, BarChart3, AlertTriangle, Edit, Trash2, Shield, Settings } from 'lucide-react'
 
 const APPROVAL_LABEL: Record<string, string> = {
@@ -120,8 +121,8 @@ export function CategoryRulesPage() {
       }
       setShowDialog(false)
       setSelectedRule(null)
-    } catch {
-      toast.error(isEditing ? 'Failed to update rule' : 'Failed to create rule')
+    } catch (err) {
+      toast.error(isEditing ? 'Failed to update rule' : 'Failed to create rule', { description: getErrorMessage(err) })
     }
   }
 
@@ -132,8 +133,8 @@ export function CategoryRulesPage() {
       toast.success('Rule deleted')
       setDeleteId(null)
       if (selectedRule?.id === deleteId) setSelectedRule(null)
-    } catch {
-      toast.error('Failed to delete rule')
+    } catch (err) {
+      toast.error('Failed to delete rule', { description: getErrorMessage(err) })
     }
   }
 
@@ -247,7 +248,7 @@ export function CategoryRulesPage() {
                 {/* Discount Limits */}
                 <div>
                   <h4 className="text-[12px] font-medium text-foreground mb-3">Discount Limits</h4>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div className="rounded-lg border border-border p-3">
                       <p className="text-[11px] text-muted-foreground">Max Discount</p>
                       <p className="text-[20px] font-bold text-foreground tabular-nums">{selectedRule.maxDiscountPercent}%</p>
@@ -362,7 +363,7 @@ export function CategoryRulesPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="space-y-1.5">
                 <Label>Max Discount % *</Label>
                 <Input

@@ -30,7 +30,13 @@ export function PlatformUserDetailsPage() {
     return (
       <div className="space-y-6 animate-pulse">
         <Skeleton className="h-9 w-[140px]" />
-        <div className="flex items-center gap-4"><Skeleton className="h-16 w-16 rounded-full" /><div className="space-y-2"><Skeleton className="h-6 w-[200px]" /><Skeleton className="h-4 w-[300px]" /></div></div>
+        <div className="flex flex-wrap items-center gap-4">
+          <Skeleton className="h-16 w-16 rounded-full shrink-0" />
+          <div className="space-y-2 min-w-0">
+            <Skeleton className="h-6 w-[200px] max-w-full" />
+            <Skeleton className="h-4 w-[280px] max-w-full" />
+          </div>
+        </div>
         <Skeleton className="h-[300px] w-full rounded-xl" />
       </div>
     )

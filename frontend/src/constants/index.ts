@@ -95,6 +95,7 @@ export const SIDEBAR_NAV: NavSection[] = [
       { label: 'Warehouses & Shipping', path: '/business-admin/warehouses', icon: 'Warehouse' },
       { label: 'Subscription Plans', path: '/business-admin/subscriptions', icon: 'RefreshCw' },
       { label: 'Deal Health Monitor', path: '/business-admin/deal-health', icon: 'HeartPulse' },
+      { label: 'Reports & Analytics', path: '/business-admin/reports', icon: 'BarChart3' },
       { label: 'Audit Trail', path: '/business-admin/audit', icon: 'Shield' },
       { label: 'Settings', path: '/business-admin/settings', icon: 'Settings' },
     ],

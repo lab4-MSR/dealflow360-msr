@@ -9,6 +9,7 @@ import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useCreatePriceList, useProducts, useCustomers } from '../hooks/use-business-admin'
 import type { Product } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { ArrowLeft, Save, Plus, Trash2, Search } from 'lucide-react'
 import { parseISO, isValid } from 'date-fns'
 import { cn } from '@/lib/utils'
@@ -183,8 +184,8 @@ export function CreatePriceListPage() {
       })
       toast.success('Price list created')
       navigate('/business-admin/pricing/price-lists')
-    } catch {
-      toast.error('Failed to create price list')
+    } catch (err) {
+      toast.error('Failed to create price list', { description: getErrorMessage(err) })
     }
   }
 

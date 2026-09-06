@@ -206,8 +206,8 @@ export function CurrencyTaxPage() {
           {/* Tax Rates Table */}
           <div className="mt-4">
             <h4 className="text-[13px] font-semibold text-foreground mb-3">Tax Rates</h4>
-            <div className="rounded-xl border border-border overflow-hidden">
-              <table className="w-full">
+            <div className="rounded-xl border border-border overflow-x-auto">
+              <table className="w-full min-w-[550px] sm:min-w-full">
                 <thead>
                   <tr className="border-b border-border bg-surface-muted">
                     <th className="px-4 py-3 text-left text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Name</th>

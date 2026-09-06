@@ -377,7 +377,7 @@ export function CustomerDashboardPage() {
             </Button>
           </CardHeader>
           <CardContent className="pt-5 space-y-4">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="rounded-xl border border-border/70 p-3.5 bg-secondary/20">
                 <p className="text-[11px] text-muted-foreground font-medium">Outstanding</p>
                 <p className="mt-1 text-lg font-bold text-amber-400 tabular-nums">

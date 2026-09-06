@@ -27,7 +27,7 @@ export default function UnauthorizedPage() {
     <div className="min-h-screen bg-background flex flex-col relative overflow-hidden selection:bg-primary/20 selection:text-primary">
       {/* Ambient background decoration */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-rose-500/10 dark:bg-rose-500/15 rounded-full blur-3xl" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] sm:w-[600px] h-[320px] sm:h-[600px] bg-rose-500/10 dark:bg-rose-500/15 rounded-full blur-3xl" />
       </div>
 
       {/* Top Bar */}

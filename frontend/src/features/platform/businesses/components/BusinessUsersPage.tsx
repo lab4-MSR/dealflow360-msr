@@ -278,16 +278,16 @@ export function BusinessUsersPage() {
             </div>
           ))}
         </div>
-        <div className="flex gap-3">
-          <Skeleton className="h-10 w-[280px] rounded-lg" />
-          <Skeleton className="h-10 w-[140px] rounded-lg" />
-          <Skeleton className="h-10 w-[140px] rounded-lg" />
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Skeleton className="h-10 w-full sm:w-[280px] rounded-lg" />
+          <Skeleton className="h-10 w-full sm:w-[140px] rounded-lg" />
+          <Skeleton className="h-10 w-full sm:w-[140px] rounded-lg" />
         </div>
-        <div className="rounded-xl border border-border">
-          <div className="p-4 space-y-4">
+        <div className="rounded-xl border border-border overflow-x-auto">
+          <div className="p-4 space-y-4 min-w-[500px] sm:min-w-full">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="flex items-center gap-4">
-                <Skeleton className="h-9 w-9 rounded-full" />
+                <Skeleton className="h-9 w-9 rounded-full shrink-0" />
                 <Skeleton className="h-4 w-[160px]" />
                 <Skeleton className="h-5 w-[100px] rounded-full" />
                 <Skeleton className="h-4 w-[80px]" />

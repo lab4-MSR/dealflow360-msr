@@ -17,6 +17,7 @@ import { Drawer } from '@/components/ui/drawer'
 import { useTeams, useTeamKpis, useCreateTeam, useUpdateTeam, useDeleteTeam, useTeamDetail, useUsers } from '../hooks/use-business-admin'
 import type { Team } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Plus, Search, UsersRound, UserCheck, Activity, MoreHorizontal, Eye, Pencil, Trash2 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -64,8 +65,8 @@ export function TeamsPage() {
       toast.success('Team created')
       setShowCreateDialog(false)
       setNewTeam({ name: '', description: '', leadId: '' })
-    } catch {
-      toast.error('Failed to create team')
+    } catch (err) {
+      toast.error('Failed to create team', { description: getErrorMessage(err) })
     }
   }
 
@@ -87,8 +88,8 @@ export function TeamsPage() {
       })
       toast.success('Team updated')
       setEditingTeam(null)
-    } catch {
-      toast.error('Failed to update team')
+    } catch (err) {
+      toast.error('Failed to update team', { description: getErrorMessage(err) })
     }
   }
 
@@ -98,8 +99,8 @@ export function TeamsPage() {
       await deleteTeam.mutateAsync(deleteId)
       toast.success('Team archived')
       setDeleteId(null)
-    } catch {
-      toast.error('Failed to archive team')
+    } catch (err) {
+      toast.error('Failed to archive team', { description: getErrorMessage(err) })
     }
   }
 

@@ -17,6 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useRoles, useRoleKpis, useCreateRole, useUpdateRole, useDuplicateRole, useDeleteRole } from '../hooks/use-business-admin'
 import type { Role } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Shield, Search, Plus, MoreHorizontal, Eye, Copy, Pencil, Trash2 } from 'lucide-react'
 
 export function RolesPage() {
@@ -64,8 +65,8 @@ export function RolesPage() {
       toast.success('Role created')
       setShowCreateDialog(false)
       setNewRole({ name: '', displayName: '', description: '' })
-    } catch {
-      toast.error('Failed to create role')
+    } catch (err) {
+      toast.error('Failed to create role', { description: getErrorMessage(err) })
     }
   }
 
@@ -86,8 +87,8 @@ export function RolesPage() {
       })
       toast.success('Role updated')
       setEditingRole(null)
-    } catch {
-      toast.error('Failed to update role')
+    } catch (err) {
+      toast.error('Failed to update role', { description: getErrorMessage(err) })
     }
   }
 
@@ -101,8 +102,8 @@ export function RolesPage() {
         },
       })
       toast.success('Role duplicated')
-    } catch {
-      toast.error('Failed to duplicate role')
+    } catch (err) {
+      toast.error('Failed to duplicate role', { description: getErrorMessage(err) })
     }
   }
 
@@ -112,8 +113,8 @@ export function RolesPage() {
       await deleteRole.mutateAsync(deleteId)
       toast.success('Role deleted')
       setDeleteId(null)
-    } catch {
-      toast.error('Failed to delete role')
+    } catch (err) {
+      toast.error('Failed to delete role', { description: getErrorMessage(err) })
     }
   }
 

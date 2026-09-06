@@ -45,7 +45,7 @@ export function LoadingState({ rows = 5, className, type = 'table' }: LoadingSta
       {type === 'page' && (
         <div className="space-y-6">
           <Skeleton className="h-8 w-[200px]" />
-          <Skeleton className="h-4 w-[300px]" />
+          <Skeleton className="h-4 w-full max-w-[300px]" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Skeleton className="h-[120px] rounded-xl" />
             <Skeleton className="h-[120px] rounded-xl" />

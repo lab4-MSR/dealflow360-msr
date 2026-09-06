@@ -52,7 +52,7 @@ export function ChartFrame({
       style={{ height }}
       role="img"
       aria-label={ariaLabel}
-      className="w-full"
+      className="w-full min-w-0"
     >
       {isLoading ? (
         <Skeleton className="h-full w-full rounded-lg" aria-hidden="true" />

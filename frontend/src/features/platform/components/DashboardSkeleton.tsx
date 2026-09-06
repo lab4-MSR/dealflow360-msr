@@ -5,12 +5,12 @@ export function DashboardSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       {/* Header skeleton */}
-      <div className="flex items-start justify-between">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-[260px]" />
-          <Skeleton className="h-4 w-[400px]" />
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+        <div className="space-y-2 w-full max-w-md">
+          <Skeleton className="h-8 w-[260px] max-w-full" />
+          <Skeleton className="h-4 w-full max-w-[400px]" />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Skeleton className="h-9 w-[120px] rounded-lg" />
           <Skeleton className="h-9 w-[100px] rounded-lg" />
           <Skeleton className="h-9 w-[110px] rounded-lg" />

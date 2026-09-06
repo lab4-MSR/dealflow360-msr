@@ -209,8 +209,8 @@ function LoadingSkeleton() {
   return (
     <div className="space-y-6 animate-pulse">
       <div className="space-y-2">
-        <Skeleton className="h-7 w-[200px]" />
-        <Skeleton className="h-4 w-[300px]" />
+        <Skeleton className="h-7 w-[200px] max-w-full" />
+        <Skeleton className="h-4 w-full max-w-[300px]" />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card>

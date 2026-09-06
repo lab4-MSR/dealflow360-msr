@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -45,7 +45,13 @@ export function PricingHistoryPage() {
     perPage: 15,
   }
 
-  const { data, isLoading, error, refetch } = usePricingHistory(filters)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput)
+      setPage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const handleSearch = () => {
     setSearch(searchInput)

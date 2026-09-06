@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { ShieldCheck, Check, X, RotateCcw } from 'lucide-react'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 
 interface ApprovalActionModalProps {
   open: boolean
@@ -42,7 +43,7 @@ export function ApprovalActionModal({
       toast.success(`Quotation ${action}d successfully`)
       onClose()
     } catch (err) {
-      toast.error('Failed to record approval decision.')
+      toast.error('Failed to record approval decision', { description: getErrorMessage(err) })
     } finally {
       setSubmitting(false)
     }
@@ -65,7 +66,7 @@ export function ApprovalActionModal({
           {/* Action Selector */}
           <div className="space-y-1.5">
             <Label>Decision Type</Label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => setAction('approve')}

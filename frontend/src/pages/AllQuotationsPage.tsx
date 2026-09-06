@@ -15,6 +15,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import apiClient, { getApiErrorMessage } from '@/lib/api'
 import { toast } from 'sonner'
 import { Search, Plus, Download, Archive, Send, FileText, Clock, AlertTriangle } from 'lucide-react'
+import { SalesWorkspaceTopMenu } from '@/components/ui/SalesWorkspaceTopMenu'
 
 const FALLBACK_QUOTATIONS = {
   data: [
@@ -77,15 +78,48 @@ export function AllQuotationsPage() {
         params.set('page',searchParams.get('page')??'1');
         params.set('per_page','20');
         const r=await apiClient.get(`/quotations?${params.toString()}`);
-        if(!c) {
-          if (r.data?.data && r.data.data.length > 0) {
+        const filterFallback = () => {
+          let list = [...FALLBACK_QUOTATIONS.data];
+          if (search) {
+            const sq = search.toLowerCase().trim();
+            list = list.filter(item =>
+              item.quote_number.toLowerCase().includes(sq) ||
+              item.customer_name.toLowerCase().includes(sq) ||
+              item.status.toLowerCase().includes(sq)
+            );
+          }
+          if (status && status !== 'all') {
+            list = list.filter(item => item.status === status);
+          }
+          return { data: list, meta: { total: list.length, page: 1, per_page: 20, total_pages: Math.max(1, Math.ceil(list.length / 20)) } };
+        };
+
+        if (!c) {
+          if (r.data && Array.isArray(r.data.data)) {
             setData(r.data);
           } else {
-            setData(FALLBACK_QUOTATIONS);
+            setData(filterFallback());
           }
         }
       } catch {
-        if(!c) setData(FALLBACK_QUOTATIONS);
+        if (!c) {
+          const filterFallback = () => {
+            let list = [...FALLBACK_QUOTATIONS.data];
+            if (search) {
+              const sq = search.toLowerCase().trim();
+              list = list.filter(item =>
+                item.quote_number.toLowerCase().includes(sq) ||
+                item.customer_name.toLowerCase().includes(sq) ||
+                item.status.toLowerCase().includes(sq)
+              );
+            }
+            if (status && status !== 'all') {
+              list = list.filter(item => item.status === status);
+            }
+            return { data: list, meta: { total: list.length, page: 1, per_page: 20, total_pages: Math.max(1, Math.ceil(list.length / 20)) } };
+          };
+          setData(filterFallback());
+        }
       } finally {
         if(!c) setLoading(false);
       }
@@ -120,6 +154,7 @@ export function AllQuotationsPage() {
 
   return (
     <div className="space-y-6">
+      <SalesWorkspaceTopMenu />
       <PageHeader
         title="All Quotations"
         description="Single quotation state machine — no conflicting frontend states"

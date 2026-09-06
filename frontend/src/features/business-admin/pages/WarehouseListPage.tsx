@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,6 +13,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { useWarehouses, useWarehouseKpis, useDeleteWarehouse, useUpdateWarehouse } from '../hooks/use-business-admin'
 import type { Warehouse, WarehouseFilters } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Plus, Search, Warehouse as WarehouseIcon, CheckCircle, AlertTriangle, Package, MoreHorizontal, Eye, Edit, Power, Trash2, MapPin } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
@@ -41,9 +42,17 @@ export function WarehouseListPage() {
   const updateWarehouse = useUpdateWarehouse()
 
   const handleSearch = () => {
-    setSearch(searchInput)
+    setSearch(searchInput.trim())
     setPage(1)
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput.trim())
+      setPage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const handleClearFilters = () => {
     setSearch('')
@@ -59,8 +68,8 @@ export function WarehouseListPage() {
       await deleteWarehouse.mutateAsync(deleteId)
       toast.success('Warehouse deleted')
       setDeleteId(null)
-    } catch {
-      toast.error('Failed to delete warehouse')
+    } catch (err) {
+      toast.error('Failed to delete warehouse', { description: getErrorMessage(err) })
     }
   }
 
@@ -69,8 +78,8 @@ export function WarehouseListPage() {
     try {
       await updateWarehouse.mutateAsync({ id: warehouse.id, data: { status: nextStatus } })
       toast.success(`Warehouse ${nextStatus === 'active' ? 'activated' : 'deactivated'}`)
-    } catch {
-      toast.error('Failed to update warehouse status')
+    } catch (err) {
+      toast.error('Failed to update warehouse status', { description: getErrorMessage(err) })
     }
   }
 

@@ -291,8 +291,8 @@ export function BusinessConfigurationPage() {
     return (
       <div className="space-y-6">
         <div className="space-y-2">
-          <Skeleton className="h-7 w-[250px]" />
-          <Skeleton className="h-4 w-[400px]" />
+          <Skeleton className="h-7 w-[250px] max-w-full" />
+          <Skeleton className="h-4 w-full max-w-[400px]" />
         </div>
         <div className="flex gap-6">
           <Skeleton className="hidden lg:block h-[500px] w-[200px] rounded-xl" />
@@ -304,9 +304,9 @@ export function BusinessConfigurationPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {Array.from({ length: 3 }).map((_, j) => (
-                    <div key={j} className="flex items-center justify-between">
+                    <div key={j} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <Skeleton className="h-4 w-[140px]" />
-                      <Skeleton className="h-10 w-[280px] rounded-lg" />
+                      <Skeleton className="h-10 w-full sm:w-[280px] rounded-lg" />
                     </div>
                   ))}
                 </CardContent>

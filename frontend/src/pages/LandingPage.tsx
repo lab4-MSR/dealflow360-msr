@@ -506,13 +506,13 @@ export function LandingPage() {
                     </div>
 
                     {/* Dynamic Real-time Metric Cards */}
-                    <div className="grid grid-cols-3 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3">
                         <p className="text-[11px] text-muted-foreground">Deal Value</p>
                         <p className="text-base sm:text-lg font-bold tabular-nums text-foreground mt-0.5">
-                          â‚¹{finalValue.toLocaleString('en-IN')}
+                          ₹{finalValue.toLocaleString('en-IN')}
                         </p>
-                        <span className="text-[10px] text-muted-foreground line-through">â‚¹{baseValue.toLocaleString('en-IN')}</span>
+                        <span className="text-[10px] text-muted-foreground line-through">₹{baseValue.toLocaleString('en-IN')}</span>
                       </div>
 
                       <div className="rounded-xl border border-border/80 bg-surface-muted/50 p-3">
@@ -1029,7 +1029,7 @@ export function LandingPage() {
                   </div>
 
                   {/* 3 Real-time KPI Metric Telemetry Cards */}
-                  <div className="mt-6 grid grid-cols-3 gap-2.5 sm:gap-3">
+                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                     {activeVector.metrics.map((m) => (
                       <div key={m.label} className="rounded-xl border border-border/80 bg-surface-muted/50 p-3 sm:p-3.5 space-y-1">
                         <p className="text-[11px] text-muted-foreground truncate">{m.label}</p>
@@ -1174,7 +1174,7 @@ export function LandingPage() {
                 <h2 className="mt-2.5 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">From confirmed order to delivered promise.</h2>
                 <p className="mt-3.5 max-w-xl text-body leading-7 text-muted-foreground dark:text-slate-300">Inventory validation, warehouse allocation, partial fulfillment, backorders, shipment tracking and delivery status live in one operational chain.</p>
                 <Button asChild variant="secondary" className="mt-8"><Link to={user ? '/operations' : '/login'}>Explore Operations <ArrowRight className="ml-2 h-4 w-4" /></Link></Button>
-                <div className="mt-10 grid grid-cols-3 gap-2">
+                <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-2">
                   {['Inventory', 'Fulfillment', 'Delivery'].map((item, index) => <motion.div {...reveal(index * 0.08)} key={item} className="border-l border-border dark:border-slate-700 pl-3"><p className="font-mono text-caption text-primary">0{index + 1}</p><p className="mt-1 text-small font-semibold">{item}</p></motion.div>)}
                 </div>
               </motion.div>

@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { ErrorState } from '@/components/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Pagination } from '@/components/ui/datatable/pagination'
 import { useQuery } from '@tanstack/react-query'
 import { Search, X, Shield, Settings, UserCog, Download, Clock } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
@@ -35,18 +36,28 @@ interface AuditData {
   totalPages: number
 }
 
-const MOCK_AUDIT: AuditData = {
-  overview: { totalEvents: 24891, securityEvents: 342, configChanges: 1893, adminActions: 5621 },
-  events: [
-    { id: 'ae1', timestamp: '2026-09-05T09:15:00Z', actor: 'John Mitchell', actorRole: 'super_admin', action: 'Updated security policy', resource: 'Platform Settings', ip: '192.168.1.100', severity: 'high', details: { before: { mfaRequired: false }, after: { mfaRequired: true }, reason: 'Security hardening initiative' } },
-    { id: 'ae2', timestamp: '2026-09-05T08:30:00Z', actor: 'Sarah Chen', actorRole: 'business_admin', businessName: 'Meridian Logistics', action: 'Invited team member', resource: 'User Management', ip: '10.0.0.55', severity: 'low' },
-    { id: 'ae3', timestamp: '2026-09-05T07:45:00Z', actor: 'System', action: 'Automated backup completed', resource: 'Database', severity: 'low' },
-    { id: 'ae4', timestamp: '2026-09-04T16:30:00Z', actor: 'Michael Park', actorRole: 'business_admin', businessName: 'Cascade Enterprises', action: 'Changed discount rules', resource: 'Configuration', ip: '172.16.0.22', severity: 'medium', details: { before: { maxDiscount: '15%' }, after: { maxDiscount: '20%' }, reason: 'Quarterly review adjustment' } },
-    { id: 'ae5', timestamp: '2026-09-04T14:20:00Z', actor: 'System', action: 'Business suspended', resource: 'Quick Serve Retail', severity: 'critical', details: { reason: 'Payment failure after 3 retries' } },
-    { id: 'ae6', timestamp: '2026-09-04T11:00:00Z', actor: 'Emily Torres', actorRole: 'sales_manager', businessName: 'Summit Industries', action: 'Exported deal report', resource: 'Analytics', ip: '10.0.0.78', severity: 'low' },
-  ],
-  total: 24891, page: 1, perPage: 25, totalPages: 996,
-}
+const ALL_MOCK_GLOBAL_AUDIT_EVENTS: AuditEvent[] = [
+  { id: 'ae1', timestamp: '2026-09-05T09:15:00Z', actor: 'John Mitchell', actorRole: 'super_admin', action: 'Updated security policy', resource: 'Platform Settings', ip: '192.168.1.100', severity: 'high', details: { before: { mfaRequired: false }, after: { mfaRequired: true }, reason: 'Security hardening initiative' } },
+  { id: 'ae2', timestamp: '2026-09-05T08:30:00Z', actor: 'Sarah Chen', actorRole: 'business_admin', businessName: 'Meridian Logistics', action: 'Invited team member', resource: 'User Management', ip: '10.0.0.55', severity: 'low' },
+  { id: 'ae3', timestamp: '2026-09-05T07:45:00Z', actor: 'System', action: 'Automated backup completed', resource: 'Database', severity: 'low' },
+  { id: 'ae4', timestamp: '2026-09-04T16:30:00Z', actor: 'Michael Park', actorRole: 'business_admin', businessName: 'Cascade Enterprises', action: 'Changed discount rules', resource: 'Configuration', ip: '172.16.0.22', severity: 'medium', details: { before: { maxDiscount: '15%' }, after: { maxDiscount: '20%' }, reason: 'Quarterly review adjustment' } },
+  { id: 'ae5', timestamp: '2026-09-04T14:20:00Z', actor: 'System', action: 'Business suspended', resource: 'Quick Serve Retail', severity: 'critical', details: { reason: 'Payment failure after 3 retries' } },
+  { id: 'ae6', timestamp: '2026-09-04T11:00:00Z', actor: 'Emily Torres', actorRole: 'sales_manager', businessName: 'Summit Industries', action: 'Exported deal report', resource: 'Analytics', ip: '10.0.0.78', severity: 'low' },
+  { id: 'ae7', timestamp: '2026-09-04T09:40:00Z', actor: 'Marcus Vance', actorRole: 'sales_manager', businessName: 'Acme Corp', action: 'Approved High Value Quotation', resource: 'Quotations', ip: '192.168.1.115', severity: 'low' },
+  { id: 'ae8', timestamp: '2026-09-04T08:15:00Z', actor: 'Security System', action: 'DDoS Rate Limit Throttled', resource: 'API Gateway', ip: '45.33.32.156', severity: 'high', details: { reason: 'Excessive requests per second' } },
+  { id: 'ae9', timestamp: '2026-09-03T18:00:00Z', actor: 'David Becker', actorRole: 'operations', businessName: 'Acme Corp', action: 'Updated Allocation Strategy', resource: 'Warehouse Routing', ip: '10.0.0.60', severity: 'medium' },
+  { id: 'ae10', timestamp: '2026-09-03T16:20:00Z', actor: 'Pooja Verma', actorRole: 'finance', businessName: 'Meridian Logistics', action: 'Configured Annual Billing Cycle', resource: 'Billing Engine', ip: '10.0.0.82', severity: 'low' },
+  { id: 'ae11', timestamp: '2026-09-03T14:10:00Z', actor: 'Carlos Rivera', actorRole: 'sales_rep', businessName: 'Cascade Enterprises', action: 'Customer Contact Info Updated', resource: 'CRM Directory', ip: '172.16.0.44', severity: 'low' },
+  { id: 'ae12', timestamp: '2026-09-03T11:35:00Z', actor: 'System Scheduler', action: 'SSL Certificate Auto-Renewed', resource: 'Load Balancer', severity: 'low' },
+  { id: 'ae13', timestamp: '2026-09-02T17:00:00Z', actor: 'John Mitchell', actorRole: 'super_admin', action: 'Provisioned New Tenant Database', resource: 'Tenancy Manager', ip: '192.168.1.100', severity: 'medium' },
+  { id: 'ae14', timestamp: '2026-09-02T15:45:00Z', actor: 'Natasha Roman', actorRole: 'sales_rep', businessName: 'Apex Engineering', action: 'Deal Stage Advanced to Negotiation', resource: 'Sales Pipeline', ip: '10.0.0.95', severity: 'low' },
+  { id: 'ae15', timestamp: '2026-09-02T13:20:00Z', actor: 'System Guard', action: 'Invalid API Key Revoked', resource: 'Auth Tokens', ip: '198.51.100.24', severity: 'critical', details: { reason: 'Multiple unauthorized endpoint probes' } },
+  { id: 'ae16', timestamp: '2026-09-02T10:00:00Z', actor: 'Simon Riley', actorRole: 'operations', businessName: 'TransGlobal', action: 'Consolidated Backorder Records', resource: 'Inventory Queue', ip: '10.0.0.70', severity: 'low' },
+  { id: 'ae17', timestamp: '2026-09-01T16:15:00Z', actor: 'Elena Rostova', actorRole: 'business_admin', businessName: 'Acme Corp', action: 'Modified Global Margin Floor', resource: 'Margin Rules', ip: '192.168.1.112', severity: 'medium' },
+  { id: 'ae18', timestamp: '2026-09-01T14:00:00Z', actor: 'Aisha Patel', actorRole: 'sales_rep', businessName: 'SunPower', action: 'Published Client Proposal', resource: 'Quotations', ip: '10.0.0.49', severity: 'low' },
+  { id: 'ae19', timestamp: '2026-09-01T11:30:00Z', actor: 'John Mitchell', actorRole: 'super_admin', action: 'Exported Global Platform Compliance Log', resource: 'Audit Trail', ip: '192.168.1.100', severity: 'low' },
+  { id: 'ae20', timestamp: '2026-09-01T09:00:00Z', actor: 'System Scheduler', action: 'Weekly Security Integrity Check Completed', resource: 'Security Scanner', severity: 'low' },
+]
 
 const severityVariant: Record<string, 'success' | 'warning' | 'danger' | 'secondary'> = {
   low: 'secondary', medium: 'warning', high: 'danger', critical: 'danger',
@@ -73,7 +84,33 @@ export function GlobalAuditPage() {
         const json = await response.json()
         if (!json.success) throw new Error(json.error?.message)
         return json.data
-      } catch { return MOCK_AUDIT }
+      } catch {
+        let filtered = [...ALL_MOCK_GLOBAL_AUDIT_EVENTS]
+        if (filters.search) {
+          const q = filters.search.toLowerCase()
+          filtered = filtered.filter(e => e.action.toLowerCase().includes(q) || e.actor.toLowerCase().includes(q) || e.resource.toLowerCase().includes(q))
+        }
+        if (filters.business) {
+          filtered = filtered.filter(e => e.businessName?.toLowerCase().includes(filters.business.toLowerCase()))
+        }
+        if (filters.severity) {
+          filtered = filtered.filter(e => e.severity === filters.severity)
+        }
+        const perPage = 10
+        const total = filtered.length
+        const totalPages = Math.max(1, Math.ceil(total / perPage))
+        const safePage = Math.min(Math.max(1, Number(filters.page) || 1), totalPages)
+        const startIndex = (safePage - 1) * perPage
+        const events = filtered.slice(startIndex, startIndex + perPage)
+        return {
+          overview: { totalEvents: 24891, securityEvents: 342, configChanges: 1893, adminActions: 5621 },
+          events,
+          total,
+          page: safePage,
+          perPage,
+          totalPages,
+        }
+      }
     },
     staleTime: 5 * 60 * 1000,
   })
@@ -200,13 +237,13 @@ export function GlobalAuditPage() {
       )}
 
       {data.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-caption text-muted-foreground">Showing {((data.page - 1) * data.perPage) + 1} to {Math.min(data.page * data.perPage, data.total)} of {data.total.toLocaleString()}</p>
-          <div className="flex gap-1">
-            <Button variant="outline" size="sm" disabled={data.page <= 1} onClick={() => setFilters((p) => ({ ...p, page: p.page - 1 }))}>Previous</Button>
-            <Button variant="outline" size="sm" disabled={data.page >= data.totalPages} onClick={() => setFilters((p) => ({ ...p, page: p.page + 1 }))}>Next</Button>
-          </div>
-        </div>
+        <Pagination
+          page={data.page}
+          totalPages={data.totalPages}
+          total={data.total}
+          perPage={data.perPage}
+          onPageChange={(p) => setFilters((prev) => ({ ...prev, page: p }))}
+        />
       )}
     </div>
   )

@@ -30,6 +30,7 @@ import {
 import type { ApprovalDetailData } from '@/types/salesManager'
 import { useAuth } from '@/providers/AuthProvider'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 
 export function ApprovalDetailsPage() {
   const { user } = useAuth()
@@ -60,8 +61,8 @@ export function ApprovalDetailsPage() {
       toast.success('Approval request approved successfully')
       setApproveOpen(false)
       navigate('/sales-manager/approvals')
-    } catch {
-      toast.error('Failed to approve')
+    } catch (err) {
+      toast.error('Failed to approve quotation', { description: getErrorMessage(err) })
     } finally {
       setIsSubmitting(false)
     }
@@ -75,8 +76,8 @@ export function ApprovalDetailsPage() {
       toast.success('Approval request rejected')
       setRejectOpen(false)
       navigate('/sales-manager/approvals')
-    } catch {
-      toast.error('Failed to reject')
+    } catch (err) {
+      toast.error('Failed to reject quotation', { description: getErrorMessage(err) })
     } finally {
       setIsSubmitting(false)
     }
@@ -90,8 +91,8 @@ export function ApprovalDetailsPage() {
       toast.success('Quotation returned to sales rep for modification')
       setReturnOpen(false)
       navigate('/sales-manager/approvals')
-    } catch {
-      toast.error('Failed to return')
+    } catch (err) {
+      toast.error('Failed to return quotation', { description: getErrorMessage(err) })
     } finally {
       setIsSubmitting(false)
     }

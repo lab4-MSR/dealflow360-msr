@@ -14,6 +14,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
+import { getErrorMessage } from "@/lib/errors"
 import { InvoiceStatusBadge, CurrencyValue } from "../components/FinanceBadges"
 import { getInvoice, voidInvoice, sendInvoice } from "../services/finance.service"
 
@@ -47,7 +48,7 @@ export function FinanceInvoiceDetailsPage() {
       await sendInvoice(id)
       toast.success("Invoice dispatched to customer via email")
     } catch (e: any) {
-      toast.error(e.message || "Failed to send invoice")
+      toast.error("Failed to send invoice", { description: getErrorMessage(e) })
     } finally {
       setActionLoading(false)
     }
@@ -60,7 +61,7 @@ export function FinanceInvoiceDetailsPage() {
       setInvoice((prev: any) => ({ ...prev, status: "void" }))
       toast.success("Invoice voided successfully")
     } catch (e: any) {
-      toast.error(e.message || "Failed to void invoice")
+      toast.error("Failed to void invoice", { description: getErrorMessage(e) })
     } finally {
       setActionLoading(false)
     }

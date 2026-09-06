@@ -532,8 +532,8 @@ export function BusinessRevenuePage() {
               Failed to load product data
             </p>
           ) : productData.length > 0 ? (
-            <div className="rounded-xl border border-border overflow-hidden">
-              <table className="w-full">
+            <div className="rounded-xl border border-border overflow-x-auto">
+              <table className="w-full min-w-[480px] sm:min-w-full">
                 <thead>
                   <tr className="border-b border-border bg-surface-muted/50">
                     <th className="px-4 py-2.5 text-left text-caption font-medium text-muted-foreground">
@@ -602,8 +602,8 @@ export function BusinessRevenuePage() {
               Failed to load customer data
             </p>
           ) : customerData.length > 0 ? (
-            <div className="rounded-xl border border-border overflow-hidden">
-              <table className="w-full">
+            <div className="rounded-xl border border-border overflow-x-auto">
+              <table className="w-full min-w-[480px] sm:min-w-full">
                 <thead>
                   <tr className="border-b border-border bg-surface-muted/50">
                     <th className="px-4 py-2.5 text-left text-caption font-medium text-muted-foreground">

@@ -11,6 +11,7 @@ import { ErrorState } from '@/components/shared'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { usePlatformUsers, usePlatformUserKpis } from '../hooks/use-platform-users'
 import type { PlatformUserFilters } from '../types'
+import { Pagination } from '@/components/ui/datatable/pagination'
 import { Search, X, Users, UserPlus, UserCheck, UserX, Clock } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -32,7 +33,7 @@ const roleLabel: Record<string, string> = {
 
 export function PlatformUsersPage() {
   const navigate = useNavigate()
-  const [filters, setFilters] = useState<PlatformUserFilters>({ page: 1, perPage: 25 })
+  const [filters, setFilters] = useState<PlatformUserFilters>({ page: 1, perPage: 10 })
   const [searchInput, setSearchInput] = useState('')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -120,7 +121,7 @@ export function PlatformUsersPage() {
               </SelectContent>
             </Select>
             {(filters.search || filters.role || filters.status) && (
-              <Button variant="ghost" size="sm" onClick={() => { setFilters({ page: 1, perPage: 25 }); setSearchInput('') }} className="gap-1.5">
+              <Button variant="ghost" size="sm" onClick={() => { setFilters({ page: 1, perPage: 10 }); setSearchInput('') }} className="gap-1.5">
                 <X className="h-3.5 w-3.5" /> Clear
               </Button>
             )}
@@ -176,12 +177,14 @@ export function PlatformUsersPage() {
       )}
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-caption text-muted-foreground">Showing {((filters.page || 1) - 1) * (filters.perPage || 25) + 1} to {Math.min((filters.page || 1) * (filters.perPage || 25), total)} of {total}</p>
-          <div className="flex gap-1">
-            <Button variant="outline" size="sm" disabled={(filters.page || 1) <= 1} onClick={() => setFilters((p) => ({ ...p, page: (p.page || 1) - 1 }))}>Previous</Button>
-            <Button variant="outline" size="sm" disabled={(filters.page || 1) >= totalPages} onClick={() => setFilters((p) => ({ ...p, page: (p.page || 1) + 1 }))}>Next</Button>
-          </div>
+        <div className="pt-2">
+          <Pagination
+            page={filters.page || 1}
+            totalPages={totalPages}
+            total={total}
+            perPage={filters.perPage || 10}
+            onPageChange={(page) => setFilters((p) => ({ ...p, page }))}
+          />
         </div>
       )}
     </div>

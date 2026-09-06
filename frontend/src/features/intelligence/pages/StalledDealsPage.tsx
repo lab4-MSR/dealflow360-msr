@@ -40,17 +40,40 @@ export const StalledDealsPage: React.FC = () => {
     loadData()
   }, [])
 
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [search])
+
   const filtered = deals.filter(
     (d) =>
-      d.deal_name.toLowerCase().includes(search.toLowerCase()) ||
-      d.customer_name.toLowerCase().includes(search.toLowerCase()) ||
-      d.rep_name.toLowerCase().includes(search.toLowerCase())
+      d.deal_name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      d.customer_name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+      d.rep_name.toLowerCase().includes(debouncedSearch.toLowerCase())
   )
 
   const handleUnstick = (deal: StalledDealItem) => {
     setUnstickMsg({
       id: deal.deal_id,
-      msg: `Dispatched action: "${deal.recommended_action}" to ${deal.rep_name}.`,
+      msg: `Dispatched AI action: "${deal.recommended_action}" to ${deal.rep_name}.`,
+    })
+  }
+
+  const handleNudgeRep = (deal: StalledDealItem) => {
+    setUnstickMsg({
+      id: deal.deal_id,
+      msg: `Nudge reminder sent to sales representative ${deal.rep_name} for ${deal.deal_name}.`,
+    })
+  }
+
+  const handleEscalate = (deal: StalledDealItem) => {
+    setUnstickMsg({
+      id: deal.deal_id,
+      msg: `Escalated ${deal.deal_name} to Sales Operations Manager for immediate review.`,
     })
   }
 
@@ -85,8 +108,9 @@ export const StalledDealsPage: React.FC = () => {
       </div>
 
       {unstickMsg && (
-        <div className="p-3 bg-success-subtle text-success text-xs font-semibold rounded-lg">
-          ✓ {unstickMsg.msg}
+        <div className="p-3 bg-success-subtle text-success text-xs font-semibold rounded-lg flex items-center justify-between">
+          <span>✓ {unstickMsg.msg}</span>
+          <Button variant="ghost" size="sm" className="h-5 text-[11px] p-0" onClick={() => setUnstickMsg(null)}>Dismiss</Button>
         </div>
       )}
 
@@ -121,14 +145,19 @@ export const StalledDealsPage: React.FC = () => {
                     <th className="py-3 px-3">Stalled Days</th>
                     <th className="py-3 px-3">Reason</th>
                     <th className="py-3 px-3">Suggested Recovery</th>
-                    <th className="py-3 px-4 text-right">Action</th>
+                    <th className="py-3 px-4 text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
                   {filtered.map((deal) => (
                     <tr key={deal.deal_id || deal.id} className="hover:bg-surface-muted/50 transition-colors">
                       <td className="py-3.5 px-4">
-                        <span className="font-semibold text-foreground block">{deal.deal_name}</span>
+                        <Link
+                          to={`/sales/deals/${deal.deal_id || deal.id}`}
+                          className="font-semibold text-primary hover:underline block"
+                        >
+                          {deal.deal_name}
+                        </Link>
                         <span className="text-[11px] text-muted-foreground">{deal.customer_name}</span>
                       </td>
                       <td className="py-3.5 px-3 font-medium text-foreground">{deal.rep_name}</td>
@@ -148,13 +177,33 @@ export const StalledDealsPage: React.FC = () => {
                         {deal.recommended_action}
                       </td>
                       <td className="py-3.5 px-4 text-right">
-                        <Button
-                          size="sm"
-                          onClick={() => handleUnstick(deal)}
-                          className="bg-primary hover:bg-primary-hover text-white text-xs h-7 gap-1"
-                        >
-                          <Send className="h-3 w-3" /> Unstick
-                        </Button>
+                        <div className="flex items-center justify-end gap-1.5">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleNudgeRep(deal)}
+                            className="text-[11px] h-7 px-2"
+                            title="Nudge representative"
+                          >
+                            Nudge
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEscalate(deal)}
+                            className="text-[11px] h-7 px-2 text-warning hover:text-warning"
+                            title="Escalate to manager"
+                          >
+                            Escalate
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleUnstick(deal)}
+                            className="bg-primary hover:bg-primary-hover text-white text-xs h-7 gap-1 px-2.5"
+                          >
+                            <Send className="h-3 w-3" /> Unstick
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))}

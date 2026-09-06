@@ -96,7 +96,7 @@ export function NegotiationSection({ negotiation, currency }: NegotiationSection
               &ldquo;{customer_request}&rdquo;
             </div>
 
-            <div className="grid grid-cols-3 gap-3 pt-2 text-small">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-small">
               {/* Counter Discount */}
               <div className="p-2.5 rounded-lg border border-border bg-card">
                 <span className="text-[11px] uppercase tracking-wider font-semibold text-muted-foreground block">

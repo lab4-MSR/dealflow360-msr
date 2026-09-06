@@ -14,6 +14,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { useApprovalChains, useApprovalChainKpis, useCreateApprovalChain, useUpdateApprovalChain, useDeleteApprovalChain } from '../hooks/use-business-admin'
 import type { ApprovalChain, ApprovalChainFilters } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Plus, Search, MoreHorizontal, Eye, Edit, Power, Trash2, ArrowDown, CheckCircle, Users, Settings, GitBranch } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -77,7 +78,7 @@ function ApprovalChainsPage() {
   const handleDelete = async () => {
     if (!deleteId) return
     try { await deleteApprovalChain.mutateAsync(deleteId); toast.success('Approval chain deleted'); setDeleteId(null) }
-    catch { toast.error('Failed to delete approval chain') }
+    catch (err) { toast.error('Failed to delete approval chain', { description: getErrorMessage(err) }) }
   }
 
   const handleToggleStatus = async (chain: ApprovalChain) => {
@@ -85,8 +86,8 @@ function ApprovalChainsPage() {
     try {
       await updateApprovalChain.mutateAsync({ id: chain.id, data: { status: nextStatus } })
       toast.success(`Chain ${nextStatus === 'active' ? 'activated' : 'deactivated'}`)
-    } catch {
-      toast.error('Failed to update chain status')
+    } catch (err) {
+      toast.error('Failed to update chain status', { description: getErrorMessage(err) })
     }
   }
 
@@ -102,7 +103,9 @@ function ApprovalChainsPage() {
       setIsCreateOpen(false)
       setEditingChain(null)
       refetch()
-    } catch { toast.error(isEdit ? 'Failed to update approval chain' : 'Failed to create approval chain') }
+    } catch (err) {
+      toast.error(isEdit ? 'Failed to update approval chain' : 'Failed to create approval chain', { description: getErrorMessage(err) })
+    }
   }
 
   const getFormDefaults = (chain?: ApprovalChain): ChainFormData => ({

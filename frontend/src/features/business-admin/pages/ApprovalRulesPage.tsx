@@ -13,6 +13,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { useApprovalRules, useApprovalRuleKpis, useDeleteApprovalRule, useUpdateApprovalRule } from '../hooks/use-business-admin'
 import type { ApprovalRule, ApprovalRuleFilters } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { Plus, Search, AlertTriangle, Shield, MoreHorizontal, Eye, Edit, Power, Trash2, CheckCircle } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
@@ -61,7 +62,7 @@ function ApprovalRulesPage() {
   const handleDelete = async () => {
     if (!deleteId) return
     try { await deleteApprovalRule.mutateAsync(deleteId); toast.success('Approval rule deleted'); setDeleteId(null) }
-    catch { toast.error('Failed to delete approval rule') }
+    catch (err) { toast.error('Failed to delete approval rule', { description: getErrorMessage(err) }) }
   }
 
   const getTriggerLabel = (rule: ApprovalRule) => {
@@ -166,8 +167,8 @@ function ApprovalRulesPage() {
     try {
       await updateApprovalRule.mutateAsync({ id: rule.id, data: { status: nextStatus } })
       toast.success(`Rule ${nextStatus === 'active' ? 'activated' : 'deactivated'}`)
-    } catch {
-      toast.error('Failed to update rule status')
+    } catch (err) {
+      toast.error('Failed to update rule status', { description: getErrorMessage(err) })
     }
   }
 
@@ -364,8 +365,8 @@ function ApprovalRulesPage() {
                   </div>
                   <Badge variant={STATUS_VARIANT[rule.status] || 'secondary'}>{rule.status}</Badge>
                 </div>
-                <div className="grid grid-cols-3 gap-3 text-xs pt-2 border-t border-border/40">
-                  <div><p className="text-muted-foreground text-[10px] uppercase">Level</p><p className="font-medium text-foreground">{rule.approvalLevel.replace('_', ' ')}</p></div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs pt-2 border-t border-border/40">
+                  <div><p className="text-muted-foreground text-[10px] uppercase">Level</p><p className="font-medium text-foreground truncate">{rule.approvalLevel.replace('_', ' ')}</p></div>
                   <div><p className="text-muted-foreground text-[10px] uppercase">Priority</p><p className="font-medium font-mono text-foreground">{rule.priority}</p></div>
                   <div><p className="text-muted-foreground text-[10px] uppercase">Risk</p><p className="font-medium text-foreground">{getRiskLevel(rule.priority)}</p></div>
                 </div>

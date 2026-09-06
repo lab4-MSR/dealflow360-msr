@@ -32,6 +32,7 @@ import {
 import type { ApprovalQueueItem } from '@/types/salesManager'
 import { useAuth } from '@/providers/AuthProvider'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 
 export function ApprovalInboxPage() {
   const { user } = useAuth()
@@ -100,8 +101,8 @@ export function ApprovalInboxPage() {
       toast.success(`Quotation ${activeItem.quote_number} approved successfully.`)
       await loadData()
       setSelectedIds(prev => prev.filter(id => id !== activeItem.id))
-    } catch (err: any) {
-      toast.error(err?.message || 'Failed to approve quotation.')
+    } catch (err) {
+      toast.error('Failed to approve quotation', { description: getErrorMessage(err) })
     } finally {
       setIsSubmitting(false)
     }
@@ -115,8 +116,8 @@ export function ApprovalInboxPage() {
       toast.success(`Quotation ${activeItem.quote_number} rejected.`)
       await loadData()
       setSelectedIds(prev => prev.filter(id => id !== activeItem.id))
-    } catch (err: any) {
-      toast.error(err?.message || 'Failed to reject quotation.')
+    } catch (err) {
+      toast.error('Failed to reject quotation', { description: getErrorMessage(err) })
     } finally {
       setIsSubmitting(false)
     }
@@ -130,8 +131,8 @@ export function ApprovalInboxPage() {
       toast.success(`Quotation ${activeItem.quote_number} returned for revision.`)
       await loadData()
       setSelectedIds(prev => prev.filter(id => id !== activeItem.id))
-    } catch (err: any) {
-      toast.error(err?.message || 'Failed to return quotation.')
+    } catch (err) {
+      toast.error('Failed to return quotation', { description: getErrorMessage(err) })
     } finally {
       setIsSubmitting(false)
     }

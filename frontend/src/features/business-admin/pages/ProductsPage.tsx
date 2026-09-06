@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -53,9 +53,17 @@ export function ProductsPage() {
   const deleteProduct = useDeleteProduct()
 
   const handleSearch = () => {
-    setSearch(searchInput)
+    setSearch(searchInput.trim())
     setPage(1)
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput.trim())
+      setPage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const handleDelete = async () => {
     if (!deleteId) return

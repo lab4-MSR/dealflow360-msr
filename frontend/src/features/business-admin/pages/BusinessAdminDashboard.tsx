@@ -260,7 +260,7 @@ export function BusinessAdminDashboard() {
       {/* Sales Pipeline & Revenue Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Sales Overview */}
-        <Card className="border-0 bg-transparent shadow-none">
+        <Card className="border-0 bg-transparent shadow-none min-w-0">
           <CardHeader className="p-5 pb-4 border-0">
             <div className="flex items-center justify-between">
               <div>
@@ -280,7 +280,7 @@ export function BusinessAdminDashboard() {
             </div>
           </CardHeader>
           <CardContent className="p-5 pt-1">
-            <div className="grid grid-cols-3 gap-2.5 p-2.5 rounded-lg bg-muted/30 mb-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-2.5 rounded-lg bg-muted/30 mb-3.5">
               <div className="text-center">
                 <p className="text-lg font-bold text-foreground font-display tabular-nums">{sales?.totalDeals ?? 0}</p>
                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">Total Deals</p>
@@ -319,7 +319,7 @@ export function BusinessAdminDashboard() {
         </Card>
 
         {/* Revenue Overview */}
-        <Card className="border-0 bg-transparent shadow-none">
+        <Card className="border-0 bg-transparent shadow-none min-w-0">
           <CardHeader className="p-5 pb-4 border-0">
             <div className="flex items-center justify-between">
               <div>
@@ -342,7 +342,7 @@ export function BusinessAdminDashboard() {
             </div>
           </CardHeader>
           <CardContent className="p-5 pt-1">
-            <div className="grid grid-cols-3 gap-2.5 p-2.5 rounded-lg bg-muted/30 mb-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-2.5 rounded-lg bg-muted/30 mb-3.5">
               <div className="text-center">
                 <p className="text-base font-bold text-foreground font-display tabular-nums truncate">
                   ₹{(revenue?.totalRevenue ?? 0).toLocaleString('en-IN')}

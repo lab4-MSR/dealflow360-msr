@@ -21,6 +21,7 @@ import {
 } from '../hooks/use-business-admin'
 import type { CategoryTreeNode, Category } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import {
   Plus,
   ChevronRight,
@@ -122,8 +123,8 @@ export function CategoriesPage() {
       setForm({ name: '', description: '', parentId: '_none', status: 'active', sortOrder: '0' })
       setEditingCategory(null)
       setParentForNew('')
-    } catch {
-      toast.error(editingCategory ? 'Failed to update category' : 'Failed to create category')
+    } catch (err) {
+      toast.error(editingCategory ? 'Failed to update category' : 'Failed to create category', { description: getErrorMessage(err) })
     }
   }
 
@@ -134,8 +135,8 @@ export function CategoriesPage() {
       toast.success('Category deleted')
       setDeleteId(null)
       if (selectedCategory?.id === deleteId) setSelectedCategory(null)
-    } catch {
-      toast.error('Failed to delete category')
+    } catch (err) {
+      toast.error('Failed to delete category', { description: getErrorMessage(err) })
     }
   }
 

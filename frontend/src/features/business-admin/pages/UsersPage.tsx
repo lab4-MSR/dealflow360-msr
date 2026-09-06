@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -110,9 +110,25 @@ export function UsersPage() {
 
   // User Actions
   const handleSearchUsers = () => {
-    setSearch(searchInput)
+    setSearch(searchInput.trim())
     setPage(1)
   }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput.trim())
+      setPage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRoleSearch(roleSearchInput.trim())
+      setRolePage(1)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [roleSearchInput])
 
   const handleClearFilters = () => {
     setSearchInput('')

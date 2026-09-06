@@ -9,6 +9,7 @@ import { PageHeader } from '../components/BusinessAdminPageHeader'
 import { useCreateProduct } from '../hooks/use-business-admin'
 import type { ProductCreateInput } from '../types'
 import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/errors'
 import { ArrowLeft, Save } from 'lucide-react'
 
 export function CreateProductPage() {
@@ -59,8 +60,8 @@ export function CreateProductPage() {
       })
       toast.success('Product created')
       navigate('/business-admin/products')
-    } catch {
-      toast.error('Failed to create product')
+    } catch (err) {
+      toast.error('Failed to create product', { description: getErrorMessage(err) })
     }
   }
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { KpiCard } from '@/components/ui/kpi-card'
 import { Card, CardContent } from '@/components/ui/card'
@@ -96,7 +96,7 @@ const statusDot: Record<BusinessStatus, string> = {
 
 export function AllBusinessesPage() {
   const navigate = useNavigate()
-  const [filters, setFilters] = useState<BusinessListFilters>({ page: 1, perPage: 25 })
+  const [filters, setFilters] = useState<BusinessListFilters>({ page: 1, perPage: 10 })
   const [searchInput, setSearchInput] = useState('')
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [actionRow, setActionRow] = useState<Business | null>(null)
@@ -139,12 +139,19 @@ export function AllBusinessesPage() {
   }
 
   const handleSearch = useCallback(() => {
-    setFilters((prev) => ({ ...prev, search: searchInput || undefined, page: 1 }))
+    setFilters((prev) => ({ ...prev, search: searchInput.trim() || undefined, page: 1 }))
   }, [searchInput])
 
-  const debouncedSearch = useMemo(() => {
-    return handleSearch
-  }, [handleSearch])
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters((prev) => {
+        const trimmed = searchInput.trim() || undefined
+        if (prev.search === trimmed) return prev
+        return { ...prev, search: trimmed, page: 1 }
+      })
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [searchInput])
 
   const handleFilterChange = (key: keyof BusinessListFilters, value: string | undefined) => {
     setFilters((prev) => ({ ...prev, [key]: value || undefined, page: 1 }))
@@ -686,7 +693,7 @@ export function AllBusinessesPage() {
           }
           action={
             filters.search || filters.status || filters.plan ? (
-              <Button variant="outline" onClick={() => { setFilters({ page: 1, perPage: 25 }); setSearchInput('') }}>
+              <Button variant="outline" onClick={() => { setFilters({ page: 1, perPage: 10 }); setSearchInput('') }}>
                 Clear Filters
               </Button>
             ) : (

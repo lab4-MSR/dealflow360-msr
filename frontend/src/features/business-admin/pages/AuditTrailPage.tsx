@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Search,
   Download,
@@ -132,6 +132,17 @@ export function AuditTrailPage() {
   const handleSearch = () => {
     setFilters(prev => ({ ...prev, search: searchInput.trim() || undefined, page: 1 }));
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFilters(prev => {
+        const trimmed = searchInput.trim() || undefined;
+        if (prev.search === trimmed) return prev;
+        return { ...prev, search: trimmed, page: 1 };
+      });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const handleFilterChange = (key: keyof AuditFilters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value === 'all' ? undefined : value, page: 1 }));

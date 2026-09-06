@@ -22,6 +22,7 @@ import {
   Home,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { SalesWorkspaceTopMenu } from '@/components/ui/SalesWorkspaceTopMenu'
 import {
   getQuotationDetails,
   submitForApprovalAction,
@@ -307,6 +308,7 @@ export function QuotationDetailsPage() {
 
   return (
     <div className="space-y-6 pb-20">
+      <SalesWorkspaceTopMenu onReload={() => loadQuote(activeVersion)} />
       {/* 1. Breadcrumb */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-caption text-muted-foreground">
         <Link to="/dashboard" className="hover:text-foreground flex items-center gap-1">

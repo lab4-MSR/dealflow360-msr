@@ -203,6 +203,8 @@
     font-size: 14px;
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+    max-width: 100vw;
   }
 
   body {
@@ -216,6 +218,9 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum", "ss01", "ss02";
+    overflow-x: hidden;
+    max-width: 100vw;
+    min-height: 100vh;
   }
 
   h1,
